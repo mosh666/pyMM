@@ -1,0 +1,152 @@
+name: Build Portable Distribution
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-windows:
+    name: Build for Python ${{ matrix.python-version }}
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+        include:
+          - python-version: "3.12"
+            python-url: "https://www.python.org/ftp/python/3.12.8/python-3.12.8-embed-amd64.zip"
+            python-dir: "python312"
+            lib-dir: "lib-py312"
+            requirements-file: "requirements-frozen-py312.txt"
+          - python-version: "3.13"
+            python-url: "https://www.python.org/ftp/python/3.13.1/python-3.13.1-embed-amd64.zip"
+            python-dir: "python313"
+            lib-dir: "lib-py313"
+            requirements-file: "requirements-frozen-py313.txt"
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for setuptools-scm
+      
+      - name: Set up Python ${{ matrix.python-version }} for building
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build setuptools-scm
+      
+      - name: Get version from setuptools-scm
+        id: version
+        run: |
+          $version = python -m setuptools_scm
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Version: $version"
+      
+      - name: Download embeddable Python package
+        run: |
+          Invoke-WebRequest -Uri "${{ matrix.python-url }}" -OutFile python-embed.zip
+          Expand-Archive python-embed.zip -DestinationPath ${{ matrix.python-dir }}/
+      
+      - name: Configure embeddable Python for site-packages
+        run: |
+          $pythonVersion = "${{ matrix.python-version }}".Replace(".", "")
+          $pthFile = Get-ChildItem -Path ${{ matrix.python-dir }}/ -Filter "python$pythonVersion._pth"
+          
+          # Append site and lib directory to ._pth file
+          Add-Content -Path $pthFile.FullName -Value "../${{ matrix.lib-dir }}"
+          Add-Content -Path $pthFile.FullName -Value "import site"
+          
+          Get-Content $pthFile.FullName
+      
+      - name: Install pip in embeddable Python
+        run: |
+          Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile get-pip.py
+          & "./${{ matrix.python-dir }}/python.exe" get-pip.py --no-warn-script-location
+      
+      - name: Install runtime dependencies
+        run: |
+          & "./${{ matrix.python-dir }}/python.exe" -m pip install `
+            --target ${{ matrix.lib-dir }}/ `
+            --no-warn-script-location `
+            PySide6>=6.6.0 `
+            PySide6-Fluent-Widgets>=1.5.0 `
+            pydantic>=2.5.0 `
+            pyyaml>=6.0 `
+            psutil>=5.9.0 `
+            aiohttp>=3.9.0 `
+            rich>=13.7.0
+      
+      - name: Freeze dependencies
+        run: |
+          & "./${{ matrix.python-dir }}/python.exe" -m pip freeze > ${{ matrix.requirements-file }}
+      
+      - name: Generate _version.py
+        run: |
+          python -m setuptools_scm
+          # setuptools-scm writes to app/_version.py as configured in pyproject.toml
+      
+      - name: Create portable archive
+        run: |
+          $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win64.zip"
+          
+          Compress-Archive -Path `
+            ${{ matrix.python-dir }}, `
+            ${{ matrix.lib-dir }}, `
+            app, `
+            plugins, `
+            config, `
+            launcher.py, `
+            README.md, `
+            LICENSE, `
+            ${{ matrix.requirements-file }} `
+            -DestinationPath $archiveName
+          
+          echo "ARCHIVE_NAME=$archiveName" >> $env:GITHUB_OUTPUT
+      
+      - name: Calculate SHA256 checksum
+        id: checksum
+        run: |
+          $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win64.zip"
+          $hash = (Get-FileHash -Path $archiveName -Algorithm SHA256).Hash
+          $hash | Out-File -FilePath "${archiveName}.sha256" -NoNewline
+          echo "CHECKSUM=$hash" >> $env:GITHUB_OUTPUT
+          echo "Checksum: $hash"
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyMM-py${{ matrix.python-version }}-build
+          path: |
+            pyMM-v*.zip
+            pyMM-v*.sha256
+          retention-days: 30
+  
+  create-recommended-link:
+    name: Create recommended release link
+    runs-on: ubuntu-latest
+    needs: build-windows
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      
+      - name: Create recommended symlink metadata
+        run: |
+          # Python 3.13 is the recommended version
+          echo "pyMM-py3.13-build" > RECOMMENDED.txt
+          echo "For most users, download the Python 3.13 build for best compatibility." >> RECOMMENDED.txt
+      
+      - name: Upload recommended metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: recommended-metadata
+          path: RECOMMENDED.txt

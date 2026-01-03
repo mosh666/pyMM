@@ -1,0 +1,237 @@
+"""Tests for ConfigService."""
+import pytest
+from pathlib import Path
+import yaml
+from app.core.services.config_service import (
+    ConfigService,
+    AppConfig,
+    PathConfig,
+    LoggingConfig,
+    UIConfig,
+    LogLevel,
+)
+
+
+class TestAppConfig:
+    """Test suite for AppConfig model."""
+
+    def test_default_config(self):
+        """Test default configuration values."""
+        config = AppConfig()
+
+        assert config.app_name == "pyMediaManager"
+        assert config.app_version == "0.0.1"
+        assert config.paths.projects_dir == "pyMM.Projects"
+        assert config.logging.level == LogLevel.INFO
+        assert config.ui.show_first_run is True
+
+    def test_config_with_overrides(self):
+        """Test configuration with custom values."""
+        config = AppConfig(
+            app_name="CustomApp",
+            logging=LoggingConfig(level=LogLevel.DEBUG),
+            ui=UIConfig(theme="dark", window_width=1600),
+        )
+
+        assert config.app_name == "CustomApp"
+        assert config.logging.level == LogLevel.DEBUG
+        assert config.ui.theme == "dark"
+        assert config.ui.window_width == 1600
+
+    def test_to_dict_without_redaction(self):
+        """Test converting config to dict without redaction."""
+        config = AppConfig()
+        data = config.to_dict(redact_sensitive=False)
+
+        assert isinstance(data, dict)
+        assert data["app_name"] == "pyMediaManager"
+        assert "paths" in data
+        assert "logging" in data
+
+    def test_to_dict_with_redaction(self):
+        """Test sensitive data redaction."""
+        config = AppConfig()
+        # Manually add a sensitive field for testing
+        config_dict = config.model_dump()
+        config_dict["api_key"] = "secret-key-123"
+        config_dict["password"] = "secret-password"
+
+        # Create new config with sensitive data
+        test_config = AppConfig(**config_dict)
+        redacted = test_config.to_dict(redact_sensitive=True)
+
+        assert redacted["api_key"] == "[REDACTED]"
+        assert redacted["password"] == "[REDACTED]"
+
+
+class TestConfigService:
+    """Test suite for ConfigService."""
+
+    @pytest.fixture
+    def service(self, app_root):
+        """Create ConfigService instance."""
+        return ConfigService(app_root)
+
+    def test_init(self, service, app_root):
+        """Test service initialization."""
+        assert service.app_root == app_root
+        assert service.config_dir == app_root / "config"
+
+    def test_load_default_config(self, service):
+        """Test loading default configuration when no files exist."""
+        config = service.load()
+
+        assert isinstance(config, AppConfig)
+        assert config.app_name == "pyMediaManager"
+
+    def test_load_with_default_file(self, service, app_root):
+        """Test loading configuration from default file."""
+        # Create default config file
+        default_config = {
+            "app_name": "TestApp",
+            "logging": {"level": "DEBUG"},
+        }
+
+        config_dir = app_root / "config"
+        config_dir.mkdir(exist_ok=True)
+
+        with open(config_dir / "app.yaml", "w") as f:
+            yaml.dump(default_config, f)
+
+        config = service.load()
+
+        assert config.app_name == "TestApp"
+        assert config.logging.level == LogLevel.DEBUG
+
+    def test_load_with_user_override(self, service, app_root):
+        """Test user configuration overrides default."""
+        # Create default config
+        default_config = {
+            "app_name": "DefaultApp",
+            "ui": {"theme": "light"},
+        }
+
+        # Create user config
+        user_config = {
+            "app_name": "UserApp",
+            "ui": {"theme": "dark"},
+        }
+
+        config_dir = app_root / "config"
+        config_dir.mkdir(exist_ok=True)
+
+        with open(config_dir / "app.yaml", "w") as f:
+            yaml.dump(default_config, f)
+
+        with open(config_dir / "user.yaml", "w") as f:
+            yaml.dump(user_config, f)
+
+        config = service.load()
+
+        # User config should override defaults
+        assert config.app_name == "UserApp"
+        assert config.ui.theme == "dark"
+
+    def test_save_user_config(self, service, app_root):
+        """Test saving user configuration."""
+        config = AppConfig(app_name="SavedApp", ui=UIConfig(theme="dark"))
+
+        service.save_user_config(config)
+
+        user_file = app_root / "config" / "user.yaml"
+        assert user_file.exists()
+
+        # Verify saved content
+        with open(user_file, "r") as f:
+            data = yaml.safe_load(f)
+
+        assert data["app_name"] == "SavedApp"
+        assert data["ui"]["theme"] == "dark"
+
+    def test_get_config_lazy_load(self, service):
+        """Test lazy loading of configuration."""
+        # Config should be None initially
+        assert service._config is None
+
+        config = service.get_config()
+
+        # Should load and cache
+        assert isinstance(config, AppConfig)
+        assert service._config is config
+
+        # Second call should return cached
+        config2 = service.get_config()
+        assert config2 is config
+
+    def test_update_config(self, service, app_root):
+        """Test updating configuration values."""
+        # Initial load
+        config = service.load()
+        original_theme = config.ui.theme
+
+        # Update config
+        updated = service.update_config(ui=UIConfig(theme="dark", window_width=1920))
+
+        assert updated.ui.theme == "dark"
+        assert updated.ui.window_width == 1920
+
+        # Verify saved to user config
+        user_file = app_root / "config" / "user.yaml"
+        assert user_file.exists()
+
+    def test_reset_to_defaults(self, service, app_root):
+        """Test resetting configuration to defaults."""
+        # Create user config
+        user_file = app_root / "config" / "user.yaml"
+        user_file.parent.mkdir(exist_ok=True)
+        user_file.write_text("app_name: CustomApp")
+
+        assert user_file.exists()
+
+        # Reset
+        config = service.reset_to_defaults()
+
+        assert not user_file.exists()
+        assert config.app_name == "pyMediaManager"  # Default value
+
+    def test_export_config(self, service, app_root):
+        """Test exporting configuration to file."""
+        config = service.load()
+
+        export_path = app_root / "export" / "config.yaml"
+        service.export_config(export_path, redact_sensitive=False)
+
+        assert export_path.exists()
+
+        with open(export_path, "r") as f:
+            data = yaml.safe_load(f)
+
+        assert data["app_name"] == config.app_name
+
+    def test_export_config_with_redaction(self, service, app_root):
+        """Test exporting with sensitive data redacted."""
+        config = service.load()
+
+        export_path = app_root / "export" / "config_redacted.yaml"
+        service.export_config(export_path, redact_sensitive=True)
+
+        assert export_path.exists()
+
+    def test_merge_dicts_simple(self, service):
+        """Test simple dictionary merging."""
+        base = {"a": 1, "b": 2}
+        override = {"b": 3, "c": 4}
+
+        result = service._merge_dicts(base, override)
+
+        assert result == {"a": 1, "b": 3, "c": 4}
+
+    def test_merge_dicts_nested(self, service):
+        """Test nested dictionary merging."""
+        base = {"level1": {"a": 1, "b": 2}, "other": "value"}
+        override = {"level1": {"b": 3, "c": 4}}
+
+        result = service._merge_dicts(base, override)
+
+        assert result["level1"] == {"a": 1, "b": 3, "c": 4}
+        assert result["other"] == "value"

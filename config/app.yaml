@@ -1,0 +1,30 @@
+# pyMediaManager Default Configuration
+# This file contains default settings that can be overridden by user.yaml
+
+app_name: pyMediaManager
+app_version: 0.0.1
+
+paths:
+  projects_dir: pyMM.Projects
+  logs_dir: pyMM.Logs
+  plugins_dir: pyMM.Plugins
+  config_dir: config
+
+logging:
+  level: INFO
+  console_enabled: true
+  file_enabled: true
+  max_file_size: 10485760  # 10MB
+  backup_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+ui:
+  theme: auto  # light, dark, or auto
+  show_first_run: true
+  window_width: 1200
+  window_height: 800
+
+plugins:
+  auto_update_check: true
+  download_timeout: 300  # seconds
+  parallel_downloads: 3

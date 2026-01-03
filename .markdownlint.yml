@@ -1,0 +1,24 @@
+# pyMediaManager Markdown Linting Configuration
+
+# MD041 - Allow non-heading first line in LICENSE
+MD041: false
+
+# MD034 - Allow bare URLs in documentation
+MD034: false
+
+# MD040 - Fenced code blocks without language (sometimes needed)
+MD040: false
+
+# MD022 - Allow headings without blank lines for compact lists
+MD022:
+  lines_above: 1
+  lines_below: 0
+
+# MD032 - Allow lists without surrounding blank lines
+MD032: false
+
+# MD031 - Allow fenced code blocks without surrounding blank lines  
+MD031: false
+
+# MD036 - Allow emphasis as heading for subtitle styling
+MD036: false

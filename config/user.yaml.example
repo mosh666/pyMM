@@ -1,0 +1,11 @@
+# User Configuration
+# Override default settings here
+# This file is created on first run and is not tracked by Git
+
+# Example overrides:
+# logging:
+#   level: DEBUG
+#
+# ui:
+#   theme: dark
+#   window_width: 1600
