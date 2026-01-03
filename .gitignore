@@ -1,0 +1,61 @@
+# Python embeddable packages (not committed - downloaded by build)
+python*/
+python*._pth
+python*.zip
+
+# Python dependencies (not committed - installed by build)
+lib*/
+lib-py*/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+app/_version.py
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs (portable drive - not in repo)
+*.log
+pyMM.Logs/
+
+# Projects (portable drive - not in repo)
+pyMM.Projects/
+
+# Plugins (installed binaries - not in repo)
+pyMM.Plugins/
+
+# Configuration (user-specific)
+config/user.yaml
+config/.secrets
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Distribution archives
+*.zip
+*.tar.gz

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": ".",
+		}
+	],
+	"settings": {
+		"cSpell.words": [],
+		"files.exclude": {
+			"$RECYCLE.BIN": true,
+			"msdownld.tmp": true,
+			"System Volume Information": true,
+		},
+		"gitProjectManager.displayProjectPath": true,
+		"vscode-edge-devtools.showWorkers": true,
+		"vscode-edge-devtools.useHttps": true,
+		"workbench.colorTheme": "Default Dark+",
+		"codacy.guardrails.instructionsFile": "manual"
+	}
+}
