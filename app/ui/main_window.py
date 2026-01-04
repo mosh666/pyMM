@@ -2,9 +2,10 @@
 Main window for pyMediaManager application.
 Uses Fluent Design with navigation interface.
 """
+import logging
 from pathlib import Path
 from typing import Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
@@ -40,6 +41,8 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         project_service: ProjectService,
     ):
         super().__init__()
+        
+        self.logger = logging.getLogger(__name__)
 
         self.config_service = config_service
         self.storage_service = storage_service
@@ -171,8 +174,6 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         
         dialog = SettingsDialog(self.config_service, self)
         dialog.exec()
-
-        return widget
 
     def _init_fallback_ui(self):
         """Initialize fallback UI when Fluent Widgets not available."""

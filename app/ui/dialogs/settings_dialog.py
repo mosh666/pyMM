@@ -8,6 +8,7 @@ Provides a tabbed interface for configuring:
 - Git settings (user name, email)
 """
 
+import logging
 from pathlib import Path
 from typing import Optional
 
@@ -45,6 +46,8 @@ class SettingsDialog(QDialog):
     
     def __init__(self, config_service: ConfigService, parent=None):
         super().__init__(parent)
+        
+        self.logger = logging.getLogger(__name__)
         self.config_service = config_service
         self.config = config_service.get_config()
         
@@ -295,7 +298,8 @@ class SettingsDialog(QDialog):
             config = git.GitConfigParser()
             self.git_user_name_edit.setText(config.get_value("user", "name", ""))
             self.git_user_email_edit.setText(config.get_value("user", "email", ""))
-        except:
+        except (ImportError, Exception):
+            # Git not available or config error - use empty values
             pass
     
     def _apply_settings(self):

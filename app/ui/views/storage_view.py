@@ -22,6 +22,8 @@ class StorageView(QWidget):
 
     def __init__(self, storage_service: StorageService, parent=None):
         super().__init__(parent)
+        
+        self.logger = logging.getLogger(__name__)
         self.storage_service = storage_service
         self._init_ui()
         self.refresh_drives()

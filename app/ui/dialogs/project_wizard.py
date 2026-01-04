@@ -39,6 +39,8 @@ class ProjectWizard(QDialog):
     
     def __init__(self, project_service: ProjectService, parent=None):
         super().__init__(parent)
+        
+        self.logger = logging.getLogger(__name__)
         self.project_service = project_service
         self.created_project: Optional[Project] = None
         
