@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated documentation to reflect new release process
 
 ### Fixed
+- Import sorting issues in `app/__init__.py` (fixed via Ruff)
 - Markdown linting issues in documentation files
 - Version inconsistencies between README (0.1.0) and code (0.0.1)
 - Python 3.14 references updated to reflect actual availability (3.13 is current stable)

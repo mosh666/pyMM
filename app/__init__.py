@@ -1,10 +1,10 @@
 """pyMediaManager - Portable media management application."""
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 try:
-    from ._version import version as __version__
     from ._version import commit_id as __commit_id__
+    from ._version import version as __version__
 except ImportError:
     try:
         __version__ = version("pyMediaManager")
