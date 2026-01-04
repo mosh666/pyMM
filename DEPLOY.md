@@ -112,7 +112,7 @@ This will:
      ```markdown
      # 🎉 pyMediaManager v0.0.1 - Initial Release
 
-     First release of pyMediaManager, a complete Python rewrite of PSmediaManager with modern PySide6 Fluent UI.
+     First release of pyMediaManager, a portable Python-based media management application with modern PySide6 Fluent UI.
 
      ## Features
 
@@ -161,10 +161,6 @@ This will:
      - Windows only (Linux/macOS support planned)
      - Plugin downloads not yet implemented (infrastructure complete)
      - Project management is placeholder (v0.1.0 target)
-
-     ## Credits
-
-     Original PowerShell implementation: [PSmediaManager](https://github.com/mosh666/PSmediaManager)
      ```
 
 3. **Attach files** (if building manually):

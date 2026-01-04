@@ -6,7 +6,7 @@ Version: 0.1.0 (Beta)
 
 ## Overview
 
-pyMediaManager is a complete rewrite of [PSmediaManager](https://github.com/mosh666/PSmediaManager) in Python, featuring:
+pyMediaManager is a portable Python-based media management application featuring:
 
 - 🎨 **Modern Fluent Design UI** using PySide6 and Fluent Widgets
 - 💾 **Fully Portable** - runs from removable drives with no system installation
@@ -297,7 +297,6 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Acknowledgments
 
-- Original [PSmediaManager](https://github.com/mosh666/PSmediaManager) PowerShell implementation
 - [PyQt-Fluent-Widgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets) for modern UI components
 - All plugin authors for their excellent tools
 

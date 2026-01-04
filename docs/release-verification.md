@@ -154,7 +154,6 @@ The application will:
 
 ## 🙏 Acknowledgments
 
-- **Original Project:** [PSmediaManager](https://github.com/mosh666/PSmediaManager) by mosh666
 - **UI Framework:** [PyQt-Fluent-Widgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets)
 - **Development:** GitHub Copilot with Claude Sonnet 4.5
 

@@ -6,7 +6,7 @@
 
 ## Overview
 
-This document tracks the implementation status of pyMediaManager, a complete rewrite of PSmediaManager in Python with modern PySide6 Fluent UI.
+This document tracks the implementation status of pyMediaManager, a portable Python media management application with modern PySide6 Fluent UI.
 
 ## Implementation Phases
 
