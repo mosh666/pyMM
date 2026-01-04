@@ -26,6 +26,8 @@ class PluginManifest:
     command_executable: str = ""
     register_to_path: bool = False
     dependencies: list[str] = None
+    checksum_sha256: Optional[str] = None
+    file_size: Optional[int] = None
 
     def __post_init__(self):
         if self.dependencies is None:
@@ -178,6 +180,17 @@ class PluginBase(ABC):
                                     progress_callback(downloaded, total_size)
 
                 print(f"  Download complete: {destination.exists()}")
+                
+                # Verify checksum if provided
+                if hasattr(self, 'manifest') and self.manifest.checksum_sha256:
+                    if not await self._verify_checksum(destination, self.manifest.checksum_sha256):
+                        print(f"  Checksum verification failed!")
+                        destination.unlink()
+                        if attempt < max_retries - 1:
+                            continue
+                        return False
+                    print(f"  Checksum verified")
+                
                 return True
             except (aiohttp.ClientError, asyncio.TimeoutError) as e:
                 print(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
@@ -195,6 +208,38 @@ class PluginBase(ABC):
                 return False
         
         return False
+    
+    async def _verify_checksum(self, file_path: Path, expected_sha256: str) -> bool:
+        """Verify file SHA256 checksum.
+        
+        Args:
+            file_path: Path to file to verify
+            expected_sha256: Expected SHA256 hash (case-insensitive)
+            
+        Returns:
+            True if checksum matches
+        """
+        try:
+            import hashlib
+            
+            sha256_hash = hashlib.sha256()
+            with open(file_path, "rb") as f:
+                # Read in chunks to handle large files
+                for chunk in iter(lambda: f.read(8192), b""):
+                    sha256_hash.update(chunk)
+            
+            calculated = sha256_hash.hexdigest().upper()
+            expected = expected_sha256.upper()
+            
+            if calculated == expected:
+                return True
+            else:
+                print(f"  Expected: {expected}")
+                print(f"  Got:      {calculated}")
+                return False
+        except Exception as e:
+            print(f"  Checksum verification error: {e}")
+            return False
 
 
 class SimplePluginImplementation(PluginBase):

@@ -82,6 +82,8 @@ class PluginManager:
                 source_type=source.get("type", "url"),
                 source_uri=source.get("base_uri", ""),
                 asset_pattern=source.get("asset_pattern"),
+                checksum_sha256=source.get("checksum_sha256"),
+                file_size=source.get("file_size"),
                 command_path=data.get("command", {}).get("path", ""),
                 command_executable=data.get("command", {}).get("executable", ""),
                 register_to_path=data.get("register_to_path", False),

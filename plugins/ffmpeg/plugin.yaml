@@ -8,6 +8,8 @@ enabled: false
 source:
   type: url
   base_uri: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
+  checksum_sha256: "77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62"
+  file_size: 211496872
 
 command:
   path: bin

@@ -7,7 +7,9 @@ enabled: true
 
 source:
   type: url
-  base_uri: https://sourceforge.net/projects/exiftool/files/exiftool-13.45_64.zip/download
+  base_uri: https://exiftool.org/exiftool-13.45_64.zip
+  checksum_sha256: "CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2"
+  file_size: 10984399
 
 command:
   path: ""
