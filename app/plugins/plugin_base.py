@@ -131,52 +131,70 @@ class PluginBase(ABC):
             return False
 
     async def _download_file(
-        self, url: str, destination: Path, progress_callback=None
+        self, url: str, destination: Path, progress_callback=None, max_retries: int = 3
     ) -> bool:
         """
-        Download a file from URL.
+        Download a file from URL with retry logic.
 
         Args:
             url: URL to download from
             destination: Destination file path
             progress_callback: Optional callback for progress updates
+            max_retries: Maximum number of retry attempts (default 3)
 
         Returns:
             True if download successful
         """
-        try:
-            print(f"  Downloading from: {url}")
-            print(f"  Destination: {destination}")
-            destination.parent.mkdir(parents=True, exist_ok=True)
+        for attempt in range(max_retries):
+            try:
+                if attempt > 0:
+                    wait_time = 2 ** attempt  # Exponential backoff: 2, 4, 8 seconds
+                    print(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                
+                print(f"  Downloading from: {url}")
+                print(f"  Destination: {destination}")
+                destination.parent.mkdir(parents=True, exist_ok=True)
 
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
-                    print(f"  HTTP Status: {response.status}")
-                    if response.status != 200:
-                        print(f"  Error: HTTP {response.status} - {response.reason}")
-                        return False
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response:
+                        print(f"  HTTP Status: {response.status}")
+                        if response.status != 200:
+                            print(f"  Error: HTTP {response.status} - {response.reason}")
+                            if attempt < max_retries - 1:
+                                continue
+                            return False
 
-                    total_size = int(response.headers.get("content-length", 0))
-                    print(f"  Download size: {total_size / (1024*1024):.2f} MB")
-                    downloaded = 0
+                        total_size = int(response.headers.get("content-length", 0))
+                        print(f"  Download size: {total_size / (1024*1024):.2f} MB")
+                        downloaded = 0
 
-                    with open(destination, "wb") as f:
-                        async for chunk in response.content.iter_chunked(8192):
-                            f.write(chunk)
-                            downloaded += len(chunk)
+                        with open(destination, "wb") as f:
+                            async for chunk in response.content.iter_chunked(8192):
+                                f.write(chunk)
+                                downloaded += len(chunk)
 
-                            if progress_callback and total_size > 0:
-                                progress_callback(downloaded, total_size)
+                                if progress_callback and total_size > 0:
+                                    progress_callback(downloaded, total_size)
 
-            print(f"  Download complete: {destination.exists()}")
-            return True
-        except Exception as e:
-            print(f"  Download exception: {type(e).__name__}: {e}")
-            import traceback
-            traceback.print_exc()
-            if destination.exists():
-                destination.unlink()
-            return False
+                print(f"  Download complete: {destination.exists()}")
+                return True
+            except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                print(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
+                if destination.exists():
+                    destination.unlink()
+                if attempt < max_retries - 1:
+                    continue
+                return False
+            except Exception as e:
+                print(f"  Download exception: {type(e).__name__}: {e}")
+                import traceback
+                traceback.print_exc()
+                if destination.exists():
+                    destination.unlink()
+                return False
+        
+        return False
 
 
 class SimplePluginImplementation(PluginBase):
