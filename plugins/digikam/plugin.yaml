@@ -1,0 +1,23 @@
+# digiKam Plugin Manifest
+
+name: digiKam
+version: "8.5.0"
+mandatory: true
+enabled: true
+
+source:
+  type: url
+  base_uri: https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe
+  # Note: This is an installer, actual implementation would handle this appropriately
+
+command:
+  path: ""
+  executable: digikam.exe
+
+register_to_path: true
+
+dependencies:
+  - mariadb
+  - exiftool
+
+description: Professional photo management application with powerful tagging and organization features

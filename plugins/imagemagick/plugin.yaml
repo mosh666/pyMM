@@ -1,0 +1,20 @@
+# ImageMagick Plugin Manifest
+
+name: ImageMagick
+version: "7.1.1-43"
+mandatory: false
+enabled: false
+
+source:
+  type: url
+  base_uri: https://imagemagick.org/archive/binaries/ImageMagick-7.1.1-43-portable-Q16-HDRI-x64.zip
+
+command:
+  path: ""
+  executable: magick.exe
+
+register_to_path: true
+
+dependencies: []
+
+description: Create, edit, compose, or convert digital images

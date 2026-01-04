@@ -1,0 +1,20 @@
+# MariaDB Plugin Manifest
+
+name: MariaDB
+version: "11.6.2"
+mandatory: true
+enabled: true
+
+source:
+  type: url
+  base_uri: https://archive.mariadb.org/mariadb-11.6.2/winx64-packages/mariadb-11.6.2-winx64.zip
+
+command:
+  path: bin
+  executable: mysql.exe
+
+register_to_path: true
+
+dependencies: []
+
+description: Open source relational database - required backend for digiKam

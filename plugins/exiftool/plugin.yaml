@@ -1,0 +1,20 @@
+# ExifTool Plugin Manifest
+
+name: ExifTool
+version: "13.10"
+mandatory: true
+enabled: true
+
+source:
+  type: url
+  base_uri: https://exiftool.org/exiftool-13.10_64.zip
+
+command:
+  path: ""
+  executable: exiftool.exe
+
+register_to_path: true
+
+dependencies: []
+
+description: Read, write and edit meta information in a wide variety of files

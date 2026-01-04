@@ -1,0 +1,20 @@
+# Git Plugin Manifest
+
+name: Git
+version: "2.48.1"
+mandatory: true
+enabled: true
+
+source:
+  type: url
+  base_uri: https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/PortableGit-2.48.1-64-bit.7z.exe
+
+command:
+  path: cmd
+  executable: git.exe
+
+register_to_path: true
+
+dependencies: []
+
+description: Distributed version control system for tracking project changes
