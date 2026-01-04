@@ -97,9 +97,11 @@ class AppConfig(BaseModel):
         """Recursively redact sensitive data in configuration."""
         if isinstance(data, dict):
             return {
-                key: "[REDACTED]"
-                if any(sensitive in key.lower() for sensitive in self._sensitive_fields)
-                else self._redact_sensitive_data(value)
+                key: (
+                    "[REDACTED]"
+                    if any(sensitive in key.lower() for sensitive in self._sensitive_fields)
+                    else self._redact_sensitive_data(value)
+                )
                 for key, value in data.items()
             }
         elif isinstance(data, list):

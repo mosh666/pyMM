@@ -82,8 +82,9 @@ class TestPluginDownload:
         assert len(progress_updates) > 0
 
         # Verify installation
-        exiftool = next(p for p in plugin_manager.get_all_plugins()
-                       if p.manifest.name == "ExifTool")
+        exiftool = next(
+            p for p in plugin_manager.get_all_plugins() if p.manifest.name == "ExifTool"
+        )
 
         assert exiftool.is_installed()
 

@@ -1,4 +1,5 @@
 """Tests for view classes."""
+
 from unittest.mock import Mock
 
 import pytest

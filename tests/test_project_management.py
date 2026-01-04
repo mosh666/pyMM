@@ -71,6 +71,7 @@ def test_project_service():
     # Clean up if exists
     if project_path.exists():
         import shutil
+
         shutil.rmtree(project_path)
 
     metadata_file = service._get_metadata_file(project_path)
@@ -124,12 +125,14 @@ def test_project_service():
     except Exception as e:
         print(f"\n✗ Error during test: {e}")
         import traceback
+
         traceback.print_exc()
         raise
     finally:
         # Clean up
         if project_path.exists():
             import shutil
+
             shutil.rmtree(project_path)
         if metadata_file.exists():
             metadata_file.unlink()

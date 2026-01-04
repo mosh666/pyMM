@@ -143,23 +143,27 @@ command:
         # Setup same as above
         mandatory_dir = manifests_dir / "mandatory"
         mandatory_dir.mkdir()
-        (mandatory_dir / "plugin.yaml").write_text("""
+        (mandatory_dir / "plugin.yaml").write_text(
+            """
 name: MandatoryPlugin
 mandatory: true
 enabled: true
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
-""")
+"""
+        )
 
         optional_dir = manifests_dir / "optional"
         optional_dir.mkdir()
-        (optional_dir / "plugin.yaml").write_text("""
+        (optional_dir / "plugin.yaml").write_text(
+            """
 name: OptionalPlugin
 mandatory: false
 enabled: true
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
-""")
+"""
+        )
 
         manager.discover_plugins()
 
@@ -172,24 +176,28 @@ command: {path: "", executable: "test.exe"}
         # Enabled plugin
         enabled_dir = manifests_dir / "enabled"
         enabled_dir.mkdir()
-        (enabled_dir / "plugin.yaml").write_text("""
+        (enabled_dir / "plugin.yaml").write_text(
+            """
 name: EnabledPlugin
 enabled: true
 mandatory: false
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
-""")
+"""
+        )
 
         # Disabled plugin
         disabled_dir = manifests_dir / "disabled"
         disabled_dir.mkdir()
-        (disabled_dir / "plugin.yaml").write_text("""
+        (disabled_dir / "plugin.yaml").write_text(
+            """
 name: DisabledPlugin
 enabled: false
 mandatory: false
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
-""")
+"""
+        )
 
         manager.discover_plugins()
 

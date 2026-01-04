@@ -207,7 +207,7 @@ class TestSimplePluginImplementation:
     async def test_download_success(self, simple_plugin, install_dir):
         """Test successful download."""
         # Mock the download method
-        with patch.object(simple_plugin, '_download_file', new_callable=AsyncMock) as mock_download:
+        with patch.object(simple_plugin, "_download_file", new_callable=AsyncMock) as mock_download:
             mock_download.return_value = True
 
             result = await simple_plugin.download()
@@ -230,7 +230,7 @@ class TestSimplePluginImplementation:
         archive_path.touch()
 
         # Mock extraction methods
-        with patch.object(simple_plugin, '_extract_zip', new_callable=AsyncMock) as mock_extract:
+        with patch.object(simple_plugin, "_extract_zip", new_callable=AsyncMock) as mock_extract:
             mock_extract.return_value = True
 
             # Create fake extracted content
@@ -239,8 +239,8 @@ class TestSimplePluginImplementation:
             (temp_dir / "bin").mkdir()
             (temp_dir / "bin" / "test.exe").touch()
 
-            with patch.object(simple_plugin, '_flatten_extraction'):
-                with patch.object(simple_plugin, '_handle_special_cases'):
+            with patch.object(simple_plugin, "_flatten_extraction"):
+                with patch.object(simple_plugin, "_handle_special_cases"):
                     result = await simple_plugin.extract()
 
             assert result is True
@@ -359,7 +359,7 @@ class TestDownloadFile:
         mock_response.__aenter__ = AsyncMock(return_value=mock_response)
         mock_response.__aexit__ = AsyncMock()
 
-        with patch('aiohttp.ClientSession', return_value=mock_session):
+        with patch("aiohttp.ClientSession", return_value=mock_session):
             result = await simple_plugin._download_file(
                 "https://example.com/file.zip",
                 destination,

@@ -2,7 +2,6 @@
 Tests for GitService.
 """
 
-
 import pytest
 
 from app.services.git_service import GitService

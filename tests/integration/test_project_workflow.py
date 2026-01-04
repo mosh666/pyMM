@@ -4,7 +4,6 @@ Integration tests for project workflow.
 Tests the complete lifecycle of a project from creation to deletion.
 """
 
-
 import pytest
 
 from app.services.project_service import ProjectService

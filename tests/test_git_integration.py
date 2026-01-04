@@ -55,7 +55,7 @@ def test_git_service():
 
         # Check status with untracked file
         status = GitService.get_status(test_repo_path)
-        assert len(status['untracked']) == 1
+        assert len(status["untracked"]) == 1
         print(f"✓ Detected untracked file: {status['untracked']}")
 
         # Test commit
@@ -65,7 +65,7 @@ def test_git_service():
 
         # Check status after commit
         status = GitService.get_status(test_repo_path)
-        assert status['total_changes'] == 0
+        assert status["total_changes"] == 0
         print("✓ Repository is clean after commit")
 
         # Test get_log
@@ -83,6 +83,7 @@ def test_git_service():
     except Exception as e:
         print(f"\n✗ Error during test: {e}")
         import traceback
+
         traceback.print_exc()
         raise
     finally:
@@ -91,6 +92,7 @@ def test_git_service():
             try:
                 # On Windows, we need to handle file permissions
                 import stat
+
                 def remove_readonly(func, path, _):
                     """Clear the readonly bit and reattempt the removal"""
                     Path(path).chmod(stat.S_IWRITE)
@@ -145,7 +147,7 @@ def test_project_git_integration():
 
         # Check status
         status = service.get_git_status(project)
-        assert status['total_changes'] > 0
+        assert status["total_changes"] > 0
         print(f"✓ Detected changes: {status['total_changes']} files")
 
         # Commit changes
@@ -166,7 +168,7 @@ def test_project_git_integration():
 
         # Clean status check
         status = service.get_git_status(project)
-        assert status['total_changes'] == 0
+        assert status["total_changes"] == 0
         print("✓ Repository is clean after commit")
 
         print("\n✅ Project Git integration tests passed!")
@@ -174,6 +176,7 @@ def test_project_git_integration():
     except Exception as e:
         print(f"\n✗ Error during test: {e}")
         import traceback
+
         traceback.print_exc()
         raise
     finally:
@@ -181,6 +184,7 @@ def test_project_git_integration():
         if project_path.exists():
             try:
                 import stat
+
                 def remove_readonly(func, path, _):
                     """Clear the readonly bit and reattempt the removal"""
                     Path(path).chmod(stat.S_IWRITE)

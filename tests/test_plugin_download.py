@@ -2,6 +2,7 @@
 Test script for plugin download functionality.
 Run this to verify plugin downloads work correctly.
 """
+
 import asyncio
 import sys
 from pathlib import Path
@@ -26,6 +27,7 @@ async def test_plugin_download():
     # Clean test directory
     if plugins_dir.exists():
         import shutil
+
         shutil.rmtree(plugins_dir)
     plugins_dir.mkdir(parents=True, exist_ok=True)
 
@@ -73,7 +75,9 @@ async def test_plugin_download():
             print(f"✓ {test_plugin_name} installed successfully!")
 
             # Verify installation
-            plugin = next(p for p in manager.get_all_plugins() if p.manifest.name == test_plugin_name)
+            plugin = next(
+                p for p in manager.get_all_plugins() if p.manifest.name == test_plugin_name
+            )
             if plugin.is_installed():
                 print("✓ Installation verified")
                 exe_path = plugin.get_executable_path()
@@ -90,6 +94,7 @@ async def test_plugin_download():
     except Exception as e:
         print(f"\n✗ Error during installation: {e}")
         import traceback
+
         traceback.print_exc()
 
     print("\n" + "=" * 60)

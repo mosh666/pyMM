@@ -280,9 +280,9 @@ class PluginManager:
             "installed": plugin.is_installed(),
             "mandatory": plugin.manifest.mandatory,
             "enabled": plugin.manifest.enabled,
-            "executable": str(plugin.get_executable_path())
-            if plugin.get_executable_path()
-            else None,
+            "executable": (
+                str(plugin.get_executable_path()) if plugin.get_executable_path() else None
+            ),
         }
 
     def register_plugins_to_path(self) -> list[Path]:

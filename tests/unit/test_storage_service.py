@@ -1,4 +1,5 @@
 """Tests for StorageService."""
+
 import pytest
 
 from app.core.services.storage_service import DriveInfo, StorageService

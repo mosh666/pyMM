@@ -1,4 +1,5 @@
 """Tests for LoggingService."""
+
 import logging
 
 from app.core.logging_service import LoggingService

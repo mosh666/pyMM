@@ -2,6 +2,7 @@
 File system service for pyMediaManager.
 Provides abstraction layer for file operations with portable path handling.
 """
+
 import logging
 import shutil
 from pathlib import Path
