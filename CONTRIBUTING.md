@@ -28,7 +28,12 @@ Thank you for your interest in contributing to pyMediaManager! This document pro
    pip install -e ".[dev]"
    ```
 
-4. **Run tests**:
+4. **Install pre-commit hooks**:
+   ```bash
+   pre-commit install
+   ```
+
+5. **Run tests**:
    ```bash
    pytest
    ```
@@ -53,6 +58,32 @@ ruff check app/ tests/
 # Type check
 mypy app/
 ```
+
+### Pre-commit Hooks
+
+We use [pre-commit](https://pre-commit.com/) to automatically run code quality checks before each
+commit. The hooks are configured in [.pre-commit-config.yaml](.pre-commit-config.yaml) and include:
+
+- **ruff** - Linter with auto-fix (replaces flake8, isort, and more)
+- **ruff-format** - Code formatter (replaces Black)
+- **trailing-whitespace** - Remove trailing whitespace
+- **end-of-file-fixer** - Ensure files end with newline
+- **check-yaml** - Validate YAML files
+- **check-toml** - Validate TOML files
+- **check-merge-conflict** - Check for merge conflict markers
+- **mixed-line-ending** - Ensure consistent line endings
+
+**Install hooks** (one-time setup):
+```bash
+pre-commit install
+```
+
+**Run manually** (optional):
+```bash
+pre-commit run --all-files
+```
+
+The hooks run automatically on `git commit`. If any hook fails, the commit will be blocked until you fix the issues.
 
 ### Pre-commit Checks
 Before committing, ensure:
@@ -135,9 +166,9 @@ def test_button_click(qtbot):
     """Test button click handling."""
     widget = MyWidget()
     qtbot.addWidget(widget)
-    
+
     qtbot.mouseClick(widget.button, Qt.MouseButton.LeftButton)
-    
+
     assert widget.clicked is True
 ```
 
@@ -203,7 +234,7 @@ pytest --cov=app --cov-report=html
    class MyService:
        def __init__(self):
            pass
-       
+
        def do_something(self):
            pass
    ```
@@ -245,12 +276,12 @@ pytest --cov=app --cov-report=html
    ```python
    # app/ui/views/my_view.py
    from PySide6.QtWidgets import QWidget
-   
+
    class MyView(QWidget):
        def __init__(self, parent=None):
            super().__init__(parent)
            self._init_ui()
-       
+
        def _init_ui(self):
            # Setup UI
            pass
@@ -278,17 +309,17 @@ Use Google-style docstrings:
 def my_function(param1: str, param2: int) -> bool:
     """
     Short description of function.
-    
+
     Longer description with more details about what the function does,
     how it works, and any important notes.
-    
+
     Args:
         param1: Description of param1
         param2: Description of param2
-    
+
     Returns:
         Description of return value
-    
+
     Raises:
         ValueError: When param1 is empty
     """
