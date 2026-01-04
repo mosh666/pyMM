@@ -34,7 +34,7 @@ class FileSystemService:
         """
         Get the root of the drive containing the app.
         
-        Returns the drive root (e.g., D:\ if app is at D:\pyMM).
+        Returns the drive root (e.g., D:\\ if app is at D:\\pyMM).
         Caches the result after first call.
         
         Returns:
