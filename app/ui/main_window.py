@@ -110,6 +110,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore
     def _create_home_interface(self) -> QWidget:
         """Create home/dashboard interface."""
         widget = QWidget()
+        widget.setObjectName("homeInterface")
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(40, 40, 40, 40)
         layout.setSpacing(20)
@@ -141,6 +142,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore
     def _create_settings_interface(self) -> QWidget:
         """Create settings interface."""
         widget = QWidget()
+        widget.setObjectName("settingsInterface")
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(40, 40, 40, 40)
 

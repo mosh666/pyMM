@@ -65,6 +65,7 @@ class PluginView(QWidget):
 
     def __init__(self, plugin_manager: PluginManager, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.setObjectName("pluginView")
 
         self.logger = logging.getLogger(__name__)
         self.plugin_manager = plugin_manager

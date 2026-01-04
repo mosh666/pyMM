@@ -24,6 +24,7 @@ class StorageView(QWidget):
 
     def __init__(self, storage_service: StorageService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.setObjectName("storageView")
 
         self.logger = logging.getLogger(__name__)
         self.storage_service = storage_service

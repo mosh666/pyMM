@@ -26,6 +26,7 @@ class ProjectView(QWidget):
 
     def __init__(self, project_service: ProjectService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.setObjectName("projectView")
 
         self.logger = logging.getLogger(__name__)
         self.project_service = project_service
