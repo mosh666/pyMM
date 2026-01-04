@@ -148,15 +148,29 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         title.setFont(title_font)
         layout.addWidget(title)
 
-        # Theme selector
-        theme_label = QLabel("Theme: Light/Dark mode coming soon")
-        layout.addWidget(theme_label)
+        description = QLabel(
+            "Configure application settings, theme, plugins, and more.\n\n"
+            "Click the button below to open the settings dialog."
+        )
+        description.setWordWrap(True)
+        layout.addWidget(description)
 
-        # Logging level
-        logging_label = QLabel(f"Logging Level: {self.config_service.get_config().logging.level.value}")
-        layout.addWidget(logging_label)
+        # Open settings button
+        open_settings_btn = QPushButton("Open Settings")
+        open_settings_btn.clicked.connect(self._open_settings_dialog)
+        open_settings_btn.setMaximumWidth(200)
+        layout.addWidget(open_settings_btn)
 
         layout.addStretch()
+
+        return widget
+    
+    def _open_settings_dialog(self):
+        """Open the settings dialog."""
+        from app.ui.dialogs.settings_dialog import SettingsDialog
+        
+        dialog = SettingsDialog(self.config_service, self)
+        dialog.exec()
 
         return widget
 
