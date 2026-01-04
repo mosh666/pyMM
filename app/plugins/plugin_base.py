@@ -143,14 +143,19 @@ class PluginBase(ABC):
             True if download successful
         """
         try:
+            print(f"  Downloading from: {url}")
+            print(f"  Destination: {destination}")
             destination.parent.mkdir(parents=True, exist_ok=True)
 
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as response:
+                    print(f"  HTTP Status: {response.status}")
                     if response.status != 200:
+                        print(f"  Error: HTTP {response.status} - {response.reason}")
                         return False
 
                     total_size = int(response.headers.get("content-length", 0))
+                    print(f"  Download size: {total_size / (1024*1024):.2f} MB")
                     downloaded = 0
 
                     with open(destination, "wb") as f:
@@ -161,8 +166,12 @@ class PluginBase(ABC):
                             if progress_callback and total_size > 0:
                                 progress_callback(downloaded, total_size)
 
+            print(f"  Download complete: {destination.exists()}")
             return True
-        except Exception:
+        except Exception as e:
+            print(f"  Download exception: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
             if destination.exists():
                 destination.unlink()
             return False
