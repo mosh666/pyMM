@@ -82,7 +82,7 @@ class WelcomePage(WizardPage):
     def __init__(self) -> None:
         super().__init__(
             "Welcome to pyMediaManager",
-            "Thank you for choosing pyMediaManager, your portable media management solution. "
+            "Thank you for choosing pyMediaManager, your portable media management solution.<br>"
             "This wizard will help you set up the application for first use.",
         )
 
