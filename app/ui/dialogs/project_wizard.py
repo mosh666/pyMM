@@ -236,7 +236,7 @@ class ProjectWizard(QDialog):
             
             # Initialize Git if requested
             if git_enabled and not self.created_project.is_git_repo:
-                self._initialize_git(self.created_project.path)
+                self.project_service.init_git_repository(self.created_project, initial_commit=True)
             
             QMessageBox.information(
                 self,
@@ -252,32 +252,3 @@ class ProjectWizard(QDialog):
                 "Error",
                 f"Failed to create project:\n{str(e)}",
             )
-    
-    def _initialize_git(self, project_path: Path):
-        """Initialize Git repository."""
-        import subprocess
-        
-        try:
-            # Initialize git repo
-            subprocess.run(
-                ["git", "init"],
-                cwd=str(project_path),
-                check=True,
-                capture_output=True,
-            )
-            
-            # Create .gitignore
-            gitignore_path = project_path / ".gitignore"
-            gitignore_content = """# pyMM project files
-cache/
-*.tmp
-*.log
-
-# OS files
-.DS_Store
-Thumbs.db
-"""
-            gitignore_path.write_text(gitignore_content)
-            
-        except Exception as e:
-            print(f"Warning: Failed to initialize Git: {e}")
