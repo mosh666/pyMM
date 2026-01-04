@@ -2,7 +2,7 @@
 
 **Portable Python-based media management application with modern Fluent Design UI**
 
-Version: 0.1.0 (Beta)
+Version: 0.1.0-beta (In Development)
 
 ## Overview
 
@@ -17,7 +17,8 @@ pyMediaManager is a portable Python-based media management application featuring
 - ✅ **Reliable Downloads** - plugin downloads with retry logic and checksum verification
 - 🔄 **Git Integration** - built-in version control for projects
 
-> **📖 Documentation:** [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Testing Status](docs/testing-status.md)**
+> **📖 Documentation:**  
+> [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [CHANGELOG](CHANGELOG.md)
 
 ## Portable Architecture
 
@@ -54,16 +55,17 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 └── pymediamanager.log
 ```
 
-**Note:** The `pyMM.Projects` and `pyMM.Logs` folders are automatically created at the root of your portable drive (e.g., `D:\`) to ensure they remain accessible even if you move the `pyMM\` application folder.
+**Note:** The `pyMM.Projects` and `pyMM.Logs` folders are automatically created at the root of your
+portable drive (e.g., `D:\`) to ensure they remain accessible even if you move the `pyMM\`
+application folder.
 
 ## Quick Start
 
 ### Download Pre-Built Release
 
 1. Download the latest release for your Python version:
-   - **Recommended:** `pyMM-v0.1.0-py314-win64.zip` (Python 3.14)
-   - Also available: `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
-   - Legacy: `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
+   - **Recommended:** `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
+   - Also available: `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
 
 2. Extract to your portable drive (e.g., `D:\pyMM\`)
 
@@ -83,7 +85,7 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 ### Build From Source
 
 **Prerequisites:**
-- Python 3.12+ installed on development machine (3.14 recommended)
+- Python 3.12 or 3.13 installed on development machine (3.13 recommended)
 - Git for version control
 
 **Steps:**
@@ -309,4 +311,6 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ---
 
-**Status:** � v0.1.0 Beta Release - January 2026
+**Status:** 🚧 v0.1.0-beta In Development - January 2026
+
+> **Note:** See [CHANGELOG.md](CHANGELOG.md) for detailed version history and release notes.

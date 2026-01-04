@@ -1,5 +1,9 @@
 # pyMediaManager Architecture Documentation
 
+> **Version:** 0.1.0-beta  
+> **Last Updated:** January 4, 2026  
+> **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
+
 ## Overview
 
 pyMediaManager is a portable, Python-based media management application designed to run entirely from removable drives without system installation. The application follows a modular architecture with clear separation of concerns.
@@ -351,8 +355,8 @@ Config:            D:\pyMM\config\
 ### Version Matrix
 
 Python 3.12 and 3.13 supported with separate builds:
-- `pyMM-v0.0.1-py312-win64.zip` (Python 3.12)
-- `pyMM-v0.0.1-py313-win64.zip` (Python 3.13, recommended)
+- `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
+- `pyMM-v0.1.0-py313-win64.zip` (Python 3.13, recommended)
 
 ## Testing Strategy
 

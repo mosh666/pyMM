@@ -1,7 +1,9 @@
 # pyMediaManager User Guide
 
-**Version:** 0.1.0  
+**Version:** 0.1.0-beta  
 **Last Updated:** January 4, 2026
+
+> **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
 
 ## Table of Contents
 
@@ -189,17 +191,17 @@ Shows:
 
 ### Available Plugins
 
-| Plugin | Type | Description | Size |
-|--------|------|-------------|------|
-| Git | Mandatory | Version control system | ~40MB |
-| 7-Zip | Mandatory | Archive extraction | ~2MB |
-| ExifTool | Optional | Metadata extraction | ~8MB |
-| FFmpeg | Optional | Video/audio processing | ~100MB |
-| digiKam | Optional | Photo management | ~500MB |
-| ImageMagick | Optional | Image manipulation | ~30MB |
-| HandBrake | Optional | Video transcoding | ~20MB |
-| MKVToolNix | Optional | MKV tools | ~35MB |
-| MediaInfo | Optional | Media file analysis | ~5MB |
+|Plugin|Type|Description|Size|
+|---|---|---|---|
+|Git|Mandatory|Version control system|~40MB|
+|7-Zip|Mandatory|Archive extraction|~2MB|
+|ExifTool|Optional|Metadata extraction|~8MB|
+|FFmpeg|Optional|Video/audio processing|~100MB|
+|digiKam|Optional|Photo management|~500MB|
+|ImageMagick|Optional|Image manipulation|~30MB|
+|HandBrake|Optional|Video transcoding|~20MB|
+|MKVToolNix|Optional|MKV tools|~35MB|
+|MediaInfo|Optional|Media file analysis|~5MB|
 
 ---
 
@@ -465,15 +467,15 @@ If you encounter a bug:
 
 ## Keyboard Shortcuts
 
-| Action | Shortcut |
-|--------|----------|
-| New Project | `Ctrl+N` |
-| Open Settings | `Ctrl+,` |
-| Plugin View | `Ctrl+P` |
-| Project View | `Ctrl+1` |
-| Storage View | `Ctrl+2` |
-| Refresh View | `F5` |
-| Quit Application | `Ctrl+Q` |
+|Action|Shortcut|
+|---|---|
+|New Project|`Ctrl+N`|
+|Open Settings|`Ctrl+,`|
+|Plugin View|`Ctrl+P`|
+|Project View|`Ctrl+1`|
+|Storage View|`Ctrl+2`|
+|Refresh View|`F5`|
+|Quit Application|`Ctrl+Q`|
 
 ---
 

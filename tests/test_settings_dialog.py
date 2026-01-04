@@ -6,6 +6,9 @@ This test script verifies:
 - All tabs are present
 - Settings can be loaded
 - Configuration can be saved
+
+Note: This test uses pytest's built-in output capture.
+For verbose output, run with: pytest -v -s
 """
 
 import sys
@@ -34,50 +37,37 @@ def qapp():
 
 def test_settings_dialog(qapp):
     """Test settings dialog creation and functionality."""
-    print("=" * 60)
-    print("Testing Settings Dialog")
-    print("=" * 60)
-
     # Create config service
     app_root = Path(__file__).parent
     config_service = ConfigService(app_root)
     config = config_service.load()
 
-    print("\n✓ Loaded configuration")
-    print(f"  - Theme: {config.ui.theme}")
-    print(f"  - Log level: {config.logging.level.value}")
-    print(f"  - Window size: {config.ui.window_width}x{config.ui.window_height}")
+    # Verify config loaded
+    assert config.ui.theme in ["light", "dark", "auto"]
+    assert config.logging.level.value in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
     # Create settings dialog
     dialog = SettingsDialog(config_service)
 
-    print("✓ Created settings dialog")
-    print(f"  - Tabs: {dialog.tabs.count()}")
-    print(f"  - Tab 1: {dialog.tabs.tabText(0)}")
-    print(f"  - Tab 2: {dialog.tabs.tabText(1)}")
-    print(f"  - Tab 3: {dialog.tabs.tabText(2)}")
-    print(f"  - Tab 4: {dialog.tabs.tabText(3)}")
+    # Verify dialog was created with all tabs
+    assert dialog.tabs.count() == 4
+    assert dialog.tabs.tabText(0) == "General"
+    assert dialog.tabs.tabText(1) == "Plugins"
+    assert dialog.tabs.tabText(2) == "Storage"
+    assert dialog.tabs.tabText(3) == "Git"
 
-    # Check that settings are loaded
+    # Check that settings are loaded into UI
     assert dialog.theme_combo.currentIndex() >= 0
     assert dialog.log_level_combo.currentIndex() >= 0
-    print("✓ Settings loaded into UI")
 
-    # Test modifying settings
+    # Test modifying settings (just verify the UI works)
     original_timeout = dialog.download_timeout_spin.value()
     dialog.download_timeout_spin.setValue(600)
-    print(f"✓ Modified download timeout: {original_timeout} -> 600")
+    assert dialog.download_timeout_spin.value() == 600
 
-    # Don't actually save - just verify the UI works
-    print("✓ UI controls functional")
-
-    print("\n✅ Settings dialog tests passed!")
-    print("\nNote: Dialog was not shown to avoid requiring user interaction.")
-    print("To test interactively, run the main application.")
+    # Restore original value (don't actually save)
+    dialog.download_timeout_spin.setValue(original_timeout)
 
 
 if __name__ == "__main__":
-    print("=" * 60)
-    print("Settings Dialog Test")
-    print("=" * 60)
-    print("\nPlease run with: pytest tests/test_settings_dialog.py")
+    pytest.main([__file__, "-v", "-s"])

@@ -2,10 +2,12 @@
 
 Thank you for your interest in contributing to pyMediaManager! This document provides guidelines and instructions for contributing.
 
+> **See also:** [CHANGELOG.md](CHANGELOG.md) for recent changes and version history
+
 ## Development Setup
 
 ### Prerequisites
-- Python 3.12, 3.13, or 3.14
+- Python 3.12 or 3.13
 - Git
 - Windows OS (for now - Linux/macOS support planned)
 
