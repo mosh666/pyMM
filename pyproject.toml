@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
-    {name = "mosh666", email = "your.email@example.com"}
+    {name = "mosh666", email = "24556349+mosh666@users.noreply.github.com"}
 ]
 keywords = ["media-management", "portable", "digikam", "pyside6"]
 classifiers = [

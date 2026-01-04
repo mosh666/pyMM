@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 from enum import Enum
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
 class LogLevel(str, Enum):
@@ -61,6 +61,8 @@ class PluginConfig(BaseModel):
 
 class AppConfig(BaseModel):
     """Main application configuration."""
+    
+    model_config = ConfigDict(extra='allow')
 
     app_name: str = Field(default="pyMediaManager", description="Application name")
     app_version: str = Field(default="0.0.1", description="Application version")
@@ -82,7 +84,7 @@ class AppConfig(BaseModel):
         Returns:
             Dictionary representation of config
         """
-        data = self.model_dump()
+        data = self.model_dump(mode='json')
 
         if redact_sensitive:
             data = self._redact_sensitive_data(data)
@@ -161,7 +163,7 @@ class ConfigService:
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
         with open(self._user_config_path, "w", encoding="utf-8") as f:
-            yaml.dump(config.model_dump(), f, default_flow_style=False, sort_keys=False)
+            yaml.dump(config.model_dump(mode='json'), f, default_flow_style=False, sort_keys=False)
 
     def get_config(self) -> AppConfig:
         """

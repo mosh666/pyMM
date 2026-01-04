@@ -25,6 +25,14 @@ pyMediaManager is a portable, Python-based media management application designed
 - **Isolated Installation**: Each plugin in separate directory
 - **Version Management**: Plugins track their own versions
 
+### 4. Code Quality Standards
+- **Structured Logging**: All modules use proper logger instances instead of print statements
+- **Type Safety**: Comprehensive return type hints on all functions and methods
+- **Documentation**: Docstrings for all public APIs following Google style
+- **Testing**: 70%+ code coverage requirement with unit and integration tests
+- **Code Formatting**: Consistent style enforced by Ruff and Black
+- **Static Analysis**: MyPy type checking for catching errors early
+
 ## Directory Structure
 
 ```
@@ -188,6 +196,15 @@ logging_service = LoggingService(
 logger = logging_service.setup()
 logger.info("Application started")
 ```
+
+**Code Quality Improvements**:
+- **Migration from print()**: All print statements replaced with structured logging calls
+  - Debug information: `logger.debug()`
+  - General progress: `logger.info()`
+  - User warnings: `logger.warning()`
+  - Error conditions: `logger.error()`
+- **Benefits**: Better debugging, production monitoring, log filtering by level, centralized output control
+- **Consistency**: All 15+ modules now use logger instances from `logging.getLogger(__name__)`
 
 ### 5. PluginManager
 **Purpose**: Discover, install, and manage plugins
