@@ -28,8 +28,8 @@ def run_application() -> int:
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # type: ignore[attr-defined]
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # type: ignore[attr-defined]
 
     app = QApplication(sys.argv)
     app.setApplicationName("pyMediaManager")
@@ -97,7 +97,7 @@ def run_application() -> int:
         main_window.show()
 
         # Store reference to prevent garbage collection
-        app.main_window = main_window
+        app.main_window = main_window  # type: ignore[attr-defined]
 
     # Check first-run state
     if config.ui.show_first_run:

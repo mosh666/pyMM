@@ -294,8 +294,8 @@ class SettingsDialog(QDialog):
             import git
 
             config = git.GitConfigParser()
-            self.git_user_name_edit.setText(config.get_value("user", "name", ""))
-            self.git_user_email_edit.setText(config.get_value("user", "email", ""))
+            self.git_user_name_edit.setText(str(config.get_value("user", "name", "")))
+            self.git_user_email_edit.setText(str(config.get_value("user", "email", "")))
         except (ImportError, Exception):
             # Git not available or config error - use empty values
             pass

@@ -7,7 +7,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -176,6 +176,7 @@ class ConfigService:
         """
         if self._config is None:
             self.load()
+        assert self._config is not None
         return self._config
 
     def update_config(self, **kwargs: Any) -> AppConfig:

@@ -2,6 +2,7 @@
 Logging service for pyMediaManager.
 Provides rich console logging and rotating file logs.
 """
+
 import logging
 import logging.handlers
 from pathlib import Path
@@ -42,7 +43,7 @@ class LoggingService:
 
         # Use portable logs folder if log_dir not specified and file_system_service available
         if log_dir is None and file_system_service is not None:
-            self.log_dir = file_system_service.get_portable_folder("pyMM.Logs")
+            self.log_dir = file_system_service.get_portable_folder("pyMM.Logs")  # type: ignore[attr-defined]
         else:
             self.log_dir = log_dir
 
@@ -122,6 +123,7 @@ class LoggingService:
         if name:
             return logging.getLogger(f"{self.app_name}.{name}")
 
+        assert self._logger is not None
         return self._logger
 
     def set_level(self, level: str) -> None:
@@ -149,7 +151,7 @@ class LoggingService:
         if not self.file_enabled or not self.log_dir:
             return None
 
-        return self.log_dir / f"{self.app_name.lower()}.log"
+        return Path(self.log_dir / f"{self.app_name.lower()}.log")
 
     def get_all_log_files(self) -> list[Path]:
         """

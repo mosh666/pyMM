@@ -288,7 +288,7 @@ class SimplePluginImplementation(PluginBase):
 
         self.archive_path = install_dir / f"{manifest.name.lower()}.{ext}"
 
-    async def download(self, progress_callback=None) -> bool:
+    async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> bool:
         """Download plugin archive."""
         return await self._download_file(self.download_url, self.archive_path, progress_callback)
 

@@ -30,7 +30,7 @@ from app.plugins.plugin_manager import PluginManager
 from app.services.project_service import ProjectService
 
 
-class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
+class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore[misc]
     """Main application window with Fluent Design interface."""
 
     def __init__(
@@ -184,7 +184,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             "Install with: pip install PySide6-Fluent-Widgets\n\n"
             "Running in fallback mode..."
         )
-        warning.setAlignment(Qt.AlignCenter)
+        warning.setAlignment(Qt.AlignCenter)  # type: ignore[attr-defined]
         layout.addWidget(warning)
 
     def _apply_theme(self) -> None:

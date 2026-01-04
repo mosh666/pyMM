@@ -103,7 +103,7 @@ class StorageView(QWidget):
             status = f"{used_pct:.1f}% used"
             self.drives_table.setItem(row, 5, QTableWidgetItem(status))
 
-    def get_selected_drive(self) -> Path:
+    def get_selected_drive(self) -> Path | None:
         """
         Get the currently selected drive.
 
@@ -113,6 +113,8 @@ class StorageView(QWidget):
         selected_rows = self.drives_table.selectedItems()
         if selected_rows:
             row = selected_rows[0].row()
-            drive_letter = self.drives_table.item(row, 0).text()
-            return Path(drive_letter)
+            item = self.drives_table.item(row, 0)
+            if item is not None:
+                drive_letter = item.text()
+                return Path(drive_letter)
         return None
