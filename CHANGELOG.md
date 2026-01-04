@@ -8,13 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive CHANGELOG.md following Keep a Changelog format
-- Full documentation update to reflect latest codebase
+- **Modernized GitHub Workflows**
+  - Implemented branch-based release flow: `dev` → Beta, `main` → Stable
+  - Added support for alpha/beta/rc tags in versioning and releases
+  - Added caching for embeddable Python to speed up builds
+  - Added `contents: read` permissions to workflows for better security
+  - Automated `latest-beta` rolling releases on `dev` branch pushes
 
 ### Changed
-- Updated documentation to be consistent across all files
-- Cleaned up test files to use pytest output instead of print statements
-- Standardized version numbers across all files
+- Updated `pyproject.toml` to allow semantic versioning with prerelease suffixes (e.g., `v1.0.0-alpha.1`)
+- Updated documentation to reflect new release process
 
 ### Fixed
 - Markdown linting issues in documentation files

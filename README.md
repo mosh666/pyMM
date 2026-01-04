@@ -64,14 +64,15 @@ application folder.
 ### Download Pre-Built Release
 
 1. Download the latest release for your Python version:
-   - **Recommended:** `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
-   - Also available: `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
+   - **Stable Releases:** Check the [Releases Page](https://github.com/mosh666/pyMM/releases) for `vX.Y.Z` tags.
+   - **Beta Releases:** Check for `latest-beta` or `vX.Y.Z-beta` tags for the newest features.
+   - **Recommended:** `pyMM-*-py3.13-win64.zip` (Python 3.13)
 
 2. Extract to your portable drive (e.g., `D:\pyMM\`)
 
 3. Run `launcher.py`:
    ```cmd
-   D:\pyMM\python314\python.exe D:\pyMM\launcher.py
+   D:\pyMM\python313\python.exe D:\pyMM\launcher.py
    ```
 
 4. Complete the first-run wizard:

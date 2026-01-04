@@ -97,6 +97,25 @@ ruff check --fix app/ tests/
 ruff format app/ tests/
 ```
 
+## Release Process
+
+We follow a branch-based release flow:
+
+1.  **Development (`dev` branch)**:
+    *   All new features and fixes are merged here.
+    *   Pushes to `dev` automatically trigger a **Beta Release** (tagged `latest-beta`).
+    *   These releases are marked as "Pre-release" on GitHub.
+
+2.  **Stable (`main` branch)**:
+    *   Stable releases are created by pushing a semantic version tag (e.g., `v1.0.0`) to `main`.
+    *   **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
+    *   The workflow will automatically build and publish the release.
+
+3.  **Versioning**:
+    *   We use [Semantic Versioning](https://semver.org/).
+    *   Format: `vX.Y.Z` (Stable) or `vX.Y.Z-alpha.N` / `vX.Y.Z-beta.N` (Prerelease).
+    *   `setuptools_scm` automatically handles versioning based on git tags.
+
 ## Commit Messages
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):

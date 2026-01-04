@@ -5,7 +5,10 @@ on:
   workflow_call:  # Allow calling from other workflows
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
+
+permissions:
+  contents: read
 
 jobs:
   build-windows:
@@ -54,9 +57,20 @@ jobs:
           echo "VERSION=$version" >> $env:GITHUB_OUTPUT
           echo "Version: $version"
       
+      - name: Cache embeddable Python
+        id: cache-python
+        uses: actions/cache@v4
+        with:
+          path: python-embed.zip
+          key: python-embed-${{ matrix.python-version }}-${{ matrix.python-url }}
+
       - name: Download embeddable Python package
+        if: steps.cache-python.outputs.cache-hit != 'true'
         run: |
           Invoke-WebRequest -Uri "${{ matrix.python-url }}" -OutFile python-embed.zip
+
+      - name: Extract embeddable Python
+        run: |
           Expand-Archive python-embed.zip -DestinationPath ${{ matrix.python-dir }}/
       
       - name: Configure embeddable Python for site-packages
