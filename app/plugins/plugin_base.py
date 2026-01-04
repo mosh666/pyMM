@@ -7,6 +7,8 @@ from typing import Optional, Dict, Any
 from dataclasses import dataclass
 import aiohttp
 import asyncio
+import shutil
+import subprocess
 
 
 @dataclass
@@ -193,28 +195,153 @@ class SimplePluginImplementation(PluginBase):
         """
         super().__init__(manifest, install_dir)
         self.download_url = download_url
-        self.archive_path = install_dir / f"{manifest.name.lower()}.zip"
+        
+        # Determine archive extension from URL
+        url_lower = download_url.lower()
+        if '.7z.exe' in url_lower:
+            ext = '7z.exe'
+        elif url_lower.endswith('.7z'):
+            ext = '7z'
+        elif url_lower.endswith('.zip'):
+            ext = 'zip'
+        else:
+            ext = 'zip'  # Default to zip
+        
+        self.archive_path = install_dir / f"{manifest.name.lower()}.{ext}"
 
     async def download(self, progress_callback=None) -> bool:
         """Download plugin archive."""
         return await self._download_file(self.download_url, self.archive_path, progress_callback)
 
     async def extract(self) -> bool:
-        """Extract plugin archive."""
+        """Extract plugin archive with support for ZIP, 7z, and self-extracting exe."""
         if not self.archive_path.exists():
             return False
 
         try:
-            import zipfile
+            # Create temporary extraction directory
+            temp_extract_dir = self.plugin_dir.parent / f"{self.plugin_dir.name}_temp"
+            temp_extract_dir.mkdir(parents=True, exist_ok=True)
 
-            with zipfile.ZipFile(self.archive_path, "r") as zip_ref:
-                zip_ref.extractall(self.plugin_dir)
+            # Extract based on archive type
+            if self.archive_path.suffix == '.zip':
+                success = await self._extract_zip(temp_extract_dir)
+            elif str(self.archive_path).endswith('.7z.exe'):
+                success = await self._extract_7z_exe(temp_extract_dir)
+            elif self.archive_path.suffix == '.7z':
+                success = await self._extract_7z(temp_extract_dir)
+            else:
+                return False
 
-            # Clean up archive after extraction
+            if not success:
+                shutil.rmtree(temp_extract_dir, ignore_errors=True)
+                return False
+
+            # Flatten nested structure if needed
+            self._flatten_extraction(temp_extract_dir)
+            
+            # Handle special file renames (e.g., ExifTool)
+            self._handle_special_cases(temp_extract_dir)
+
+            # Move to final location
+            if self.plugin_dir.exists():
+                shutil.rmtree(self.plugin_dir)
+            temp_extract_dir.rename(self.plugin_dir)
+
+            # Clean up archive
             self.archive_path.unlink()
+            return True
+        except Exception as e:
+            print(f"  Extraction error: {type(e).__name__}: {e}")
+            if temp_extract_dir.exists():
+                shutil.rmtree(temp_extract_dir, ignore_errors=True)
+            return False
+
+    async def _extract_zip(self, extract_dir: Path) -> bool:
+        """Extract ZIP archive."""
+        try:
+            import zipfile
+            with zipfile.ZipFile(self.archive_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
             return True
         except Exception:
             return False
+
+    async def _extract_7z(self, extract_dir: Path) -> bool:
+        """Extract 7z archive using py7zr."""
+        try:
+            import py7zr
+            with py7zr.SevenZipFile(self.archive_path, mode='r') as archive:
+                archive.extractall(path=extract_dir)
+            return True
+        except ImportError:
+            print("  py7zr not installed, attempting 7z command-line")
+            return await self._extract_7z_cli(extract_dir)
+        except Exception:
+            return False
+
+    async def _extract_7z_cli(self, extract_dir: Path) -> bool:
+        """Extract 7z archive using 7z command-line tool."""
+        try:
+            result = subprocess.run(
+                ['7z', 'x', str(self.archive_path), f'-o{extract_dir}', '-y'],
+                capture_output=True,
+                text=True
+            )
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    async def _extract_7z_exe(self, extract_dir: Path) -> bool:
+        """Extract self-extracting 7z .exe archive."""
+        try:
+            # Self-extracting 7z archives can be extracted with -o flag
+            result = subprocess.run(
+                [str(self.archive_path), '-o' + str(extract_dir), '-y'],
+                capture_output=True,
+                text=True,
+                cwd=str(self.archive_path.parent)
+            )
+            return result.returncode == 0
+        except Exception:
+            # If that fails, try with py7zr (7z.exe files are often just 7z archives)
+            return await self._extract_7z(extract_dir)
+
+    def _flatten_extraction(self, extract_dir: Path) -> None:
+        """Flatten nested extraction structure if archive contains a single top-level directory."""
+        try:
+            items = list(extract_dir.iterdir())
+            
+            # If extraction resulted in a single directory, flatten it
+            if len(items) == 1 and items[0].is_dir():
+                nested_dir = items[0]
+                
+                # Move all contents up one level
+                for item in nested_dir.iterdir():
+                    dest = extract_dir / item.name
+                    if dest.exists():
+                        if dest.is_dir():
+                            shutil.rmtree(dest)
+                        else:
+                            dest.unlink()
+                    shutil.move(str(item), str(dest))
+                
+                # Remove the now-empty nested directory
+                nested_dir.rmdir()
+        except Exception as e:
+            print(f"  Warning: Could not flatten structure: {e}")
+    
+    def _handle_special_cases(self, extract_dir: Path) -> None:
+        """Handle plugin-specific post-extraction tasks."""
+        try:
+            # ExifTool: Rename exiftool(-k).exe to exiftool.exe
+            if self.manifest.name == "ExifTool":
+                old_name = extract_dir / "exiftool(-k).exe"
+                new_name = extract_dir / "exiftool.exe"
+                if old_name.exists() and not new_name.exists():
+                    old_name.rename(new_name)
+        except Exception as e:
+            print(f"  Warning: Special case handling failed: {e}")
 
     def validate_installation(self) -> bool:
         """Validate plugin installation by checking executable."""
