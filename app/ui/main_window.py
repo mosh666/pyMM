@@ -2,17 +2,18 @@
 Main window for pyMediaManager application.
 Uses Fluent Design with navigation interface.
 """
-from pathlib import Path
-from typing import Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
+
+import logging
+from typing import Any
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 
 try:
     from qfluentwidgets import (
+        FluentIcon,
         FluentWindow,
         NavigationItemPosition,
-        FluentIcon,
         Theme,
         setTheme,
     )
@@ -29,7 +30,7 @@ from app.plugins.plugin_manager import PluginManager
 from app.services.project_service import ProjectService
 
 
-class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
+class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore[misc]
     """Main application window with Fluent Design interface."""
 
     def __init__(
@@ -41,6 +42,8 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
     ):
         super().__init__()
 
+        self.logger = logging.getLogger(__name__)
+
         self.config_service = config_service
         self.storage_service = storage_service
         self.plugin_manager = plugin_manager
@@ -51,14 +54,14 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         self._init_navigation()
         self._apply_theme()
 
-    def _init_window(self):
+    def _init_window(self) -> None:
         """Initialize window properties."""
         config = self.config_service.get_config()
 
         self.setWindowTitle(config.app_name)
         self.resize(config.ui.window_width, config.ui.window_height)
 
-    def _init_navigation(self):
+    def _init_navigation(self) -> None:
         """Initialize navigation interface."""
         if not FLUENT_AVAILABLE:
             self._init_fallback_ui()
@@ -107,6 +110,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
     def _create_home_interface(self) -> QWidget:
         """Create home/dashboard interface."""
         widget = QWidget()
+        widget.setObjectName("homeInterface")
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(40, 40, 40, 40)
         layout.setSpacing(20)
@@ -138,6 +142,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
     def _create_settings_interface(self) -> QWidget:
         """Create settings interface."""
         widget = QWidget()
+        widget.setObjectName("settingsInterface")
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(40, 40, 40, 40)
 
@@ -164,17 +169,15 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         layout.addStretch()
 
         return widget
-    
-    def _open_settings_dialog(self):
+
+    def _open_settings_dialog(self) -> None:
         """Open the settings dialog."""
         from app.ui.dialogs.settings_dialog import SettingsDialog
-        
+
         dialog = SettingsDialog(self.config_service, self)
         dialog.exec()
 
-        return widget
-
-    def _init_fallback_ui(self):
+    def _init_fallback_ui(self) -> None:
         """Initialize fallback UI when Fluent Widgets not available."""
         layout = QVBoxLayout(self)
 
@@ -183,10 +186,10 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             "Install with: pip install PySide6-Fluent-Widgets\n\n"
             "Running in fallback mode..."
         )
-        warning.setAlignment(Qt.AlignCenter)
+        warning.setAlignment(Qt.AlignCenter)  # type: ignore[attr-defined]
         layout.addWidget(warning)
 
-    def _apply_theme(self):
+    def _apply_theme(self) -> None:
         """Apply theme based on configuration."""
         if not FLUENT_AVAILABLE:
             return
@@ -200,17 +203,17 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         else:
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
-    
-    def _on_project_opened(self, project):
+
+    def _on_project_opened(self, project: Any) -> None:
         """Handle project opened event."""
         from PySide6.QtWidgets import QMessageBox
-        
+
         self.current_project = project
-        
+
         # Update window title
         config = self.config_service.get_config()
         self.setWindowTitle(f"{config.app_name} - {project.name}")
-        
+
         # Show notification
         QMessageBox.information(
             self,

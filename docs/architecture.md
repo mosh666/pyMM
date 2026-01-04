@@ -1,8 +1,16 @@
 # pyMediaManager Architecture Documentation
 
+> **Version:** Auto-detected from Git using setuptools_scm  
+> **Last Updated:** January 5, 2026  
+> **Python Support:** 3.12 | 3.13  
+> **Test Suite:** 137+ tests with 73% code coverage  
+> **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
+
 ## Overview
 
-pyMediaManager is a portable, Python-based media management application designed to run entirely from removable drives without system installation. The application follows a modular architecture with clear separation of concerns.
+pyMediaManager is a portable, Python-based media management application designed to run
+entirely from removable drives without system installation. The application follows a
+modular architecture with clear separation of concerns.
 
 ## Design Principles
 
@@ -25,17 +33,42 @@ pyMediaManager is a portable, Python-based media management application designed
 - **Isolated Installation**: Each plugin in separate directory
 - **Version Management**: Plugins track their own versions
 
+### 4. Code Quality Standards
+- **Structured Logging**: All modules use proper logger instances instead of print statements
+- **Type Safety**: Comprehensive return type hints on all functions and methods
+- **Modern Type Hints**: Use Python 3.12+ native generic types (`list`, `dict`, `tuple`) instead
+  of importing from `typing` module
+- **Documentation**: Docstrings for all public APIs following Google style
+- **Testing**: 70%+ code coverage requirement with unit and integration tests
+- **Code Formatting**: Consistent style enforced by Ruff formatter
+- **Static Analysis**: MyPy type checking for catching errors early
+- **Linting**: Ruff linter with auto-fix for code quality
+
+### 5. Version Management
+- **Automatic Detection**: Version derived from Git tags using `setuptools_scm`
+- **Semantic Versioning**: Supports alpha, beta, rc prerelease tags (e.g., v1.0.0-beta.1)
+- **Runtime Access**: Version and commit hash available at runtime via `app.__version__` and `app.__commit_id__`
+- **Fallback**: Graceful fallback to `importlib.metadata` or dev version if Git is missing
+- **UI Integration**: Version details displayed in Settings → About tab
+- **Branch Strategy**: `dev` branch for beta releases, `main` branch for stable releases
+- **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes
+
+### 6. UI Framework Stability
+- **QFluentWidgets Integration**: All navigation interfaces and views properly initialized
+- **Object Names**: All views set `setObjectName()` to prevent "object name can't be empty string" errors
+- **Fixed Interfaces**: Home, Settings, Storage, Plugin, and Project views properly configured
+
 ## Directory Structure
 
 ```
 D:\pyMM\                          # Application root
 │
-├── python312\                    # Embedded Python runtime
+├── python313\                    # Embedded Python runtime (3.13 default)
 │   ├── python.exe
-│   ├── python312.dll
+│   ├── python313.dll
 │   └── ...
 │
-├── lib-py312\                    # Python dependencies (version-specific)
+├── lib-py313\                    # Python dependencies (version-specific)
 │   ├── PySide6\
 │   ├── pydantic\
 │   └── ...
@@ -113,11 +146,12 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 
 **Usage**:
 ```python
+from pathlib import Path
 from app.core.services.file_system_service import FileSystemService
 
 fs = FileSystemService()
-project_dir = fs.ensure_directory("../pyMM.Projects/new-project")
-files = fs.list_directory(project_dir, pattern="*.jpg", recursive=True)
+project_dir: Path = fs.ensure_directory("../pyMM.Projects/new-project")
+files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=True)
 ```
 
 ### 2. StorageService
@@ -131,11 +165,12 @@ files = fs.list_directory(project_dir, pattern="*.jpg", recursive=True)
 
 **Usage**:
 ```python
-from app.core.services.storage_service import StorageService
+from pathlib import Path
+from app.core.services.storage_service import StorageService, DriveInfo
 
 storage = StorageService()
-removable_drives = storage.get_removable_drives()
-drive_info = storage.get_drive_info(Path("D:\\"))
+removable_drives: list[DriveInfo] = storage.get_removable_drives()
+drive_info: DriveInfo | None = storage.get_drive_info(Path("D:\\"))
 ```
 
 ### 3. ConfigService
@@ -155,10 +190,11 @@ drive_info = storage.get_drive_info(Path("D:\\"))
 
 **Usage**:
 ```python
-from app.core.services.config_service import ConfigService
+from pathlib import Path
+from app.core.services.config_service import ConfigService, AppConfig
 
 config_service = ConfigService(app_root)
-config = config_service.load()
+config: AppConfig = config_service.load()
 
 # Update specific setting
 config_service.update_config(ui={"theme": "dark"})
@@ -178,6 +214,8 @@ config_service.export_config(Path("config_export.yaml"), redact_sensitive=True)
 
 **Usage**:
 ```python
+from pathlib import Path
+from logging import Logger
 from app.core.logging_service import LoggingService
 
 logging_service = LoggingService(
@@ -185,9 +223,18 @@ logging_service = LoggingService(
     log_dir=Path("D:\\pyMM.Logs"),
     level="INFO"
 )
-logger = logging_service.setup()
+logger: Logger = logging_service.setup()
 logger.info("Application started")
 ```
+
+**Code Quality Improvements**:
+- **Migration from print()**: All print statements replaced with structured logging calls
+  - Debug information: `logger.debug()`
+  - General progress: `logger.info()`
+  - User warnings: `logger.warning()`
+  - Error conditions: `logger.error()`
+- **Benefits**: Better debugging, production monitoring, log filtering by level, centralized output control
+- **Consistency**: All 15+ modules now use logger instances from `logging.getLogger(__name__)`
 
 ### 5. PluginManager
 **Purpose**: Discover, install, and manage plugins
@@ -220,6 +267,8 @@ dependencies: []
 
 **Usage**:
 ```python
+import os
+from pathlib import Path
 from app.plugins.plugin_manager import PluginManager
 
 plugin_manager = PluginManager(
@@ -228,13 +277,13 @@ plugin_manager = PluginManager(
 )
 
 # Discover available plugins
-count = plugin_manager.discover_plugins()
+count: int = plugin_manager.discover_plugins()
 
 # Install plugin
 await plugin_manager.install_plugin("FFmpeg")
 
 # Get PATH entries for enabled plugins
-paths = plugin_manager.register_plugins_to_path()
+paths: list[Path] = plugin_manager.register_plugins_to_path()
 os.environ['PATH'] = os.pathsep.join([str(p) for p in paths]) + os.pathsep + os.environ['PATH']
 ```
 
@@ -267,9 +316,11 @@ Each major feature has a dedicated view:
 
 **Integration**:
 ```python
+from app.ui.components.first_run_wizard import FirstRunWizard
+
 # Check if first run
 if config.ui.show_first_run:
-    wizard = FirstRunWizard(storage_service, optional_plugins)
+    wizard: FirstRunWizard = FirstRunWizard(storage_service, optional_plugins)
     wizard.finished.connect(on_setup_complete)
     wizard.show()
 ```
@@ -286,7 +337,7 @@ if config.ui.show_first_run:
 
 ### Example Path Resolution
 
-```
+```plaintext
 Scenario: App installed on D:\pyMM
 
 Application Root:  D:\pyMM
@@ -330,26 +381,43 @@ Config:            D:\pyMM\config\
 
 ### Version Matrix
 
-Python 3.12 and 3.13 supported with separate builds:
-- `pyMM-v0.0.1-py312-win64.zip` (Python 3.12)
-- `pyMM-v0.0.1-py313-win64.zip` (Python 3.13, recommended)
+Python 3.12 and 3.13 explicitly supported with separate builds:
+
+- `pyMM-v0.1.0-py313-win64.zip` (Python 3.13, **recommended**)
+- `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
+
+**Note:** Python 3.14 support tested in CI workflows for forward compatibility.
 
 ## Testing Strategy
 
-### Unit Tests (pytest)
-**Coverage Target**: 70%+
+### Comprehensive Test Suite
+**Current Stats**: 137+ tests with 73% code coverage  
+**Coverage Target**: 70% minimum (enforced in CI)
 
 **Test Structure**:
-```
+```plaintext
 tests/
-├── unit/
+├── unit/                         # Core service unit tests
 │   ├── test_file_system_service.py
 │   ├── test_storage_service.py
 │   ├── test_config_service.py
-│   └── test_plugin_manager.py
-└── gui/
-    ├── test_first_run_wizard.py
-    └── test_views.py
+│   ├── test_logging_service.py
+│   ├── test_plugin_manager.py
+│   ├── test_plugin_base.py
+│   ├── test_project.py
+│   ├── test_git_service.py
+│   └── test_storage_service.py
+├── gui/                          # UI component tests
+│   ├── test_first_run_wizard.py
+│   ├── test_project_dialogs.py
+│   └── test_views.py
+├── integration/                  # Integration tests
+│   ├── test_plugin_workflow.py
+│   └── test_project_workflow.py
+├── test_git_integration.py       # Git integration tests
+├── test_plugin_download.py       # Plugin download tests
+├── test_project_management.py    # Project management tests
+└── test_settings_dialog.py       # Settings dialog tests
 ```
 
 ### GUI Tests (pytest-qt)
@@ -357,8 +425,11 @@ tests/
 
 **Key Patterns**:
 ```python
-def test_button_click(qtbot):
-    widget = MyWidget()
+from pytestqt.qtbot import QtBot
+from PySide6.QtCore import Qt
+
+def test_button_click(qtbot: QtBot) -> None:
+    widget: MyWidget = MyWidget()
     qtbot.addWidget(widget)
     
     # Click button
@@ -372,9 +443,30 @@ def test_button_click(qtbot):
 ### CI/CD Pipeline
 
 **GitHub Actions Workflows**:
-1. **ci.yml**: Lint, test, coverage (Python 3.12 + 3.13 matrix)
-2. **build.yml**: Build portable packages per Python version
-3. **release.yml**: Create GitHub releases on version tag
+
+1. **ci.yml** - Continuous Integration
+   - **Matrix Testing**: Python 3.12, 3.13, 3.14 (forward compatibility)
+   - **Code Quality**: Ruff linting and formatting checks
+   - **Test Execution**: Full test suite with pytest
+   - **Coverage Reports**: 70% minimum enforced, HTML reports in artifacts
+   - **Triggers**: Push to all branches, pull requests
+
+2. **build.yml** - Build Automation
+   - **Python Embeddable Caching**: Speeds up builds by caching runtimes
+   - **Multi-Version Builds**: Separate packages for Python 3.12 and 3.13
+   - **Pre-Build Testing**: Full test suite runs before building
+   - **Artifact Upload**: ZIP packages uploaded as workflow artifacts
+   - **Triggers**: Manual workflow dispatch
+
+3. **release.yml** - Release Management
+   - **Branch-Based Releases**:
+     - `dev` branch → Beta releases (prerelease flag)
+     - `main` branch → Stable releases
+   - **Automatic Tagging**: `latest-beta` rolling tag on `dev` pushes
+   - **GitHub Releases**: Created with changelog and download links
+   - **Version Detection**: Uses setuptools_scm for automatic versioning
+   - **Security**: Read-only permissions with minimal scope
+   - **Triggers**: Git tags matching `v*.*.*` pattern
 
 ## Security Considerations
 
@@ -425,16 +517,17 @@ def test_button_click(qtbot):
 
 ### Custom Plugin Implementations
 ```python
+from collections.abc import Callable
 from app.plugins.plugin_base import PluginBase
 
 class CustomPlugin(PluginBase):
-    async def download(self, progress_callback=None):
+    async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> None:
         # Custom download logic
         pass
     
-    def validate_installation(self):
+    def validate_installation(self) -> bool:
         # Custom validation
-        pass
+        return True
 ```
 
 ## Troubleshooting
@@ -455,20 +548,25 @@ class CustomPlugin(PluginBase):
 
 ## Future Roadmap
 
-### v0.1.0
-- Complete project management implementation
-- Git integration for version control
-- digiKam integration for media management
+### v0.1.0 (Current Beta)
+- ✅ Complete project management implementation
+- ✅ Git integration for version control
+- ✅ Automatic version management with setuptools_scm
+- ✅ Comprehensive test suite (137+ tests, 73% coverage)
+- ✅ CI/CD pipeline with branch-based releases
+- 🔄 digiKam integration for media management (in progress)
 
-### v0.2.0
+### v0.2.0 (Planned)
 - Cross-platform support (Linux, macOS)
-- Plugin auto-updates
-- Enhanced settings UI
+- Plugin auto-updates with version checking
+- Enhanced settings UI with advanced options
+- Plugin SHA-256 checksum verification
 
-### v0.3.0
-- Plugin marketplace
-- Cloud sync support
-- Advanced project templates
+### v0.3.0 (Future)
+- Plugin marketplace discovery
+- Cloud sync support for projects
+- Advanced project templates with wizards
+- Digital signatures for plugin security
 
 ## Contributing
 

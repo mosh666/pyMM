@@ -1,6 +1,9 @@
 """Tests for FileSystemService."""
-import pytest
+
 from pathlib import Path
+
+import pytest
+
 from app.core.services.file_system_service import FileSystemService
 
 
@@ -15,7 +18,7 @@ class TestFileSystemService:
     def test_init_with_explicit_root(self, app_root):
         """Test initialization with explicit root path."""
         service = FileSystemService(app_root)
-        assert service.get_app_root() == app_root
+        assert service.get_app_root().resolve() == app_root.resolve()
 
     def test_init_auto_detect_root(self):
         """Test initialization with auto-detected root."""
@@ -47,14 +50,14 @@ class TestFileSystemService:
     def test_ensure_portable_folders(self, service):
         """Test ensuring portable folders exist."""
         folders = service.ensure_portable_folders()
-        
+
         assert "projects" in folders
         assert "logs" in folders
-        
+
         # Folders should exist
         assert folders["projects"].exists()
         assert folders["logs"].exists()
-        
+
         # Folders should be at drive root
         drive_root = service.get_drive_root()
         assert folders["projects"] == drive_root / "pyMM.Projects"
@@ -64,7 +67,7 @@ class TestFileSystemService:
         """Test resolving relative paths."""
         rel_path = Path("test/file.txt")
         resolved = service.resolve_path(rel_path)
-        assert resolved == app_root / "test" / "file.txt"
+        assert resolved.resolve() == (app_root / "test" / "file.txt").resolve()
         assert resolved.is_absolute()
 
     def test_resolve_absolute_path(self, service, temp_dir):
@@ -79,7 +82,7 @@ class TestFileSystemService:
         result = service.ensure_directory(new_dir)
         assert result.exists()
         assert result.is_dir()
-        assert result == app_root / "test_dir" / "nested"
+        assert result.resolve() == (app_root / "test_dir" / "nested").resolve()
 
     def test_ensure_directory_existing(self, service, app_root):
         """Test ensuring existing directory."""
@@ -87,7 +90,7 @@ class TestFileSystemService:
         existing.mkdir()
         result = service.ensure_directory(existing)
         assert result.exists()
-        assert result == existing
+        assert result.resolve() == existing.resolve()
 
     def test_list_directory_empty(self, service, app_root):
         """Test listing empty directory."""

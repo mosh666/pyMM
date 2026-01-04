@@ -5,7 +5,10 @@ on:
   workflow_call:  # Allow calling from other workflows
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
+
+permissions:
+  contents: read
 
 jobs:
   build-windows:
@@ -13,7 +16,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ["3.12", "3.13"]
+        python-version: ["3.12", "3.13", "3.14"]
         include:
           - python-version: "3.12"
             python-url: "https://www.python.org/ftp/python/3.12.8/python-3.12.8-embed-amd64.zip"
@@ -25,6 +28,11 @@ jobs:
             python-dir: "python313"
             lib-dir: "lib-py313"
             requirements-file: "requirements-frozen-py313.txt"
+          - python-version: "3.14"
+            python-url: "https://www.python.org/ftp/python/3.14.0/python-3.14.0-embed-amd64.zip"
+            python-dir: "python314"
+            lib-dir: "lib-py314"
+            requirements-file: "requirements-frozen-py314.txt"
     
     steps:
       - name: Checkout code
@@ -49,9 +57,20 @@ jobs:
           echo "VERSION=$version" >> $env:GITHUB_OUTPUT
           echo "Version: $version"
       
+      - name: Cache embeddable Python
+        id: cache-python
+        uses: actions/cache@v4
+        with:
+          path: python-embed.zip
+          key: python-embed-${{ matrix.python-version }}-${{ matrix.python-url }}
+
       - name: Download embeddable Python package
+        if: steps.cache-python.outputs.cache-hit != 'true'
         run: |
           Invoke-WebRequest -Uri "${{ matrix.python-url }}" -OutFile python-embed.zip
+
+      - name: Extract embeddable Python
+        run: |
           Expand-Archive python-embed.zip -DestinationPath ${{ matrix.python-dir }}/
       
       - name: Configure embeddable Python for site-packages

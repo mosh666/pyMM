@@ -1,58 +1,156 @@
 # Contributing to pyMediaManager
 
-Thank you for your interest in contributing to pyMediaManager! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to pyMediaManager! This guide provides comprehensive
+instructions for setting up your development environment, writing code, testing, and submitting
+contributions.
+
+> **See also:** [CHANGELOG.md](CHANGELOG.md) | [Architecture Guide](docs/architecture.md) |
+> [User Guide](docs/user-guide.md)
+
+---
+
+## Table of Contents
+
+1. [Development Setup](#development-setup)
+2. [Code Style](#code-style)
+3. [Testing Guidelines](#testing-guidelines)
+4. [Pull Request Process](#pull-request-process)
+5. [Release Process](#release-process)
+6. [Adding New Features](#adding-new-features)
+7. [Documentation](#documentation)
+8. [Issue Reporting](#issue-reporting)
+
+---
 
 ## Development Setup
 
 ### Prerequisites
-- Python 3.12 or 3.13
-- Git
-- Windows OS (for now - Linux/macOS support planned)
+
+- **Python:** 3.12 or 3.13 (3.13 recommended)
+- **Git:** Latest version
+- **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
+- **IDE:** VS Code recommended (with Python extension)
 
 ### Setup Steps
 
-1. **Clone the repository**:
+1. **Fork and Clone:**
+
    ```bash
-   git clone https://github.com/mosh666/pyMM.git
+   # Fork the repository on GitHub first
+   git clone https://github.com/YOUR_USERNAME/pyMM.git
    cd pyMM
+   
+   # Add upstream remote
+   git remote add upstream https://github.com/mosh666/pyMM.git
    ```
 
-2. **Create virtual environment**:
+2. **Create Virtual Environment:**
+
    ```bash
+   # Create environment
    python -m venv venv
-   venv\Scripts\activate  # Windows
+   
+   # Activate (Windows)
+   venv\Scripts\activate
+   
+   # Activate (Linux/macOS)
+   source venv/bin/activate
    ```
 
-3. **Install dependencies**:
+3. **Install Dependencies:**
+
    ```bash
+   # Install in editable mode with dev dependencies
    pip install -e ".[dev]"
+   
+   # Verify installation
+   python -c "import app; print(app.__version__)"
    ```
 
-4. **Run tests**:
+4. **Install Pre-commit Hooks:**
+
    ```bash
-   pytest
+   # Install pre-commit framework
+   pip install pre-commit
+   
+   # Install git hooks
+   pre-commit install
+   
+   # Test hooks (optional)
+   pre-commit run --all-files
    ```
+
+5. **Run Tests:**
+
+   ```bash
+   # Run full test suite
+   pytest
+   
+   # Run with coverage
+   pytest --cov=app --cov-report=html
+   
+   # View coverage report
+   # Open htmlcov/index.html in browser
+   ```
+
+6. **Configure Git:**
+
+   ```bash
+   # Set your identity
+   git config user.name "Your Name"
+   git config user.email "your.email@example.com"
+   
+   # Set default branch
+   git config init.defaultBranch main
+   ```
+
+---
 
 ## Code Style
 
 ### Python Style Guide
 We follow PEP 8 with these tools:
-- **Black**: Code formatting (line length: 100)
-- **Ruff**: Linting and import sorting
+- **Ruff**: Fast linting with auto-fix and formatting (replaces Black, flake8, isort)
 - **MyPy**: Static type checking
+- **Modern Type Hints**: Use Python 3.12+ native types (`list`, `dict`, `tuple`) instead of
+  `typing.List`, `typing.Dict`, etc.
 
 ### Running Code Quality Tools
 
 ```bash
-# Format code
-black app/ tests/
-
-# Lint code
-ruff check app/ tests/
+# Format and fix code
+ruff check --fix app/ tests/
+ruff format app/ tests/
 
 # Type check
 mypy app/
 ```
+
+### Pre-commit Hooks
+
+We use [pre-commit](https://pre-commit.com/) to automatically run code quality checks before each
+commit. The hooks are configured in [.pre-commit-config.yaml](.pre-commit-config.yaml) and include:
+
+- **ruff** - Linter with auto-fix (replaces flake8, isort, and more)
+- **ruff-format** - Code formatter (replaces Black)
+- **trailing-whitespace** - Remove trailing whitespace
+- **end-of-file-fixer** - Ensure files end with newline
+- **check-yaml** - Validate YAML files
+- **check-toml** - Validate TOML files
+- **check-merge-conflict** - Check for merge conflict markers
+- **mixed-line-ending** - Ensure consistent line endings
+
+**Install hooks** (one-time setup):
+```bash
+pre-commit install
+```
+
+**Run manually** (optional):
+```bash
+pre-commit run --all-files
+```
+
+The hooks run automatically on `git commit`. If any hook fails, the commit will be blocked until you fix the issues.
 
 ### Pre-commit Checks
 Before committing, ensure:
@@ -60,12 +158,29 @@ Before committing, ensure:
 # All tests pass
 pytest
 
-# Code is formatted
-black --check app/ tests/
-
-# No lint errors
-ruff check app/ tests/
+# Code is formatted and linted
+ruff check --fix app/ tests/
+ruff format app/ tests/
 ```
+
+## Release Process
+
+We follow a branch-based release flow:
+
+1. **Development (`dev` branch)**
+   - All new features and fixes are merged here.
+   - Pushes to `dev` automatically trigger a **Beta Release** (tagged `latest-beta`).
+   - These releases are marked as "Pre-release" on GitHub.
+
+2. **Stable (`main` branch)**
+   - Stable releases are created by pushing a semantic version tag (e.g., `v1.0.0`) to `main`.
+   - **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
+   - The workflow will automatically build and publish the release.
+
+3. **Versioning**
+   - We use [Semantic Versioning](https://semver.org/).
+   - Format: `vX.Y.Z` (Stable) or `vX.Y.Z-alpha.N` / `vX.Y.Z-beta.N` (Prerelease).
+   - `setuptools_scm` automatically handles versioning based on git tags.
 
 ## Commit Messages
 
@@ -135,9 +250,9 @@ def test_button_click(qtbot):
     """Test button click handling."""
     widget = MyWidget()
     qtbot.addWidget(widget)
-    
+
     qtbot.mouseClick(widget.button, Qt.MouseButton.LeftButton)
-    
+
     assert widget.clicked is True
 ```
 
@@ -203,7 +318,7 @@ pytest --cov=app --cov-report=html
    class MyService:
        def __init__(self):
            pass
-       
+
        def do_something(self):
            pass
    ```
@@ -245,12 +360,12 @@ pytest --cov=app --cov-report=html
    ```python
    # app/ui/views/my_view.py
    from PySide6.QtWidgets import QWidget
-   
+
    class MyView(QWidget):
        def __init__(self, parent=None):
            super().__init__(parent)
            self._init_ui()
-       
+
        def _init_ui(self):
            # Setup UI
            pass
@@ -278,17 +393,17 @@ Use Google-style docstrings:
 def my_function(param1: str, param2: int) -> bool:
     """
     Short description of function.
-    
+
     Longer description with more details about what the function does,
     how it works, and any important notes.
-    
+
     Args:
         param1: Description of param1
         param2: Description of param2
-    
+
     Returns:
         Description of return value
-    
+
     Raises:
         ValueError: When param1 is empty
     """

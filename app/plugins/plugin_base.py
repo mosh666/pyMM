@@ -1,14 +1,17 @@
 """
 Plugin base class and plugin management system.
 """
-from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Optional, Dict, Any
-from dataclasses import dataclass
-import aiohttp
+
 import asyncio
+import logging
 import shutil
 import subprocess
+from abc import ABC, abstractmethod
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import aiohttp
 
 
 @dataclass
@@ -21,17 +24,16 @@ class PluginManifest:
     enabled: bool
     source_type: str  # 'url' or 'github'
     source_uri: str
-    asset_pattern: Optional[str] = None
+    asset_pattern: str | None = None
     command_path: str = ""
     command_executable: str = ""
     register_to_path: bool = False
-    dependencies: list[str] = None
-    checksum_sha256: Optional[str] = None
-    file_size: Optional[int] = None
+    dependencies: list[str] = field(default_factory=list)
+    checksum_sha256: str | None = None
+    file_size: int | None = None
 
-    def __post_init__(self):
-        if self.dependencies is None:
-            self.dependencies = []
+    def __post_init__(self) -> None:
+        pass  # dependencies now handled by field(default_factory=list)
 
 
 class PluginBase(ABC):
@@ -45,12 +47,13 @@ class PluginBase(ABC):
             manifest: Plugin manifest configuration
             install_dir: Directory where plugin will be installed
         """
+        self.logger = logging.getLogger(__name__)
         self.manifest = manifest
         self.install_dir = install_dir
         self.plugin_dir = install_dir / manifest.name.lower()
 
     @abstractmethod
-    async def download(self, progress_callback=None) -> bool:
+    async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> bool:
         """
         Download plugin binaries.
 
@@ -83,7 +86,7 @@ class PluginBase(ABC):
         pass
 
     @abstractmethod
-    def get_version(self) -> Optional[str]:
+    def get_version(self) -> str | None:
         """
         Get installed plugin version.
 
@@ -92,7 +95,7 @@ class PluginBase(ABC):
         """
         pass
 
-    def get_executable_path(self) -> Optional[Path]:
+    def get_executable_path(self) -> Path | None:
         """
         Get path to plugin executable.
 
@@ -133,7 +136,11 @@ class PluginBase(ABC):
             return False
 
     async def _download_file(
-        self, url: str, destination: Path, progress_callback=None, max_retries: int = 3
+        self,
+        url: str,
+        destination: Path,
+        progress_callback: Callable[[int, int], None] | None = None,
+        max_retries: int = 3,
     ) -> bool:
         """
         Download a file from URL with retry logic.
@@ -150,25 +157,31 @@ class PluginBase(ABC):
         for attempt in range(max_retries):
             try:
                 if attempt > 0:
-                    wait_time = 2 ** attempt  # Exponential backoff: 2, 4, 8 seconds
-                    print(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    wait_time = 2**attempt  # Exponential backoff: 2, 4, 8 seconds
+                    self.logger.info(
+                        f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s..."
+                    )
                     await asyncio.sleep(wait_time)
-                
-                print(f"  Downloading from: {url}")
-                print(f"  Destination: {destination}")
+
+                self.logger.debug(f"  Downloading from: {url}")
+                self.logger.debug(f"  Destination: {destination}")
                 destination.parent.mkdir(parents=True, exist_ok=True)
 
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response:
-                        print(f"  HTTP Status: {response.status}")
+                    async with session.get(
+                        url, timeout=aiohttp.ClientTimeout(total=300)
+                    ) as response:
+                        self.logger.info(f"  HTTP Status: {response.status}")
                         if response.status != 200:
-                            print(f"  Error: HTTP {response.status} - {response.reason}")
+                            self.logger.error(
+                                f"  Error: HTTP {response.status} - {response.reason}"
+                            )
                             if attempt < max_retries - 1:
                                 continue
                             return False
 
                         total_size = int(response.headers.get("content-length", 0))
-                        print(f"  Download size: {total_size / (1024*1024):.2f} MB")
+                        self.logger.info(f"  Download size: {total_size / (1024*1024):.2f} MB")
                         downloaded = 0
 
                         with open(destination, "wb") as f:
@@ -179,66 +192,69 @@ class PluginBase(ABC):
                                 if progress_callback and total_size > 0:
                                     progress_callback(downloaded, total_size)
 
-                print(f"  Download complete: {destination.exists()}")
-                
+                self.logger.info(f"  Download complete: {destination.exists()}")
+
                 # Verify checksum if provided
-                if hasattr(self, 'manifest') and self.manifest.checksum_sha256:
+                if hasattr(self, "manifest") and self.manifest.checksum_sha256:
                     if not await self._verify_checksum(destination, self.manifest.checksum_sha256):
-                        print(f"  Checksum verification failed!")
+                        self.logger.error("  Checksum verification failed!")
                         destination.unlink()
                         if attempt < max_retries - 1:
                             continue
                         return False
-                    print(f"  Checksum verified")
-                
+                    self.logger.info("  Checksum verified")
+
                 return True
-            except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-                print(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
+            except (TimeoutError, aiohttp.ClientError) as e:
+                self.logger.warning(
+                    f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}"
+                )
                 if destination.exists():
                     destination.unlink()
                 if attempt < max_retries - 1:
                     continue
                 return False
             except Exception as e:
-                print(f"  Download exception: {type(e).__name__}: {e}")
+                self.logger.error(f"  Download exception: {type(e).__name__}: {e}")
                 import traceback
+
                 traceback.print_exc()
                 if destination.exists():
                     destination.unlink()
                 return False
-        
+
         return False
-    
+
     async def _verify_checksum(self, file_path: Path, expected_sha256: str) -> bool:
         """Verify file SHA256 checksum.
-        
+
         Args:
             file_path: Path to file to verify
             expected_sha256: Expected SHA256 hash (case-insensitive)
-            
+
         Returns:
             True if checksum matches
         """
         try:
             import hashlib
-            
+
             sha256_hash = hashlib.sha256()
             with open(file_path, "rb") as f:
                 # Read in chunks to handle large files
                 for chunk in iter(lambda: f.read(8192), b""):
                     sha256_hash.update(chunk)
-            
+
             calculated = sha256_hash.hexdigest().upper()
             expected = expected_sha256.upper()
-            
+
             if calculated == expected:
                 return True
             else:
-                print(f"  Expected: {expected}")
-                print(f"  Got:      {calculated}")
+                self.logger.error(f"  Expected: {expected}")
+                self.logger.error(f"  Got:      {calculated}")
                 return False
         except Exception as e:
-            print(f"  Checksum verification error: {e}")
+            self.logger.error(f"  Checksum verification error: {e}")
             return False
 
 
@@ -258,21 +274,21 @@ class SimplePluginImplementation(PluginBase):
         """
         super().__init__(manifest, install_dir)
         self.download_url = download_url
-        
+
         # Determine archive extension from URL
         url_lower = download_url.lower()
-        if '.7z.exe' in url_lower:
-            ext = '7z.exe'
-        elif url_lower.endswith('.7z'):
-            ext = '7z'
-        elif url_lower.endswith('.zip'):
-            ext = 'zip'
+        if ".7z.exe" in url_lower:
+            ext = "7z.exe"
+        elif url_lower.endswith(".7z"):
+            ext = "7z"
+        elif url_lower.endswith(".zip"):
+            ext = "zip"
         else:
-            ext = 'zip'  # Default to zip
-        
+            ext = "zip"  # Default to zip
+
         self.archive_path = install_dir / f"{manifest.name.lower()}.{ext}"
 
-    async def download(self, progress_callback=None) -> bool:
+    async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> bool:
         """Download plugin archive."""
         return await self._download_file(self.download_url, self.archive_path, progress_callback)
 
@@ -287,11 +303,11 @@ class SimplePluginImplementation(PluginBase):
             temp_extract_dir.mkdir(parents=True, exist_ok=True)
 
             # Extract based on archive type
-            if self.archive_path.suffix == '.zip':
+            if self.archive_path.suffix == ".zip":
                 success = await self._extract_zip(temp_extract_dir)
-            elif str(self.archive_path).endswith('.7z.exe'):
+            elif str(self.archive_path).endswith(".7z.exe"):
                 success = await self._extract_7z_exe(temp_extract_dir)
-            elif self.archive_path.suffix == '.7z':
+            elif self.archive_path.suffix == ".7z":
                 success = await self._extract_7z(temp_extract_dir)
             else:
                 return False
@@ -302,7 +318,7 @@ class SimplePluginImplementation(PluginBase):
 
             # Flatten nested structure if needed
             self._flatten_extraction(temp_extract_dir)
-            
+
             # Handle special file renames (e.g., ExifTool)
             self._handle_special_cases(temp_extract_dir)
 
@@ -315,7 +331,7 @@ class SimplePluginImplementation(PluginBase):
             self.archive_path.unlink()
             return True
         except Exception as e:
-            print(f"  Extraction error: {type(e).__name__}: {e}")
+            self.logger.error(f"  Extraction error: {type(e).__name__}: {e}")
             if temp_extract_dir.exists():
                 shutil.rmtree(temp_extract_dir, ignore_errors=True)
             return False
@@ -324,7 +340,8 @@ class SimplePluginImplementation(PluginBase):
         """Extract ZIP archive."""
         try:
             import zipfile
-            with zipfile.ZipFile(self.archive_path, 'r') as zip_ref:
+
+            with zipfile.ZipFile(self.archive_path, "r") as zip_ref:
                 zip_ref.extractall(extract_dir)
             return True
         except Exception:
@@ -334,11 +351,12 @@ class SimplePluginImplementation(PluginBase):
         """Extract 7z archive using py7zr."""
         try:
             import py7zr
-            with py7zr.SevenZipFile(self.archive_path, mode='r') as archive:
+
+            with py7zr.SevenZipFile(self.archive_path, mode="r") as archive:
                 archive.extractall(path=extract_dir)
             return True
         except ImportError:
-            print("  py7zr not installed, attempting 7z command-line")
+            self.logger.debug("  py7zr not installed, attempting 7z command-line")
             return await self._extract_7z_cli(extract_dir)
         except Exception:
             return False
@@ -347,9 +365,9 @@ class SimplePluginImplementation(PluginBase):
         """Extract 7z archive using 7z command-line tool."""
         try:
             result = subprocess.run(
-                ['7z', 'x', str(self.archive_path), f'-o{extract_dir}', '-y'],
+                ["7z", "x", str(self.archive_path), f"-o{extract_dir}", "-y"],
                 capture_output=True,
-                text=True
+                text=True,
             )
             return result.returncode == 0
         except Exception:
@@ -360,10 +378,10 @@ class SimplePluginImplementation(PluginBase):
         try:
             # Self-extracting 7z archives can be extracted with -o flag
             result = subprocess.run(
-                [str(self.archive_path), '-o' + str(extract_dir), '-y'],
+                [str(self.archive_path), "-o" + str(extract_dir), "-y"],
                 capture_output=True,
                 text=True,
-                cwd=str(self.archive_path.parent)
+                cwd=str(self.archive_path.parent),
             )
             return result.returncode == 0
         except Exception:
@@ -374,11 +392,11 @@ class SimplePluginImplementation(PluginBase):
         """Flatten nested extraction structure if archive contains a single top-level directory."""
         try:
             items = list(extract_dir.iterdir())
-            
+
             # If extraction resulted in a single directory, flatten it
             if len(items) == 1 and items[0].is_dir():
                 nested_dir = items[0]
-                
+
                 # Move all contents up one level
                 for item in nested_dir.iterdir():
                     dest = extract_dir / item.name
@@ -388,12 +406,12 @@ class SimplePluginImplementation(PluginBase):
                         else:
                             dest.unlink()
                     shutil.move(str(item), str(dest))
-                
+
                 # Remove the now-empty nested directory
                 nested_dir.rmdir()
         except Exception as e:
-            print(f"  Warning: Could not flatten structure: {e}")
-    
+            self.logger.warning(f"  Could not flatten structure: {e}")
+
     def _handle_special_cases(self, extract_dir: Path) -> None:
         """Handle plugin-specific post-extraction tasks."""
         try:
@@ -404,13 +422,13 @@ class SimplePluginImplementation(PluginBase):
                 if old_name.exists() and not new_name.exists():
                     old_name.rename(new_name)
         except Exception as e:
-            print(f"  Warning: Special case handling failed: {e}")
+            self.logger.warning(f"  Special case handling failed: {e}")
 
     def validate_installation(self) -> bool:
         """Validate plugin installation by checking executable."""
         exe_path = self.get_executable_path()
         return exe_path is not None and exe_path.exists()
 
-    def get_version(self) -> Optional[str]:
+    def get_version(self) -> str | None:
         """Get plugin version from manifest."""
         return self.manifest.version if self.is_installed() else None

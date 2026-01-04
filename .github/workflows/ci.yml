@@ -3,8 +3,12 @@ name: CI - Tests and Linting
 on:
   push:
     branches: [ main, dev ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, dev ]
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -13,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12", "3.13"]
+        python-version: ["3.12", "3.13", "3.14"]
     
     steps:
       - name: Checkout code

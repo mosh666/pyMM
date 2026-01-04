@@ -2,35 +2,37 @@
 First-run wizard for pyMediaManager initial setup.
 Multi-step wizard for storage detection and plugin configuration.
 """
+
 from pathlib import Path
-from typing import Optional, List
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QStackedWidget,
-    QCheckBox,
-    QListWidget,
-    QListWidgetItem,
-)
+from typing import Any
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
-from app.core.services.storage_service import StorageService, DriveInfo
+from app.core.services.storage_service import StorageService
 
 
 class WizardPage(QWidget):
     """Base class for wizard pages."""
 
-    def __init__(self, title: str, description: str):
+    def __init__(self, title: str, description: str) -> None:
         super().__init__()
         self.title = title
         self.description = description
         self._init_ui()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize base UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -64,7 +66,7 @@ class WizardPage(QWidget):
         """
         return True
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, Any]:
         """
         Get data collected on this page.
 
@@ -77,10 +79,10 @@ class WizardPage(QWidget):
 class WelcomePage(WizardPage):
     """Welcome page introducing the application."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             "Welcome to pyMediaManager",
-            "Thank you for choosing pyMediaManager, your portable media management solution. "
+            "Thank you for choosing pyMediaManager, your portable media management solution.<br>"
             "This wizard will help you set up the application for first use.",
         )
 
@@ -92,11 +94,13 @@ class WelcomePage(WizardPage):
             "• Project-based - organize your media projects<br>"
             "• Version control ready - Git integration built-in"
         )
-        features.setTextFormat(Qt.RichText)
+        features.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
         self.content_layout.addWidget(features)
 
-        next_steps = QLabel("<br><b>Next steps:</b><br>We'll help you configure storage and plugins.")
-        next_steps.setTextFormat(Qt.RichText)
+        next_steps = QLabel(
+            "<br><b>Next steps:</b><br>We'll help you configure storage and plugins."
+        )
+        next_steps.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
         self.content_layout.addWidget(next_steps)
 
 
@@ -105,9 +109,9 @@ class StoragePage(WizardPage):
 
     drive_selected = Signal(Path)
 
-    def __init__(self, storage_service: StorageService):
+    def __init__(self, storage_service: StorageService) -> None:
         self.storage_service = storage_service
-        self.selected_drive: Optional[Path] = None
+        self.selected_drive: Path | None = None
 
         super().__init__(
             "Select Portable Drive",
@@ -129,7 +133,7 @@ class StoragePage(WizardPage):
         # Auto-refresh on page show
         self.refresh_drives()
 
-    def refresh_drives(self):
+    def refresh_drives(self) -> None:
         """Refresh the list of available drives."""
         self.drive_list.clear()
 
@@ -154,18 +158,18 @@ class StoragePage(WizardPage):
             label += f" - {free_gb:.1f} GB free / {size_gb:.1f} GB total"
 
             item = QListWidgetItem(label)
-            item.setData(Qt.UserRole, drive.drive_letter)
+            item.setData(Qt.UserRole, drive.drive_letter)  # type: ignore[attr-defined]
             self.drive_list.addItem(item)
 
         # Auto-select first drive
         if self.drive_list.count() > 0:
             self.drive_list.setCurrentRow(0)
 
-    def _on_drive_selected(self):
+    def _on_drive_selected(self) -> None:
         """Handle drive selection."""
         items = self.drive_list.selectedItems()
         if items:
-            drive_letter = items[0].data(Qt.UserRole)
+            drive_letter = items[0].data(Qt.UserRole)  # type: ignore[attr-defined]
             if drive_letter:
                 self.selected_drive = Path(drive_letter)
                 self.drive_selected.emit(self.selected_drive)
@@ -174,7 +178,7 @@ class StoragePage(WizardPage):
         """Validate that a drive is selected."""
         return self.selected_drive is not None
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, Path | None]:
         """Return selected drive."""
         return {"portable_drive": self.selected_drive}
 
@@ -182,9 +186,9 @@ class StoragePage(WizardPage):
 class PluginPage(WizardPage):
     """Plugin selection page."""
 
-    def __init__(self, plugin_names: List[str]):
+    def __init__(self, plugin_names: list[str]) -> None:
         self.plugin_names = plugin_names
-        self.selected_plugins: List[str] = []
+        self.selected_plugins: list[str] = []
 
         super().__init__(
             "Select Optional Plugins",
@@ -202,17 +206,19 @@ class PluginPage(WizardPage):
             self.content_layout.addWidget(checkbox)
 
         # Info label
-        self.info_label = QLabel("Mandatory plugins (Git, GitVersion, digiKam, etc.) will be installed automatically.")
+        self.info_label = QLabel(
+            "Mandatory plugins (Git, GitVersion, digiKam, etc.) will be installed automatically."
+        )
         self.info_label.setWordWrap(True)
         self.content_layout.addWidget(self.info_label)
 
-    def _update_selection(self):
+    def _update_selection(self) -> None:
         """Update selected plugins list."""
         self.selected_plugins = [
             name for name, checkbox in self.checkboxes.items() if checkbox.isChecked()
         ]
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, list[str]]:
         """Return selected plugins."""
         return {"optional_plugins": self.selected_plugins}
 
@@ -220,7 +226,7 @@ class PluginPage(WizardPage):
 class CompletePage(WizardPage):
     """Completion page with summary and settings."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             "Setup Complete!",
             "pyMediaManager is ready to use. You can now start managing your media projects.",
@@ -239,10 +245,10 @@ class CompletePage(WizardPage):
             "• Configure application settings<br>"
             "• Explore the documentation"
         )
-        summary.setTextFormat(Qt.RichText)
+        summary.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
         self.content_layout.addWidget(summary)
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, bool]:
         """Return wizard settings."""
         return {"dont_show_again": self.dont_show_checkbox.isChecked()}
 
@@ -256,18 +262,18 @@ class FirstRunWizard(QWidget):
     def __init__(
         self,
         storage_service: StorageService,
-        optional_plugin_names: List[str],
-        parent=None,
-    ):
+        optional_plugin_names: list[str],
+        parent: QWidget | None = None,
+    ) -> None:
         super().__init__(parent)
         self.storage_service = storage_service
         self.optional_plugin_names = optional_plugin_names
-        self.collected_data = {}
+        self.collected_data: dict[str, Any] = {}
 
         self._init_ui()
         self._create_pages()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize wizard UI."""
         self.setWindowTitle("pyMediaManager Setup Wizard")
         self.setMinimumSize(700, 500)
@@ -302,7 +308,7 @@ class FirstRunWizard(QWidget):
 
         layout.addLayout(button_layout)
 
-    def _create_pages(self):
+    def _create_pages(self) -> None:
         """Create wizard pages."""
         self.pages = [
             WelcomePage(),
@@ -316,16 +322,16 @@ class FirstRunWizard(QWidget):
 
         self._update_buttons()
 
-    def _go_next(self):
+    def _go_next(self) -> None:
         """Move to next page or finish."""
         current_page = self.stack.currentWidget()
 
         # Validate current page
-        if not current_page.validate():
+        if not current_page.validate():  # type: ignore[attr-defined]
             return
 
         # Collect data from current page
-        self.collected_data.update(current_page.get_data())
+        self.collected_data.update(current_page.get_data())  # type: ignore[attr-defined]
 
         # Move to next page or finish
         if self.stack.currentIndex() < len(self.pages) - 1:
@@ -336,18 +342,18 @@ class FirstRunWizard(QWidget):
             self.finished.emit(self.collected_data)
             self.close()
 
-    def _go_back(self):
+    def _go_back(self) -> None:
         """Move to previous page."""
         if self.stack.currentIndex() > 0:
             self.stack.setCurrentIndex(self.stack.currentIndex() - 1)
             self._update_buttons()
 
-    def _on_cancel(self):
+    def _on_cancel(self) -> None:
         """Handle wizard cancellation."""
         self.cancelled.emit()
         self.close()
 
-    def _update_buttons(self):
+    def _update_buttons(self) -> None:
         """Update button states based on current page."""
         current_index = self.stack.currentIndex()
 

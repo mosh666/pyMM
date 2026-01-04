@@ -1,9 +1,11 @@
 """
 Storage service for detecting and managing portable drives.
 """
+
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Any
+
 import psutil
 
 
@@ -17,7 +19,7 @@ class DriveInfo:
     total_size: int  # bytes
     free_space: int  # bytes
     is_removable: bool
-    serial_number: Optional[str] = None
+    serial_number: str | None = None
 
     @property
     def used_space(self) -> int:
@@ -35,11 +37,11 @@ class DriveInfo:
 class StorageService:
     """Service for detecting and managing portable storage drives."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize storage service."""
         pass
 
-    def get_all_drives(self) -> List[DriveInfo]:
+    def get_all_drives(self) -> list[DriveInfo]:
         """
         Get information about all mounted drives.
 
@@ -68,7 +70,7 @@ class StorageService:
 
         return drives
 
-    def get_removable_drives(self) -> List[DriveInfo]:
+    def get_removable_drives(self) -> list[DriveInfo]:
         """
         Get information about removable drives only.
 
@@ -77,7 +79,7 @@ class StorageService:
         """
         return [drive for drive in self.get_all_drives() if drive.is_removable]
 
-    def get_drive_info(self, path: Path | str) -> Optional[DriveInfo]:
+    def get_drive_info(self, path: Path | str) -> DriveInfo | None:
         """
         Get drive information for the drive containing the given path.
 
@@ -114,7 +116,7 @@ class StorageService:
         drive_info = self.get_drive_info(path)
         return drive_info.is_removable if drive_info else False
 
-    def get_drive_root(self, path: Path | str) -> Optional[Path]:
+    def get_drive_root(self, path: Path | str) -> Path | None:
         """
         Get the root path of the drive containing the given path.
 
@@ -137,7 +139,7 @@ class StorageService:
 
         return None
 
-    def _is_removable_drive(self, partition) -> bool:
+    def _is_removable_drive(self, partition: Any) -> bool:
         """
         Determine if a partition is on a removable drive.
 
@@ -186,7 +188,7 @@ class StorageService:
         except Exception:
             return ""
 
-    def _get_drive_serial(self, device: str) -> Optional[str]:
+    def _get_drive_serial(self, device: str) -> str | None:
         """
         Get the serial number for a drive.
 

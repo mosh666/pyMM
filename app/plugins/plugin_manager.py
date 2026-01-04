@@ -1,9 +1,14 @@
 """
 Plugin manager for discovering, installing, and managing plugins.
 """
+
+import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import Dict, List, Optional
-import yaml
+from typing import Any
+
+import yaml  # type: ignore[import-untyped]
+
 from app.plugins.plugin_base import PluginBase, PluginManifest, SimplePluginImplementation
 
 
@@ -18,10 +23,11 @@ class PluginManager:
             plugins_dir: Directory where plugins are installed (e.g., D:\\pyMM.Plugins)
             manifests_dir: Directory containing plugin manifest YAML files
         """
+        self.logger = logging.getLogger(__name__)
         self.plugins_dir = Path(plugins_dir)
         self.manifests_dir = Path(manifests_dir)
-        self.plugins: Dict[str, PluginBase] = {}
-        self.manifests: Dict[str, PluginManifest] = {}
+        self.plugins: dict[str, PluginBase] = {}
+        self.manifests: dict[str, PluginManifest] = {}
 
     def discover_plugins(self) -> int:
         """
@@ -50,11 +56,11 @@ class PluginManager:
                         self.plugins[manifest.name] = plugin
             except Exception as e:
                 # Log error but continue discovering
-                print(f"Error loading manifest {manifest_file}: {e}")
+                self.logger.warning(f"Error loading manifest {manifest_file}: {e}")
 
         return len(self.plugins)
 
-    def _load_manifest(self, manifest_file: Path) -> Optional[PluginManifest]:
+    def _load_manifest(self, manifest_file: Path) -> PluginManifest | None:
         """
         Load plugin manifest from YAML file.
 
@@ -65,7 +71,7 @@ class PluginManager:
             PluginManifest object or None if loading fails
         """
         try:
-            with open(manifest_file, "r", encoding="utf-8") as f:
+            with open(manifest_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
 
             if not data:
@@ -92,10 +98,10 @@ class PluginManager:
 
             return manifest
         except Exception as e:
-            print(f"Error parsing manifest: {e}")
+            self.logger.error(f"Error parsing manifest: {e}")
             return None
 
-    def _create_plugin_instance(self, manifest: PluginManifest) -> Optional[PluginBase]:
+    def _create_plugin_instance(self, manifest: PluginManifest) -> PluginBase | None:
         """
         Create plugin instance from manifest.
 
@@ -115,7 +121,7 @@ class PluginManager:
 
         return None
 
-    def get_plugin(self, name: str) -> Optional[PluginBase]:
+    def get_plugin(self, name: str) -> PluginBase | None:
         """
         Get plugin by name.
 
@@ -127,7 +133,7 @@ class PluginManager:
         """
         return self.plugins.get(name)
 
-    def get_all_plugins(self) -> List[PluginBase]:
+    def get_all_plugins(self) -> list[PluginBase]:
         """
         Get all discovered plugins.
 
@@ -136,7 +142,7 @@ class PluginManager:
         """
         return list(self.plugins.values())
 
-    def get_mandatory_plugins(self) -> List[PluginBase]:
+    def get_mandatory_plugins(self) -> list[PluginBase]:
         """
         Get mandatory plugins only.
 
@@ -145,7 +151,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.manifest.mandatory]
 
-    def get_optional_plugins(self) -> List[PluginBase]:
+    def get_optional_plugins(self) -> list[PluginBase]:
         """
         Get optional plugins only.
 
@@ -154,7 +160,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if not p.manifest.mandatory]
 
-    def get_enabled_plugins(self) -> List[PluginBase]:
+    def get_enabled_plugins(self) -> list[PluginBase]:
         """
         Get enabled plugins only.
 
@@ -163,7 +169,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.manifest.enabled]
 
-    def get_installed_plugins(self) -> List[PluginBase]:
+    def get_installed_plugins(self) -> list[PluginBase]:
         """
         Get plugins that are currently installed.
 
@@ -172,7 +178,9 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.is_installed()]
 
-    async def install_plugin(self, name: str, progress_callback=None) -> bool:
+    async def install_plugin(
+        self, name: str, progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
         """
         Install a plugin by name.
 
@@ -185,33 +193,34 @@ class PluginManager:
         """
         plugin = self.get_plugin(name)
         if not plugin:
-            print(f"Plugin {name} not found in registry")
+            self.logger.error(f"Plugin {name} not found in registry")
             return False
 
         try:
             # Download
-            print(f"Downloading {name}...")
+            self.logger.info(f"Downloading {name}...")
             download_success = await plugin.download(progress_callback)
             if not download_success:
-                print(f"Download failed for {name}")
+                self.logger.error(f"Download failed for {name}")
                 return False
 
             # Extract
-            print(f"Extracting {name}...")
+            self.logger.info(f"Extracting {name}...")
             extract_success = await plugin.extract()
             if not extract_success:
-                print(f"Extraction failed for {name}")
+                self.logger.error(f"Extraction failed for {name}")
                 return False
 
             # Validate
-            print(f"Validating {name}...")
+            self.logger.info(f"Validating {name}...")
             is_valid = plugin.validate_installation()
             if not is_valid:
-                print(f"Validation failed for {name}")
+                self.logger.error(f"Validation failed for {name}")
             return is_valid
         except Exception as e:
-            print(f"Exception during installation of {name}: {e}")
+            self.logger.error(f"Exception during installation of {name}: {e}")
             import traceback
+
             traceback.print_exc()
             return False
 
@@ -231,7 +240,9 @@ class PluginManager:
 
         return await plugin.uninstall()
 
-    async def update_plugin(self, name: str, progress_callback=None) -> bool:
+    async def update_plugin(
+        self, name: str, progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
         """
         Update a plugin to latest version.
 
@@ -248,7 +259,7 @@ class PluginManager:
 
         return await self.install_plugin(name, progress_callback)
 
-    def get_plugin_status(self, name: str) -> Dict[str, any]:
+    def get_plugin_status(self, name: str) -> dict[str, Any]:
         """
         Get detailed status of a plugin.
 
@@ -269,10 +280,12 @@ class PluginManager:
             "installed": plugin.is_installed(),
             "mandatory": plugin.manifest.mandatory,
             "enabled": plugin.manifest.enabled,
-            "executable": str(plugin.get_executable_path()) if plugin.get_executable_path() else None,
+            "executable": (
+                str(plugin.get_executable_path()) if plugin.get_executable_path() else None
+            ),
         }
 
-    def register_plugins_to_path(self) -> List[Path]:
+    def register_plugins_to_path(self) -> list[Path]:
         """
         Get list of plugin paths that should be registered to PATH.
 

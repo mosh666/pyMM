@@ -1,11 +1,15 @@
 """Tests for view classes."""
+
+from unittest.mock import Mock
+
 import pytest
-from PySide6.QtCore import Qt
-from app.ui.views.storage_view import StorageView
+
+from app.core.services.storage_service import StorageService
+from app.models.project import Project
+from app.plugins.plugin_manager import PluginManager
 from app.ui.views.plugin_view import PluginView
 from app.ui.views.project_view import ProjectView
-from app.core.services.storage_service import StorageService
-from app.plugins.plugin_manager import PluginManager
+from app.ui.views.storage_view import StorageView
 
 
 class TestStorageView:
@@ -94,9 +98,26 @@ class TestProjectView:
     """Test suite for ProjectView."""
 
     @pytest.fixture
-    def view(self, qtbot):
+    def mock_project_service(self):
+        """Create mock project service."""
+        service = Mock()
+        service.list_projects.return_value = []
+        return service
+
+    @pytest.fixture
+    def sample_project(self, temp_dir):
+        """Create a sample project for testing."""
+        project = Mock(spec=Project)
+        project.name = "Test Project"
+        project.path = temp_dir / "test_project"
+        project.description = "Test description"
+        project.exists = True
+        return project
+
+    @pytest.fixture
+    def view(self, qtbot, mock_project_service):
         """Create project view."""
-        view = ProjectView()
+        view = ProjectView(mock_project_service)
         qtbot.addWidget(view)
         return view
 
@@ -106,5 +127,5 @@ class TestProjectView:
 
     def test_initial_state(self, view):
         """Test initial view state."""
-        # Should have placeholder message
+        # Should have placeholder message when no projects
         assert view.projects_list.count() > 0

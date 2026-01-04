@@ -15,6 +15,17 @@
 		"vscode-edge-devtools.showWorkers": true,
 		"vscode-edge-devtools.useHttps": true,
 		"workbench.colorTheme": "Default Dark+",
-		"codacy.guardrails.instructionsFile": "manual"
+		"codacy.guardrails.instructionsFile": "manual",
+		"inlineChat.notebookAgent": true,
+		"inlineChat.enableV2": true,
+		"chat.viewSessions.orientation": "stacked",
+		"chat.renderRelatedFiles": true,
+		"chat.mcp.gallery.enabled": true,
+		"chat.mcp.assisted.nuget.enabled": true,
+		"chat.editor.wordWrap": "on",
+		"chat.editing.autoAcceptDelay": 10,
+		"chat.customAgentInSubagent.enabled": true,
+		"chat.checkpoints.showFileChanges": true,
+		"chat.agent.maxRequests": 100
 	}
 }

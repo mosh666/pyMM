@@ -2,12 +2,13 @@
 Logging service for pyMediaManager.
 Provides rich console logging and rotating file logs.
 """
-from pathlib import Path
-from typing import Optional
+
 import logging
 import logging.handlers
-from rich.logging import RichHandler
+from pathlib import Path
+
 from rich.console import Console
+from rich.logging import RichHandler
 
 
 class LoggingService:
@@ -16,13 +17,13 @@ class LoggingService:
     def __init__(
         self,
         app_name: str = "pyMediaManager",
-        log_dir: Optional[Path] = None,
+        log_dir: Path | None = None,
         level: str = "INFO",
         console_enabled: bool = True,
         file_enabled: bool = True,
         max_file_size: int = 10485760,  # 10MB
         backup_count: int = 5,
-        file_system_service: Optional[object] = None,
+        file_system_service: object | None = None,
     ):
         """
         Initialize logging service.
@@ -39,21 +40,21 @@ class LoggingService:
         """
         self.app_name = app_name
         self.file_system_service = file_system_service
-        
+
         # Use portable logs folder if log_dir not specified and file_system_service available
         if log_dir is None and file_system_service is not None:
-            self.log_dir = file_system_service.get_portable_folder("pyMM.Logs")
+            self.log_dir = file_system_service.get_portable_folder("pyMM.Logs")  # type: ignore[attr-defined]
         else:
             self.log_dir = log_dir
-        
+
         self.level = getattr(logging, level.upper())
         self.console_enabled = console_enabled
         self.file_enabled = file_enabled
         self.max_file_size = max_file_size
         self.backup_count = backup_count
 
-        self._logger: Optional[logging.Logger] = None
-        self._console: Optional[Console] = None
+        self._logger: logging.Logger | None = None
+        self._console: Console | None = None
 
     def setup(self) -> logging.Logger:
         """
@@ -106,7 +107,7 @@ class LoggingService:
 
         return self._logger
 
-    def get_logger(self, name: Optional[str] = None) -> logging.Logger:
+    def get_logger(self, name: str | None = None) -> logging.Logger:
         """
         Get a logger instance.
 
@@ -122,6 +123,7 @@ class LoggingService:
         if name:
             return logging.getLogger(f"{self.app_name}.{name}")
 
+        assert self._logger is not None
         return self._logger
 
     def set_level(self, level: str) -> None:
@@ -139,7 +141,7 @@ class LoggingService:
             for handler in self._logger.handlers:
                 handler.setLevel(new_level)
 
-    def get_log_file_path(self) -> Optional[Path]:
+    def get_log_file_path(self) -> Path | None:
         """
         Get the current log file path.
 
@@ -149,7 +151,7 @@ class LoggingService:
         if not self.file_enabled or not self.log_dir:
             return None
 
-        return self.log_dir / f"{self.app_name.lower()}.log"
+        return Path(self.log_dir / f"{self.app_name.lower()}.log")
 
     def get_all_log_files(self) -> list[Path]:
         """

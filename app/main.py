@@ -2,12 +2,13 @@
 Main application entry point for pyMediaManager.
 Initializes services and launches the PySide6 GUI.
 """
+
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any
 
-from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication
 
 
 def get_app_root() -> Path:
@@ -19,7 +20,7 @@ def get_app_root() -> Path:
 def run_application() -> int:
     """
     Initialize and run the pyMediaManager application.
-    
+
     Returns:
         Exit code (0 for success, non-zero for errors)
     """
@@ -27,27 +28,29 @@ def run_application() -> int:
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # type: ignore[attr-defined]
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # type: ignore[attr-defined]
+
+    from app import __version__
 
     app = QApplication(sys.argv)
     app.setApplicationName("pyMediaManager")
     app.setOrganizationName("mosh666")
-    app.setApplicationVersion("0.0.1")
+    app.setApplicationVersion(__version__)
 
     # Initialize services
     app_root = get_app_root()
 
-    from app.core.services.file_system_service import FileSystemService
-    from app.core.services.config_service import ConfigService
-    from app.core.services.storage_service import StorageService
     from app.core.logging_service import LoggingService
+    from app.core.services.config_service import ConfigService
+    from app.core.services.file_system_service import FileSystemService
+    from app.core.services.storage_service import StorageService
     from app.plugins.plugin_manager import PluginManager
     from app.services.project_service import ProjectService
 
     # File system service
     file_system_service = FileSystemService(app_root)
-    
+
     # Ensure portable folders exist at drive root
     portable_folders = file_system_service.ensure_portable_folders()
 
@@ -67,7 +70,9 @@ def run_application() -> int:
     logger.info(f"Starting {config.app_name} v{config.app_version}")
     logger.info(f"App root: {app_root}")
     logger.info(f"Drive root: {file_system_service.get_drive_root()}")
-    logger.info(f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}")
+    logger.info(
+        f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}"
+    )
 
     # Storage service
     storage_service = StorageService()
@@ -81,9 +86,20 @@ def run_application() -> int:
     logger.info(f"Discovered {len(plugin_manager.get_all_plugins())} plugins")
 
     # Project service
-    projects_metadata_dir = portable_folders['projects'] / ".metadata"
+    projects_metadata_dir = portable_folders["projects"] / ".metadata"
     project_service = ProjectService(projects_metadata_dir)
     logger.info(f"Project service initialized: {projects_metadata_dir}")
+
+    # Define show_main_window function first
+    def show_main_window() -> None:
+        """Create and show the main window."""
+        from app.ui.main_window import MainWindow
+
+        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
+        main_window.show()
+
+        # Store reference to prevent garbage collection
+        app.main_window = main_window  # type: ignore[attr-defined]
 
     # Check first-run state
     if config.ui.show_first_run:
@@ -95,7 +111,7 @@ def run_application() -> int:
 
         wizard = FirstRunWizard(storage_service, optional_plugins)
 
-        def on_wizard_finished(data):
+        def on_wizard_finished(data: dict[str, Any]) -> None:
             logger.info(f"First-run wizard completed: {data}")
             # Update config to not show wizard again
             if data.get("dont_show_again"):
@@ -104,7 +120,7 @@ def run_application() -> int:
             # Show main window
             show_main_window()
 
-        def on_wizard_cancelled():
+        def on_wizard_cancelled() -> None:
             logger.info("First-run wizard cancelled")
             # Still show main window
             show_main_window()
@@ -115,16 +131,6 @@ def run_application() -> int:
     else:
         # Show main window directly
         show_main_window()
-
-    def show_main_window():
-        """Create and show the main window."""
-        from app.ui.main_window import MainWindow
-
-        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
-        main_window.show()
-
-        # Store reference to prevent garbage collection
-        app.main_window = main_window
 
     return app.exec()
 

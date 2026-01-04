@@ -1,14 +1,15 @@
 """Tests for ConfigService."""
+
 import pytest
-from pathlib import Path
 import yaml
+
+from app import __commit_id__, __version__
 from app.core.services.config_service import (
-    ConfigService,
     AppConfig,
-    PathConfig,
+    ConfigService,
     LoggingConfig,
-    UIConfig,
     LogLevel,
+    UIConfig,
 )
 
 
@@ -20,7 +21,8 @@ class TestAppConfig:
         config = AppConfig()
 
         assert config.app_name == "pyMediaManager"
-        assert config.app_version == "0.0.1"
+        assert config.app_version == __version__
+        assert config.app_commit == __commit_id__
         assert config.paths.projects_dir == "pyMM.Projects"
         assert config.logging.level == LogLevel.INFO
         assert config.ui.show_first_run is True
@@ -142,7 +144,7 @@ class TestConfigService:
         assert user_file.exists()
 
         # Verify saved content
-        with open(user_file, "r") as f:
+        with open(user_file) as f:
             data = yaml.safe_load(f)
 
         assert data["app_name"] == "SavedApp"
@@ -166,8 +168,7 @@ class TestConfigService:
     def test_update_config(self, service, app_root):
         """Test updating configuration values."""
         # Initial load
-        config = service.load()
-        original_theme = config.ui.theme
+        service.load()
 
         # Update config
         updated = service.update_config(ui=UIConfig(theme="dark", window_width=1920))
@@ -203,14 +204,14 @@ class TestConfigService:
 
         assert export_path.exists()
 
-        with open(export_path, "r") as f:
+        with open(export_path) as f:
             data = yaml.safe_load(f)
 
         assert data["app_name"] == config.app_name
 
     def test_export_config_with_redaction(self, service, app_root):
         """Test exporting with sensitive data redacted."""
-        config = service.load()
+        service.load()
 
         export_path = app_root / "export" / "config_redacted.yaml"
         service.export_config(export_path, redact_sensitive=True)

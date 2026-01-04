@@ -2,8 +2,9 @@ name: Release
 
 on:
   push:
+    branches: [ dev ]
     tags:
-      - 'v*.*.*'
+      - 'v*'
   workflow_dispatch:
     inputs:
       tag:
@@ -41,42 +42,57 @@ jobs:
           find artifacts/ -name "*.sha256" -exec cp {} release-assets/ \;
           ls -lah release-assets/
       
-      - name: Extract changelog for this version
+      - name: Determine Release Tag & Changelog
         id: changelog
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            IS_PRERELEASE=false
+            if [[ "$TAG_NAME" == *"-alpha"* ]] || [[ "$TAG_NAME" == *"-beta"* ]] || [[ "$TAG_NAME" == *"-rc"* ]]; then
+              IS_PRERELEASE=true
+            fi
+          elif [[ $GITHUB_REF == refs/heads/dev ]]; then
+            TAG_NAME="latest-beta"
+            IS_PRERELEASE=true
+          else
+            TAG_NAME="unknown"
+            IS_PRERELEASE=true
+          fi
+          
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "IS_PRERELEASE=$IS_PRERELEASE" >> $GITHUB_OUTPUT
           
           # Extract changelog section for this version (if CHANGELOG.md exists)
-          if [ -f CHANGELOG.md ]; then
+          if [ -f CHANGELOG.md ] && [[ $GITHUB_REF == refs/tags/* ]]; then
             sed -n "/## \[$TAG_NAME\]/,/## \[/p" CHANGELOG.md | sed '$d' > release-notes.md
           else
             echo "Release $TAG_NAME" > release-notes.md
             echo "" >> release-notes.md
+            echo "Automated release from $GITHUB_REF" >> release-notes.md
             echo "See commit history for changes." >> release-notes.md
           fi
           
           # Add download instructions
-          cat >> release-notes.md << 'EOF'
+          cat >> release-notes.md << EOF
           
           ## Download Instructions
           
           ### Recommended (Python 3.13)
-          Download `pyMM-${TAG_NAME}-py3.13-win64.zip` for the latest Python version with best compatibility.
+          Download \`pyMM-*-py3.13-win64.zip\` for the latest Python version with best compatibility.
           
           ### Python 3.12
-          Download `pyMM-${TAG_NAME}-py3.12-win64.zip` if you need Python 3.12 specifically.
+          Download \`pyMM-*-py3.12-win64.zip\` if you need Python 3.12 specifically.
           
           ### Verification
           Verify your download using the SHA256 checksums:
-          ```bash
+          \`\`\`bash
           # PowerShell
           (Get-FileHash -Path pyMM-*.zip -Algorithm SHA256).Hash -eq (Get-Content pyMM-*.sha256)
-          ```
+          \`\`\`
           
           ### Installation
-          1. Extract ZIP to your portable drive (e.g., `D:\pyMM\`)
-          2. Run: `D:\pyMM\python313\python.exe D:\pyMM\launcher.py`
+          1. Extract ZIP to your portable drive (e.g., \`D:\pyMM\\\`)
+          2. Run: \`D:\pyMM\python313\python.exe D:\pyMM\launcher.py\`
           3. Complete first-run setup wizard
           
           See [README.md](https://github.com/mosh666/pyMM/blob/main/README.md) for detailed instructions.
@@ -85,10 +101,11 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.changelog.outputs.TAG_NAME }}
           files: release-assets/*
           body_path: release-notes.md
           draft: false
-          prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
+          prerelease: ${{ steps.changelog.outputs.IS_PRERELEASE }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -96,4 +113,3 @@ jobs:
       - name: Update latest release symlink comment
         run: |
           echo "✅ Release ${{ steps.changelog.outputs.TAG_NAME }} published successfully"
-          echo "📦 Recommended download: pyMM-${{ steps.changelog.outputs.TAG_NAME }}-py3.13-win64.zip"

@@ -1,32 +1,37 @@
 """
 Storage view for managing portable drives.
 """
+
+import logging
 from pathlib import Path
+
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QPushButton,
     QTableWidget,
     QTableWidgetItem,
-    QHeaderView,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtCore import Qt
 
-from app.core.services.storage_service import StorageService, DriveInfo
+from app.core.services.storage_service import StorageService
 
 
 class StorageView(QWidget):
     """View for displaying and managing storage drives."""
 
-    def __init__(self, storage_service: StorageService, parent=None):
+    def __init__(self, storage_service: StorageService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.setObjectName("storageView")
+
+        self.logger = logging.getLogger(__name__)
         self.storage_service = storage_service
         self._init_ui()
         self.refresh_drives()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -69,7 +74,7 @@ class StorageView(QWidget):
 
         layout.addLayout(button_layout)
 
-    def refresh_drives(self):
+    def refresh_drives(self) -> None:
         """Refresh the drives table."""
         drives = self.storage_service.get_all_drives()
 
@@ -99,7 +104,7 @@ class StorageView(QWidget):
             status = f"{used_pct:.1f}% used"
             self.drives_table.setItem(row, 5, QTableWidgetItem(status))
 
-    def get_selected_drive(self) -> Path:
+    def get_selected_drive(self) -> Path | None:
         """
         Get the currently selected drive.
 
@@ -109,6 +114,8 @@ class StorageView(QWidget):
         selected_rows = self.drives_table.selectedItems()
         if selected_rows:
             row = selected_rows[0].row()
-            drive_letter = self.drives_table.item(row, 0).text()
-            return Path(drive_letter)
+            item = self.drives_table.item(row, 0)
+            if item is not None:
+                drive_letter = item.text()
+                return Path(drive_letter)
         return None

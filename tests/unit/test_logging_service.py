@@ -1,8 +1,6 @@
 """Tests for LoggingService."""
-import logging
-from pathlib import Path
 
-import pytest
+import logging
 
 from app.core.logging_service import LoggingService
 from app.core.services.file_system_service import FileSystemService
@@ -114,24 +112,24 @@ class TestLoggingService:
     def test_setup_clears_existing_handlers(self, tmp_path):
         """Test that setup clears existing handlers."""
         service = LoggingService(log_dir=tmp_path / "logs")
-        
+
         # Setup first time
         logger1 = service.setup()
         handler_count_1 = len(logger1.handlers)
-        
+
         # Setup again - handlers should be cleared and recreated
         logger2 = service.setup()
         handler_count_2 = len(logger2.handlers)
-        
+
         assert handler_count_1 == handler_count_2
 
     def test_get_logger_auto_setup(self, tmp_path):
         """Test get_logger automatically calls setup if needed."""
         service = LoggingService(log_dir=tmp_path / "logs")
-        
+
         assert service._logger is None
         logger = service.get_logger()
-        
+
         assert service._logger is not None
         assert logger is not None
 
