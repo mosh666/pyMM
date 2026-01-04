@@ -2,6 +2,7 @@ name: Build Portable Distribution
 
 on:
   workflow_dispatch:  # Manual trigger
+  workflow_call:  # Allow calling from other workflows
   push:
     tags:
       - 'v*.*.*'
