@@ -43,6 +43,7 @@ def run_application() -> int:
     from app.core.services.storage_service import StorageService
     from app.core.logging_service import LoggingService
     from app.plugins.plugin_manager import PluginManager
+    from app.services.project_service import ProjectService
 
     # File system service
     file_system_service = FileSystemService(app_root)
@@ -79,6 +80,11 @@ def run_application() -> int:
 
     logger.info(f"Discovered {len(plugin_manager.get_all_plugins())} plugins")
 
+    # Project service
+    projects_metadata_dir = portable_folders['projects'] / ".metadata"
+    project_service = ProjectService(projects_metadata_dir)
+    logger.info(f"Project service initialized: {projects_metadata_dir}")
+
     # Check first-run state
     if config.ui.show_first_run:
         logger.info("Showing first-run wizard")
@@ -114,7 +120,7 @@ def run_application() -> int:
         """Create and show the main window."""
         from app.ui.main_window import MainWindow
 
-        main_window = MainWindow(config_service, storage_service, plugin_manager)
+        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
         main_window.show()
 
         # Store reference to prevent garbage collection

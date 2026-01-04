@@ -26,6 +26,7 @@ except ImportError:
 from app.core.services.config_service import ConfigService
 from app.core.services.storage_service import StorageService
 from app.plugins.plugin_manager import PluginManager
+from app.services.project_service import ProjectService
 
 
 class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
@@ -36,12 +37,15 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         config_service: ConfigService,
         storage_service: StorageService,
         plugin_manager: PluginManager,
+        project_service: ProjectService,
     ):
         super().__init__()
 
         self.config_service = config_service
         self.storage_service = storage_service
         self.plugin_manager = plugin_manager
+        self.project_service = project_service
+        self.current_project = None
 
         self._init_window()
         self._init_navigation()
@@ -85,7 +89,8 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         # Project Management
         from app.ui.views.project_view import ProjectView
 
-        self.project_view = ProjectView()
+        self.project_view = ProjectView(self.project_service)
+        self.project_view.project_opened.connect(self._on_project_opened)
         self.addSubInterface(
             self.project_view, FluentIcon.FOLDER_ADD, "Projects", NavigationItemPosition.TOP
         )
@@ -181,3 +186,20 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         else:
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
+    
+    def _on_project_opened(self, project):
+        """Handle project opened event."""
+        from PySide6.QtWidgets import QMessageBox
+        
+        self.current_project = project
+        
+        # Update window title
+        config = self.config_service.get_config()
+        self.setWindowTitle(f"{config.app_name} - {project.name}")
+        
+        # Show notification
+        QMessageBox.information(
+            self,
+            "Project Opened",
+            f"Successfully opened project: {project.name}\n\nPath: {project.path}",
+        )
