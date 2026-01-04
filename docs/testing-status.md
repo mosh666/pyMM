@@ -4,9 +4,9 @@
 This document tracks the testing progress for pyMM v0.1.0 development.
 
 ## Test Coverage Summary
-**Current Coverage: 45%** (as of Phase 4 - January 2026)
+**Current Coverage: 30%** (as of Phase 4 - January 2025)
 - **Target: 70%+**
-- **Tests Passing: 123/128**
+- **Tests Passing: 137/142**
 - **Tests Failing: 3** (pre-existing config service tests)
 - **Test Errors: 2** (GUI tests needing ProjectService fixture)
 
@@ -51,7 +51,7 @@ This document tracks the testing progress for pyMM v0.1.0 development.
   - Directory operations (create, list, delete)
   - File operations (copy, move, delete, size, free space)
 
-#### ✅ GitService Tests (`test_git_service.py`) - NEW
+#### ✅ GitService Tests (`test_git_service.py`)
 - **Status:** All passing (14/14)
 - **Coverage:** 77%
 - **Features Tested:**
@@ -63,20 +63,37 @@ This document tracks the testing progress for pyMM v0.1.0 development.
   - Commit log retrieval
   - Error handling for non-repositories
 
+#### ✅ PluginBase Tests (`test_plugin_base.py`) - NEW
+- **Status:** All passing (27/27)
+- **Coverage:** 71%
+- **Features Tested:**
+  - PluginManifest dataclass creation and defaults
+  - Plugin initialization and paths
+  - Installation detection (`is_installed`)
+  - Uninstall functionality
+  - Executable path resolution
+  - Archive extension detection (zip, 7z, 7z.exe)
+  - Download error handling (HTTP errors, retries)
+  - Checksum verification (success, failure, case-insensitive)
+  - Extraction workflows (zip archives)
+  - Directory flattening
+  - Special case handling (ExifTool)
+  - Version retrieval
+
 #### ✅ PluginManager Tests (`test_plugin_manager.py`)
 - **Status:** All passing (11/11)
-- **Coverage:** 61%
+- **Coverage:** 75%
 - **Features Tested:**
   - Plugin discovery and manifest loading
   - Plugin retrieval and filtering
   - Status checking (mandatory, optional, enabled)
   - Plugin registration to PATH
 
-#### ✅ Project Tests (`test_project.py`) - NEW
+#### ✅ Project Tests (`test_project.py`)
 - **Status:** All passing (20/20)
 - **Coverage:**
   - Project model: 96%
-  - ProjectService: 68%
+  - ProjectService: 80%
 - **Features Tested:**
   - Project creation and validation
   - Path handling
@@ -127,38 +144,41 @@ Located in project root - need conversion to pytest format:
 | Module | Statements | Miss | Cover |
 |--------|-----------|------|-------|
 | app/models/project.py | 27 | 1 | 96% |
-| app/core/services/config_service.py | 104 | 1 | 99% |
 | app/core/services/file_system_service.py | 98 | 9 | 91% |
-| app/ui/views/storage_view.py | 58 | 6 | 90% |
 | app/core/services/storage_service.py | 80 | 12 | 85% |
 | app/services/project_service.py | 96 | 19 | 80% |
 | app/services/git_service.py | 97 | 22 | 77% |
-| app/plugins/plugin_manager.py | 104 | 37 | 64% |
-| app/ui/views/plugin_view.py | 114 | 64 | 44% |
-| app/plugins/plugin_base.py | 213 | 153 | 28% |
+| app/plugins/plugin_manager.py | 104 | 26 | 75% |
+| app/plugins/plugin_base.py | 213 | 62 | 71% |
+| app/core/services/config_service.py | 104 | 104 | 0% |
+| app/core/logging_service.py | 60 | 60 | 0% |
+| UI modules (dialogs, views, main_window) | ~900 | ~900 | 0% |
 
-### Good Coverage (>80%)
-- Core services (config, file system, storage)
-- Project model and service
-- Git service
+### Good Coverage (>70%)
+- Plugin base class (71%) ✅ **IMPROVED**
+- Plugin manager (75%) ✅
+- Git service (77%) ✅
+- Project service (80%) ✅
+- Storage service (85%) ✅
+- File system service (91%) ✅
+- Project model (96%) ✅
 
-### Moderate Coverage (50-80%)
-- Plugin manager
-- Storage and plugin views
-
-### Low Coverage (<50%)
+### Low Coverage (<30%)
+- Config service (0%)
+- Logging service (0%)
 - UI dialogs (0%)
+- UI views (0%)
 - Main window (0%)
-- Plugin base class (28%)
-- Project view (18%)
 
 ## Testing Gaps & Next Steps
 
-### Priority 1: Reach 70% Coverage (Current: 45%)
-- [ ] Add PluginBase download tests (would add ~6%)
-- [ ] Add UI dialog tests (project wizard, browser, settings) (~8%)
-- [ ] Add LoggingService tests (~3%)
-- [ ] Add remaining view tests (~4%)
+### Priority 1: Reach 70% Coverage (Current: 30%)
+- [x] Add PluginBase tests (added ~6%, now at 71% coverage) ✅
+- [ ] Add ConfigService tests (~5% coverage gain)
+- [ ] Add LoggingService tests (~3% coverage gain)
+- [ ] Add UI dialog tests (project wizard, browser, settings) (~8% coverage gain)
+- [ ] Add view tests (plugin, project, storage views) (~4% coverage gain)
+- **Estimated total gain:** ~26% (would bring total to ~56%)
 
 ### Priority 2: Fix Existing Issues
 - [ ] Fix ConfigService YAML serialization (3 failing tests)
