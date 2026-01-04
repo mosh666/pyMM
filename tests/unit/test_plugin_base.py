@@ -5,7 +5,7 @@ Tests download, extraction, checksum verification, and plugin management.
 """
 
 import hashlib
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -347,17 +347,19 @@ class TestDownloadFile:
         """Test download with HTTP error."""
         destination = tmp_path / "download.zip"
 
-        mock_response = AsyncMock()
+        mock_response = MagicMock()
         mock_response.status = 404
         mock_response.reason = "Not Found"
 
-        mock_session = AsyncMock()
-        mock_session.get = AsyncMock(return_value=mock_response)
-        mock_session.__aenter__ = AsyncMock(return_value=mock_session)
-        mock_session.__aexit__ = AsyncMock()
+        # Create an async context manager for session.get()
+        mock_get_cm = AsyncMock()
+        mock_get_cm.__aenter__.return_value = mock_response
+        mock_get_cm.__aexit__.return_value = None
 
-        mock_response.__aenter__ = AsyncMock(return_value=mock_response)
-        mock_response.__aexit__ = AsyncMock()
+        mock_session = MagicMock()
+        mock_session.get.return_value = mock_get_cm
+        mock_session.__aenter__ = AsyncMock(return_value=mock_session)
+        mock_session.__aexit__ = AsyncMock(return_value=None)
 
         with patch("aiohttp.ClientSession", return_value=mock_session):
             result = await simple_plugin._download_file(
