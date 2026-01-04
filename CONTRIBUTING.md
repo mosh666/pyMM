@@ -5,7 +5,7 @@ Thank you for your interest in contributing to pyMediaManager! This document pro
 ## Development Setup
 
 ### Prerequisites
-- Python 3.12 or 3.13
+- Python 3.12, 3.13, or 3.14
 - Git
 - Windows OS (for now - Linux/macOS support planned)
 
@@ -42,18 +42,17 @@ Thank you for your interest in contributing to pyMediaManager! This document pro
 
 ### Python Style Guide
 We follow PEP 8 with these tools:
-- **Black**: Code formatting (line length: 100)
-- **Ruff**: Linting and import sorting
+- **Ruff**: Fast linting with auto-fix and formatting (replaces Black, flake8, isort)
 - **MyPy**: Static type checking
+- **Modern Type Hints**: Use Python 3.12+ native types (`list`, `dict`, `tuple`) instead of
+  `typing.List`, `typing.Dict`, etc.
 
 ### Running Code Quality Tools
 
 ```bash
-# Format code
-black app/ tests/
-
-# Lint code
-ruff check app/ tests/
+# Format and fix code
+ruff check --fix app/ tests/
+ruff format app/ tests/
 
 # Type check
 mypy app/
@@ -91,11 +90,9 @@ Before committing, ensure:
 # All tests pass
 pytest
 
-# Code is formatted
-black --check app/ tests/
-
-# No lint errors
-ruff check app/ tests/
+# Code is formatted and linted
+ruff check --fix app/ tests/
+ruff format app/ tests/
 ```
 
 ## Commit Messages

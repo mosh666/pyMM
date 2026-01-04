@@ -62,7 +62,8 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 
 1. Download the latest release for your Python version:
    - **Recommended:** `pyMM-v0.1.0-py314-win64.zip` (Python 3.14)
-   - `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
+   - Also available: `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
+   - Legacy: `pyMM-v0.1.0-py312-win64.zip` (Python 3.12)
 
 2. Extract to your portable drive (e.g., `D:\pyMM\`)
 
@@ -82,7 +83,7 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 ### Build From Source
 
 **Prerequisites:**
-- Python 3.12+ installed on development machine
+- Python 3.12+ installed on development machine (3.14 recommended)
 - Git for version control
 
 **Steps:**
@@ -308,4 +309,4 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ---
 
-**Status:** 🚧 Active Development - v0.0.1 Initial Release
+**Status:** � v0.1.0 Beta Release - January 2026

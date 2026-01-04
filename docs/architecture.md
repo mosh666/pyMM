@@ -28,10 +28,13 @@ pyMediaManager is a portable, Python-based media management application designed
 ### 4. Code Quality Standards
 - **Structured Logging**: All modules use proper logger instances instead of print statements
 - **Type Safety**: Comprehensive return type hints on all functions and methods
+- **Modern Type Hints**: Use Python 3.12+ native generic types (`list`, `dict`, `tuple`) instead
+  of importing from `typing` module
 - **Documentation**: Docstrings for all public APIs following Google style
 - **Testing**: 70%+ code coverage requirement with unit and integration tests
-- **Code Formatting**: Consistent style enforced by Ruff and Black
+- **Code Formatting**: Consistent style enforced by Ruff formatter
 - **Static Analysis**: MyPy type checking for catching errors early
+- **Linting**: Ruff linter with auto-fix for code quality
 
 ## Directory Structure
 
