@@ -7,6 +7,7 @@ This module defines the Project dataclass for storing project metadata.
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -30,7 +31,7 @@ class Project:
     modified: datetime = field(default_factory=datetime.now)
     description: str | None = None
     git_enabled: bool = True
-    settings: dict = field(default_factory=dict)
+    settings: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Validate and normalize project data."""
@@ -52,7 +53,7 @@ class Project:
         """Check if the project is a Git repository."""
         return (self.path / ".git").exists()
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert project to dictionary for serialization."""
         return {
             "name": self.name,
@@ -65,7 +66,7 @@ class Project:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Project":
+    def from_dict(cls, data: dict[str, Any]) -> "Project":
         """Create project from dictionary."""
         return cls(
             name=data["name"],

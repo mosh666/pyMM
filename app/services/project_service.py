@@ -10,6 +10,7 @@ import logging
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from app.models.project import Project
 from app.services.git_service import GitService
@@ -231,7 +232,7 @@ class ProjectService:
             self.logger.error(f"Error initializing Git repository: {e}")
             return False
 
-    def get_git_status(self, project: Project) -> dict | None:
+    def get_git_status(self, project: Project) -> dict[str, Any] | None:
         """
         Get Git status for a project.
 
@@ -274,7 +275,7 @@ class ProjectService:
             self.logger.error(f"Error committing changes: {e}")
             return False
 
-    def get_git_log(self, project: Project, max_count: int = 10) -> list[dict]:
+    def get_git_log(self, project: Project, max_count: int = 10) -> list[dict[str, Any]]:
         """
         Get commit log for a project.
 

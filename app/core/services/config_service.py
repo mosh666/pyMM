@@ -74,7 +74,7 @@ class AppConfig(BaseModel):
     plugins: PluginConfig = Field(default_factory=PluginConfig)
 
     # Sensitive fields that should be redacted in logs
-    _sensitive_fields: set = {"password", "token", "secret", "key", "api_key"}
+    _sensitive_fields: set[str] = {"password", "token", "secret", "key", "api_key"}
 
     def to_dict(self, redact_sensitive: bool = False) -> dict[str, Any]:
         """
@@ -215,7 +215,7 @@ class ConfigService:
         self._config = None
         return self.load()
 
-    def _merge_dicts(self, base: dict, override: dict) -> dict:
+    def _merge_dicts(self, base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
         """
         Recursively merge two dictionaries.
 

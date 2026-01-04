@@ -66,7 +66,7 @@ class WizardPage(QWidget):
         """
         return True
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, Any]:
         """
         Get data collected on this page.
 
@@ -178,7 +178,7 @@ class StoragePage(WizardPage):
         """Validate that a drive is selected."""
         return self.selected_drive is not None
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, Path | None]:
         """Return selected drive."""
         return {"portable_drive": self.selected_drive}
 
@@ -218,7 +218,7 @@ class PluginPage(WizardPage):
             name for name, checkbox in self.checkboxes.items() if checkbox.isChecked()
         ]
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, list[str]]:
         """Return selected plugins."""
         return {"optional_plugins": self.selected_plugins}
 
@@ -248,7 +248,7 @@ class CompletePage(WizardPage):
         summary.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
         self.content_layout.addWidget(summary)
 
-    def get_data(self) -> dict:
+    def get_data(self) -> dict[str, bool]:
         """Return wizard settings."""
         return {"dont_show_again": self.dont_show_checkbox.isChecked()}
 

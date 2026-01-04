@@ -6,6 +6,7 @@ to provide Git functionality for projects.
 """
 
 from pathlib import Path
+from typing import Any
 
 import git
 from git import GitCommandError, Repo
@@ -100,7 +101,7 @@ desktop.ini
         return (path / ".git").exists()
 
     @staticmethod
-    def get_status(path: Path) -> dict | None:
+    def get_status(path: Path) -> dict[str, Any] | None:
         """
         Get the status of a Git repository.
 
@@ -247,7 +248,7 @@ desktop.ini
             return False
 
     @staticmethod
-    def get_remotes(path: Path) -> list[dict]:
+    def get_remotes(path: Path) -> list[dict[str, Any]]:
         """
         Get list of remotes for the repository.
 
@@ -263,15 +264,17 @@ desktop.ini
 
         remotes = []
         for remote in repo.remotes:
-            remotes.append({
-                "name": remote.name,
-                "urls": list(remote.urls),
-            })
+            remotes.append(
+                {
+                    "name": remote.name,
+                    "urls": list(remote.urls),
+                }
+            )
 
         return remotes
 
     @staticmethod
-    def get_log(path: Path, max_count: int = 10) -> list[dict]:
+    def get_log(path: Path, max_count: int = 10) -> list[dict[str, Any]]:
         """
         Get commit log for the repository.
 
@@ -288,11 +291,13 @@ desktop.ini
 
         commits = []
         for commit in repo.iter_commits(max_count=max_count):
-            commits.append({
-                "sha": commit.hexsha[:7],
-                "message": commit.message.strip(),
-                "author": f"{commit.author.name} <{commit.author.email}>",
-                "date": commit.committed_datetime.isoformat(),
-            })
+            commits.append(
+                {
+                    "sha": commit.hexsha[:7],
+                    "message": commit.message.strip(),
+                    "author": f"{commit.author.name} <{commit.author.email}>",
+                    "date": commit.committed_datetime.isoformat(),
+                }
+            )
 
         return commits
