@@ -4,12 +4,34 @@
 This document tracks the testing progress for pyMM v0.1.0 development.
 
 ## Test Coverage Summary
-**Current Coverage: 29%** (as of Phase 4)
+**Current Coverage: 45%** (as of Phase 4 - January 2026)
 - **Target: 70%+**
-- **Tests Passing: 89/92**
+- **Tests Passing: 123/128**
 - **Tests Failing: 3** (pre-existing config service tests)
+- **Test Errors: 2** (GUI tests needing ProjectService fixture)
 
 ## Test Suites
+
+### Integration Tests (`tests/integration/`) - NEW
+
+#### ✅ Project Workflow Tests (`test_project_workflow.py`)
+- **Status:** All passing (6/6)
+- **Features Tested:**
+  - Basic project creation
+  - Project with Git initialization
+  - Complete project lifecycle (create → modify → delete)
+  - Git operations workflow (status, commit, log)
+  - Multiple project management
+  - Projects with complex directory structures
+
+#### ✅ Plugin Workflow Tests (`test_plugin_workflow.py`)
+- **Status:** All passing (5/5, excluding slow download test)
+- **Features Tested:**
+  - Plugin discovery from manifests
+  - Plugin status checking
+  - Installation of nonexistent plugins (error handling)
+  - Plugin status retrieval
+  - Mandatory vs optional plugin filtering
 
 ### Unit Tests (`tests/unit/`)
 
@@ -104,39 +126,46 @@ Located in project root - need conversion to pytest format:
 
 | Module | Statements | Miss | Cover |
 |--------|-----------|------|-------|
-| app/core/services/config_service.py | 104 | 1 | 99% |
 | app/models/project.py | 27 | 1 | 96% |
+| app/core/services/config_service.py | 104 | 1 | 99% |
 | app/core/services/file_system_service.py | 98 | 9 | 91% |
+| app/ui/views/storage_view.py | 58 | 6 | 90% |
 | app/core/services/storage_service.py | 80 | 12 | 85% |
+| app/services/project_service.py | 96 | 19 | 80% |
 | app/services/git_service.py | 97 | 22 | 77% |
-| app/services/project_service.py | 96 | 31 | 68% |
-| app/plugins/plugin_manager.py | 104 | 41 | 61% |
-| app/plugins/plugin_base.py | 213 | 155 | 27% |
+| app/plugins/plugin_manager.py | 104 | 37 | 64% |
+| app/ui/views/plugin_view.py | 114 | 64 | 44% |
+| app/plugins/plugin_base.py | 213 | 153 | 28% |
 
-### No Coverage (0%)
-- app/core/logging_service.py (60 statements)
-- app/main.py (64 statements)
-- app/ui/** (all UI modules - 875 statements total)
+### Good Coverage (>80%)
+- Core services (config, file system, storage)
+- Project model and service
+- Git service
+
+### Moderate Coverage (50-80%)
+- Plugin manager
+- Storage and plugin views
+
+### Low Coverage (<50%)
+- UI dialogs (0%)
+- Main window (0%)
+- Plugin base class (28%)
+- Project view (18%)
 
 ## Testing Gaps & Next Steps
 
-### Priority 1: Convert Manual Tests
-- [ ] Convert `test_project_management.py` to pytest
-- [ ] Convert `test_git_integration.py` to pytest  
-- [ ] Convert `test_settings_dialog.py` to pytest (requires UI testing setup)
-- [ ] Convert `test_plugin_download.py` to pytest
+### Priority 1: Reach 70% Coverage (Current: 45%)
+- [ ] Add PluginBase download tests (would add ~6%)
+- [ ] Add UI dialog tests (project wizard, browser, settings) (~8%)
+- [ ] Add LoggingService tests (~3%)
+- [ ] Add remaining view tests (~4%)
 
-### Priority 2: Add Missing Unit Tests
-- [ ] LoggingService tests
-- [ ] PluginBase tests (download, extraction, verification)
-- [ ] UI component tests (requires qtbot setup)
+### Priority 2: Fix Existing Issues
+- [ ] Fix ConfigService YAML serialization (3 failing tests)
+- [ ] Fix ProjectView fixture (2 test errors)
+- [ ] Convert remaining manual test scripts to pytest format
 
-### Priority 3: Integration Tests
-- [ ] End-to-end project workflow (create → Git init → commit → delete)
-- [ ] Plugin download → extraction → registration flow
-- [ ] Settings changes → service integration flow
-
-### Priority 4: Documentation
+### Priority 3: Documentation
 - [ ] Create user guide (docs/user-guide.md)
 - [ ] Update README.md with v0.1.0 features
 - [ ] Add troubleshooting guide
@@ -190,7 +219,13 @@ testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
-addopts = "--cov-fail-under=70"
+addopts = ["--cov=app", "--cov-report=html", "--cov-report=term-missing", "--cov-fail-under=70", "-v"]
+asyncio_mode = "auto"
+markers = [
+    "integration: Integration tests (may be slower, access filesystem/network)",
+    "slow: Tests that may take significant time to complete",
+    "ui: Tests that require GUI components",
+]
 ```
 
 ### Fixtures
@@ -210,36 +245,49 @@ addopts = "--cov-fail-under=70"
 ## Metrics
 
 ### Test Execution Time
-- Unit tests: ~4-5 seconds
-- All tests: ~5-6 seconds
+- Unit tests: ~5-6 seconds
+- Integration tests: ~1-2 seconds
+- All tests (excluding slow): ~7-8 seconds
 
 ### Lines of Test Code
 - Unit tests: ~1,800 lines
-- Manual tests: ~500 lines
-- **Total: ~2,300 lines**
+- Integration tests: ~350 lines
+- GUI tests: ~600 lines
+- Manual tests (to be deprecated): ~500 lines
+- **Total: ~3,250 lines**
+
+### Test Distribution
+- **Unit tests:** 92 tests (72%)
+- **Integration tests:** 11 tests (9%)
+- **GUI tests:** 25 tests (19%)
+- **Total:** 128 tests
 
 ## Next Phase Actions
 
 1. **Increase Coverage to 70%+:**
-   - Convert 4 manual test scripts to pytest
-   - Add UI tests for dialogs and views
-   - Add integration tests for workflows
+   - Priority: PluginBase download/extraction tests
+   - Add remaining UI dialog tests
+   - Add LoggingService tests
+   - **Estimated:** ~20-25 additional tests needed
 
 2. **Fix Failing Tests:**
-   - Resolve ConfigService YAML serialization issue
-   - Ensure all 92 tests pass
+   - Resolve ConfigService YAML serialization issue (LogLevel enum)
+   - Fix ProjectView test fixtures
+   - **Target:** 128/128 tests passing
 
 3. **Documentation:**
-   - Complete user guide
-   - Update README with v0.1.0 features
+   - Complete user guide with screenshots
+   - Update README with v0.1.0 features and installation instructions
    - Create troubleshooting guide
+   - **Target:** Production-ready documentation
 
-4. **CI/CD Setup:**
-   - Configure GitHub Actions for automated testing
-   - Set up coverage reporting
-   - Add pre-commit hooks
+4. **Quality Improvements:**
+   - Remove deprecated manual test scripts
+   - Add pre-commit hooks for testing
+   - Set up CI/CD pipeline (optional)
 
 ---
 
-**Last Updated:** 2024 (Phase 4 - Testing & Documentation)
+**Last Updated:** January 4, 2026 (Phase 4 - Testing & Documentation)
 **Version:** v0.1.0-dev
+**Status:** 64% complete toward 70% coverage goal
