@@ -23,6 +23,43 @@ class TestFileSystemService:
         # Should auto-detect from module location
         assert service.get_app_root().exists()
 
+    def test_get_drive_root(self, service, app_root):
+        """Test getting drive root from app root."""
+        drive_root = service.get_drive_root()
+        assert drive_root.exists()
+        assert drive_root.is_dir()
+        # Drive root should be an anchor (e.g., C:\, D:\)
+        assert str(drive_root) == app_root.anchor
+
+    def test_get_drive_root_cached(self, service):
+        """Test drive root is cached after first call."""
+        first_call = service.get_drive_root()
+        second_call = service.get_drive_root()
+        # Should return same object (cached)
+        assert first_call is second_call
+
+    def test_get_portable_folder(self, service):
+        """Test getting portable folder path."""
+        folder = service.get_portable_folder("pyMM.Projects")
+        drive_root = service.get_drive_root()
+        assert folder == drive_root / "pyMM.Projects"
+
+    def test_ensure_portable_folders(self, service):
+        """Test ensuring portable folders exist."""
+        folders = service.ensure_portable_folders()
+        
+        assert "projects" in folders
+        assert "logs" in folders
+        
+        # Folders should exist
+        assert folders["projects"].exists()
+        assert folders["logs"].exists()
+        
+        # Folders should be at drive root
+        drive_root = service.get_drive_root()
+        assert folders["projects"] == drive_root / "pyMM.Projects"
+        assert folders["logs"] == drive_root / "pyMM.Logs"
+
     def test_resolve_relative_path(self, service, app_root):
         """Test resolving relative paths."""
         rel_path = Path("test/file.txt")

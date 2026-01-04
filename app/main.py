@@ -38,26 +38,35 @@ def run_application() -> int:
     # Initialize services
     app_root = get_app_root()
 
+    from app.core.services.file_system_service import FileSystemService
     from app.core.services.config_service import ConfigService
     from app.core.services.storage_service import StorageService
     from app.core.logging_service import LoggingService
     from app.plugins.plugin_manager import PluginManager
 
+    # File system service
+    file_system_service = FileSystemService(app_root)
+    
+    # Ensure portable folders exist at drive root
+    portable_folders = file_system_service.ensure_portable_folders()
+
     # Config service
     config_service = ConfigService(app_root)
     config = config_service.load()
 
-    # Logging service
-    log_dir = app_root.parent / config.paths.logs_dir
+    # Logging service - uses portable logs folder automatically
     logging_service = LoggingService(
         app_name=config.app_name,
-        log_dir=log_dir,
         level=config.logging.level.value,
         console_enabled=config.logging.console_enabled,
         file_enabled=config.logging.file_enabled,
+        file_system_service=file_system_service,
     )
     logger = logging_service.setup()
     logger.info(f"Starting {config.app_name} v{config.app_version}")
+    logger.info(f"App root: {app_root}")
+    logger.info(f"Drive root: {file_system_service.get_drive_root()}")
+    logger.info(f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}")
 
     # Storage service
     storage_service = StorageService()

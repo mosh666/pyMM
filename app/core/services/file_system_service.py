@@ -23,10 +23,68 @@ class FileSystemService:
             self.app_root = Path(__file__).parent.parent.parent.parent.resolve()
         else:
             self.app_root = Path(app_root).resolve()
+        
+        self._drive_root: Optional[Path] = None
 
     def get_app_root(self) -> Path:
         """Get the application root directory."""
         return self.app_root
+
+    def get_drive_root(self) -> Path:
+        """
+        Get the root of the drive containing the app.
+        
+        Returns the drive root (e.g., D:\ if app is at D:\pyMM).
+        Caches the result after first call.
+        
+        Returns:
+            Path to drive root directory
+        """
+        if self._drive_root is None:
+            # Get the drive root by taking the anchor of the absolute path
+            # For D:\pyMM\app, this returns D:\
+            self._drive_root = Path(self.app_root.anchor)
+        
+        return self._drive_root
+
+    def get_portable_folder(self, folder_name: str) -> Path:
+        """
+        Get path to a portable folder at the drive root.
+        
+        For portable operation, certain folders (Projects, Logs) should be
+        at the drive root rather than within the app directory.
+        
+        Args:
+            folder_name: Name of the folder (e.g., "pyMM.Projects", "pyMM.Logs")
+        
+        Returns:
+            Path to the portable folder at drive root
+        """
+        return self.get_drive_root() / folder_name
+
+    def ensure_portable_folders(self) -> dict[str, Path]:
+        """
+        Ensure all portable folders exist at the drive root.
+        
+        Creates pyMM.Projects and pyMM.Logs folders at the root of the
+        drive containing the application.
+        
+        Returns:
+            Dictionary mapping folder names to their resolved paths
+        """
+        folders = {
+            "projects": self.get_portable_folder("pyMM.Projects"),
+            "logs": self.get_portable_folder("pyMM.Logs"),
+        }
+        
+        for name, path in folders.items():
+            try:
+                path.mkdir(parents=True, exist_ok=True)
+            except OSError as e:
+                # Log error but continue - folders may already exist or have permission issues
+                print(f"Warning: Could not create {name} folder at {path}: {e}")
+        
+        return folders
 
     def get_relative_path(self, path: Path, base: Optional[Path] = None) -> Path:
         """

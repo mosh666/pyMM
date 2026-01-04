@@ -22,21 +22,30 @@ class LoggingService:
         file_enabled: bool = True,
         max_file_size: int = 10485760,  # 10MB
         backup_count: int = 5,
+        file_system_service: Optional[object] = None,
     ):
         """
         Initialize logging service.
 
         Args:
             app_name: Application name for logger
-            log_dir: Directory for log files
+            log_dir: Directory for log files (if None, uses portable folder from file_system_service)
             level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
             console_enabled: Enable console logging with rich formatting
             file_enabled: Enable file logging with rotation
             max_file_size: Maximum log file size in bytes before rotation
             backup_count: Number of backup log files to keep
+            file_system_service: FileSystemService instance for portable folder detection
         """
         self.app_name = app_name
-        self.log_dir = log_dir
+        self.file_system_service = file_system_service
+        
+        # Use portable logs folder if log_dir not specified and file_system_service available
+        if log_dir is None and file_system_service is not None:
+            self.log_dir = file_system_service.get_portable_folder("pyMM.Logs")
+        else:
+            self.log_dir = log_dir
+        
         self.level = getattr(logging, level.upper())
         self.console_enabled = console_enabled
         self.file_enabled = file_enabled

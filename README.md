@@ -15,6 +15,8 @@ pyMediaManager is a complete rewrite of [PSmediaManager](https://github.com/mosh
 - 🔒 **Secure Configuration** - isolated settings with sensitive data redaction
 - 📊 **Comprehensive Logging** - rich console output and rotating file logs
 
+> **📖 For detailed technical documentation, see [Architecture Guide](docs/architecture.md)**
+
 ## Portable Architecture
 
 pyMediaManager is designed to run entirely from a removable drive (USB, external SSD) with zero system modifications:
@@ -23,7 +25,7 @@ pyMediaManager is designed to run entirely from a removable drive (USB, external
 - **Embedded Python** - ships with Python 3.12+ runtime
 - **Bundled Dependencies** - all Python packages included
 - **Isolated Configuration** - settings stored within app directory
-- **Drive-Root Projects** - projects and logs stored at portable drive root
+- **Drive-Root Storage** - projects and logs stored at portable drive root (`D:\pyMM.Projects`, `D:\pyMM.Logs`)
 
 ### Directory Structure
 
@@ -47,8 +49,10 @@ D:\pyMM.Projects\                 # Media projects (drive root)
 └── my-project\
 
 D:\pyMM.Logs\                     # Application logs (drive root)
-└── pymm-2026-01-03.log
+└── pymediamanager.log
 ```
+
+**Note:** The `pyMM.Projects` and `pyMM.Logs` folders are automatically created at the root of your portable drive (e.g., `D:\`) to ensure they remain accessible even if you move the `pyMM\` application folder.
 
 ## Quick Start
 
