@@ -10,6 +10,8 @@ from typing import Any
 import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field
 
+from app import __commit_id__, __version__
+
 
 class LogLevel(str, Enum):
     """Logging levels."""
@@ -67,7 +69,8 @@ class AppConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     app_name: str = Field(default="pyMediaManager", description="Application name")
-    app_version: str = Field(default="0.0.1", description="Application version")
+    app_version: str = Field(default=__version__, description="Application version")
+    app_commit: str | None = Field(default=__commit_id__, description="Git commit hash")
     paths: PathConfig = Field(default_factory=PathConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     ui: UIConfig = Field(default_factory=UIConfig)

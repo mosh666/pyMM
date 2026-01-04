@@ -2,7 +2,6 @@
 # This file contains default settings that can be overridden by user.yaml
 
 app_name: pyMediaManager
-app_version: 0.0.1
 
 paths:
   projects_dir: pyMM.Projects

@@ -76,6 +76,9 @@ class SettingsDialog(QDialog):
         self.git_tab = self._create_git_tab()
         self.tabs.addTab(self.git_tab, "Git")
 
+        self.about_tab = self._create_about_tab()
+        self.tabs.addTab(self.about_tab, "About")
+
         layout.addWidget(self.tabs)
 
         # Buttons
@@ -385,3 +388,24 @@ class SettingsDialog(QDialog):
         """Handle OK button click."""
         self._apply_settings()
         self.accept()
+
+    def _create_about_tab(self) -> QWidget:
+        """Create the About tab."""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # App Info
+        info_group = QGroupBox("Application Information")
+        info_layout = QFormLayout(info_group)
+
+        info_layout.addRow("Name:", QLabel(self.config.app_name))
+        info_layout.addRow("Version:", QLabel(self.config.app_version))
+
+        if self.config.app_commit:
+            info_layout.addRow("Commit:", QLabel(self.config.app_commit))
+
+        layout.addWidget(info_group)
+        layout.addStretch()
+
+        return widget

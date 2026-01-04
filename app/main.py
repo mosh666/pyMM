@@ -31,10 +31,12 @@ def run_application() -> int:
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # type: ignore[attr-defined]
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # type: ignore[attr-defined]
 
+    from app import __version__
+
     app = QApplication(sys.argv)
     app.setApplicationName("pyMediaManager")
     app.setOrganizationName("mosh666")
-    app.setApplicationVersion("0.0.1")
+    app.setApplicationVersion(__version__)
 
     # Initialize services
     app_root = get_app_root()

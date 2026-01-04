@@ -2,7 +2,7 @@
 
 **Portable Python-based media management application with modern Fluent Design UI**
 
-Version: 0.1.0-beta (In Development)
+Version: Auto-detected from Git
 
 ## Overview
 

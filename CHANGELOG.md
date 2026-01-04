@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Automatic Version Management**
+  - Implemented `setuptools_scm` for Git-based versioning
+  - Added runtime version detection with fallback
+  - Added "About" tab in Settings dialog to display version and commit hash
 - **Modernized GitHub Workflows**
   - Implemented branch-based release flow: `dev` → Beta, `main` → Stable
   - Added support for alpha/beta/rc tags in versioning and releases

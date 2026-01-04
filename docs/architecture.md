@@ -1,6 +1,6 @@
 # pyMediaManager Architecture Documentation
 
-> **Version:** 0.1.0-beta  
+> **Version:** Auto-detected from Git  
 > **Last Updated:** January 4, 2026  
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
@@ -39,6 +39,12 @@ pyMediaManager is a portable, Python-based media management application designed
 - **Code Formatting**: Consistent style enforced by Ruff formatter
 - **Static Analysis**: MyPy type checking for catching errors early
 - **Linting**: Ruff linter with auto-fix for code quality
+
+### 5. Version Management
+- **Automatic Detection**: Version derived from Git tags using `setuptools_scm`
+- **Runtime Access**: Version and commit hash available at runtime via `app.__version__` and `app.__commit_id__`
+- **Fallback**: Graceful fallback to `importlib.metadata` or dev version if Git is missing
+- **UI Integration**: Version details displayed in Settings > About
 
 ## Directory Structure
 

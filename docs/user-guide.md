@@ -1,6 +1,6 @@
 # pyMediaManager User Guide
 
-**Version:** 0.1.0-beta  
+**Version:** Auto-detected from Git  
 **Last Updated:** January 4, 2026
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
@@ -357,6 +357,12 @@ Access settings via:
 - **User Email:** Your email for commits
 - **Auto-Initialize:** Create Git repos by default
 - **Default Branch:** Branch name (main/master)
+
+#### About
+
+- **Version:** Current application version
+- **Commit:** Git commit hash (if available)
+- **Application Info:** General application details
 
 ### Saving Settings
 

@@ -3,6 +3,7 @@
 import pytest
 import yaml
 
+from app import __commit_id__, __version__
 from app.core.services.config_service import (
     AppConfig,
     ConfigService,
@@ -20,7 +21,8 @@ class TestAppConfig:
         config = AppConfig()
 
         assert config.app_name == "pyMediaManager"
-        assert config.app_version == "0.0.1"
+        assert config.app_version == __version__
+        assert config.app_commit == __commit_id__
         assert config.paths.projects_dir == "pyMM.Projects"
         assert config.logging.level == LogLevel.INFO
         assert config.ui.show_first_run is True
