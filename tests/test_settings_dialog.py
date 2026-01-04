@@ -50,11 +50,12 @@ def test_settings_dialog(qapp):
     dialog = SettingsDialog(config_service)
 
     # Verify dialog was created with all tabs
-    assert dialog.tabs.count() == 4
+    assert dialog.tabs.count() == 5
     assert dialog.tabs.tabText(0) == "General"
     assert dialog.tabs.tabText(1) == "Plugins"
     assert dialog.tabs.tabText(2) == "Storage"
     assert dialog.tabs.tabText(3) == "Git"
+    assert dialog.tabs.tabText(4) == "About"
 
     # Check that settings are loaded into UI
     assert dialog.theme_combo.currentIndex() >= 0
