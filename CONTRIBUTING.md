@@ -1,44 +1,110 @@
 # Contributing to pyMediaManager
 
-Thank you for your interest in contributing to pyMediaManager! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to pyMediaManager! This guide provides comprehensive
+instructions for setting up your development environment, writing code, testing, and submitting
+contributions.
 
-> **See also:** [CHANGELOG.md](CHANGELOG.md) for recent changes and version history
+> **See also:** [CHANGELOG.md](CHANGELOG.md) | [Architecture Guide](docs/architecture.md) |
+> [User Guide](docs/user-guide.md)
+
+---
+
+## Table of Contents
+
+1. [Development Setup](#development-setup)
+2. [Code Style](#code-style)
+3. [Testing Guidelines](#testing-guidelines)
+4. [Pull Request Process](#pull-request-process)
+5. [Release Process](#release-process)
+6. [Adding New Features](#adding-new-features)
+7. [Documentation](#documentation)
+8. [Issue Reporting](#issue-reporting)
+
+---
 
 ## Development Setup
 
 ### Prerequisites
-- Python 3.12 or 3.13
-- Git
-- Windows OS (for now - Linux/macOS support planned)
+
+- **Python:** 3.12 or 3.13 (3.13 recommended)
+- **Git:** Latest version
+- **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
+- **IDE:** VS Code recommended (with Python extension)
 
 ### Setup Steps
 
-1. **Clone the repository**:
+1. **Fork and Clone:**
+
    ```bash
-   git clone https://github.com/mosh666/pyMM.git
+   # Fork the repository on GitHub first
+   git clone https://github.com/YOUR_USERNAME/pyMM.git
    cd pyMM
+   
+   # Add upstream remote
+   git remote add upstream https://github.com/mosh666/pyMM.git
    ```
 
-2. **Create virtual environment**:
+2. **Create Virtual Environment:**
+
    ```bash
+   # Create environment
    python -m venv venv
-   venv\Scripts\activate  # Windows
+   
+   # Activate (Windows)
+   venv\Scripts\activate
+   
+   # Activate (Linux/macOS)
+   source venv/bin/activate
    ```
 
-3. **Install dependencies**:
+3. **Install Dependencies:**
+
    ```bash
+   # Install in editable mode with dev dependencies
    pip install -e ".[dev]"
+   
+   # Verify installation
+   python -c "import app; print(app.__version__)"
    ```
 
-4. **Install pre-commit hooks**:
+4. **Install Pre-commit Hooks:**
+
    ```bash
+   # Install pre-commit framework
+   pip install pre-commit
+   
+   # Install git hooks
    pre-commit install
+   
+   # Test hooks (optional)
+   pre-commit run --all-files
    ```
 
-5. **Run tests**:
+5. **Run Tests:**
+
    ```bash
+   # Run full test suite
    pytest
+   
+   # Run with coverage
+   pytest --cov=app --cov-report=html
+   
+   # View coverage report
+   # Open htmlcov/index.html in browser
    ```
+
+6. **Configure Git:**
+
+   ```bash
+   # Set your identity
+   git config user.name "Your Name"
+   git config user.email "your.email@example.com"
+   
+   # Set default branch
+   git config init.defaultBranch main
+   ```
+
+---
 
 ## Code Style
 
@@ -101,20 +167,20 @@ ruff format app/ tests/
 
 We follow a branch-based release flow:
 
-1.  **Development (`dev` branch)**:
-    *   All new features and fixes are merged here.
-    *   Pushes to `dev` automatically trigger a **Beta Release** (tagged `latest-beta`).
-    *   These releases are marked as "Pre-release" on GitHub.
+1. **Development (`dev` branch)**
+   - All new features and fixes are merged here.
+   - Pushes to `dev` automatically trigger a **Beta Release** (tagged `latest-beta`).
+   - These releases are marked as "Pre-release" on GitHub.
 
-2.  **Stable (`main` branch)**:
-    *   Stable releases are created by pushing a semantic version tag (e.g., `v1.0.0`) to `main`.
-    *   **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
-    *   The workflow will automatically build and publish the release.
+2. **Stable (`main` branch)**
+   - Stable releases are created by pushing a semantic version tag (e.g., `v1.0.0`) to `main`.
+   - **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
+   - The workflow will automatically build and publish the release.
 
-3.  **Versioning**:
-    *   We use [Semantic Versioning](https://semver.org/).
-    *   Format: `vX.Y.Z` (Stable) or `vX.Y.Z-alpha.N` / `vX.Y.Z-beta.N` (Prerelease).
-    *   `setuptools_scm` automatically handles versioning based on git tags.
+3. **Versioning**
+   - We use [Semantic Versioning](https://semver.org/).
+   - Format: `vX.Y.Z` (Stable) or `vX.Y.Z-alpha.N` / `vX.Y.Z-beta.N` (Prerelease).
+   - `setuptools_scm` automatically handles versioning based on git tags.
 
 ## Commit Messages
 

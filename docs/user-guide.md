@@ -1,7 +1,7 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git  
-**Last Updated:** January 4, 2026
+**Version:** Auto-detected from Git (latest-beta)  
+**Last Updated:** January 5, 2026
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
 
@@ -15,6 +15,9 @@
 6. [Git Integration](#git-integration)
 7. [Settings & Configuration](#settings--configuration)
 8. [Troubleshooting](#troubleshooting)
+9. [Keyboard Shortcuts](#keyboard-shortcuts)
+10. [Support & Resources](#support--resources)
+11. [Tips & Tricks](#tips--tricks)
 
 ---
 
@@ -23,19 +26,28 @@
 ### System Requirements
 
 - **Operating System:** Windows 10/11 (64-bit)
+- **Python:** 3.12 or 3.13 (3.13 recommended) - Embedded runtime included
 - **Storage:** Minimum 500MB free space (more for plugins and projects)
 - **Recommended:** USB 3.0+ or SSD for portable installation
+- **Reliability:** 137+ tests ensuring stability and quality
 
 ### Installation
 
 pyMediaManager is designed to be fully portable with no system installation required:
 
-1. **Download** the latest release (ZIP archive)
+1. **Download** the latest release:
+   - **Stable releases:** Download from releases page
+   - **Latest beta:** Download the `latest-beta` tag for newest features
+   - Version is automatically managed using Git tags and setuptools_scm
 2. **Extract** to your desired location:
    - USB drive: `E:\pyMM\`
    - External SSD: `D:\pyMM\`
    - Local drive: `C:\Apps\pyMM\`
 3. **Run** `launcher.py` to start the application
+
+The application includes an embedded Python 3.13 runtime and all dependencies.
+Version information is automatically managed from Git tags and displayed in
+the Settings → About tab.
 
 The application will automatically detect the drive root and configure portable folders.
 
@@ -47,10 +59,10 @@ The application will automatically detect the drive root and configure portable 
 
 When you first launch pyMediaManager, the First Run Wizard will guide you through setup:
 
-1. **Welcome Screen** - Introduction to pyMediaManager
-2. **Drive Detection** - Confirms your installation location
-3. **Plugin Discovery** - Scans for available plugins
-4. **Configuration** - Creates default settings
+1. **Welcome Screen** - Introduction to pyMediaManager and key features
+2. **Storage Page** - Select your portable drive and confirm installation location
+3. **Plugin Page** - Choose optional plugins to install (mandatory plugins installed automatically)
+4. **Complete Page** - Setup summary with option to skip wizard on future launches
 
 ### Recommended First Steps
 
@@ -193,15 +205,15 @@ Shows:
 
 |Plugin|Type|Description|Size|
 |---|---|---|---|
-|Git|Mandatory|Version control system|~40MB|
-|7-Zip|Mandatory|Archive extraction|~2MB|
-|ExifTool|Optional|Metadata extraction|~8MB|
-|FFmpeg|Optional|Video/audio processing|~100MB|
-|digiKam|Optional|Photo management|~500MB|
-|ImageMagick|Optional|Image manipulation|~30MB|
-|HandBrake|Optional|Video transcoding|~20MB|
-|MKVToolNix|Optional|MKV tools|~35MB|
-|MediaInfo|Optional|Media file analysis|~5MB|
+|Git|Mandatory|Version control system|~61MB|
+|Git-LFS|Mandatory|Git extension for large files|~5MB|
+|GitVersion|Mandatory|Semantic versioning tool|~3MB|
+|digiKam|Mandatory|Photo management|~300MB+|
+|MariaDB|Mandatory|Database backend for digiKam|~200MB+|
+|ExifTool|Mandatory|Metadata extraction|~11MB|
+|FFmpeg|Optional|Video/audio processing|~202MB|
+|ImageMagick|Optional|Image manipulation|~21MB|
+|MKVToolNix|Optional|MKV video tools|~20MB+|
 
 ---
 
@@ -213,9 +225,13 @@ pyMediaManager uses drive-root folders for maximum portability:
 
 ```
 D:\                              # Your drive root
-├── pyMM\                        # Application (movable)
-├── pyMM.Projects\               # Your projects
-├── pyMM.Plugins\                # Installed tools
+├── pyMM\                        # Application (contains embedded Python 3.13)
+│   ├── python313\               # Embedded Python 3.13 runtime
+│   ├── lib-py313\               # Python dependencies
+│   ├── app\                     # Application code
+│   └── launcher.py              # Entry point
+├── pyMM.Projects\               # Your media projects
+├── pyMM.Plugins\                # Installed plugin binaries
 ├── pyMM.Logs\                   # Application logs
 └── pyMM.Config\                 # User settings (optional)
 ```
@@ -238,12 +254,13 @@ D:\                              # Your drive root
 
 pyMediaManager is fully portable:
 
-1. **Copy** entire `pyMM` folder to new drive
-2. **Update** shortcuts/launchers if needed
-3. **Run** - automatic drive detection on launch
+1. **Copy** entire `pyMM` folder to new drive (includes Python 3.13 runtime)
+2. **Copy** `pyMM.Projects`, `pyMM.Plugins`, and `pyMM.Config` folders if desired
+3. **Run** `launcher.py` - automatic drive detection on launch
 4. Projects and plugins remain accessible
 
-**Note:** If moving projects separately, update project paths in settings.
+**Note:** The embedded Python runtime moves with the application, ensuring consistency.
+If moving projects separately, they will be auto-detected in the new drive root.
 
 ---
 
@@ -257,12 +274,14 @@ Projects can optionally use Git for version control:
 - Commit snapshots with descriptive messages
 - View complete history of modifications
 - Collaborate with team members
+- Git LFS support for large media files
 
 ### Using Git
 
 **Initialize Repository:**
 - Enable "Initialize Git" when creating project
 - Or: `Project > Initialize Git` on existing project
+- Automatically creates `.gitignore` with media-friendly defaults
 
 **Check Status:**
 ```
@@ -273,6 +292,7 @@ Shows:
 - New files (green)
 - Deleted files (red)
 - Untracked files
+- Current branch name
 
 **Commit Changes:**
 
@@ -280,7 +300,7 @@ Shows:
 2. Open Git Status view
 3. Review changed files
 4. Click **"Commit"**
-5. Enter commit message
+5. Enter descriptive commit message
 6. Confirm commit
 
 **View History:**
@@ -288,9 +308,19 @@ Shows:
 View > Git Log
 ```
 Shows:
-- Commit messages
-- Author and date
+- Commit messages with full descriptions
+- Author name and email
+- Commit date and time
 - Files changed per commit
+- Commit hash for reference
+
+**Git Configuration:**
+
+Configure Git settings in `Settings > Git`:
+- Set your name and email for commits
+- Choose default branch name (main/master)
+- Enable auto-initialization for new projects
+- Git path is auto-detected from installed plugin
 
 ### Git Best Practices
 
@@ -330,49 +360,62 @@ Access settings via:
 
 ### Settings Sections
 
-#### General Settings
+The Settings dialog includes 5 tabs for comprehensive configuration:
 
-- **Application Name:** Display name
-- **Theme:** Light, Dark, or Auto
-- **Language:** Interface language
-- **Check Updates:** Auto-update checking
+#### General Tab
 
-#### Plugin Settings
+- **Application Name:** Display name for the window title
+- **Theme:** Light, Dark, or Auto (follows system)
+- **Language:** Interface language selection
+- **Logging Level:** DEBUG, INFO, WARNING, ERROR, or CRITICAL
+- **Check Updates:** Automatic update checking (when available)
 
-- **Auto-Install:** Install mandatory plugins on first run
-- **Download Timeout:** Network timeout (seconds)
-- **Verify Checksums:** Enable security verification
-- **Plugin Directory:** Custom plugin location
+#### Plugins Tab
 
-#### Storage Settings
+- **Auto-Install:** Install mandatory plugins automatically on first run
+- **Download Timeout:** Network timeout in seconds (default: 300)
+- **Retry Attempts:** Number of download retry attempts (default: 3)
+- **Verify Checksums:** Enable SHA256 checksum verification for security
+- **Plugin Directory:** Custom plugin installation location
+- **Plugin Paths:** Configure paths for specific plugins
 
-- **Default Drive:** Preferred storage location
-- **Project Root:** Where to create new projects
-- **Log Location:** Application log directory
-- **Max Log Size:** Size before rotation
+#### Storage Tab
 
-#### Git Settings
+- **Default Drive:** Preferred storage location for portable operation
+- **Project Root:** Base directory where new projects are created
+- **Log Location:** Application log directory (pyMM.Logs)
+- **Max Log Size:** File size before log rotation (default: 10MB)
+- **Log Retention:** Number of backup log files to keep
 
-- **User Name:** Your name for commits
-- **User Email:** Your email for commits
-- **Auto-Initialize:** Create Git repos by default
-- **Default Branch:** Branch name (main/master)
+#### Git Tab
 
-#### About
+- **User Name:** Your full name for Git commits
+- **User Email:** Your email address for Git commits
+- **Auto-Initialize:** Create Git repositories by default for new projects
+- **Default Branch:** Branch name for new repositories (main/master)
+- **Git Executable Path:** Custom path to git.exe (auto-detected)
 
-- **Version:** Current application version
-- **Commit:** Git commit hash (if available)
-- **Application Info:** General application details
+#### About Tab
+
+- **Version:** Current application version (auto-detected from Git)
+  - Automatically managed using setuptools_scm and Git tags
+  - Development builds show commit hash and distance from last tag
+  - Supports alpha, beta, and rc prerelease versions
+- **Commit Hash:** Git commit SHA (for development builds)
+- **Python Version:** Embedded Python runtime version (3.13 recommended)
+- **Application Info:** License, author, and project details
+- **Dependencies:** Installed package versions (PySide6, GitPython, etc.)
+- **Test Coverage:** 137+ tests ensuring reliability
 
 ### Saving Settings
 
-- Click **"Save"** to apply changes
-- Click **"Reset to Defaults"** to undo all changes
-- Click **"Cancel"** to discard changes
+- Click **"Apply"** to save changes without closing the dialog
+- Click **"OK"** to save changes and close the dialog
+- Click **"Cancel"** to discard changes and close
 
 Settings are stored in:
-- System: `config/default.yaml` (read-only)
-- User: `D:\pyMM.Config\user.yaml` (your changes)
+- System: `config/app.yaml` (default configuration, read-only)
+- User: `D:\pyMM.Config\user.yaml` (your custom settings)
 
 ---
 
@@ -385,10 +428,11 @@ Settings are stored in:
 **Symptoms:** Double-clicking `launcher.py` does nothing
 
 **Solutions:**
-1. Check Python is installed: Right-click → "Edit with IDLE"
-2. Run from terminal: `python launcher.py`
+1. Verify Python 3.13 runtime: Check `pyMM\python313\` directory exists
+2. Run from terminal: `python launcher.py` or `.\python313\python.exe launcher.py`
 3. Check logs: `D:\pyMM.Logs\pymediamanager.log`
 4. Verify drive permissions (not read-only)
+5. Ensure all dependencies in `lib-py313\` are present
 
 #### Plugin Installation Fails
 
@@ -487,9 +531,11 @@ If you encounter a bug:
 
 ## Support & Resources
 
-- **Documentation:** [https://github.com/mosh666/pyMM/docs](https://github.com/mosh666/pyMM/tree/main/docs)
-- **Issues:** [https://github.com/mosh666/pyMM/issues](https://github.com/mosh666/pyMM/issues)
-- **Discussions:** [https://github.com/mosh666/pyMM/discussions](https://github.com/mosh666/pyMM/discussions)
+- **Documentation:** [GitHub Docs](https://github.com/mosh666/pyMM/tree/main/docs)
+- **Issues:** [Report Bugs](https://github.com/mosh666/pyMM/issues)
+- **Discussions:** [Community Forum](https://github.com/mosh666/pyMM/discussions)
+- **Test Suite:** 137+ tests ensuring reliability and stability
+- **Changelog:** [Version History](../CHANGELOG.md)
 
 ---
 
