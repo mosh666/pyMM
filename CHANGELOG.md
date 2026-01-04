@@ -8,200 +8,238 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **Automatic Version Management**
-  - Implemented `setuptools_scm` for Git-based versioning
-  - Added runtime version detection with fallback
-  - Added "About" tab in Settings dialog to display version and commit hash
-- **Modernized GitHub Workflows**
-  - Implemented branch-based release flow: `dev` → Beta, `main` → Stable
-  - Added support for alpha/beta/rc tags in versioning and releases
-  - Added caching for embeddable Python to speed up builds
-  - Added `contents: read` permissions to workflows for better security
-  - Automated `latest-beta` rolling releases on `dev` branch pushes
+  - Implemented `setuptools_scm` for Git-based semantic versioning
+  - Runtime version detection with fallback to `importlib.metadata`
+  - Version and commit hash displayed in Settings → About tab
+  - Support for alpha, beta, and rc prerelease tags
+
+- **Modernized CI/CD Pipeline**
+  - Branch-based release flow: `dev` → Beta releases, `main` → Stable releases
+  - Automated `latest-beta` rolling tag on `dev` branch pushes
+  - Python embeddable runtime caching to speed up builds
+  - Added `contents: read` permissions for better security
+  - Support for Python 3.14 in CI workflows (forward compatibility)
 
 ### Changed
-- Updated `pyproject.toml` to allow semantic versioning with prerelease suffixes (e.g., `v1.0.0-alpha.1`)
-- Updated documentation to reflect new release process
+
+- Updated `pyproject.toml` to support semantic versioning with prerelease suffixes
+- Improved documentation structure and clarity
+- Enhanced test coverage for settings dialog (5 tabs expected)
 
 ### Fixed
-- Import sorting issues in `app/__init__.py` (fixed via Ruff)
-- Markdown linting issues in documentation files
-- Version inconsistencies between README (0.1.0) and code (0.0.1)
-- Python 3.14 references updated to reflect actual availability (3.13 is current stable)
-- **QFluentWidgets Navigation Error**: Fixed "object name can't be empty string" error by adding
-  `setObjectName()` calls to all navigation interfaces (home, settings) and views (storage, plugin,
-  project)
 
-## [0.1.0] - 2026-01-04
+- **QFluentWidgets Navigation Error**: Fixed "object name can't be empty string" error by adding
+  `setObjectName()` calls to all navigation interfaces and views
+  - Home interface
+  - Settings interface
+  - Storage view
+  - Plugin view
+  - Project view
+- Import sorting issues in `app/__init__.py` (resolved via Ruff)
+- Markdown linting issues across documentation files
+- Version inconsistencies between README and codebase
+- Text formatting in first-run wizard welcome message
+- Async mock warnings in plugin download tests
+- Path comparison issues in file system service tests
+- Ruff ignore rules for auto-generated `_version.py` file
+
+### Removed
+
+- Obsolete research and planning documentation
+- Deprecated release and testing documentation files
+- Unused deployment and setup files
+- Test plugin and project folders from repository
+- Legacy requirements.txt files (now using pyproject.toml)
+
+## [0.0.1] - 2026-01-03
 
 ### Added
-- **Project Management System**
-  - Create and manage media projects with metadata
-  - Project browser with search and filtering capabilities
-  - Recent projects quick access list
-  - Project templates for common workflows
-  
-- **Git Integration**
-  - Initialize Git repositories for new projects
-  - Commit changes with descriptive messages
-  - View project history and status
-  - Built-in .gitignore templates for media projects
-  - Git user configuration in settings
-  
-- **Enhanced Plugin System**
-  - Reliable plugin downloads with automatic retry logic (3 attempts with exponential backoff)
-  - SHA256 checksum verification for security
-  - Progress tracking with detailed status indicators
-  - One-click installation from GUI
-  - Automatic version detection and validation
-  - Support for mandatory plugins (Git, 7-Zip) and optional plugins (ExifTool, FFmpeg, digiKam, etc.)
-  - Plugin PATH registration for system integration
-  
-- **Modern Fluent UI**
-  - PySide6-based interface with Fluent Design components
-  - Side navigation with collapsible menu
-  - Light, Dark, and Auto (system) theme support
-  - High DPI scaling support
-  - Acrylic effects and transparency
-  
-- **First-Run Wizard**
-  - Welcome screen with feature introduction
-  - Portable drive detection and configuration
-  - Plugin discovery and optional installation
-  - Settings configuration wizard
-  
-- **Comprehensive Settings Dialog**
-  - General settings (theme, language, updates)
-  - Plugin configuration (auto-install, timeouts, verification)
-  - Storage preferences (default drive, project root, log location)
-  - Git configuration (user name, email, default branch)
-  - Tabbed interface for organized settings
-  
-- **Portable Architecture**
+
+- **Core Architecture**
+  - Service-oriented architecture with dependency injection
+  - Modular design with clear separation of concerns
+  - Pydantic-based configuration management
+  - Comprehensive logging service with Rich formatting
+
+- **Portable Design**
   - Fully portable operation from removable drives
-  - No system installation required
-  - Embedded Python runtime (3.12, 3.13 support)
-  - Bundled dependencies
-  - Drive-root storage for projects and logs
-  - Automatic drive detection
-  
-- **Configuration Management**
-  - Layered configuration system (defaults → app → user)
-  - Pydantic-based validation
-  - Sensitive data redaction
-  - YAML-based configuration files
-  - Export functionality with optional secret redaction
-  
-- **Logging System**
-  - Rich-formatted console output with colors
-  - Rotating file logs (10MB limit, 5 backups)
-  - Configurable log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-  - Structured logging throughout codebase
-  - Logs stored at portable drive root
-  
-- **File System Services**
-  - Abstraction layer for portable path handling
-  - Automatic directory creation
-  - Cross-platform path operations
-  - Disk space monitoring
-  
-- **Storage Services**
+  - No system installation or registry modifications required
+  - Embedded Python runtime support (3.12, 3.13)
+  - Automatic drive detection and path handling
+  - Drive-root storage for projects (`pyMM.Projects`) and logs (`pyMM.Logs`)
+
+- **Plugin System**
+  - YAML-based plugin manifests
+  - Plugin discovery and validation
+  - Download and extraction support for ZIP and 7z archives
+  - Retry logic with exponential backoff (3 attempts)
+  - SHA256 checksum verification for security
+  - Nested folder handling for complex archives
+  - Support for mandatory plugins (Git, 7-Zip) and optional plugins
+  - Plugin manifests for: digiKam, ExifTool, FFmpeg, Git, Git LFS, GitVersion, ImageMagick,
+    MariaDB, MKVToolNix
+
+- **Project Management**
+  - Create and manage media projects with metadata
+  - Project browser with search and filtering
+  - Project templates for common workflows
+  - Git repository initialization for projects
+  - Project metadata storage in `.metadata` directory
+  - Recent projects tracking
+
+- **Git Integration**
+  - GitPython-based version control integration
+  - Initialize Git repositories for new projects
+  - Commit tracking and history viewing
+  - Built-in .gitignore templates for media projects
+  - Git user configuration (name, email, default branch)
+  - Repository status checking
+
+- **Modern Fluent UI**
+  - PySide6-based interface with QFluentWidgets
+  - Side navigation with Home, Storage, Plugins, Projects, Settings
+  - Light, Dark, and Auto (system-based) theme support
+  - High DPI scaling support
+  - Responsive layout design
+
+- **First-Run Wizard**
+  - Multi-step setup wizard for initial configuration
+  - Welcome screen with feature overview
+  - Portable drive detection and selection
+  - Optional plugin installation
+  - Settings configuration
+  - "Don't show again" option
+
+- **Settings Dialog**
+  - Tabbed interface with 5 sections:
+    - General (theme, language, auto-updates)
+    - Plugins (auto-install, download timeout, checksum verification)
+    - Storage (default drive, project root, log location)
+    - Git (user name, email, default branch)
+    - About (version info, commit hash, license)
+  - Real-time validation
+  - Settings persistence
+
+- **Storage Management**
   - Drive detection (fixed and removable)
   - Drive serial number tracking
   - Capacity and free space monitoring
-  - Removable drive identification
-  
+  - Drive type identification
+  - Removable drive filtering
+
+- **Configuration Services**
+  - Layered configuration system (defaults → app → user)
+  - YAML-based configuration files
+  - Pydantic validation
+  - Sensitive data redaction for logging
+  - Configuration export functionality
+
+- **Logging System**
+  - Rich-formatted console output with colors and timestamps
+  - Rotating file logs (10MB limit, 5 backups)
+  - Configurable log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  - Structured logging throughout entire codebase
+  - Logs stored at portable drive root (`pyMM.Logs`)
+
 - **Testing Infrastructure**
   - Comprehensive test suite with 137+ tests
-  - Unit tests for core services
-  - Integration tests for workflows
+  - Unit tests for all core services
+  - Integration tests for plugin and project workflows
   - GUI tests using pytest-qt
-  - 70%+ code coverage on core modules
-  - pytest configuration with coverage reporting
-  
+  - 73% code coverage on core modules
+  - pytest configuration with fixtures and markers
+  - Coverage reporting and test organization
+
+- **Code Quality Tools**
+  - Pre-commit hooks for automated checks
+  - Ruff for linting and formatting
+  - MyPy for static type checking (all errors resolved)
+  - Black code formatter integration
+  - Comprehensive type hints (Python 3.12+ native generics)
+  - Return type annotations on all functions
+
 - **Documentation**
   - Comprehensive README with quick start guide
   - Architecture documentation with design principles
   - User guide with tutorials and troubleshooting
   - Contributing guidelines with code style standards
-  - Plugin manifests for all supported tools
+  - Deployment guide for GitHub releases
+  - Project status tracking documents
 
 ### Changed
+
 - Migrated from print statements to structured logging across all modules
-- Updated to modern Python 3.12+ type hints (native generics)
+- Updated to modern Python 3.12+ type hints (native generics instead of `typing` module)
 - Implemented proper dependency injection for services
-- Organized code into clear service layers
+- Organized code into clear service layers (core, UI, plugins, projects)
+- Reformatted entire codebase with Black and Ruff
+- Enhanced error handling with proper exception types
 
 ### Fixed
+
+- Critical bug fixes for logger initialization in UI modules
+- Pydantic serialization issues in test mocks
+- File encoding issues (standardized to UTF-8 throughout)
 - Drive serial number detection on various USB drives
-- Plugin download retry logic with proper error handling
-- Configuration validation and error messages
-- File encoding issues (UTF-8 throughout)
-
-## [0.0.1] - 2025-12-15
-
-### Added
-- Initial project structure
-- Basic application launcher
-- Core service architecture
-- Plugin manager foundation
-- Project management models
-- Configuration service with Pydantic
-- Logging service setup
-- Basic GUI framework with PySide6
-
-### Changed
-- N/A (initial release)
-
-### Deprecated
-- N/A (initial release)
-
-### Removed
-- N/A (initial release)
-
-### Fixed
-- N/A (initial release)
+- Plugin download error handling
+- Configuration validation edge cases
+- Escape sequence warnings in docstrings
+- File system path resolution issues
+- Test fixture cleanup and isolation
 
 ### Security
-- N/A (initial release)
+
+- SHA256 checksum verification for all plugin downloads
+- Sensitive data redaction in logs and configuration exports
+- Secure configuration file handling
+- No credentials stored in plain text
 
 ---
 
 ## Version History Summary
 
-- **v0.1.0** (2026-01-04) - First Beta Release
-  - Full project management system
-  - Git integration
-  - Enhanced plugin system with reliability features
-  - Comprehensive UI with settings
-  - First-run wizard
-  - Extensive testing coverage
+- **[Unreleased]** (dev branch) - Development builds with latest features
+  - Automatic version management with setuptools_scm
+  - Enhanced CI/CD with branch-based releases
+  - QFluentWidgets navigation fixes
+  - Documentation improvements
 
-- **v0.0.1** (2025-12-15) - Initial Alpha
-  - Core architecture and services
-  - Basic plugin system
-  - Foundation for future features
+- **v0.0.1** (2026-01-03) - Initial Release
+  - Complete portable architecture
+  - Plugin system with download and verification
+  - Project management with Git integration
+  - Modern Fluent UI with themes
+  - Comprehensive settings and configuration
+  - First-run wizard
+  - 73% test coverage
+
+---
 
 ## Upcoming Features
 
-See [docs/roadmap.md](docs/roadmap.md) for planned features in future releases.
-
 ### v0.2.0 (Planned)
+
 - Media import and organization tools
-- Batch metadata editing
+- Batch metadata editing with ExifTool integration
 - Export presets and profiles
 - Advanced plugin workflow integration
-- Improved plugin marketplace
+- Plugin update notifications
+- Enhanced project templates
 
 ### v0.3.0 (Planned)
+
 - Cloud storage integration (OneDrive, Google Drive, Dropbox)
 - Team collaboration features
 - Advanced search and filtering
 - Automated backup system
 - Cross-platform support (Linux, macOS)
+- Plugin marketplace
 
 ---
 
-[Unreleased]: https://github.com/mosh666/pyMM/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/mosh666/pyMM/compare/v0.0.1...v0.1.0
+## Links
+
+[Unreleased]: https://github.com/mosh666/pyMM/compare/v0.0.1...dev
 [0.0.1]: https://github.com/mosh666/pyMM/releases/tag/v0.0.1
