@@ -73,6 +73,11 @@ addopts = [
     "-v",
 ]
 asyncio_mode = "auto"
+markers = [
+    "integration: Integration tests (may be slower, access filesystem/network)",
+    "slow: Tests that may take significant time to complete",
+    "ui: Tests that require GUI components",
+]
 
 [tool.coverage.run]
 source = ["app"]
