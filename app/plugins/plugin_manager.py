@@ -82,6 +82,8 @@ class PluginManager:
                 source_type=source.get("type", "url"),
                 source_uri=source.get("base_uri", ""),
                 asset_pattern=source.get("asset_pattern"),
+                checksum_sha256=source.get("checksum_sha256"),
+                file_size=source.get("file_size"),
                 command_path=data.get("command", {}).get("path", ""),
                 command_executable=data.get("command", {}).get("executable", ""),
                 register_to_path=data.get("register_to_path", False),
@@ -183,22 +185,34 @@ class PluginManager:
         """
         plugin = self.get_plugin(name)
         if not plugin:
+            print(f"Plugin {name} not found in registry")
             return False
 
         try:
             # Download
+            print(f"Downloading {name}...")
             download_success = await plugin.download(progress_callback)
             if not download_success:
+                print(f"Download failed for {name}")
                 return False
 
             # Extract
+            print(f"Extracting {name}...")
             extract_success = await plugin.extract()
             if not extract_success:
+                print(f"Extraction failed for {name}")
                 return False
 
             # Validate
-            return plugin.validate_installation()
-        except Exception:
+            print(f"Validating {name}...")
+            is_valid = plugin.validate_installation()
+            if not is_valid:
+                print(f"Validation failed for {name}")
+            return is_valid
+        except Exception as e:
+            print(f"Exception during installation of {name}: {e}")
+            import traceback
+            traceback.print_exc()
             return False
 
     async def uninstall_plugin(self, name: str) -> bool:

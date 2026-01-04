@@ -2,7 +2,7 @@
 
 **Portable Python-based media management application with modern Fluent Design UI**
 
-Version: 0.0.1 (Initial Development)
+Version: 0.1.0 (Beta)
 
 ## Overview
 
@@ -14,8 +14,10 @@ pyMediaManager is a complete rewrite of [PSmediaManager](https://github.com/mosh
 - 📁 **Project-Based Workflow** - organize media projects with version control integration
 - 🔒 **Secure Configuration** - isolated settings with sensitive data redaction
 - 📊 **Comprehensive Logging** - rich console output and rotating file logs
+- ✅ **Reliable Downloads** - plugin downloads with retry logic and checksum verification
+- 🔄 **Git Integration** - built-in version control for projects
 
-> **📖 For detailed technical documentation, see [Architecture Guide](docs/architecture.md)**
+> **📖 Documentation:** [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Testing Status](docs/testing-status.md)**
 
 ## Portable Architecture
 
@@ -59,20 +61,23 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 ### Download Pre-Built Release
 
 1. Download the latest release for your Python version:
-   - **Recommended:** `pyMM-v0.0.1-py313-win64.zip` (Python 3.13)
-   - `pyMM-v0.0.1-py312-win64.zip` (Python 3.12)
+   - **Recommended:** `pyMM-v0.1.0-py314-win64.zip` (Python 3.14)
+   - `pyMM-v0.1.0-py313-win64.zip` (Python 3.13)
 
 2. Extract to your portable drive (e.g., `D:\pyMM\`)
 
 3. Run `launcher.py`:
    ```cmd
-   D:\pyMM\python313\python.exe D:\pyMM\launcher.py
+   D:\pyMM\python314\python.exe D:\pyMM\launcher.py
    ```
 
 4. Complete the first-run wizard:
    - Confirm portable drive location
-   - Select optional plugins to install
-   - Configure default settings
+   - Install essential plugins (Git, ExifTool)
+   - Create your first project
+   - Configure preferences
+
+> **📖 New to pyMediaManager? Check out the [User Guide](docs/user-guide.md) for detailed instructions.**
 
 ### Build From Source
 
@@ -109,19 +114,29 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 pyMediaManager orchestrates external tools through a flexible plugin system:
 
 ### Mandatory Plugins
-- **digiKam** - Media asset management
-- **ExifTool** - Metadata manipulation
-- **MariaDB** - Database backend for digiKam
-- **Git** - Version control
-- **GitVersion** - Semantic versioning
-- **Git LFS** - Large file storage
+- **Git** - Version control for projects
+- **7-Zip** - Archive extraction for plugin installations
 
-### Optional Plugins
-- **FFmpeg** - Video/audio processing
-- **ImageMagick** - Image manipulation
-- **MKVToolNix** - Matroska container tools
+### Optional Plugins  
+- **ExifTool** - Metadata extraction (8MB)
+- **FFmpeg** - Video/audio processing (100MB)
+- **digiKam** - Photo management suite (500MB)
+- **ImageMagick** - Image manipulation (30MB)
+- **MKVToolNix** - Matroska container tools (35MB)
+- **HandBrake** - Video transcoding (20MB)
+- **MediaInfo** - Media file analysis (5MB)
 
-Plugins are managed via the GUI with one-click installation from official sources.
+**Features:**
+- ✅ One-click installation from GUI
+- ✅ Automatic download with retry logic (3 attempts, exponential backoff)
+- ✅ SHA256 checksum verification for security
+- ✅ Progress tracking with detailed status
+- ✅ Automatic PATH registration
+- ✅ Version detection and validation
+
+Plugins install to `D:\pyMM.Plugins\` and are automatically discovered by the application.
+
+> **📖 See [User Guide - Plugin Management](docs/user-guide.md#plugin-management) for installation instructions.**
 
 ## Development
 
@@ -150,19 +165,30 @@ pyMM/
 
 ### Testing
 
+We maintain comprehensive test coverage for all core functionality:
+
 ```bash
 # Run all tests with coverage
 pytest
 
-# Run only unit tests
-pytest tests/unit/
+# Run specific test suites
+pytest tests/unit                    # Unit tests only
+pytest tests/integration             # Integration tests only
+pytest tests/gui                     # GUI tests (requires X server)
 
-# Run only GUI tests
-pytest tests/gui/
+# Run tests with detailed coverage report
+pytest --cov=app --cov-report=html
 
-# Generate HTML coverage report
-pytest --cov-report=html
+# Run tests excluding GUI (CI/headless)
+pytest tests/unit tests/integration
 ```
+
+**Test Coverage Status:**
+- **Total Tests:** 137 passing
+- **Core Coverage:** 70-100% on business logic modules
+- **Test Types:** Unit, Integration, GUI (pytest-qt)
+
+See [Testing Status](docs/testing-status.md) for detailed coverage breakdown.
 
 ### Code Quality
 
@@ -177,6 +203,55 @@ ruff check app/ tests/
 mypy app/
 ```
 
+## Features
+
+### v0.1.0 (Current - Beta)
+
+✅ **Project Management**
+- Create and manage media projects with metadata
+- Project templates for common workflows
+- Project browser with search and filtering
+- Recent projects quick access
+
+✅ **Git Integration**
+- Initialize Git repositories for new projects
+- Commit changes with descriptive messages
+- View project history and status
+- Built-in .gitignore templates
+
+✅ **Enhanced Plugin System**
+- Reliable downloads with retry logic (3 attempts)
+- SHA256 checksum verification
+- Progress tracking and detailed status
+- One-click installation from GUI
+- Automatic version detection
+
+✅ **Settings UI**
+- Comprehensive settings dialog with tabs
+- Theme selection (Light/Dark/Auto)
+- Plugin configuration
+- Storage preferences
+- Git user configuration
+
+✅ **Robust Testing**
+- 137 comprehensive tests
+- 70%+ coverage on core modules
+- Unit, integration, and GUI test suites
+
+### Roadmap
+
+🔄 **v0.2.0** (Planned)
+- Media import and organization
+- Batch metadata editing
+- Export presets and profiles
+- Advanced plugin workflow integration
+
+🔄 **v0.3.0** (Planned)  
+- Cloud storage integration
+- Team collaboration features
+- Advanced search and filtering
+- Automated backup system
+
 ## Configuration
 
 Configuration follows a layered approach (defaults → environment → user):
@@ -187,6 +262,8 @@ Configuration follows a layered approach (defaults → environment → user):
 
 Sensitive data (passwords, API keys) is automatically redacted in logs and exports.
 
+> **📖 See [User Guide - Settings](docs/user-guide.md#settings--configuration) for configuration options.**
+
 ## Logging
 
 pyMediaManager provides rich logging with multiple outputs:
@@ -195,7 +272,7 @@ pyMediaManager provides rich logging with multiple outputs:
 - **File** - Rotating logs at `D:\pyMM.Logs\` (on portable drive root)
 - **Levels** - DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-Logs are automatically rotated (10MB limit) with compression.
+Logs are automatically rotated (10MB limit, 5 backups) with proper encoding.
 
 ## Contributing
 

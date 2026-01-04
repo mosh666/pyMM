@@ -7,6 +7,8 @@ from typing import Optional, Dict, Any
 from dataclasses import dataclass
 import aiohttp
 import asyncio
+import shutil
+import subprocess
 
 
 @dataclass
@@ -24,6 +26,8 @@ class PluginManifest:
     command_executable: str = ""
     register_to_path: bool = False
     dependencies: list[str] = None
+    checksum_sha256: Optional[str] = None
+    file_size: Optional[int] = None
 
     def __post_init__(self):
         if self.dependencies is None:
@@ -129,42 +133,112 @@ class PluginBase(ABC):
             return False
 
     async def _download_file(
-        self, url: str, destination: Path, progress_callback=None
+        self, url: str, destination: Path, progress_callback=None, max_retries: int = 3
     ) -> bool:
         """
-        Download a file from URL.
+        Download a file from URL with retry logic.
 
         Args:
             url: URL to download from
             destination: Destination file path
             progress_callback: Optional callback for progress updates
+            max_retries: Maximum number of retry attempts (default 3)
 
         Returns:
             True if download successful
         """
-        try:
-            destination.parent.mkdir(parents=True, exist_ok=True)
+        for attempt in range(max_retries):
+            try:
+                if attempt > 0:
+                    wait_time = 2 ** attempt  # Exponential backoff: 2, 4, 8 seconds
+                    print(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                
+                print(f"  Downloading from: {url}")
+                print(f"  Destination: {destination}")
+                destination.parent.mkdir(parents=True, exist_ok=True)
 
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
-                    if response.status != 200:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response:
+                        print(f"  HTTP Status: {response.status}")
+                        if response.status != 200:
+                            print(f"  Error: HTTP {response.status} - {response.reason}")
+                            if attempt < max_retries - 1:
+                                continue
+                            return False
+
+                        total_size = int(response.headers.get("content-length", 0))
+                        print(f"  Download size: {total_size / (1024*1024):.2f} MB")
+                        downloaded = 0
+
+                        with open(destination, "wb") as f:
+                            async for chunk in response.content.iter_chunked(8192):
+                                f.write(chunk)
+                                downloaded += len(chunk)
+
+                                if progress_callback and total_size > 0:
+                                    progress_callback(downloaded, total_size)
+
+                print(f"  Download complete: {destination.exists()}")
+                
+                # Verify checksum if provided
+                if hasattr(self, 'manifest') and self.manifest.checksum_sha256:
+                    if not await self._verify_checksum(destination, self.manifest.checksum_sha256):
+                        print(f"  Checksum verification failed!")
+                        destination.unlink()
+                        if attempt < max_retries - 1:
+                            continue
                         return False
-
-                    total_size = int(response.headers.get("content-length", 0))
-                    downloaded = 0
-
-                    with open(destination, "wb") as f:
-                        async for chunk in response.content.iter_chunked(8192):
-                            f.write(chunk)
-                            downloaded += len(chunk)
-
-                            if progress_callback and total_size > 0:
-                                progress_callback(downloaded, total_size)
-
-            return True
-        except Exception:
-            if destination.exists():
-                destination.unlink()
+                    print(f"  Checksum verified")
+                
+                return True
+            except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                print(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
+                if destination.exists():
+                    destination.unlink()
+                if attempt < max_retries - 1:
+                    continue
+                return False
+            except Exception as e:
+                print(f"  Download exception: {type(e).__name__}: {e}")
+                import traceback
+                traceback.print_exc()
+                if destination.exists():
+                    destination.unlink()
+                return False
+        
+        return False
+    
+    async def _verify_checksum(self, file_path: Path, expected_sha256: str) -> bool:
+        """Verify file SHA256 checksum.
+        
+        Args:
+            file_path: Path to file to verify
+            expected_sha256: Expected SHA256 hash (case-insensitive)
+            
+        Returns:
+            True if checksum matches
+        """
+        try:
+            import hashlib
+            
+            sha256_hash = hashlib.sha256()
+            with open(file_path, "rb") as f:
+                # Read in chunks to handle large files
+                for chunk in iter(lambda: f.read(8192), b""):
+                    sha256_hash.update(chunk)
+            
+            calculated = sha256_hash.hexdigest().upper()
+            expected = expected_sha256.upper()
+            
+            if calculated == expected:
+                return True
+            else:
+                print(f"  Expected: {expected}")
+                print(f"  Got:      {calculated}")
+                return False
+        except Exception as e:
+            print(f"  Checksum verification error: {e}")
             return False
 
 
@@ -184,28 +258,153 @@ class SimplePluginImplementation(PluginBase):
         """
         super().__init__(manifest, install_dir)
         self.download_url = download_url
-        self.archive_path = install_dir / f"{manifest.name.lower()}.zip"
+        
+        # Determine archive extension from URL
+        url_lower = download_url.lower()
+        if '.7z.exe' in url_lower:
+            ext = '7z.exe'
+        elif url_lower.endswith('.7z'):
+            ext = '7z'
+        elif url_lower.endswith('.zip'):
+            ext = 'zip'
+        else:
+            ext = 'zip'  # Default to zip
+        
+        self.archive_path = install_dir / f"{manifest.name.lower()}.{ext}"
 
     async def download(self, progress_callback=None) -> bool:
         """Download plugin archive."""
         return await self._download_file(self.download_url, self.archive_path, progress_callback)
 
     async def extract(self) -> bool:
-        """Extract plugin archive."""
+        """Extract plugin archive with support for ZIP, 7z, and self-extracting exe."""
         if not self.archive_path.exists():
             return False
 
         try:
-            import zipfile
+            # Create temporary extraction directory
+            temp_extract_dir = self.plugin_dir.parent / f"{self.plugin_dir.name}_temp"
+            temp_extract_dir.mkdir(parents=True, exist_ok=True)
 
-            with zipfile.ZipFile(self.archive_path, "r") as zip_ref:
-                zip_ref.extractall(self.plugin_dir)
+            # Extract based on archive type
+            if self.archive_path.suffix == '.zip':
+                success = await self._extract_zip(temp_extract_dir)
+            elif str(self.archive_path).endswith('.7z.exe'):
+                success = await self._extract_7z_exe(temp_extract_dir)
+            elif self.archive_path.suffix == '.7z':
+                success = await self._extract_7z(temp_extract_dir)
+            else:
+                return False
 
-            # Clean up archive after extraction
+            if not success:
+                shutil.rmtree(temp_extract_dir, ignore_errors=True)
+                return False
+
+            # Flatten nested structure if needed
+            self._flatten_extraction(temp_extract_dir)
+            
+            # Handle special file renames (e.g., ExifTool)
+            self._handle_special_cases(temp_extract_dir)
+
+            # Move to final location
+            if self.plugin_dir.exists():
+                shutil.rmtree(self.plugin_dir)
+            temp_extract_dir.rename(self.plugin_dir)
+
+            # Clean up archive
             self.archive_path.unlink()
+            return True
+        except Exception as e:
+            print(f"  Extraction error: {type(e).__name__}: {e}")
+            if temp_extract_dir.exists():
+                shutil.rmtree(temp_extract_dir, ignore_errors=True)
+            return False
+
+    async def _extract_zip(self, extract_dir: Path) -> bool:
+        """Extract ZIP archive."""
+        try:
+            import zipfile
+            with zipfile.ZipFile(self.archive_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
             return True
         except Exception:
             return False
+
+    async def _extract_7z(self, extract_dir: Path) -> bool:
+        """Extract 7z archive using py7zr."""
+        try:
+            import py7zr
+            with py7zr.SevenZipFile(self.archive_path, mode='r') as archive:
+                archive.extractall(path=extract_dir)
+            return True
+        except ImportError:
+            print("  py7zr not installed, attempting 7z command-line")
+            return await self._extract_7z_cli(extract_dir)
+        except Exception:
+            return False
+
+    async def _extract_7z_cli(self, extract_dir: Path) -> bool:
+        """Extract 7z archive using 7z command-line tool."""
+        try:
+            result = subprocess.run(
+                ['7z', 'x', str(self.archive_path), f'-o{extract_dir}', '-y'],
+                capture_output=True,
+                text=True
+            )
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    async def _extract_7z_exe(self, extract_dir: Path) -> bool:
+        """Extract self-extracting 7z .exe archive."""
+        try:
+            # Self-extracting 7z archives can be extracted with -o flag
+            result = subprocess.run(
+                [str(self.archive_path), '-o' + str(extract_dir), '-y'],
+                capture_output=True,
+                text=True,
+                cwd=str(self.archive_path.parent)
+            )
+            return result.returncode == 0
+        except Exception:
+            # If that fails, try with py7zr (7z.exe files are often just 7z archives)
+            return await self._extract_7z(extract_dir)
+
+    def _flatten_extraction(self, extract_dir: Path) -> None:
+        """Flatten nested extraction structure if archive contains a single top-level directory."""
+        try:
+            items = list(extract_dir.iterdir())
+            
+            # If extraction resulted in a single directory, flatten it
+            if len(items) == 1 and items[0].is_dir():
+                nested_dir = items[0]
+                
+                # Move all contents up one level
+                for item in nested_dir.iterdir():
+                    dest = extract_dir / item.name
+                    if dest.exists():
+                        if dest.is_dir():
+                            shutil.rmtree(dest)
+                        else:
+                            dest.unlink()
+                    shutil.move(str(item), str(dest))
+                
+                # Remove the now-empty nested directory
+                nested_dir.rmdir()
+        except Exception as e:
+            print(f"  Warning: Could not flatten structure: {e}")
+    
+    def _handle_special_cases(self, extract_dir: Path) -> None:
+        """Handle plugin-specific post-extraction tasks."""
+        try:
+            # ExifTool: Rename exiftool(-k).exe to exiftool.exe
+            if self.manifest.name == "ExifTool":
+                old_name = extract_dir / "exiftool(-k).exe"
+                new_name = extract_dir / "exiftool.exe"
+                if old_name.exists() and not new_name.exists():
+                    old_name.rename(new_name)
+        except Exception as e:
+            print(f"  Warning: Special case handling failed: {e}")
 
     def validate_installation(self) -> bool:
         """Validate plugin installation by checking executable."""

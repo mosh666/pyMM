@@ -1,13 +1,15 @@
 # ImageMagick Plugin Manifest
 
 name: ImageMagick
-version: "7.1.1-43"
+version: "7.1.2-12"
 mandatory: false
 enabled: false
 
 source:
   type: url
-  base_uri: https://imagemagick.org/archive/binaries/ImageMagick-7.1.1-43-portable-Q16-HDRI-x64.zip
+  base_uri: https://imagemagick.org/archive/binaries/ImageMagick-7.1.2-12-portable-Q16-HDRI-x64.7z
+  checksum_sha256: "0607E50B998EFE17AE47DBD54DAE5CC29A28F96CA7F16A5C2F7F10248A7B4812"
+  file_size: 21482026
 
 command:
   path: ""

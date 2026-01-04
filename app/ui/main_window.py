@@ -26,6 +26,7 @@ except ImportError:
 from app.core.services.config_service import ConfigService
 from app.core.services.storage_service import StorageService
 from app.plugins.plugin_manager import PluginManager
+from app.services.project_service import ProjectService
 
 
 class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
@@ -36,12 +37,15 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         config_service: ConfigService,
         storage_service: StorageService,
         plugin_manager: PluginManager,
+        project_service: ProjectService,
     ):
         super().__init__()
 
         self.config_service = config_service
         self.storage_service = storage_service
         self.plugin_manager = plugin_manager
+        self.project_service = project_service
+        self.current_project = None
 
         self._init_window()
         self._init_navigation()
@@ -85,7 +89,8 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         # Project Management
         from app.ui.views.project_view import ProjectView
 
-        self.project_view = ProjectView()
+        self.project_view = ProjectView(self.project_service)
+        self.project_view.project_opened.connect(self._on_project_opened)
         self.addSubInterface(
             self.project_view, FluentIcon.FOLDER_ADD, "Projects", NavigationItemPosition.TOP
         )
@@ -143,15 +148,29 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         title.setFont(title_font)
         layout.addWidget(title)
 
-        # Theme selector
-        theme_label = QLabel("Theme: Light/Dark mode coming soon")
-        layout.addWidget(theme_label)
+        description = QLabel(
+            "Configure application settings, theme, plugins, and more.\n\n"
+            "Click the button below to open the settings dialog."
+        )
+        description.setWordWrap(True)
+        layout.addWidget(description)
 
-        # Logging level
-        logging_label = QLabel(f"Logging Level: {self.config_service.get_config().logging.level.value}")
-        layout.addWidget(logging_label)
+        # Open settings button
+        open_settings_btn = QPushButton("Open Settings")
+        open_settings_btn.clicked.connect(self._open_settings_dialog)
+        open_settings_btn.setMaximumWidth(200)
+        layout.addWidget(open_settings_btn)
 
         layout.addStretch()
+
+        return widget
+    
+    def _open_settings_dialog(self):
+        """Open the settings dialog."""
+        from app.ui.dialogs.settings_dialog import SettingsDialog
+        
+        dialog = SettingsDialog(self.config_service, self)
+        dialog.exec()
 
         return widget
 
@@ -181,3 +200,20 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         else:
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
+    
+    def _on_project_opened(self, project):
+        """Handle project opened event."""
+        from PySide6.QtWidgets import QMessageBox
+        
+        self.current_project = project
+        
+        # Update window title
+        config = self.config_service.get_config()
+        self.setWindowTitle(f"{config.app_name} - {project.name}")
+        
+        # Show notification
+        QMessageBox.information(
+            self,
+            "Project Opened",
+            f"Successfully opened project: {project.name}\n\nPath: {project.path}",
+        )
