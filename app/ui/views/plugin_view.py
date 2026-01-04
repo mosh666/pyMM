@@ -1,6 +1,7 @@
 """
 Plugin view for managing application plugins.
 """
+import logging
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,

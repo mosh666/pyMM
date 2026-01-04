@@ -1,6 +1,7 @@
 """
 Project view for managing media projects.
 """
+import logging
 from pathlib import Path
 from typing import Optional
 from PySide6.QtWidgets import (

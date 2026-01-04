@@ -1,6 +1,7 @@
 """
 Storage view for managing portable drives.
 """
+import logging
 from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget,

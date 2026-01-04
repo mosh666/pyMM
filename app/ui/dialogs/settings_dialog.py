@@ -381,7 +381,7 @@ class SettingsDialog(QDialog):
                 
                 config.release()
         except Exception as e:
-            print(f"Warning: Could not update Git config: {e}")
+            self.logger.warning(f"Could not update Git config: {e}")
     
     def _ok_clicked(self):
         """Handle OK button click."""

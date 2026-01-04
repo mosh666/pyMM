@@ -6,6 +6,7 @@ saving, and managing media management projects.
 """
 
 import json
+import logging
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -30,6 +31,7 @@ class ProjectService:
         Args:
             projects_dir: Directory where project metadata files are stored
         """
+        self.logger = logging.getLogger(__name__)
         self.projects_dir = projects_dir
         self.projects_dir.mkdir(parents=True, exist_ok=True)
     
@@ -109,7 +111,7 @@ class ProjectService:
                 data = json.load(f)
             return Project.from_dict(data)
         except Exception as e:
-            print(f"Error loading project metadata: {e}")
+            self.logger.error(f"Error loading project metadata: {e}")
             return None
     
     def save_project(self, project: Project) -> None:
@@ -130,7 +132,7 @@ class ProjectService:
             with open(metadata_file, "w", encoding="utf-8") as f:
                 json.dump(project.to_dict(), f, indent=2)
         except Exception as e:
-            print(f"Error saving project metadata: {e}")
+            self.logger.error(f"Error saving project metadata: {e}")
             raise
     
     def delete_project(self, project: Project, delete_files: bool = False) -> None:
@@ -168,7 +170,7 @@ class ProjectService:
                 project = Project.from_dict(data)
                 projects.append(project)
             except Exception as e:
-                print(f"Error loading project {metadata_file}: {e}")
+                self.logger.warning(f"Error loading project {metadata_file}: {e}")
         
         # Sort by modified date (most recent first)
         projects.sort(key=lambda p: p.modified, reverse=True)
@@ -227,7 +229,7 @@ class ProjectService:
             self.save_project(project)
             return True
         except Exception as e:
-            print(f"Error initializing Git repository: {e}")
+            self.logger.error(f"Error initializing Git repository: {e}")
             return False
     
     def get_git_status(self, project: Project) -> Optional[dict]:
@@ -270,7 +272,7 @@ class ProjectService:
         try:
             return GitService.commit(project.path, message, add_all, files)
         except Exception as e:
-            print(f"Error committing changes: {e}")
+            self.logger.error(f"Error committing changes: {e}")
             return False
     
     def get_git_log(self, project: Project, max_count: int = 10) -> List[dict]:

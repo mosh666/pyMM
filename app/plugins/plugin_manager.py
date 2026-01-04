@@ -1,6 +1,7 @@
 """
 Plugin manager for discovering, installing, and managing plugins.
 """
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 import yaml
@@ -18,6 +19,7 @@ class PluginManager:
             plugins_dir: Directory where plugins are installed (e.g., D:\\pyMM.Plugins)
             manifests_dir: Directory containing plugin manifest YAML files
         """
+        self.logger = logging.getLogger(__name__)
         self.plugins_dir = Path(plugins_dir)
         self.manifests_dir = Path(manifests_dir)
         self.plugins: Dict[str, PluginBase] = {}
@@ -50,7 +52,7 @@ class PluginManager:
                         self.plugins[manifest.name] = plugin
             except Exception as e:
                 # Log error but continue discovering
-                print(f"Error loading manifest {manifest_file}: {e}")
+                self.logger.warning(f"Error loading manifest {manifest_file}: {e}")
 
         return len(self.plugins)
 
@@ -92,7 +94,7 @@ class PluginManager:
 
             return manifest
         except Exception as e:
-            print(f"Error parsing manifest: {e}")
+            self.logger.error(f"Error parsing manifest: {e}")
             return None
 
     def _create_plugin_instance(self, manifest: PluginManifest) -> Optional[PluginBase]:
@@ -185,32 +187,32 @@ class PluginManager:
         """
         plugin = self.get_plugin(name)
         if not plugin:
-            print(f"Plugin {name} not found in registry")
+            self.logger.error(f"Plugin {name} not found in registry")
             return False
 
         try:
             # Download
-            print(f"Downloading {name}...")
+            self.logger.info(f"Downloading {name}...")
             download_success = await plugin.download(progress_callback)
             if not download_success:
-                print(f"Download failed for {name}")
+                self.logger.error(f"Download failed for {name}")
                 return False
 
             # Extract
-            print(f"Extracting {name}...")
+            self.logger.info(f"Extracting {name}...")
             extract_success = await plugin.extract()
             if not extract_success:
-                print(f"Extraction failed for {name}")
+                self.logger.error(f"Extraction failed for {name}")
                 return False
 
             # Validate
-            print(f"Validating {name}...")
+            self.logger.info(f"Validating {name}...")
             is_valid = plugin.validate_installation()
             if not is_valid:
-                print(f"Validation failed for {name}")
+                self.logger.error(f"Validation failed for {name}")
             return is_valid
         except Exception as e:
-            print(f"Exception during installation of {name}: {e}")
+            self.logger.error(f"Exception during installation of {name}: {e}")
             import traceback
             traceback.print_exc()
             return False

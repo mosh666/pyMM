@@ -7,6 +7,7 @@ from typing import Optional, Dict, Any
 from dataclasses import dataclass
 import aiohttp
 import asyncio
+import logging
 import shutil
 import subprocess
 
@@ -45,6 +46,7 @@ class PluginBase(ABC):
             manifest: Plugin manifest configuration
             install_dir: Directory where plugin will be installed
         """
+        self.logger = logging.getLogger(__name__)
         self.manifest = manifest
         self.install_dir = install_dir
         self.plugin_dir = install_dir / manifest.name.lower()
@@ -151,24 +153,24 @@ class PluginBase(ABC):
             try:
                 if attempt > 0:
                     wait_time = 2 ** attempt  # Exponential backoff: 2, 4, 8 seconds
-                    print(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    self.logger.info(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
                     await asyncio.sleep(wait_time)
                 
-                print(f"  Downloading from: {url}")
-                print(f"  Destination: {destination}")
+                self.logger.debug(f"  Downloading from: {url}")
+                self.logger.debug(f"  Destination: {destination}")
                 destination.parent.mkdir(parents=True, exist_ok=True)
 
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response:
-                        print(f"  HTTP Status: {response.status}")
+                        self.logger.info(f"  HTTP Status: {response.status}")
                         if response.status != 200:
-                            print(f"  Error: HTTP {response.status} - {response.reason}")
+                            self.logger.error(f"  Error: HTTP {response.status} - {response.reason}")
                             if attempt < max_retries - 1:
                                 continue
                             return False
 
                         total_size = int(response.headers.get("content-length", 0))
-                        print(f"  Download size: {total_size / (1024*1024):.2f} MB")
+                        self.logger.info(f"  Download size: {total_size / (1024*1024):.2f} MB")
                         downloaded = 0
 
                         with open(destination, "wb") as f:
@@ -179,28 +181,28 @@ class PluginBase(ABC):
                                 if progress_callback and total_size > 0:
                                     progress_callback(downloaded, total_size)
 
-                print(f"  Download complete: {destination.exists()}")
+                self.logger.info(f"  Download complete: {destination.exists()}")
                 
                 # Verify checksum if provided
                 if hasattr(self, 'manifest') and self.manifest.checksum_sha256:
                     if not await self._verify_checksum(destination, self.manifest.checksum_sha256):
-                        print(f"  Checksum verification failed!")
+                        self.logger.error(f"  Checksum verification failed!")
                         destination.unlink()
                         if attempt < max_retries - 1:
                             continue
                         return False
-                    print(f"  Checksum verified")
+                    self.logger.info(f"  Checksum verified")
                 
                 return True
             except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-                print(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
+                self.logger.warning(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
                 if destination.exists():
                     destination.unlink()
                 if attempt < max_retries - 1:
                     continue
                 return False
             except Exception as e:
-                print(f"  Download exception: {type(e).__name__}: {e}")
+                self.logger.error(f"  Download exception: {type(e).__name__}: {e}")
                 import traceback
                 traceback.print_exc()
                 if destination.exists():
@@ -234,11 +236,11 @@ class PluginBase(ABC):
             if calculated == expected:
                 return True
             else:
-                print(f"  Expected: {expected}")
-                print(f"  Got:      {calculated}")
+                self.logger.error(f"  Expected: {expected}")
+                self.logger.error(f"  Got:      {calculated}")
                 return False
         except Exception as e:
-            print(f"  Checksum verification error: {e}")
+            self.logger.error(f"  Checksum verification error: {e}")
             return False
 
 
@@ -315,7 +317,7 @@ class SimplePluginImplementation(PluginBase):
             self.archive_path.unlink()
             return True
         except Exception as e:
-            print(f"  Extraction error: {type(e).__name__}: {e}")
+            self.logger.error(f"  Extraction error: {type(e).__name__}: {e}")
             if temp_extract_dir.exists():
                 shutil.rmtree(temp_extract_dir, ignore_errors=True)
             return False
@@ -338,7 +340,7 @@ class SimplePluginImplementation(PluginBase):
                 archive.extractall(path=extract_dir)
             return True
         except ImportError:
-            print("  py7zr not installed, attempting 7z command-line")
+            self.logger.debug("  py7zr not installed, attempting 7z command-line")
             return await self._extract_7z_cli(extract_dir)
         except Exception:
             return False
@@ -392,7 +394,7 @@ class SimplePluginImplementation(PluginBase):
                 # Remove the now-empty nested directory
                 nested_dir.rmdir()
         except Exception as e:
-            print(f"  Warning: Could not flatten structure: {e}")
+            self.logger.warning(f"  Could not flatten structure: {e}")
     
     def _handle_special_cases(self, extract_dir: Path) -> None:
         """Handle plugin-specific post-extraction tasks."""
@@ -404,7 +406,7 @@ class SimplePluginImplementation(PluginBase):
                 if old_name.exists() and not new_name.exists():
                     old_name.rename(new_name)
         except Exception as e:
-            print(f"  Warning: Special case handling failed: {e}")
+            self.logger.warning(f"  Special case handling failed: {e}")
 
     def validate_installation(self) -> bool:
         """Validate plugin installation by checking executable."""

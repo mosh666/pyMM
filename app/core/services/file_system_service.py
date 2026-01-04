@@ -2,6 +2,7 @@
 File system service for pyMediaManager.
 Provides abstraction layer for file operations with portable path handling.
 """
+import logging
 from pathlib import Path
 from typing import List, Optional
 import shutil
@@ -18,6 +19,7 @@ class FileSystemService:
         Args:
             app_root: Application root directory. If None, auto-detects from module path.
         """
+        self.logger = logging.getLogger(__name__)
         if app_root is None:
             # Auto-detect: go up from app/core/services/ to root
             self.app_root = Path(__file__).parent.parent.parent.parent.resolve()
@@ -82,7 +84,7 @@ class FileSystemService:
                 path.mkdir(parents=True, exist_ok=True)
             except OSError as e:
                 # Log error but continue - folders may already exist or have permission issues
-                print(f"Warning: Could not create {name} folder at {path}: {e}")
+                self.logger.warning(f"Could not create {name} folder at {path}: {e}")
         
         return folders
 
