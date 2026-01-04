@@ -19,6 +19,9 @@ __pycache__/
 *$py.class
 *.so
 
+# Requirements files (dependencies in pyproject.toml)
+requirements*.txt
+
 # Testing
 .coverage
 htmlcov/

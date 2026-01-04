@@ -1,3 +1,0 @@
-# Placeholder for frozen dependencies - Python 3.12
-# Generated during build process by GitHub Actions
-# This file will contain exact versions of all runtime dependencies
