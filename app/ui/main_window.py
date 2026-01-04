@@ -3,17 +3,15 @@ Main window for pyMediaManager application.
 Uses Fluent Design with navigation interface.
 """
 import logging
-from pathlib import Path
-from typing import Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 
 try:
     from qfluentwidgets import (
+        FluentIcon,
         FluentWindow,
         NavigationItemPosition,
-        FluentIcon,
         Theme,
         setTheme,
     )
@@ -41,7 +39,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         project_service: ProjectService,
     ):
         super().__init__()
-        
+
         self.logger = logging.getLogger(__name__)
 
         self.config_service = config_service
@@ -167,11 +165,11 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         layout.addStretch()
 
         return widget
-    
+
     def _open_settings_dialog(self) -> None:
         """Open the settings dialog."""
         from app.ui.dialogs.settings_dialog import SettingsDialog
-        
+
         dialog = SettingsDialog(self.config_service, self)
         dialog.exec()
 
@@ -201,17 +199,17 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         else:
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
-    
+
     def _on_project_opened(self, project) -> None:
         """Handle project opened event."""
         from PySide6.QtWidgets import QMessageBox
-        
+
         self.current_project = project
-        
+
         # Update window title
         config = self.config_service.get_config()
         self.setWindowTitle(f"{config.app_name} - {project.name}")
-        
+
         # Show notification
         QMessageBox.information(
             self,

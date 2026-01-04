@@ -3,8 +3,9 @@ Plugin manager for discovering, installing, and managing plugins.
 """
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+
 import yaml
+
 from app.plugins.plugin_base import PluginBase, PluginManifest, SimplePluginImplementation
 
 
@@ -22,8 +23,8 @@ class PluginManager:
         self.logger = logging.getLogger(__name__)
         self.plugins_dir = Path(plugins_dir)
         self.manifests_dir = Path(manifests_dir)
-        self.plugins: Dict[str, PluginBase] = {}
-        self.manifests: Dict[str, PluginManifest] = {}
+        self.plugins: dict[str, PluginBase] = {}
+        self.manifests: dict[str, PluginManifest] = {}
 
     def discover_plugins(self) -> int:
         """
@@ -56,7 +57,7 @@ class PluginManager:
 
         return len(self.plugins)
 
-    def _load_manifest(self, manifest_file: Path) -> Optional[PluginManifest]:
+    def _load_manifest(self, manifest_file: Path) -> PluginManifest | None:
         """
         Load plugin manifest from YAML file.
 
@@ -67,7 +68,7 @@ class PluginManager:
             PluginManifest object or None if loading fails
         """
         try:
-            with open(manifest_file, "r", encoding="utf-8") as f:
+            with open(manifest_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
 
             if not data:
@@ -97,7 +98,7 @@ class PluginManager:
             self.logger.error(f"Error parsing manifest: {e}")
             return None
 
-    def _create_plugin_instance(self, manifest: PluginManifest) -> Optional[PluginBase]:
+    def _create_plugin_instance(self, manifest: PluginManifest) -> PluginBase | None:
         """
         Create plugin instance from manifest.
 
@@ -117,7 +118,7 @@ class PluginManager:
 
         return None
 
-    def get_plugin(self, name: str) -> Optional[PluginBase]:
+    def get_plugin(self, name: str) -> PluginBase | None:
         """
         Get plugin by name.
 
@@ -129,7 +130,7 @@ class PluginManager:
         """
         return self.plugins.get(name)
 
-    def get_all_plugins(self) -> List[PluginBase]:
+    def get_all_plugins(self) -> list[PluginBase]:
         """
         Get all discovered plugins.
 
@@ -138,7 +139,7 @@ class PluginManager:
         """
         return list(self.plugins.values())
 
-    def get_mandatory_plugins(self) -> List[PluginBase]:
+    def get_mandatory_plugins(self) -> list[PluginBase]:
         """
         Get mandatory plugins only.
 
@@ -147,7 +148,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.manifest.mandatory]
 
-    def get_optional_plugins(self) -> List[PluginBase]:
+    def get_optional_plugins(self) -> list[PluginBase]:
         """
         Get optional plugins only.
 
@@ -156,7 +157,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if not p.manifest.mandatory]
 
-    def get_enabled_plugins(self) -> List[PluginBase]:
+    def get_enabled_plugins(self) -> list[PluginBase]:
         """
         Get enabled plugins only.
 
@@ -165,7 +166,7 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.manifest.enabled]
 
-    def get_installed_plugins(self) -> List[PluginBase]:
+    def get_installed_plugins(self) -> list[PluginBase]:
         """
         Get plugins that are currently installed.
 
@@ -250,7 +251,7 @@ class PluginManager:
 
         return await self.install_plugin(name, progress_callback)
 
-    def get_plugin_status(self, name: str) -> Dict[str, any]:
+    def get_plugin_status(self, name: str) -> dict[str, any]:
         """
         Get detailed status of a plugin.
 
@@ -274,7 +275,7 @@ class PluginManager:
             "executable": str(plugin.get_executable_path()) if plugin.get_executable_path() else None,
         }
 
-    def register_plugins_to_path(self) -> List[Path]:
+    def register_plugins_to_path(self) -> list[Path]:
         """
         Get list of plugin paths that should be registered to PATH.
 

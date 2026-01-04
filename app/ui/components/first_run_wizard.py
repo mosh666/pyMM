@@ -3,22 +3,22 @@ First-run wizard for pyMediaManager initial setup.
 Multi-step wizard for storage detection and plugin configuration.
 """
 from pathlib import Path
-from typing import Optional, List
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QStackedWidget,
-    QCheckBox,
-    QListWidget,
-    QListWidgetItem,
-)
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
-from app.core.services.storage_service import StorageService, DriveInfo
+from app.core.services.storage_service import StorageService
 
 
 class WizardPage(QWidget):
@@ -107,7 +107,7 @@ class StoragePage(WizardPage):
 
     def __init__(self, storage_service: StorageService) -> None:
         self.storage_service = storage_service
-        self.selected_drive: Optional[Path] = None
+        self.selected_drive: Path | None = None
 
         super().__init__(
             "Select Portable Drive",
@@ -182,9 +182,9 @@ class StoragePage(WizardPage):
 class PluginPage(WizardPage):
     """Plugin selection page."""
 
-    def __init__(self, plugin_names: List[str]) -> None:
+    def __init__(self, plugin_names: list[str]) -> None:
         self.plugin_names = plugin_names
-        self.selected_plugins: List[str] = []
+        self.selected_plugins: list[str] = []
 
         super().__init__(
             "Select Optional Plugins",
@@ -256,7 +256,7 @@ class FirstRunWizard(QWidget):
     def __init__(
         self,
         storage_service: StorageService,
-        optional_plugin_names: List[str],
+        optional_plugin_names: list[str],
         parent=None,
     ) -> None:
         super().__init__(parent)

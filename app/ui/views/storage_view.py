@@ -3,19 +3,19 @@ Storage view for managing portable drives.
 """
 import logging
 from pathlib import Path
+
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QPushButton,
     QTableWidget,
     QTableWidgetItem,
-    QHeaderView,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtCore import Qt
 
-from app.core.services.storage_service import StorageService, DriveInfo
+from app.core.services.storage_service import StorageService
 
 
 class StorageView(QWidget):
@@ -23,7 +23,7 @@ class StorageView(QWidget):
 
     def __init__(self, storage_service: StorageService, parent=None):
         super().__init__(parent)
-        
+
         self.logger = logging.getLogger(__name__)
         self.storage_service = storage_service
         self._init_ui()

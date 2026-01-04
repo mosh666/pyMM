@@ -1,15 +1,17 @@
 """Tests for FirstRunWizard."""
-import pytest
 from pathlib import Path
+
+import pytest
 from PySide6.QtCore import Qt
-from app.ui.components.first_run_wizard import (
-    FirstRunWizard,
-    WelcomePage,
-    StoragePage,
-    PluginPage,
-    CompletePage,
-)
+
 from app.core.services.storage_service import StorageService
+from app.ui.components.first_run_wizard import (
+    CompletePage,
+    FirstRunWizard,
+    PluginPage,
+    StoragePage,
+    WelcomePage,
+)
 
 
 class TestWelcomePage:
@@ -229,8 +231,9 @@ class TestFirstRunWizard:
 
     def test_wizard_signals(self, qtbot, wizard):
         """Test wizard signals."""
-        finished_signal = qtbot.waitSignal(wizard.finished, timeout=1000, raising=False)
-        cancelled_signal = qtbot.waitSignal(wizard.cancelled, timeout=1000, raising=False)
+        # Setup signal watchers
+        qtbot.waitSignal(wizard.finished, timeout=1000, raising=False)
+        qtbot.waitSignal(wizard.cancelled, timeout=1000, raising=False)
 
         # Test cancel
         qtbot.mouseClick(wizard.cancel_btn, Qt.MouseButton.LeftButton)

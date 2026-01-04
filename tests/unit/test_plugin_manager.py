@@ -1,8 +1,8 @@
 """Tests for PluginManager."""
+
 import pytest
-from pathlib import Path
+
 from app.plugins.plugin_manager import PluginManager
-from app.plugins.plugin_base import PluginManifest, SimplePluginImplementation
 
 
 @pytest.fixture

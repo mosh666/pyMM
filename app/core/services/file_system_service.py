@@ -3,16 +3,14 @@ File system service for pyMediaManager.
 Provides abstraction layer for file operations with portable path handling.
 """
 import logging
-from pathlib import Path
-from typing import List, Optional
 import shutil
-import os
+from pathlib import Path
 
 
 class FileSystemService:
     """Service for file system operations with portable path handling."""
 
-    def __init__(self, app_root: Optional[Path] = None):
+    def __init__(self, app_root: Path | None = None):
         """
         Initialize file system service.
 
@@ -25,8 +23,8 @@ class FileSystemService:
             self.app_root = Path(__file__).parent.parent.parent.parent.resolve()
         else:
             self.app_root = Path(app_root).resolve()
-        
-        self._drive_root: Optional[Path] = None
+
+        self._drive_root: Path | None = None
 
     def get_app_root(self) -> Path:
         """Get the application root directory."""
@@ -35,10 +33,10 @@ class FileSystemService:
     def get_drive_root(self) -> Path:
         """
         Get the root of the drive containing the app.
-        
+
         Returns the drive root (e.g., D:\\ if app is at D:\\pyMM).
         Caches the result after first call.
-        
+
         Returns:
             Path to drive root directory
         """
@@ -46,19 +44,19 @@ class FileSystemService:
             # Get the drive root by taking the anchor of the absolute path
             # For D:\pyMM\app, this returns D:\
             self._drive_root = Path(self.app_root.anchor)
-        
+
         return self._drive_root
 
     def get_portable_folder(self, folder_name: str) -> Path:
         """
         Get path to a portable folder at the drive root.
-        
+
         For portable operation, certain folders (Projects, Logs) should be
         at the drive root rather than within the app directory.
-        
+
         Args:
             folder_name: Name of the folder (e.g., "pyMM.Projects", "pyMM.Logs")
-        
+
         Returns:
             Path to the portable folder at drive root
         """
@@ -67,10 +65,10 @@ class FileSystemService:
     def ensure_portable_folders(self) -> dict[str, Path]:
         """
         Ensure all portable folders exist at the drive root.
-        
+
         Creates pyMM.Projects and pyMM.Logs folders at the root of the
         drive containing the application.
-        
+
         Returns:
             Dictionary mapping folder names to their resolved paths
         """
@@ -78,17 +76,17 @@ class FileSystemService:
             "projects": self.get_portable_folder("pyMM.Projects"),
             "logs": self.get_portable_folder("pyMM.Logs"),
         }
-        
+
         for name, path in folders.items():
             try:
                 path.mkdir(parents=True, exist_ok=True)
             except OSError as e:
                 # Log error but continue - folders may already exist or have permission issues
                 self.logger.warning(f"Could not create {name} folder at {path}: {e}")
-        
+
         return folders
 
-    def get_relative_path(self, path: Path, base: Optional[Path] = None) -> Path:
+    def get_relative_path(self, path: Path, base: Path | None = None) -> Path:
         """
         Get path relative to base directory.
 
@@ -107,7 +105,7 @@ class FileSystemService:
             # Path is not relative to base, return as-is
             return path
 
-    def resolve_path(self, path: Path | str, relative_to: Optional[Path] = None) -> Path:
+    def resolve_path(self, path: Path | str, relative_to: Path | None = None) -> Path:
         """
         Resolve a path that may be relative or absolute.
 
@@ -146,7 +144,7 @@ class FileSystemService:
 
     def list_directory(
         self, path: Path | str, pattern: str = "*", recursive: bool = False
-    ) -> List[Path]:
+    ) -> list[Path]:
         """
         List files in a directory matching a pattern.
 

@@ -4,10 +4,9 @@ Initializes services and launches the PySide6 GUI.
 """
 import sys
 from pathlib import Path
-from typing import Optional
 
-from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication
 
 
 def get_app_root() -> Path:
@@ -19,7 +18,7 @@ def get_app_root() -> Path:
 def run_application() -> int:
     """
     Initialize and run the pyMediaManager application.
-    
+
     Returns:
         Exit code (0 for success, non-zero for errors)
     """
@@ -38,16 +37,16 @@ def run_application() -> int:
     # Initialize services
     app_root = get_app_root()
 
-    from app.core.services.file_system_service import FileSystemService
-    from app.core.services.config_service import ConfigService
-    from app.core.services.storage_service import StorageService
     from app.core.logging_service import LoggingService
+    from app.core.services.config_service import ConfigService
+    from app.core.services.file_system_service import FileSystemService
+    from app.core.services.storage_service import StorageService
     from app.plugins.plugin_manager import PluginManager
     from app.services.project_service import ProjectService
 
     # File system service
     file_system_service = FileSystemService(app_root)
-    
+
     # Ensure portable folders exist at drive root
     portable_folders = file_system_service.ensure_portable_folders()
 
@@ -85,6 +84,17 @@ def run_application() -> int:
     project_service = ProjectService(projects_metadata_dir)
     logger.info(f"Project service initialized: {projects_metadata_dir}")
 
+    # Define show_main_window function first
+    def show_main_window():
+        """Create and show the main window."""
+        from app.ui.main_window import MainWindow
+
+        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
+        main_window.show()
+
+        # Store reference to prevent garbage collection
+        app.main_window = main_window
+
     # Check first-run state
     if config.ui.show_first_run:
         logger.info("Showing first-run wizard")
@@ -115,16 +125,6 @@ def run_application() -> int:
     else:
         # Show main window directly
         show_main_window()
-
-    def show_main_window():
-        """Create and show the main window."""
-        from app.ui.main_window import MainWindow
-
-        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
-        main_window.show()
-
-        # Store reference to prevent garbage collection
-        app.main_window = main_window
 
     return app.exec()
 

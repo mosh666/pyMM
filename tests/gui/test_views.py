@@ -1,13 +1,14 @@
 """Tests for view classes."""
-import pytest
 from unittest.mock import Mock
-from PySide6.QtCore import Qt
-from app.ui.views.storage_view import StorageView
+
+import pytest
+
+from app.core.services.storage_service import StorageService
+from app.models.project import Project
+from app.plugins.plugin_manager import PluginManager
 from app.ui.views.plugin_view import PluginView
 from app.ui.views.project_view import ProjectView
-from app.core.services.storage_service import StorageService
-from app.plugins.plugin_manager import PluginManager
-from app.models.project import Project
+from app.ui.views.storage_view import StorageView
 
 
 class TestStorageView:

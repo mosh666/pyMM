@@ -1,6 +1,7 @@
 """Tests for StorageService."""
 import pytest
-from app.core.services.storage_service import StorageService, DriveInfo
+
+from app.core.services.storage_service import DriveInfo, StorageService
 
 
 class TestDriveInfo:

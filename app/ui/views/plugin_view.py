@@ -2,19 +2,20 @@
 Plugin view for managing application plugins.
 """
 import logging
+
+from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
+    QMessageBox,
+    QProgressDialog,
     QPushButton,
     QTableWidget,
     QTableWidgetItem,
-    QHeaderView,
-    QMessageBox,
-    QProgressDialog,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtCore import Qt, QThread, Signal
 
 from app.plugins.plugin_manager import PluginManager
 
@@ -62,7 +63,7 @@ class PluginView(QWidget):
 
     def __init__(self, plugin_manager: PluginManager, parent=None) -> None:
         super().__init__(parent)
-        
+
         self.logger = logging.getLogger(__name__)
         self.plugin_manager = plugin_manager
         self.install_thread: PluginInstallThread = None

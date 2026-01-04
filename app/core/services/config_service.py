@@ -2,11 +2,12 @@
 Configuration service for pyMediaManager.
 Handles layered configuration (defaults → environment → user) with Pydantic models.
 """
-from pathlib import Path
-from typing import Any, Dict, Optional
 from enum import Enum
+from pathlib import Path
+from typing import Any
+
 import yaml
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class LogLevel(str, Enum):
@@ -61,7 +62,7 @@ class PluginConfig(BaseModel):
 
 class AppConfig(BaseModel):
     """Main application configuration."""
-    
+
     model_config = ConfigDict(extra='allow')
 
     app_name: str = Field(default="pyMediaManager", description="Application name")
@@ -74,7 +75,7 @@ class AppConfig(BaseModel):
     # Sensitive fields that should be redacted in logs
     _sensitive_fields: set = {"password", "token", "secret", "key", "api_key"}
 
-    def to_dict(self, redact_sensitive: bool = False) -> Dict[str, Any]:
+    def to_dict(self, redact_sensitive: bool = False) -> dict[str, Any]:
         """
         Convert config to dictionary.
 
@@ -109,7 +110,7 @@ class AppConfig(BaseModel):
 class ConfigService:
     """Service for managing layered application configuration."""
 
-    def __init__(self, app_root: Path, config_dir: Optional[Path] = None):
+    def __init__(self, app_root: Path, config_dir: Path | None = None):
         """
         Initialize configuration service.
 
@@ -120,7 +121,7 @@ class ConfigService:
         self.app_root = Path(app_root)
         self.config_dir = Path(config_dir) if config_dir else self.app_root / "config"
 
-        self._config: Optional[AppConfig] = None
+        self._config: AppConfig | None = None
         self._user_config_path = self.config_dir / "user.yaml"
         self._default_config_path = self.config_dir / "app.yaml"
 
@@ -136,13 +137,13 @@ class ConfigService:
 
         # Layer 1: Load from default config file if exists
         if self._default_config_path.exists():
-            with open(self._default_config_path, "r", encoding="utf-8") as f:
+            with open(self._default_config_path, encoding="utf-8") as f:
                 default_data = yaml.safe_load(f) or {}
                 config_data.update(default_data)
 
         # Layer 2: Load from user config file if exists
         if self._user_config_path.exists():
-            with open(self._user_config_path, "r", encoding="utf-8") as f:
+            with open(self._user_config_path, encoding="utf-8") as f:
                 user_data = yaml.safe_load(f) or {}
                 config_data = self._merge_dicts(config_data, user_data)
 
@@ -212,7 +213,7 @@ class ConfigService:
         self._config = None
         return self.load()
 
-    def _merge_dicts(self, base: Dict, override: Dict) -> Dict:
+    def _merge_dicts(self, base: dict, override: dict) -> dict:
         """
         Recursively merge two dictionaries.
 

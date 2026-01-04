@@ -1,6 +1,8 @@
 """Tests for FileSystemService."""
-import pytest
 from pathlib import Path
+
+import pytest
+
 from app.core.services.file_system_service import FileSystemService
 
 
@@ -47,14 +49,14 @@ class TestFileSystemService:
     def test_ensure_portable_folders(self, service):
         """Test ensuring portable folders exist."""
         folders = service.ensure_portable_folders()
-        
+
         assert "projects" in folders
         assert "logs" in folders
-        
+
         # Folders should exist
         assert folders["projects"].exists()
         assert folders["logs"].exists()
-        
+
         # Folders should be at drive root
         drive_root = service.get_drive_root()
         assert folders["projects"] == drive_root / "pyMM.Projects"
