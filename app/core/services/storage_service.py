@@ -1,8 +1,10 @@
 """
 Storage service for detecting and managing portable drives.
 """
+
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import psutil
 
@@ -35,7 +37,7 @@ class DriveInfo:
 class StorageService:
     """Service for detecting and managing portable storage drives."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize storage service."""
         pass
 
@@ -137,7 +139,7 @@ class StorageService:
 
         return None
 
-    def _is_removable_drive(self, partition) -> bool:
+    def _is_removable_drive(self, partition: Any) -> bool:
         """
         Determine if a partition is on a removable drive.
 

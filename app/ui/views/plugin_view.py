@@ -1,7 +1,9 @@
 """
 Plugin view for managing application plugins.
 """
+
 import logging
+from typing import Any
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
@@ -61,12 +63,12 @@ class PluginInstallThread(QThread):
 class PluginView(QWidget):
     """View for managing plugins."""
 
-    def __init__(self, plugin_manager: PluginManager, parent=None) -> None:
+    def __init__(self, plugin_manager: PluginManager, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
         self.plugin_manager = plugin_manager
-        self.install_thread: PluginInstallThread = None
+        self.install_thread: PluginInstallThread | None = None
 
         self._init_ui()
         self.refresh_plugins()
@@ -161,7 +163,7 @@ class PluginView(QWidget):
 
             self.plugins_table.setCellWidget(row, 4, action_widget)
 
-    def _install_plugin(self, plugin) -> None:
+    def _install_plugin(self, plugin: Any) -> None:
         """Install a plugin."""
         # Show confirmation
         reply = QMessageBox.question(
@@ -184,7 +186,9 @@ class PluginView(QWidget):
         self.install_thread.progress.connect(
             lambda cur, total: progress.setValue(int((cur / total) * 100) if total > 0 else 0)
         )
-        self.install_thread.finished.connect(lambda success, msg: self._on_install_finished(success, msg, progress))
+        self.install_thread.finished.connect(
+            lambda success, msg: self._on_install_finished(success, msg, progress)
+        )
         self.install_thread.start()
 
     def _on_install_finished(self, success: bool, message: str, progress: QProgressDialog) -> None:
@@ -198,11 +202,13 @@ class PluginView(QWidget):
 
         self.refresh_plugins()
 
-    def _update_plugin(self, plugin) -> None:
+    def _update_plugin(self, plugin: Any) -> None:
         """Update a plugin."""
-        QMessageBox.information(self, "Update", f"Update functionality for {plugin.manifest.name} coming soon!")
+        QMessageBox.information(
+            self, "Update", f"Update functionality for {plugin.manifest.name} coming soon!"
+        )
 
-    def _uninstall_plugin(self, plugin) -> None:
+    def _uninstall_plugin(self, plugin: Any) -> None:
         """Uninstall a plugin."""
         reply = QMessageBox.question(
             self,
@@ -215,7 +221,9 @@ class PluginView(QWidget):
             import asyncio
 
             loop = asyncio.new_event_loop()
-            success = loop.run_until_complete(self.plugin_manager.uninstall_plugin(plugin.manifest.name))
+            success = loop.run_until_complete(
+                self.plugin_manager.uninstall_plugin(plugin.manifest.name)
+            )
 
             if success:
                 QMessageBox.information(self, "Success", f"{plugin.manifest.name} uninstalled")

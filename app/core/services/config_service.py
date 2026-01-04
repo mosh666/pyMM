@@ -2,6 +2,7 @@
 Configuration service for pyMediaManager.
 Handles layered configuration (defaults → environment → user) with Pydantic models.
 """
+
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -63,7 +64,7 @@ class PluginConfig(BaseModel):
 class AppConfig(BaseModel):
     """Main application configuration."""
 
-    model_config = ConfigDict(extra='allow')
+    model_config = ConfigDict(extra="allow")
 
     app_name: str = Field(default="pyMediaManager", description="Application name")
     app_version: str = Field(default="0.0.1", description="Application version")
@@ -85,7 +86,7 @@ class AppConfig(BaseModel):
         Returns:
             Dictionary representation of config
         """
-        data = self.model_dump(mode='json')
+        data = self.model_dump(mode="json")
 
         if redact_sensitive:
             data = self._redact_sensitive_data(data)
@@ -133,7 +134,7 @@ class ConfigService:
             Loaded AppConfig object
         """
         # Start with default config
-        config_data = {}
+        config_data: dict[str, Any] = {}
 
         # Layer 1: Load from default config file if exists
         if self._default_config_path.exists():
@@ -164,7 +165,7 @@ class ConfigService:
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
         with open(self._user_config_path, "w", encoding="utf-8") as f:
-            yaml.dump(config.model_dump(mode='json'), f, default_flow_style=False, sort_keys=False)
+            yaml.dump(config.model_dump(mode="json"), f, default_flow_style=False, sort_keys=False)
 
     def get_config(self) -> AppConfig:
         """
@@ -177,7 +178,7 @@ class ConfigService:
             self.load()
         return self._config
 
-    def update_config(self, **kwargs) -> AppConfig:
+    def update_config(self, **kwargs: Any) -> AppConfig:
         """
         Update configuration values and save to user config.
 

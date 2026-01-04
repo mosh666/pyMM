@@ -4,6 +4,7 @@ Project creation wizard.
 
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -20,6 +21,9 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
+if TYPE_CHECKING:
+    from PySide6.QtWidgets import QWidget
+
 from app.models.project import Project
 from app.services.project_service import ProjectService
 
@@ -35,7 +39,7 @@ class ProjectWizard(QDialog):
     - Git integration
     """
 
-    def __init__(self, project_service: ProjectService, parent=None) -> None:
+    def __init__(self, project_service: ProjectService, parent: "QWidget | None" = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -156,8 +160,8 @@ class ProjectWizard(QDialog):
 
         if name and location:
             # Sanitize project name for directory
-            dir_name = "".join(c for c in name if c.isalnum() or c in (' ', '-', '_')).strip()
-            dir_name = dir_name.replace(' ', '_')
+            dir_name = "".join(c for c in name if c.isalnum() or c in (" ", "-", "_")).strip()
+            dir_name = dir_name.replace(" ", "_")
 
             full_path = Path(location) / dir_name
             self.path_label.setText(str(full_path))
@@ -193,8 +197,8 @@ class ProjectWizard(QDialog):
         use_template = self.template_checkbox.isChecked()
 
         # Sanitize project name for directory
-        dir_name = "".join(c for c in name if c.isalnum() or c in (' ', '-', '_')).strip()
-        dir_name = dir_name.replace(' ', '_')
+        dir_name = "".join(c for c in name if c.isalnum() or c in (" ", "-", "_")).strip()
+        dir_name = dir_name.replace(" ", "_")
 
         project_path = Path(location) / dir_name
 

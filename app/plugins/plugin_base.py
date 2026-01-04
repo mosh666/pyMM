@@ -1,12 +1,14 @@
 """
 Plugin base class and plugin management system.
 """
+
 import asyncio
 import logging
 import shutil
 import subprocess
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import aiohttp
@@ -26,13 +28,12 @@ class PluginManifest:
     command_path: str = ""
     command_executable: str = ""
     register_to_path: bool = False
-    dependencies: list[str] = None
+    dependencies: list[str] = field(default_factory=list)
     checksum_sha256: str | None = None
     file_size: int | None = None
 
-    def __post_init__(self):
-        if self.dependencies is None:
-            self.dependencies = []
+    def __post_init__(self) -> None:
+        pass  # dependencies now handled by field(default_factory=list)
 
 
 class PluginBase(ABC):
@@ -52,7 +53,7 @@ class PluginBase(ABC):
         self.plugin_dir = install_dir / manifest.name.lower()
 
     @abstractmethod
-    async def download(self, progress_callback=None) -> bool:
+    async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> bool:
         """
         Download plugin binaries.
 
@@ -135,7 +136,11 @@ class PluginBase(ABC):
             return False
 
     async def _download_file(
-        self, url: str, destination: Path, progress_callback=None, max_retries: int = 3
+        self,
+        url: str,
+        destination: Path,
+        progress_callback: Callable[[int, int], None] | None = None,
+        max_retries: int = 3,
     ) -> bool:
         """
         Download a file from URL with retry logic.
@@ -152,8 +157,10 @@ class PluginBase(ABC):
         for attempt in range(max_retries):
             try:
                 if attempt > 0:
-                    wait_time = 2 ** attempt  # Exponential backoff: 2, 4, 8 seconds
-                    self.logger.info(f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    wait_time = 2**attempt  # Exponential backoff: 2, 4, 8 seconds
+                    self.logger.info(
+                        f"  Retry attempt {attempt + 1}/{max_retries} after {wait_time}s..."
+                    )
                     await asyncio.sleep(wait_time)
 
                 self.logger.debug(f"  Downloading from: {url}")
@@ -161,10 +168,14 @@ class PluginBase(ABC):
                 destination.parent.mkdir(parents=True, exist_ok=True)
 
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response:
+                    async with session.get(
+                        url, timeout=aiohttp.ClientTimeout(total=300)
+                    ) as response:
                         self.logger.info(f"  HTTP Status: {response.status}")
                         if response.status != 200:
-                            self.logger.error(f"  Error: HTTP {response.status} - {response.reason}")
+                            self.logger.error(
+                                f"  Error: HTTP {response.status} - {response.reason}"
+                            )
                             if attempt < max_retries - 1:
                                 continue
                             return False
@@ -184,7 +195,7 @@ class PluginBase(ABC):
                 self.logger.info(f"  Download complete: {destination.exists()}")
 
                 # Verify checksum if provided
-                if hasattr(self, 'manifest') and self.manifest.checksum_sha256:
+                if hasattr(self, "manifest") and self.manifest.checksum_sha256:
                     if not await self._verify_checksum(destination, self.manifest.checksum_sha256):
                         self.logger.error("  Checksum verification failed!")
                         destination.unlink()
@@ -195,7 +206,9 @@ class PluginBase(ABC):
 
                 return True
             except (TimeoutError, aiohttp.ClientError) as e:
-                self.logger.warning(f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}")
+                self.logger.warning(
+                    f"  Download error (attempt {attempt + 1}/{max_retries}): {type(e).__name__}: {e}"
+                )
                 if destination.exists():
                     destination.unlink()
                 if attempt < max_retries - 1:
@@ -204,6 +217,7 @@ class PluginBase(ABC):
             except Exception as e:
                 self.logger.error(f"  Download exception: {type(e).__name__}: {e}")
                 import traceback
+
                 traceback.print_exc()
                 if destination.exists():
                     destination.unlink()
@@ -263,14 +277,14 @@ class SimplePluginImplementation(PluginBase):
 
         # Determine archive extension from URL
         url_lower = download_url.lower()
-        if '.7z.exe' in url_lower:
-            ext = '7z.exe'
-        elif url_lower.endswith('.7z'):
-            ext = '7z'
-        elif url_lower.endswith('.zip'):
-            ext = 'zip'
+        if ".7z.exe" in url_lower:
+            ext = "7z.exe"
+        elif url_lower.endswith(".7z"):
+            ext = "7z"
+        elif url_lower.endswith(".zip"):
+            ext = "zip"
         else:
-            ext = 'zip'  # Default to zip
+            ext = "zip"  # Default to zip
 
         self.archive_path = install_dir / f"{manifest.name.lower()}.{ext}"
 
@@ -289,11 +303,11 @@ class SimplePluginImplementation(PluginBase):
             temp_extract_dir.mkdir(parents=True, exist_ok=True)
 
             # Extract based on archive type
-            if self.archive_path.suffix == '.zip':
+            if self.archive_path.suffix == ".zip":
                 success = await self._extract_zip(temp_extract_dir)
-            elif str(self.archive_path).endswith('.7z.exe'):
+            elif str(self.archive_path).endswith(".7z.exe"):
                 success = await self._extract_7z_exe(temp_extract_dir)
-            elif self.archive_path.suffix == '.7z':
+            elif self.archive_path.suffix == ".7z":
                 success = await self._extract_7z(temp_extract_dir)
             else:
                 return False
@@ -326,7 +340,8 @@ class SimplePluginImplementation(PluginBase):
         """Extract ZIP archive."""
         try:
             import zipfile
-            with zipfile.ZipFile(self.archive_path, 'r') as zip_ref:
+
+            with zipfile.ZipFile(self.archive_path, "r") as zip_ref:
                 zip_ref.extractall(extract_dir)
             return True
         except Exception:
@@ -336,7 +351,8 @@ class SimplePluginImplementation(PluginBase):
         """Extract 7z archive using py7zr."""
         try:
             import py7zr
-            with py7zr.SevenZipFile(self.archive_path, mode='r') as archive:
+
+            with py7zr.SevenZipFile(self.archive_path, mode="r") as archive:
                 archive.extractall(path=extract_dir)
             return True
         except ImportError:
@@ -349,9 +365,9 @@ class SimplePluginImplementation(PluginBase):
         """Extract 7z archive using 7z command-line tool."""
         try:
             result = subprocess.run(
-                ['7z', 'x', str(self.archive_path), f'-o{extract_dir}', '-y'],
+                ["7z", "x", str(self.archive_path), f"-o{extract_dir}", "-y"],
                 capture_output=True,
-                text=True
+                text=True,
             )
             return result.returncode == 0
         except Exception:
@@ -362,10 +378,10 @@ class SimplePluginImplementation(PluginBase):
         try:
             # Self-extracting 7z archives can be extracted with -o flag
             result = subprocess.run(
-                [str(self.archive_path), '-o' + str(extract_dir), '-y'],
+                [str(self.archive_path), "-o" + str(extract_dir), "-y"],
                 capture_output=True,
                 text=True,
-                cwd=str(self.archive_path.parent)
+                cwd=str(self.archive_path.parent),
             )
             return result.returncode == 0
         except Exception:

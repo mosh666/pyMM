@@ -1,6 +1,7 @@
 """
 Storage view for managing portable drives.
 """
+
 import logging
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from app.core.services.storage_service import StorageService
 class StorageView(QWidget):
     """View for displaying and managing storage drives."""
 
-    def __init__(self, storage_service: StorageService, parent=None):
+    def __init__(self, storage_service: StorageService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)

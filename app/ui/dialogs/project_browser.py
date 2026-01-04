@@ -3,6 +3,7 @@ Project browser dialog for viewing and managing projects.
 """
 
 import logging
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
@@ -15,6 +16,9 @@ from PySide6.QtWidgets import (
     QPushButton,
     QVBoxLayout,
 )
+
+if TYPE_CHECKING:
+    from PySide6.QtWidgets import QWidget
 
 from app.models.project import Project
 from app.services.project_service import ProjectService
@@ -33,7 +37,7 @@ class ProjectBrowserDialog(QDialog):
 
     project_selected = Signal(Project)  # Emitted when user selects to open a project
 
-    def __init__(self, project_service: ProjectService, parent=None) -> None:
+    def __init__(self, project_service: ProjectService, parent: "QWidget | None" = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)

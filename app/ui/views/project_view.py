@@ -1,6 +1,7 @@
 """
 Project view for managing media projects.
 """
+
 import logging
 
 from PySide6.QtCore import Qt, Signal
@@ -23,7 +24,7 @@ class ProjectView(QWidget):
 
     project_opened = Signal(Project)  # Emitted when a project is opened
 
-    def __init__(self, project_service: ProjectService, parent=None) -> None:
+    def __init__(self, project_service: ProjectService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -87,7 +88,9 @@ class ProjectView(QWidget):
         projects = self.project_service.list_projects()
 
         if not projects:
-            placeholder = QListWidgetItem("No projects found. Create your first project to get started!")
+            placeholder = QListWidgetItem(
+                "No projects found. Create your first project to get started!"
+            )
             placeholder.setFlags(Qt.ItemFlag.NoItemFlags)
             self.projects_list.addItem(placeholder)
             return

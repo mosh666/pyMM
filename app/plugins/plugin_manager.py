@@ -1,8 +1,11 @@
 """
 Plugin manager for discovering, installing, and managing plugins.
 """
+
 import logging
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -175,7 +178,9 @@ class PluginManager:
         """
         return [p for p in self.plugins.values() if p.is_installed()]
 
-    async def install_plugin(self, name: str, progress_callback=None) -> bool:
+    async def install_plugin(
+        self, name: str, progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
         """
         Install a plugin by name.
 
@@ -215,6 +220,7 @@ class PluginManager:
         except Exception as e:
             self.logger.error(f"Exception during installation of {name}: {e}")
             import traceback
+
             traceback.print_exc()
             return False
 
@@ -234,7 +240,9 @@ class PluginManager:
 
         return await plugin.uninstall()
 
-    async def update_plugin(self, name: str, progress_callback=None) -> bool:
+    async def update_plugin(
+        self, name: str, progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
         """
         Update a plugin to latest version.
 
@@ -251,7 +259,7 @@ class PluginManager:
 
         return await self.install_plugin(name, progress_callback)
 
-    def get_plugin_status(self, name: str) -> dict[str, any]:
+    def get_plugin_status(self, name: str) -> dict[str, Any]:
         """
         Get detailed status of a plugin.
 
@@ -272,7 +280,9 @@ class PluginManager:
             "installed": plugin.is_installed(),
             "mandatory": plugin.manifest.mandatory,
             "enabled": plugin.manifest.enabled,
-            "executable": str(plugin.get_executable_path()) if plugin.get_executable_path() else None,
+            "executable": str(plugin.get_executable_path())
+            if plugin.get_executable_path()
+            else None,
         }
 
     def register_plugins_to_path(self) -> list[Path]:

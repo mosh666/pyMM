@@ -2,7 +2,9 @@
 Main window for pyMediaManager application.
 Uses Fluent Design with navigation interface.
 """
+
 import logging
+from typing import Any
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
@@ -200,7 +202,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
 
-    def _on_project_opened(self, project) -> None:
+    def _on_project_opened(self, project: Any) -> None:
         """Handle project opened event."""
         from PySide6.QtWidgets import QMessageBox
 

@@ -2,8 +2,10 @@
 Main application entry point for pyMediaManager.
 Initializes services and launches the PySide6 GUI.
 """
+
 import sys
 from pathlib import Path
+from typing import Any
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
@@ -66,7 +68,9 @@ def run_application() -> int:
     logger.info(f"Starting {config.app_name} v{config.app_version}")
     logger.info(f"App root: {app_root}")
     logger.info(f"Drive root: {file_system_service.get_drive_root()}")
-    logger.info(f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}")
+    logger.info(
+        f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}"
+    )
 
     # Storage service
     storage_service = StorageService()
@@ -80,12 +84,12 @@ def run_application() -> int:
     logger.info(f"Discovered {len(plugin_manager.get_all_plugins())} plugins")
 
     # Project service
-    projects_metadata_dir = portable_folders['projects'] / ".metadata"
+    projects_metadata_dir = portable_folders["projects"] / ".metadata"
     project_service = ProjectService(projects_metadata_dir)
     logger.info(f"Project service initialized: {projects_metadata_dir}")
 
     # Define show_main_window function first
-    def show_main_window():
+    def show_main_window() -> None:
         """Create and show the main window."""
         from app.ui.main_window import MainWindow
 
@@ -105,7 +109,7 @@ def run_application() -> int:
 
         wizard = FirstRunWizard(storage_service, optional_plugins)
 
-        def on_wizard_finished(data):
+        def on_wizard_finished(data: dict[str, Any]) -> None:
             logger.info(f"First-run wizard completed: {data}")
             # Update config to not show wizard again
             if data.get("dont_show_again"):
@@ -114,7 +118,7 @@ def run_application() -> int:
             # Show main window
             show_main_window()
 
-        def on_wizard_cancelled():
+        def on_wizard_cancelled() -> None:
             logger.info("First-run wizard cancelled")
             # Still show main window
             show_main_window()

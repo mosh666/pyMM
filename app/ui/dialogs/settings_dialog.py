@@ -9,6 +9,7 @@ Provides a tabbed interface for configuring:
 """
 
 import logging
+from typing import Any
 
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -41,7 +42,7 @@ class SettingsDialog(QDialog):
     - Git integration settings
     """
 
-    def __init__(self, config_service: ConfigService, parent=None) -> None:
+    def __init__(self, config_service: ConfigService, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -203,8 +204,7 @@ class SettingsDialog(QDialog):
         paths_layout = QFormLayout(paths_group)
 
         info_label = QLabel(
-            "These paths are relative to the drive root.\n"
-            "Changes require application restart."
+            "These paths are relative to the drive root.\n" "Changes require application restart."
         )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: gray; font-style: italic;")
@@ -292,6 +292,7 @@ class SettingsDialog(QDialog):
         # Git tab - load from git config if available
         try:
             import git
+
             config = git.GitConfigParser()
             self.git_user_name_edit.setText(config.get_value("user", "name", ""))
             self.git_user_email_edit.setText(config.get_value("user", "email", ""))
@@ -303,7 +304,7 @@ class SettingsDialog(QDialog):
         """Apply settings without closing dialog."""
         try:
             # Build update dictionary
-            updates = {}
+            updates: dict[str, Any] = {}
 
             # UI settings
             theme_values = ["auto", "light", "dark"]

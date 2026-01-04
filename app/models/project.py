@@ -32,7 +32,7 @@ class Project:
     git_enabled: bool = True
     settings: dict = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate and normalize project data."""
         # Convert path to Path object if it's a string
         if isinstance(self.path, str):

@@ -2,7 +2,9 @@
 First-run wizard for pyMediaManager initial setup.
 Multi-step wizard for storage detection and plugin configuration.
 """
+
 from pathlib import Path
+from typing import Any
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
@@ -95,7 +97,9 @@ class WelcomePage(WizardPage):
         features.setTextFormat(Qt.RichText)
         self.content_layout.addWidget(features)
 
-        next_steps = QLabel("<br><b>Next steps:</b><br>We'll help you configure storage and plugins.")
+        next_steps = QLabel(
+            "<br><b>Next steps:</b><br>We'll help you configure storage and plugins."
+        )
         next_steps.setTextFormat(Qt.RichText)
         self.content_layout.addWidget(next_steps)
 
@@ -202,7 +206,9 @@ class PluginPage(WizardPage):
             self.content_layout.addWidget(checkbox)
 
         # Info label
-        self.info_label = QLabel("Mandatory plugins (Git, GitVersion, digiKam, etc.) will be installed automatically.")
+        self.info_label = QLabel(
+            "Mandatory plugins (Git, GitVersion, digiKam, etc.) will be installed automatically."
+        )
         self.info_label.setWordWrap(True)
         self.content_layout.addWidget(self.info_label)
 
@@ -257,12 +263,12 @@ class FirstRunWizard(QWidget):
         self,
         storage_service: StorageService,
         optional_plugin_names: list[str],
-        parent=None,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.storage_service = storage_service
         self.optional_plugin_names = optional_plugin_names
-        self.collected_data = {}
+        self.collected_data: dict[str, Any] = {}
 
         self._init_ui()
         self._create_pages()
