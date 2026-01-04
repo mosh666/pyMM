@@ -36,7 +36,7 @@ class ProjectBrowserDialog(QDialog):
     
     project_selected = Signal(Project)  # Emitted when user selects to open a project
     
-    def __init__(self, project_service: ProjectService, parent=None):
+    def __init__(self, project_service: ProjectService, parent=None) -> None:
         super().__init__(parent)
         
         self.logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class ProjectBrowserDialog(QDialog):
         self._init_ui()
         self._load_projects()
     
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize the user interface."""
         self.setWindowTitle("Project Browser")
         self.setMinimumSize(700, 500)
@@ -92,7 +92,7 @@ class ProjectBrowserDialog(QDialog):
         
         layout.addLayout(button_layout)
     
-    def _load_projects(self):
+    def _load_projects(self) -> None:
         """Load and display all projects."""
         self.project_list.clear()
         
@@ -125,7 +125,7 @@ class ProjectBrowserDialog(QDialog):
             
             self.project_list.addItem(item)
     
-    def _on_selection_changed(self, current: QListWidgetItem, previous: QListWidgetItem):
+    def _on_selection_changed(self, current: QListWidgetItem, previous: QListWidgetItem) -> None:
         """Handle project selection change."""
         if current is None:
             self.open_button.setEnabled(False)
@@ -144,13 +144,13 @@ class ProjectBrowserDialog(QDialog):
             self.delete_button.setEnabled(True)
             self.selected_project = project
     
-    def _on_project_double_clicked(self, item: QListWidgetItem):
+    def _on_project_double_clicked(self, item: QListWidgetItem) -> None:
         """Handle double-click on a project."""
         project = item.data(Qt.ItemDataRole.UserRole)
         if project and project.exists:
             self._open_project(project)
     
-    def _on_new_project(self):
+    def _on_new_project(self) -> None:
         """Handle new project button."""
         from app.ui.dialogs.project_wizard import ProjectWizard
         
@@ -159,12 +159,12 @@ class ProjectBrowserDialog(QDialog):
             # Reload project list
             self._load_projects()
     
-    def _on_open_project(self):
+    def _on_open_project(self) -> None:
         """Handle open project button."""
         if self.selected_project:
             self._open_project(self.selected_project)
     
-    def _open_project(self, project: Project):
+    def _open_project(self, project: Project) -> None:
         """Open the selected project."""
         if not project.exists:
             QMessageBox.warning(
@@ -177,7 +177,7 @@ class ProjectBrowserDialog(QDialog):
         self.project_selected.emit(project)
         self.accept()
     
-    def _on_delete_project(self):
+    def _on_delete_project(self) -> None:
         """Handle delete project button."""
         if not self.selected_project:
             return

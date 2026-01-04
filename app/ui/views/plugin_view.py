@@ -25,12 +25,12 @@ class PluginInstallThread(QThread):
     progress = Signal(int, int)  # current, total
     finished = Signal(bool, str)  # success, message
 
-    def __init__(self, plugin_manager: PluginManager, plugin_name: str):
+    def __init__(self, plugin_manager: PluginManager, plugin_name: str) -> None:
         super().__init__()
         self.plugin_manager = plugin_manager
         self.plugin_name = plugin_name
 
-    def run(self):
+    def run(self) -> None:
         """Run plugin installation."""
         import asyncio
 
@@ -52,7 +52,7 @@ class PluginInstallThread(QThread):
         except Exception as e:
             self.finished.emit(False, f"Error: {str(e)}")
 
-    def _progress_callback(self, current: int, total: int):
+    def _progress_callback(self, current: int, total: int) -> None:
         """Update progress."""
         self.progress.emit(current, total)
 
@@ -60,7 +60,7 @@ class PluginInstallThread(QThread):
 class PluginView(QWidget):
     """View for managing plugins."""
 
-    def __init__(self, plugin_manager: PluginManager, parent=None):
+    def __init__(self, plugin_manager: PluginManager, parent=None) -> None:
         super().__init__(parent)
         
         self.logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class PluginView(QWidget):
         self._init_ui()
         self.refresh_plugins()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -112,7 +112,7 @@ class PluginView(QWidget):
 
         layout.addLayout(button_layout)
 
-    def refresh_plugins(self):
+    def refresh_plugins(self) -> None:
         """Refresh the plugins table."""
         # Discover plugins
         self.plugin_manager.discover_plugins()
@@ -160,7 +160,7 @@ class PluginView(QWidget):
 
             self.plugins_table.setCellWidget(row, 4, action_widget)
 
-    def _install_plugin(self, plugin):
+    def _install_plugin(self, plugin) -> None:
         """Install a plugin."""
         # Show confirmation
         reply = QMessageBox.question(
@@ -186,7 +186,7 @@ class PluginView(QWidget):
         self.install_thread.finished.connect(lambda success, msg: self._on_install_finished(success, msg, progress))
         self.install_thread.start()
 
-    def _on_install_finished(self, success: bool, message: str, progress: QProgressDialog):
+    def _on_install_finished(self, success: bool, message: str, progress: QProgressDialog) -> None:
         """Handle installation completion."""
         progress.close()
 
@@ -197,11 +197,11 @@ class PluginView(QWidget):
 
         self.refresh_plugins()
 
-    def _update_plugin(self, plugin):
+    def _update_plugin(self, plugin) -> None:
         """Update a plugin."""
         QMessageBox.information(self, "Update", f"Update functionality for {plugin.manifest.name} coming soon!")
 
-    def _uninstall_plugin(self, plugin):
+    def _uninstall_plugin(self, plugin) -> None:
         """Uninstall a plugin."""
         reply = QMessageBox.question(
             self,

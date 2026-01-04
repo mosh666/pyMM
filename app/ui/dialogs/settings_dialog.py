@@ -44,7 +44,7 @@ class SettingsDialog(QDialog):
     - Git integration settings
     """
     
-    def __init__(self, config_service: ConfigService, parent=None):
+    def __init__(self, config_service: ConfigService, parent=None) -> None:
         super().__init__(parent)
         
         self.logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class SettingsDialog(QDialog):
         self._init_ui()
         self._load_settings()
     
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize the user interface."""
         self.setWindowTitle("Settings")
         self.setMinimumSize(700, 500)
@@ -270,7 +270,7 @@ class SettingsDialog(QDialog):
         
         return widget
     
-    def _load_settings(self):
+    def _load_settings(self) -> None:
         """Load current settings into the UI."""
         # General tab
         theme_map = {"auto": 0, "light": 1, "dark": 2}
@@ -302,7 +302,7 @@ class SettingsDialog(QDialog):
             # Git not available or config error - use empty values
             pass
     
-    def _apply_settings(self):
+    def _apply_settings(self) -> None:
         """Apply settings without closing dialog."""
         try:
             # Build update dictionary
@@ -362,7 +362,7 @@ class SettingsDialog(QDialog):
                 f"Failed to save settings:\n{str(e)}",
             )
     
-    def _update_git_config(self):
+    def _update_git_config(self) -> None:
         """Update global Git configuration."""
         try:
             import git
@@ -383,7 +383,7 @@ class SettingsDialog(QDialog):
         except Exception as e:
             self.logger.warning(f"Could not update Git config: {e}")
     
-    def _ok_clicked(self):
+    def _ok_clicked(self) -> None:
         """Handle OK button click."""
         self._apply_settings()
         self.accept()

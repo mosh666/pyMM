@@ -54,14 +54,14 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         self._init_navigation()
         self._apply_theme()
 
-    def _init_window(self):
+    def _init_window(self) -> None:
         """Initialize window properties."""
         config = self.config_service.get_config()
 
         self.setWindowTitle(config.app_name)
         self.resize(config.ui.window_width, config.ui.window_height)
 
-    def _init_navigation(self):
+    def _init_navigation(self) -> None:
         """Initialize navigation interface."""
         if not FLUENT_AVAILABLE:
             self._init_fallback_ui()
@@ -168,14 +168,14 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
 
         return widget
     
-    def _open_settings_dialog(self):
+    def _open_settings_dialog(self) -> None:
         """Open the settings dialog."""
         from app.ui.dialogs.settings_dialog import SettingsDialog
         
         dialog = SettingsDialog(self.config_service, self)
         dialog.exec()
 
-    def _init_fallback_ui(self):
+    def _init_fallback_ui(self) -> None:
         """Initialize fallback UI when Fluent Widgets not available."""
         layout = QVBoxLayout(self)
 
@@ -187,7 +187,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         warning.setAlignment(Qt.AlignCenter)
         layout.addWidget(warning)
 
-    def _apply_theme(self):
+    def _apply_theme(self) -> None:
         """Apply theme based on configuration."""
         if not FLUENT_AVAILABLE:
             return
@@ -202,7 +202,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             # Auto mode - use system theme
             setTheme(Theme.AUTO)
     
-    def _on_project_opened(self, project):
+    def _on_project_opened(self, project) -> None:
         """Handle project opened event."""
         from PySide6.QtWidgets import QMessageBox
         

@@ -24,13 +24,13 @@ from app.core.services.storage_service import StorageService, DriveInfo
 class WizardPage(QWidget):
     """Base class for wizard pages."""
 
-    def __init__(self, title: str, description: str):
+    def __init__(self, title: str, description: str) -> None:
         super().__init__()
         self.title = title
         self.description = description
         self._init_ui()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize base UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -77,7 +77,7 @@ class WizardPage(QWidget):
 class WelcomePage(WizardPage):
     """Welcome page introducing the application."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             "Welcome to pyMediaManager",
             "Thank you for choosing pyMediaManager, your portable media management solution. "
@@ -105,7 +105,7 @@ class StoragePage(WizardPage):
 
     drive_selected = Signal(Path)
 
-    def __init__(self, storage_service: StorageService):
+    def __init__(self, storage_service: StorageService) -> None:
         self.storage_service = storage_service
         self.selected_drive: Optional[Path] = None
 
@@ -129,7 +129,7 @@ class StoragePage(WizardPage):
         # Auto-refresh on page show
         self.refresh_drives()
 
-    def refresh_drives(self):
+    def refresh_drives(self) -> None:
         """Refresh the list of available drives."""
         self.drive_list.clear()
 
@@ -161,7 +161,7 @@ class StoragePage(WizardPage):
         if self.drive_list.count() > 0:
             self.drive_list.setCurrentRow(0)
 
-    def _on_drive_selected(self):
+    def _on_drive_selected(self) -> None:
         """Handle drive selection."""
         items = self.drive_list.selectedItems()
         if items:
@@ -182,7 +182,7 @@ class StoragePage(WizardPage):
 class PluginPage(WizardPage):
     """Plugin selection page."""
 
-    def __init__(self, plugin_names: List[str]):
+    def __init__(self, plugin_names: List[str]) -> None:
         self.plugin_names = plugin_names
         self.selected_plugins: List[str] = []
 
@@ -206,7 +206,7 @@ class PluginPage(WizardPage):
         self.info_label.setWordWrap(True)
         self.content_layout.addWidget(self.info_label)
 
-    def _update_selection(self):
+    def _update_selection(self) -> None:
         """Update selected plugins list."""
         self.selected_plugins = [
             name for name, checkbox in self.checkboxes.items() if checkbox.isChecked()
@@ -220,7 +220,7 @@ class PluginPage(WizardPage):
 class CompletePage(WizardPage):
     """Completion page with summary and settings."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             "Setup Complete!",
             "pyMediaManager is ready to use. You can now start managing your media projects.",
@@ -258,7 +258,7 @@ class FirstRunWizard(QWidget):
         storage_service: StorageService,
         optional_plugin_names: List[str],
         parent=None,
-    ):
+    ) -> None:
         super().__init__(parent)
         self.storage_service = storage_service
         self.optional_plugin_names = optional_plugin_names
@@ -267,7 +267,7 @@ class FirstRunWizard(QWidget):
         self._init_ui()
         self._create_pages()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize wizard UI."""
         self.setWindowTitle("pyMediaManager Setup Wizard")
         self.setMinimumSize(700, 500)
@@ -302,7 +302,7 @@ class FirstRunWizard(QWidget):
 
         layout.addLayout(button_layout)
 
-    def _create_pages(self):
+    def _create_pages(self) -> None:
         """Create wizard pages."""
         self.pages = [
             WelcomePage(),
@@ -316,7 +316,7 @@ class FirstRunWizard(QWidget):
 
         self._update_buttons()
 
-    def _go_next(self):
+    def _go_next(self) -> None:
         """Move to next page or finish."""
         current_page = self.stack.currentWidget()
 
@@ -336,18 +336,18 @@ class FirstRunWizard(QWidget):
             self.finished.emit(self.collected_data)
             self.close()
 
-    def _go_back(self):
+    def _go_back(self) -> None:
         """Move to previous page."""
         if self.stack.currentIndex() > 0:
             self.stack.setCurrentIndex(self.stack.currentIndex() - 1)
             self._update_buttons()
 
-    def _on_cancel(self):
+    def _on_cancel(self) -> None:
         """Handle wizard cancellation."""
         self.cancelled.emit()
         self.close()
 
-    def _update_buttons(self):
+    def _update_buttons(self) -> None:
         """Update button states based on current page."""
         current_index = self.stack.currentIndex()
 

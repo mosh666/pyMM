@@ -29,7 +29,7 @@ class StorageView(QWidget):
         self._init_ui()
         self.refresh_drives()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -72,7 +72,7 @@ class StorageView(QWidget):
 
         layout.addLayout(button_layout)
 
-    def refresh_drives(self):
+    def refresh_drives(self) -> None:
         """Refresh the drives table."""
         drives = self.storage_service.get_all_drives()
 

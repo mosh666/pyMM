@@ -25,14 +25,14 @@ class ProjectView(QWidget):
     
     project_opened = Signal(Project)  # Emitted when a project is opened
 
-    def __init__(self, project_service: ProjectService, parent=None):
+    def __init__(self, project_service: ProjectService, parent=None) -> None:
         super().__init__(parent)
         
         self.logger = logging.getLogger(__name__)
         self.project_service = project_service
         self._init_ui()
 
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize UI components."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
@@ -82,7 +82,7 @@ class ProjectView(QWidget):
         # Initial refresh
         self._refresh_projects()
 
-    def _refresh_projects(self):
+    def _refresh_projects(self) -> None:
         """Refresh the projects list."""
         self.projects_list.clear()
 
@@ -109,13 +109,13 @@ class ProjectView(QWidget):
             
             self.projects_list.addItem(item)
     
-    def _on_item_double_clicked(self, item: QListWidgetItem):
+    def _on_item_double_clicked(self, item: QListWidgetItem) -> None:
         """Handle double-click on project item."""
         project = item.data(Qt.ItemDataRole.UserRole)
         if project and project.exists:
             self.project_opened.emit(project)
 
-    def _create_project(self):
+    def _create_project(self) -> None:
         """Create a new project."""
         from app.ui.dialogs.project_wizard import ProjectWizard
         
@@ -127,7 +127,7 @@ class ProjectView(QWidget):
             if wizard.created_project:
                 self.project_opened.emit(wizard.created_project)
 
-    def _open_project(self):
+    def _open_project(self) -> None:
         """Open selected project."""
         from app.ui.dialogs.project_browser import ProjectBrowserDialog
         

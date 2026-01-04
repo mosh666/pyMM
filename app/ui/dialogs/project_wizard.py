@@ -37,7 +37,7 @@ class ProjectWizard(QDialog):
     - Git integration
     """
     
-    def __init__(self, project_service: ProjectService, parent=None):
+    def __init__(self, project_service: ProjectService, parent=None) -> None:
         super().__init__(parent)
         
         self.logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class ProjectWizard(QDialog):
         
         self._init_ui()
     
-    def _init_ui(self):
+    def _init_ui(self) -> None:
         """Initialize the user interface."""
         self.setWindowTitle("Create New Project")
         self.setMinimumSize(600, 450)
@@ -132,12 +132,12 @@ class ProjectWizard(QDialog):
         default_location = Path.home() / "Documents" / "pyMM_projects"
         self.location_edit.setText(str(default_location))
     
-    def _on_name_changed(self, text: str):
+    def _on_name_changed(self, text: str) -> None:
         """Handle project name change."""
         self._update_path_label()
         self._validate_form()
     
-    def _on_browse_location(self):
+    def _on_browse_location(self) -> None:
         """Handle browse button click."""
         current_path = self.location_edit.text()
         
@@ -151,7 +151,7 @@ class ProjectWizard(QDialog):
         if directory:
             self.location_edit.setText(directory)
     
-    def _update_path_label(self):
+    def _update_path_label(self) -> None:
         """Update the full path label."""
         name = self.name_edit.text().strip()
         location = self.location_edit.text().strip()
@@ -166,7 +166,7 @@ class ProjectWizard(QDialog):
         else:
             self.path_label.setText("")
     
-    def _validate_form(self):
+    def _validate_form(self) -> None:
         """Validate form inputs and enable/disable create button."""
         name = self.name_edit.text().strip()
         location = self.location_edit.text().strip()
@@ -186,7 +186,7 @@ class ProjectWizard(QDialog):
         self.create_button.setEnabled(True)
         self.path_label.setStyleSheet("color: green; font-style: italic;")
     
-    def _on_create_project(self):
+    def _on_create_project(self) -> None:
         """Handle create project button."""
         name = self.name_edit.text().strip()
         location = self.location_edit.text().strip()
