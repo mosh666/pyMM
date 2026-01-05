@@ -7,8 +7,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field
+import yaml  # type: ignore[import-untyped]
 
 from app import __commit_id__, __version__
 
@@ -107,10 +107,9 @@ class AppConfig(BaseModel):
                 )
                 for key, value in data.items()
             }
-        elif isinstance(data, list):
+        if isinstance(data, list):
             return [self._redact_sensitive_data(item) for item in data]
-        else:
-            return data
+        return data
 
 
 class ConfigService:

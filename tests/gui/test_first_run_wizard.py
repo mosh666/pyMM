@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-import pytest
 from PySide6.QtCore import Qt
+import pytest
 
 from app.core.services.storage_service import StorageService
 from app.ui.components.first_run_wizard import (

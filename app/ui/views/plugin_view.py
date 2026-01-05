@@ -53,7 +53,7 @@ class PluginInstallThread(QThread):
                 self.finished.emit(False, f"Failed to install {self.plugin_name}")
 
         except Exception as e:
-            self.finished.emit(False, f"Error: {str(e)}")
+            self.finished.emit(False, f"Error: {e!s}")
 
     def _progress_callback(self, current: int, total: int) -> None:
         """Update progress."""

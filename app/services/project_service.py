@@ -5,11 +5,11 @@ This module provides the ProjectService class for creating, loading,
 saving, and managing media management projects.
 """
 
+from datetime import datetime
 import json
 import logging
-import shutil
-from datetime import datetime
 from pathlib import Path
+import shutil
 
 from app.models.project import Project
 

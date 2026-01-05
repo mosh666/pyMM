@@ -7,8 +7,8 @@ This test script verifies:
 - Project serialization/deserialization
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add the parent directory to the path
 sys.path.insert(0, str(Path(__file__).parent))

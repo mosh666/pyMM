@@ -350,6 +350,137 @@ This ensures complete isolation without requiring changes to test code.
 If you're writing new tests that use `FileSystemService`, the isolation will work automatically.
 No special configuration is needed.
 
+---
+
+## CI/CD and GitHub Actions
+
+pyMediaManager uses GitHub Actions for continuous integration and security scanning. All workflows
+are located in `.github/workflows/` and automatically run on pull requests and pushes.
+
+### CI Workflow (`ci.yml`)
+
+**Runs on:**
+
+- Push to `main` and `dev` branches
+- Pull requests to `main` and `dev`
+
+**What it does:**
+
+- Tests on Python 3.12, 3.13, and 3.14
+- Runs full test suite with coverage reporting
+- Uploads coverage to Codecov
+- Validates code quality with Ruff and MyPy
+- Checks for security vulnerabilities
+- Ensures all pre-commit hooks pass
+
+**Key features:**
+
+- Matrix testing across Python versions
+- Proper GITHUB_TOKEN permissions (read-only by default)
+- Coverage threshold enforcement (70% minimum)
+- Fast fail strategy for quick feedback
+
+### Security Workflow (`security.yml`)
+
+**Runs on:**
+
+- Pull requests (paths: `app/**`, `tests/**`, `.github/workflows/security.yml`)
+- Scheduled weekly scan (Mondays at 00:00 UTC)
+- Manual dispatch available
+
+**What it does:**
+
+- CodeQL analysis for security vulnerabilities
+- Detects common security issues:
+  - SQL injection
+  - Cross-site scripting (XSS)
+  - Command injection
+  - Path traversal
+  - Insecure cryptography
+- Uploads results to GitHub Security tab
+- Integrates with GitHub Advanced Security
+
+**Languages analyzed:**
+
+- Python (comprehensive security scanning)
+
+### OpenSSF Scorecard (`scorecard.yml`)
+
+**Runs on:**
+
+- Scheduled weekly scan (Mondays at 08:00 UTC)
+- Push to `main` branch
+- Manual dispatch available
+
+**What it does:**
+
+- Evaluates repository security practices
+- Checks for:
+  - Branch protection settings
+  - Code review enforcement
+  - Signed commits
+  - Dependency update tools
+  - Automated security testing
+  - Proper permission settings
+- Publishes results to OpenSSF Scorecard API
+- Displays badge on README
+
+**Score categories:**
+
+- Binary artifacts
+- Branch protection
+- CI tests
+- Code review
+- Contributors
+- Dangerous workflow
+- Dependency update
+- Fuzzing
+- License
+- Maintained
+- Packaging
+- Pinned dependencies
+- SAST (Static Application Security Testing)
+- Security policy
+- Signed releases
+- Token permissions
+- Vulnerabilities
+- Webhooks
+
+### Dependabot
+
+Dependabot automatically checks for dependency updates and creates pull requests:
+
+- **pip dependencies**: Daily updates
+- **GitHub Actions**: Daily updates
+- Grouped updates for efficiency
+- Automatic security vulnerability alerts
+
+### Local CI Testing
+
+Before pushing, you can run the same checks locally:
+
+```bash
+# Run all pre-commit hooks (same as CI)
+pre-commit run --all-files
+
+# Run full test suite with coverage
+pytest --cov=app --cov-report=html --cov-report=term
+
+# Run linting
+ruff check app/ tests/
+
+# Run formatting check
+ruff format --check app/ tests/
+
+# Run type checking
+mypy app/
+
+# Run security scanning
+bandit -r app/ -c .bandit
+```
+
+---
+
 ## Pull Request Process
 
 1. **Create a feature branch**:
@@ -381,15 +512,22 @@ No special configuration is needed.
    - Provide clear description of changes
    - Reference related issues
    - Ensure CI passes
+   - Wait for code review
 
 ### PR Checklist
 
-- [ ] Tests added/updated
+Use the pull request template (`.github/PULL_REQUEST_TEMPLATE.md`) which includes:
+
+- [ ] Tests added/updated and all tests pass
 - [ ] Documentation updated
-- [ ] Code formatted (Black)
-- [ ] Linting passes (Ruff)
-- [ ] All tests pass
-- [ ] Commit messages follow conventions
+- [ ] Code formatted with Ruff
+- [ ] Linting passes (Ruff check)
+- [ ] Type checking passes (MyPy)
+- [ ] All CI checks pass
+- [ ] Commit messages follow Conventional Commits
+- [ ] Breaking changes documented
+- [ ] Screenshots/demos for UI changes
+- [ ] Security considerations addressed
 
 ## Adding New Features
 

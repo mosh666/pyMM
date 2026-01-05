@@ -4,8 +4,8 @@ Comprehensive tests for project_browser, project_wizard UI dialogs.
 
 from pathlib import Path
 
-import pytest
 from PySide6.QtWidgets import QApplication
+import pytest
 
 from app.services.project_service import ProjectService
 from app.ui.dialogs.project_browser import ProjectBrowserDialog
@@ -18,7 +18,7 @@ def qapp():
     app = QApplication.instance()
     if app is None:
         app = QApplication([])
-    yield app
+    return app
 
 
 @pytest.fixture

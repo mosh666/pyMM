@@ -360,7 +360,7 @@ class SettingsDialog(QDialog):
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to save settings:\n{str(e)}",
+                f"Failed to save settings:\n{e!s}",
             )
 
     def _update_git_config(self) -> None:

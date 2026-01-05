@@ -222,7 +222,7 @@ desktop.ini
             return True, f"Successfully pushed to {remote}/{branch}"
 
         except GitCommandError as e:
-            return False, f"Push failed: {str(e)}"
+            return False, f"Push failed: {e!s}"
 
     @staticmethod
     def add_remote(path: Path, name: str, url: str) -> bool:

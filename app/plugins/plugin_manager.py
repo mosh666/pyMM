@@ -2,8 +2,8 @@
 Plugin manager for discovering, installing, and managing plugins.
 """
 
-import logging
 from collections.abc import Callable
+import logging
 from pathlib import Path
 from typing import Any
 

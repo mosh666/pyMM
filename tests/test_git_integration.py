@@ -9,9 +9,9 @@ Note: Git integration with project management has been removed.
 This test only verifies the GitService standalone functionality.
 """
 
+from pathlib import Path
 import shutil
 import sys
-from pathlib import Path
 
 # Add the parent directory to the path
 sys.path.insert(0, str(Path(__file__).parent))

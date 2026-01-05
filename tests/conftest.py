@@ -1,11 +1,11 @@
 """Pytest configuration and shared fixtures."""
 
+from pathlib import Path
 import shutil
 import tempfile
-from pathlib import Path
 
-import pytest
 from PySide6.QtWidgets import QApplication
+import pytest
 
 
 @pytest.fixture(scope="session")
@@ -14,7 +14,7 @@ def qapp():
     app = QApplication.instance()
     if app is None:
         app = QApplication([])
-    yield app
+    return app
 
 
 @pytest.fixture
@@ -69,4 +69,4 @@ def mock_drive_root(monkeypatch, tmp_path):
     # Monkey patch the method
     monkeypatch.setattr(FileSystemService, "get_drive_root", mock_get_drive_root_method)
 
-    yield mock_drive
+    return mock_drive

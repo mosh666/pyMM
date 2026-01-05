@@ -2,10 +2,13 @@
 
 **Version:** Auto-detected from Git (latest-beta)
 **Last Updated:** January 5, 2026
-**Test Suite:** 193 tests with 72.77% coverage
+**Test Suite:** 193 tests with 72.75% coverage
 **Python Support:** 3.12, 3.13, 3.14
+**Quality:** 15+ pre-commit hooks, Ruff linting, MyPy type checking
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
+> **See also:** [Architecture Guide](architecture.md) for technical details
+> **See also:** [CONTRIBUTING.md](../CONTRIBUTING.md) for development guidelines
 
 ## Table of Contents
 

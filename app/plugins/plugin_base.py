@@ -2,14 +2,14 @@
 Plugin base class and plugin management system.
 """
 
-import asyncio
-import logging
-import shutil
-import subprocess
 from abc import ABC, abstractmethod
+import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass, field
+import logging
 from pathlib import Path
+import shutil
+import subprocess
 
 import aiohttp
 
@@ -63,7 +63,6 @@ class PluginBase(ABC):
         Returns:
             True if download successful
         """
-        pass
 
     @abstractmethod
     async def extract(self) -> bool:
@@ -73,7 +72,6 @@ class PluginBase(ABC):
         Returns:
             True if extraction successful
         """
-        pass
 
     @abstractmethod
     def validate_installation(self) -> bool:
@@ -83,7 +81,6 @@ class PluginBase(ABC):
         Returns:
             True if plugin is installed and functional
         """
-        pass
 
     @abstractmethod
     def get_version(self) -> str | None:
@@ -93,7 +90,6 @@ class PluginBase(ABC):
         Returns:
             Version string or None if not installed
         """
-        pass
 
     def get_executable_path(self) -> Path | None:
         """
@@ -167,30 +163,28 @@ class PluginBase(ABC):
                 self.logger.debug(f"  Destination: {destination}")
                 destination.parent.mkdir(parents=True, exist_ok=True)
 
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(
-                        url, timeout=aiohttp.ClientTimeout(total=300)
-                    ) as response:
-                        self.logger.info(f"  HTTP Status: {response.status}")
-                        if response.status != 200:
-                            self.logger.error(
-                                f"  Error: HTTP {response.status} - {response.reason}"
-                            )
-                            if attempt < max_retries - 1:
-                                continue
-                            return False
+                async with (
+                    aiohttp.ClientSession() as session,
+                    session.get(url, timeout=aiohttp.ClientTimeout(total=300)) as response,
+                ):
+                    self.logger.info(f"  HTTP Status: {response.status}")
+                    if response.status != 200:
+                        self.logger.error(f"  Error: HTTP {response.status} - {response.reason}")
+                        if attempt < max_retries - 1:
+                            continue
+                        return False
 
-                        total_size = int(response.headers.get("content-length", 0))
-                        self.logger.info(f"  Download size: {total_size / (1024 * 1024):.2f} MB")
-                        downloaded = 0
+                    total_size = int(response.headers.get("content-length", 0))
+                    self.logger.info(f"  Download size: {total_size / (1024 * 1024):.2f} MB")
+                    downloaded = 0
 
-                        with open(destination, "wb") as f:
-                            async for chunk in response.content.iter_chunked(8192):
-                                f.write(chunk)
-                                downloaded += len(chunk)
+                    with open(destination, "wb") as f:
+                        async for chunk in response.content.iter_chunked(8192):
+                            f.write(chunk)
+                            downloaded += len(chunk)
 
-                                if progress_callback and total_size > 0:
-                                    progress_callback(downloaded, total_size)
+                            if progress_callback and total_size > 0:
+                                progress_callback(downloaded, total_size)
 
                 self.logger.info(f"  Download complete: {destination.exists()}")
 
@@ -249,10 +243,9 @@ class PluginBase(ABC):
 
             if calculated == expected:
                 return True
-            else:
-                self.logger.error(f"  Expected: {expected}")
-                self.logger.error(f"  Got:      {calculated}")
-                return False
+            self.logger.error(f"  Expected: {expected}")
+            self.logger.error(f"  Got:      {calculated}")
+            return False
         except Exception as e:
             self.logger.error(f"  Checksum verification error: {e}")
             return False
@@ -366,6 +359,7 @@ class SimplePluginImplementation(PluginBase):
         try:
             result = subprocess.run(
                 ["7z", "x", str(self.archive_path), f"-o{extract_dir}", "-y"],
+                check=False,
                 capture_output=True,
                 text=True,
             )
@@ -379,6 +373,7 @@ class SimplePluginImplementation(PluginBase):
             # Self-extracting 7z archives can be extracted with -o flag
             result = subprocess.run(
                 [str(self.archive_path), "-o" + str(extract_dir), "-y"],
+                check=False,
                 capture_output=True,
                 text=True,
                 cwd=str(self.archive_path.parent),
