@@ -200,8 +200,7 @@ If you use pyMediaManager in academic or research work, please cite it:
   author = {mosh666},
   title = {pyMediaManager: Portable Python Media Management Application},
   year = {2026},
-  url = {https://github.com/mosh666/pyMM},
-  version = {1.0.0}
+  url = {https://github.com/mosh666/pyMM}
 }
 ```
 

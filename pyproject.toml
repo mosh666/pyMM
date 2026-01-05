@@ -103,7 +103,7 @@ app = ["py.typed"]
 version_file = "app/_version.py"
 version_scheme = "post-release"
 local_scheme = "no-local-version"
-# Allow semantic versioning with optional alpha/beta/rc suffixes (e.g., v1.0.0-alpha.1)
+# Allow semantic versioning with optional alpha/beta/rc suffixes (e.g., vX.Y.Z-alpha.1)
 tag_regex = "^v(?P<version>[0-9]+\\.[0-9]+\\.[0-9]+(?:-[a-zA-Z0-9]+(?:\\.[0-9]+)?)?)$"
 
 [tool.pytest.ini_options]

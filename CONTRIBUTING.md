@@ -291,7 +291,7 @@ We follow a branch-based release flow:
    - These releases are marked as "Pre-release" on GitHub.
 
 2. **Stable (`main` branch)**
-   - Stable releases are created by pushing a semantic version tag (e.g., `v1.0.0`) to `main`.
+   - Stable releases are created by pushing a semantic version tag (e.g., `vX.Y.Z`) to `main`.
    - **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
    - The workflow will automatically build and publish the release.
 

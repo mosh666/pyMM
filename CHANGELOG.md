@@ -152,19 +152,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Type checking passes with zero errors (MyPy strict mode)
 - All 193 tests passing with 72.77% code coverage maintained
 
-## [1.0.0] - 2026-01-05
-
-### Added
-
-- Initial release
-- Portable Python-based media management application
-- Modern Fluent Design UI with PySide6
-- Plugin system for external tools
-- Project management functionality
-- Comprehensive test suite (193 tests, 72.77% coverage)
-- CI/CD pipelines with GitHub Actions
-- Pre-commit hooks for code quality
-- Documentation (User Guide, Architecture Guide, Contributing Guide)
-
-[Unreleased]: https://github.com/mosh666/pyMM/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/mosh666/pyMM/releases/tag/v1.0.0
+[Unreleased]: https://github.com/mosh666/pyMM/compare/main...HEAD

@@ -1,6 +1,6 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git using setuptools_scm (v1.0.0 stable, latest-beta for dev)
+**Version:** Auto-detected from Git using setuptools_scm (latest-beta for dev)
 **Last Updated:** January 5, 2026
 **Test Suite:** 193 tests with 73% coverage (all passing with automatic isolation)
 **Python Support:** 3.12, 3.13, 3.14 (embedded Python 3.13 runtime included for portability)
@@ -656,8 +656,8 @@ The Settings dialog includes **5 comprehensive tabs** for complete application c
 
 - **Version**: Current application version
   - Automatically managed using setuptools_scm from Git tags
-  - Format: v1.0.0 (stable) or v1.0.0-beta.1 (prerelease)
-  - Development builds show: v1.0.0.dev5+g1a2b3c4 (commit hash and distance)
+  - Format: vX.Y.Z (stable) or vX.Y.Z-beta.1 (prerelease)
+  - Development builds show: vX.Y.Z.devN+gHASH (commit hash and distance)
   - Stable releases from `main` branch
   - Beta releases from `dev` branch with `latest-beta` tag
 

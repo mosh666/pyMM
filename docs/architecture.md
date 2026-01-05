@@ -55,7 +55,7 @@ modular architecture with clear separation of concerns.
 ### 5. Version Management
 
 - **Automatic Detection**: Version derived from Git tags using `setuptools_scm`
-- **Semantic Versioning**: Supports alpha, beta, rc prerelease tags (e.g., v1.0.0-beta.1)
+- **Semantic Versioning**: Supports alpha, beta, rc prerelease tags (e.g., vX.Y.Z-beta.1)
 - **Runtime Access**: Version and commit hash available at runtime via `app.__version__` and `app.__commit_id__`
 - **Fallback**: Graceful fallback to `importlib.metadata` or dev version if Git is missing
 - **UI Integration**: Version details displayed in Settings → About tab
@@ -1065,7 +1065,7 @@ pytest tests/gui
 
 ## Future Roadmap
 
-### v1.0.0 (Current - January 2026)
+### Current Version (January 2026)
 
 - ✅ Complete project management implementation
 - ✅ Git integration for version control
