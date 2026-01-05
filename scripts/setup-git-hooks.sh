@@ -8,7 +8,7 @@ echo "🔧 Setting up Git hooks and pre-commit..."
 if ! command -v pre-commit &> /dev/null; then
     echo "📦 Installing pre-commit..."
     pip install pre-commit
-    
+
     if [ $? -ne 0 ]; then
         echo "❌ Failed to install pre-commit"
         exit 1
@@ -29,13 +29,13 @@ fi
 hooks_dir=".git/hooks"
 if [ -d "$hooks_dir" ]; then
     echo "📋 Installing custom Git hooks..."
-    
+
     if [ -f ".github/hooks/pre-commit" ]; then
         cp .github/hooks/pre-commit "$hooks_dir/pre-commit"
         chmod +x "$hooks_dir/pre-commit"
         echo "  ✅ pre-commit hook installed"
     fi
-    
+
     if [ -f ".github/hooks/pre-push" ]; then
         cp .github/hooks/pre-push "$hooks_dir/pre-push"
         chmod +x "$hooks_dir/pre-push"

@@ -78,7 +78,7 @@ repos:
           - -v
           - --tb=short
           - -x
-          - --timeout=30
+          - --no-cov
         stages: [pre-commit]
 
       - id: pytest-full
@@ -107,17 +107,17 @@ repos:
             import re
             import sys
             from pathlib import Path
-            
+
             # Check for TODO/FIXME in docs
             docs_path = Path('docs')
             readme = Path('README.md')
-            
+
             issues = []
             for doc in [readme] + list(docs_path.glob('*.md')):
                 content = doc.read_text(encoding='utf-8')
                 if 'TODO' in content or 'FIXME' in content:
                     issues.append(f"{doc}: Contains TODO/FIXME")
-            
+
             if issues:
                 print("⚠️  Documentation issues found:")
                 for issue in issues:

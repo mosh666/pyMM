@@ -1,9 +1,9 @@
 # pyMediaManager Architecture Documentation
 
-> **Version:** Auto-detected from Git using setuptools_scm  
-> **Last Updated:** January 5, 2026  
-> **Python Support:** 3.12 | 3.13 | 3.14  
-> **Test Suite:** 199 tests with 73% code coverage  
+> **Version:** Auto-detected from Git using setuptools_scm
+> **Last Updated:** January 5, 2026
+> **Python Support:** 3.12 | 3.13 | 3.14
+> **Test Suite:** 199 tests with 73% code coverage
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview
@@ -421,7 +421,7 @@ Python 3.12 and 3.13 explicitly supported with separate builds:
 ## Testing Strategy
 
 ### Comprehensive Test Suite
-**Current Stats**: 137+ tests with 73% code coverage  
+**Current Stats**: 137+ tests with 73% code coverage
 **Coverage Target**: 70% minimum (enforced in CI)
 
 **Test Structure**:
@@ -461,10 +461,10 @@ from PySide6.QtCore import Qt
 def test_button_click(qtbot: QtBot) -> None:
     widget: MyWidget = MyWidget()
     qtbot.addWidget(widget)
-    
+
     # Click button
     qtbot.mouseClick(widget.button, Qt.MouseButton.LeftButton)
-    
+
     # Wait for signal
     with qtbot.waitSignal(widget.finished, timeout=1000):
         pass
@@ -557,7 +557,7 @@ class CustomPlugin(PluginBase):
     async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> None:
         # Custom download logic
         pass
-    
+
     def validate_installation(self) -> bool:
         # Custom validation
         return True

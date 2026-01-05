@@ -1,6 +1,6 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git (latest-beta)  
+**Version:** Auto-detected from Git (latest-beta)
 **Last Updated:** January 5, 2026
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features

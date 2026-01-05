@@ -27,7 +27,7 @@ interface for managing media projects and orchestrating external tools through p
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
 - 🧪 **Comprehensive Testing** - 199 tests with 73% code coverage and isolated test environment
 
-> **📖 Documentation:**  
+> **📖 Documentation:**
 > [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Contributing](CONTRIBUTING.md) | [CHANGELOG](CHANGELOG.md)
 
 ---

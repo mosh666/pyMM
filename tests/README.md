@@ -66,17 +66,17 @@ system drives (C:\, D:\, etc.). This is achieved through a global `autouse` fixt
 # In conftest.py
 @pytest.fixture(autouse=True)
 def mock_drive_root(monkeypatch, tmp_path):
-    """Automatically mock FileSystemService.get_drive_root() to prevent 
+    """Automatically mock FileSystemService.get_drive_root() to prevent
     tests from creating folders on the system drive."""
     from app.core.services.file_system_service import FileSystemService
-    
+
     mock_drive = tmp_path / "mock_drive_root"
     mock_drive.mkdir(exist_ok=True)
-    
+
     def mock_get_drive_root_method(self):
         self._drive_root = mock_drive
         return mock_drive
-    
+
     monkeypatch.setattr(FileSystemService, "get_drive_root", mock_get_drive_root_method)
     yield mock_drive
 ```
@@ -211,7 +211,7 @@ def test_resolve_path(file_system_service, app_root):
     """Test resolving relative paths to absolute paths."""
     rel_path = Path("test/file.txt")
     resolved = file_system_service.resolve_path(rel_path)
-    
+
     assert resolved == app_root / "test" / "file.txt"
     assert resolved.is_absolute()
 ```
@@ -234,7 +234,7 @@ def test_project_creation_workflow(project_service, tmp_path):
         location=tmp_path,
         init_git=True
     )
-    
+
     assert project.path.exists()
     assert (project.path / ".git").exists()
 ```
@@ -254,14 +254,14 @@ def test_button_click(qtbot):
     """Test button click handling."""
     widget = MyWidget()
     qtbot.addWidget(widget)
-    
+
     # Simulate button click
     qtbot.mouseClick(widget.button, Qt.MouseButton.LeftButton)
-    
+
     # Wait for signal
     with qtbot.waitSignal(widget.clicked, timeout=1000):
         pass
-    
+
     assert widget.state == "clicked"
 ```
 
@@ -289,7 +289,7 @@ def test_with_fixtures(config_service, file_system_service):
     """Test using multiple fixtures."""
     config = config_service.load()
     paths = file_system_service.ensure_portable_folders()
-    
+
     assert config.app_name == "pyMediaManager"
     assert paths["projects"].exists()
 ```

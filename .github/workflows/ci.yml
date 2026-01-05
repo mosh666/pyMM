@@ -14,34 +14,34 @@ jobs:
   lint:
     name: Linting and Formatting
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      
+
       - name: Run ruff linting (strict)
         run: |
           echo "🔍 Running Ruff linter..."
           ruff check app/ tests/ --output-format=github
-      
+
       - name: Run ruff formatting check (strict)
         run: |
           echo "🎨 Checking code formatting..."
           ruff format --check app/ tests/
-      
+
       - name: Check import sorting
         run: |
           echo "📦 Checking import sorting..."
@@ -50,25 +50,25 @@ jobs:
   type-check:
     name: Type Checking
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
           pip install types-PyYAML types-aiofiles
-      
+
       - name: Run mypy type checking (strict)
         run: |
           echo "🔎 Running MyPy type checker..."
@@ -82,24 +82,24 @@ jobs:
       fail-fast: true  # Stop on first failure
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Required for setuptools-scm
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      
+
       - name: Run pytest with coverage (strict)
         run: |
           echo "🧪 Running all tests with coverage..."
@@ -112,7 +112,7 @@ jobs:
             --tb=short `
             --strict-markers `
             --maxfail=3
-      
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -120,7 +120,7 @@ jobs:
           flags: unittests
           name: codecov-py${{ matrix.python-version }}
         continue-on-error: true
-      
+
       - name: Upload coverage HTML report
         uses: actions/upload-artifact@v4
         with:
@@ -131,17 +131,17 @@ jobs:
   lint-docs:
     name: Documentation Validation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Lint markdown files (strict)
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: '**/*.md'
           config: '.markdownlint.json'
-      
+
       - name: Check for broken links
         run: |
           echo "🔗 Checking for broken internal links..."
@@ -150,40 +150,40 @@ jobs:
             echo "⚠️  Warning: README might have broken documentation links"
           fi
           echo "✅ Basic link check passed"
-      
+
       - name: Check documentation completeness
         run: |
           echo "📚 Checking documentation completeness..."
           required_docs=("README.md" "CHANGELOG.md" "CONTRIBUTING.md" "LICENSE" "docs/user-guide.md" "docs/architecture.md")
           missing_docs=()
-          
+
           for doc in "${required_docs[@]}"; do
             if [ ! -f "$doc" ]; then
               missing_docs+=("$doc")
             fi
           done
-          
+
           if [ ${#missing_docs[@]} -gt 0 ]; then
             echo "❌ Missing required documentation files:"
             printf '  - %s\n' "${missing_docs[@]}"
             exit 1
           fi
-          
+
           echo "✅ All required documentation files present"
 
   validate-config:
     name: Configuration Validation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      
+
       - name: Validate YAML files
         run: |
           echo "📝 Validating YAML configuration files..."
@@ -192,7 +192,7 @@ jobs:
           import yaml
           import sys
           from pathlib import Path
-          
+
           errors = []
           for yaml_file in Path('.').rglob('*.yaml'):
               if '.github' in str(yaml_file) or 'node_modules' in str(yaml_file):
@@ -204,12 +204,12 @@ jobs:
               except Exception as e:
                   errors.append(f'{yaml_file}: {e}')
                   print(f'❌ {yaml_file}: {e}')
-          
+
           if errors:
               sys.exit(1)
           print('\n✅ All YAML files validated')
           PYEOF
-      
+
       - name: Validate pyproject.toml
         run: |
           echo "📦 Validating pyproject.toml..."
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, type-check, test, lint-docs, validate-config]
     if: always()
-    
+
     steps:
       - name: Check results
         run: |
@@ -232,7 +232,7 @@ jobs:
           echo "  Tests: ${{ needs.test.result }}"
           echo "  Documentation: ${{ needs.lint-docs.result }}"
           echo "  Configuration: ${{ needs.validate-config.result }}"
-          
+
           if [[ "${{ needs.lint.result }}" != "success" ]] || \
              [[ "${{ needs.type-check.result }}" != "success" ]] || \
              [[ "${{ needs.test.result }}" != "success" ]] || \
@@ -241,5 +241,5 @@ jobs:
             echo "❌ CI pipeline failed - please fix errors before merging"
             exit 1
           fi
-          
+
           echo "✅ All CI checks passed!"

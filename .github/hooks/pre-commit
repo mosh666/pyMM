@@ -23,7 +23,7 @@ if ($preCommit) {
 } else {
     Write-Host "⚠️  pre-commit not found. Install it with: pip install pre-commit" -ForegroundColor Yellow
     Write-Host "⚠️  Then run: pre-commit install" -ForegroundColor Yellow
-    
+
     # Fallback to basic checks
     Write-Host "🔍 Running fallback syntax check..." -ForegroundColor Cyan
     $pythonFiles = Get-ChildItem -Path app,tests -Filter *.py -Recurse -ErrorAction SilentlyContinue

@@ -16,7 +16,7 @@ $preCommitInstalled = Get-Command pre-commit -ErrorAction SilentlyContinue
 if (-not $preCommitInstalled) {
     Write-Host "📦 Installing pre-commit..." -ForegroundColor Yellow
     pip install pre-commit
-    
+
     if ($LASTEXITCODE -ne 0) {
         Write-Host "❌ Failed to install pre-commit" -ForegroundColor Red
         exit 1
@@ -37,12 +37,12 @@ if ($LASTEXITCODE -ne 0) {
 $hooksDir = ".git/hooks"
 if (Test-Path $hooksDir) {
     Write-Host "📋 Installing custom Git hooks..." -ForegroundColor Yellow
-    
+
     if (Test-Path ".github/hooks/pre-commit") {
         Copy-Item ".github/hooks/pre-commit" "$hooksDir/pre-commit" -Force
         Write-Host "  ✅ pre-commit hook installed" -ForegroundColor Green
     }
-    
+
     if (Test-Path ".github/hooks/pre-push") {
         Copy-Item ".github/hooks/pre-push" "$hooksDir/pre-push" -Force
         Write-Host "  ✅ pre-push hook installed" -ForegroundColor Green

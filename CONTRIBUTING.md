@@ -39,7 +39,7 @@ contributions.
    # Fork the repository on GitHub first
    git clone https://github.com/YOUR_USERNAME/pyMM.git
    cd pyMM
-   
+
    # Add upstream remote
    git remote add upstream https://github.com/mosh666/pyMM.git
    ```
@@ -49,10 +49,10 @@ contributions.
    ```bash
    # Create environment
    python -m venv venv
-   
+
    # Activate (Windows)
    venv\Scripts\activate
-   
+
    # Activate (Linux/macOS)
    source venv/bin/activate
    ```
@@ -62,7 +62,7 @@ contributions.
    ```bash
    # Install in editable mode with dev dependencies
    pip install -e ".[dev]"
-   
+
    # Verify installation
    python -c "import app; print(app.__version__)"
    ```
@@ -73,15 +73,15 @@ contributions.
    # Automatic setup (recommended)
    # Windows PowerShell:
    .\scripts\setup-git-hooks.ps1
-   
+
    # Linux/macOS/Git Bash:
    bash scripts/setup-git-hooks.sh
-   
+
    # Manual setup:
    pip install pre-commit
    pre-commit install --install-hooks
    pre-commit install --hook-type pre-push
-   
+
    # Test hooks
    pre-commit run --all-files
    ```
@@ -101,10 +101,10 @@ contributions.
    ```bash
    # Run full test suite
    pytest
-   
+
    # Run with coverage
    pytest --cov=app --cov-report=html
-   
+
    # View coverage report
    # Open htmlcov/index.html in browser
    ```
@@ -115,7 +115,7 @@ contributions.
    # Set your identity
    git config user.name "Your Name"
    git config user.email "your.email@example.com"
-   
+
    # Set default branch
    git config init.defaultBranch main
    ```

@@ -33,30 +33,30 @@ jobs:
             python-dir: "python314"
             lib-dir: "lib-py314"
             requirements-file: "requirements-frozen-py314.txt"
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Required for setuptools-scm
-      
+
       - name: Set up Python ${{ matrix.python-version }} for building
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build setuptools-scm
-      
+
       - name: Get version from setuptools-scm
         id: version
         run: |
           $version = python -m setuptools_scm
           echo "VERSION=$version" >> $env:GITHUB_OUTPUT
           echo "Version: $version"
-      
+
       - name: Cache embeddable Python
         id: cache-python
         uses: actions/cache@v4
@@ -72,23 +72,23 @@ jobs:
       - name: Extract embeddable Python
         run: |
           Expand-Archive python-embed.zip -DestinationPath ${{ matrix.python-dir }}/
-      
+
       - name: Configure embeddable Python for site-packages
         run: |
           $pythonVersion = "${{ matrix.python-version }}".Replace(".", "")
           $pthFile = Get-ChildItem -Path ${{ matrix.python-dir }}/ -Filter "python$pythonVersion._pth"
-          
+
           # Append site and lib directory to ._pth file
           Add-Content -Path $pthFile.FullName -Value "../${{ matrix.lib-dir }}"
           Add-Content -Path $pthFile.FullName -Value "import site"
-          
+
           Get-Content $pthFile.FullName
-      
+
       - name: Install pip in embeddable Python
         run: |
           Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile get-pip.py
           & "./${{ matrix.python-dir }}/python.exe" get-pip.py --no-warn-script-location
-      
+
       - name: Install runtime dependencies
         run: |
           & "./${{ matrix.python-dir }}/python.exe" -m pip install `
@@ -101,20 +101,20 @@ jobs:
             psutil>=5.9.0 `
             aiohttp>=3.9.0 `
             rich>=13.7.0
-      
+
       - name: Freeze dependencies
         run: |
           & "./${{ matrix.python-dir }}/python.exe" -m pip freeze > ${{ matrix.requirements-file }}
-      
+
       - name: Generate _version.py
         run: |
           python -m setuptools_scm
           # setuptools-scm writes to app/_version.py as configured in pyproject.toml
-      
+
       - name: Create portable archive
         run: |
           $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win64.zip"
-          
+
           Compress-Archive -Path `
             ${{ matrix.python-dir }}, `
             ${{ matrix.lib-dir }}, `
@@ -126,9 +126,9 @@ jobs:
             LICENSE, `
             ${{ matrix.requirements-file }} `
             -DestinationPath $archiveName
-          
+
           echo "ARCHIVE_NAME=$archiveName" >> $env:GITHUB_OUTPUT
-      
+
       - name: Calculate SHA256 checksum
         id: checksum
         run: |
@@ -137,7 +137,7 @@ jobs:
           $hash | Out-File -FilePath "${archiveName}.sha256" -NoNewline
           echo "CHECKSUM=$hash" >> $env:GITHUB_OUTPUT
           echo "Checksum: $hash"
-      
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -146,25 +146,25 @@ jobs:
             pyMM-v*.zip
             pyMM-v*.sha256
           retention-days: 30
-  
+
   create-recommended-link:
     name: Create recommended release link
     runs-on: ubuntu-latest
     needs: build-windows
     if: startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
-      
+
       - name: Create recommended symlink metadata
         run: |
           # Python 3.13 is the recommended version
           echo "pyMM-py3.13-build" > RECOMMENDED.txt
           echo "For most users, download the Python 3.13 build for best compatibility." >> RECOMMENDED.txt
-      
+
       - name: Upload recommended metadata
         uses: actions/upload-artifact@v4
         with:
