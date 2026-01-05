@@ -3,6 +3,13 @@
 
 Write-Host "🔧 Setting up Git hooks and pre-commit..." -ForegroundColor Cyan
 
+# Add Python Scripts to PATH
+$pythonScriptsPath = "$env:APPDATA\Python\Python314\Scripts"
+if (Test-Path $pythonScriptsPath) {
+    $env:Path = "$pythonScriptsPath;$env:Path"
+    Write-Host "✅ Added Python Scripts to PATH" -ForegroundColor Green
+}
+
 # Check if pre-commit is installed
 $preCommitInstalled = Get-Command pre-commit -ErrorAction SilentlyContinue
 
@@ -13,7 +20,7 @@ if (-not $preCommitInstalled) {
     if ($LASTEXITCODE -ne 0) {
         Write-Host "❌ Failed to install pre-commit" -ForegroundColor Red
         exit 1
-    fi
+    }
 }
 
 # Install pre-commit hooks

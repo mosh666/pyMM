@@ -79,7 +79,7 @@ repos:
           - --tb=short
           - -x
           - --timeout=30
-        stages: [commit]
+        stages: [pre-commit]
 
       - id: pytest-full
         name: PyTest - All Tests (Pre-Push)
@@ -93,7 +93,7 @@ repos:
           - --cov=app
           - --cov-report=term-missing:skip-covered
           - --cov-fail-under=70
-        stages: [push]
+        stages: [pre-push]
 
       - id: docs-check
         name: Documentation Validation
@@ -125,4 +125,4 @@ repos:
                 print("\n✅ Note: This is a warning, not blocking commit")
             else:
                 print("✅ Documentation validation passed")
-        stages: [push]
+        stages: [pre-push]

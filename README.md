@@ -162,12 +162,30 @@ venv\Scripts\activate  # Windows
 # 3. Install dependencies
 pip install -e ".[dev]"
 
-# 4. Run tests
+# 4. Setup Git hooks (ensures code quality)
+# Windows PowerShell:
+.\scripts\setup-git-hooks.ps1
+
+# Linux/macOS/Git Bash:
+bash scripts/setup-git-hooks.sh
+
+# 5. Run tests
 pytest
 
-# 5. Run application
+# 6. Run application
 python launcher.py
 ```
+
+**Development Workflow:**
+
+The project uses automated pre-commit hooks to ensure code quality:
+
+- ✅ **Pre-commit hooks** - Run linters and formatters automatically
+- ✅ **Pre-push hooks** - Run full test suite before pushing
+- ✅ **CI/CD pipeline** - Comprehensive checks on GitHub
+- ✅ **Coverage requirements** - Maintain 70%+ test coverage
+
+All checks must pass before code can be committed or pushed. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 **Build Portable Distribution:**
 ```bash
