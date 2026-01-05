@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - Tag References Cleanup (2026-01-05)
+
+- Removed all references to v1.0.0 tag from documentation
+  - Updated CHANGELOG.md to remove v1.0.0 release section
+  - Updated README.md citation to remove version number
+  - Updated CITATION.cff to remove version and date fields
+  - Updated user-guide.md with generic version examples (vX.Y.Z)
+  - Updated architecture.md with generic semantic versioning examples
+  - Updated CONTRIBUTING.md with generic tag examples
+  - Updated pyproject.toml comment to use generic example
+- All version information now uses generic placeholders or auto-detection from Git
+- Documentation remains version-agnostic for better maintenance
+
 ### Changed - Complete Documentation Rewrite (2026-01-05)
 
 - Comprehensive rewrite of all documentation files to accurately reflect current codebase
