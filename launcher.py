@@ -5,8 +5,8 @@ Entry point for the portable Python application.
 Configures paths for embeddable Python and launches the main application.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Determine application root (where launcher.py resides)
 APP_ROOT = Path(__file__).parent.resolve()
