@@ -66,6 +66,31 @@ jobs:
             echo "ℹ️  No existing latest-beta release found (will be created)"
           fi
       
+      - name: Update latest-beta tag to trigger source archive regeneration
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Delete remote tag if it exists (this will also delete the release)
+          if git ls-remote --tags origin | grep -q "refs/tags/latest-beta"; then
+            echo "Deleting existing latest-beta tag from remote..."
+            git push origin :refs/tags/latest-beta || echo "Tag already deleted"
+            
+            # Delete release (if still exists after tag deletion)
+            gh release delete latest-beta --yes 2>/dev/null || echo "Release already deleted"
+          fi
+          
+          # Create new tag at current commit
+          echo "Creating new latest-beta tag at current commit..."
+          git tag -f latest-beta
+          git push origin latest-beta
+          
+          echo "✅ Tag updated - GitHub will regenerate source archives"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Determine Release Tag & Changelog
         id: changelog
         run: |
