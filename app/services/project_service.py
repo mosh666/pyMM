@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any
 
 from app.models.project import Project
-from app.services.git_service import GitService
 
 
 class ProjectService:
@@ -40,7 +39,6 @@ class ProjectService:
         name: str,
         path: Path,
         description: str | None = None,
-        git_enabled: bool = True,
         use_template: str | None = None,
     ) -> Project:
         """
@@ -50,7 +48,6 @@ class ProjectService:
             name: Project name
             path: Project directory path
             description: Optional project description
-            git_enabled: Whether to enable Git integration
             use_template: Optional template name to use
 
         Returns:
@@ -83,7 +80,6 @@ class ProjectService:
             name=name,
             path=path,
             description=description,
-            git_enabled=git_enabled,
         )
 
         # Save project metadata
@@ -209,84 +205,3 @@ class ProjectService:
         # Create a basic README
         readme = project_path / "README.md"
         readme.write_text(f"# {project_path.name}\n\nMedia management project.\n")
-
-    # Git Integration Methods
-
-    def init_git_repository(self, project: Project, initial_commit: bool = True) -> bool:
-        """
-        Initialize Git repository for a project.
-
-        Args:
-            project: Project to initialize Git for
-            initial_commit: Whether to create an initial commit
-
-        Returns:
-            True if successful
-        """
-        try:
-            GitService.init_repository(project.path, initial_commit=initial_commit)
-            project.git_enabled = True
-            self.save_project(project)
-            return True
-        except Exception as e:
-            self.logger.error(f"Error initializing Git repository: {e}")
-            return False
-
-    def get_git_status(self, project: Project) -> dict[str, Any] | None:
-        """
-        Get Git status for a project.
-
-        Args:
-            project: Project to check
-
-        Returns:
-            Status dictionary or None if not a Git repo
-        """
-        if not project.is_git_repo:
-            return None
-
-        return GitService.get_status(project.path)
-
-    def commit_changes(
-        self,
-        project: Project,
-        message: str,
-        add_all: bool = False,
-        files: list[str] | None = None,
-    ) -> bool:
-        """
-        Commit changes to the project repository.
-
-        Args:
-            project: Project to commit
-            message: Commit message
-            add_all: Whether to stage all changes
-            files: Specific files to stage
-
-        Returns:
-            True if commit was successful
-        """
-        if not project.is_git_repo:
-            return False
-
-        try:
-            return GitService.commit(project.path, message, add_all, files)
-        except Exception as e:
-            self.logger.error(f"Error committing changes: {e}")
-            return False
-
-    def get_git_log(self, project: Project, max_count: int = 10) -> list[dict[str, Any]]:
-        """
-        Get commit log for a project.
-
-        Args:
-            project: Project to get log for
-            max_count: Maximum number of commits
-
-        Returns:
-            List of commit dictionaries
-        """
-        if not project.is_git_repo:
-            return []
-
-        return GitService.get_log(project.path, max_count)

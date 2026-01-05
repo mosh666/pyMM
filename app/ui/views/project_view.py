@@ -49,7 +49,7 @@ class ProjectView(QWidget):
         # Description
         desc = QLabel(
             "Create and manage media projects. Each project is stored in the 'pyMM.Projects' "
-            "folder on your portable drive with version control support."
+            "folder on your portable drive."
         )
         desc.setWordWrap(True)
         layout.addWidget(desc)
@@ -100,10 +100,9 @@ class ProjectView(QWidget):
             item = QListWidgetItem()
 
             # Format display
-            git_icon = "📁" if project.is_git_repo else "📂"
             status = "✓" if project.exists else "✗"
 
-            item.setText(f"{status} {git_icon} {project.name}\n    {project.path}")
+            item.setText(f"{status} 📁 {project.name}\n    {project.path}")
             item.setData(Qt.ItemDataRole.UserRole, project)
 
             if not project.exists:

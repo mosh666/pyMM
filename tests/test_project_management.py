@@ -29,13 +29,11 @@ def test_project_model():
         name="My Test Project",
         path=test_path,
         description="A test project for media management",
-        git_enabled=True,
     )
 
     print(f"\n✓ Created project: {project.name}")
     print(f"  Path: {project.path}")
     print(f"  Created: {project.created}")
-    print(f"  Git enabled: {project.git_enabled}")
 
     # Test serialization
     project_dict = project.to_dict()
@@ -84,7 +82,6 @@ def test_project_service():
             name="Service Test Project",
             path=project_path,
             description="Testing project service",
-            git_enabled=True,
         )
 
         print(f"\n✓ Created project: {project.name}")

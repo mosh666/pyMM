@@ -45,7 +45,6 @@ class TestProject:
         assert project.name == "Test Project"
         assert project.path == sample_project_path
         assert project.description == "A test project"
-        assert project.git_enabled is True
         assert isinstance(project.created, datetime)
         assert isinstance(project.modified, datetime)
 
@@ -63,23 +62,12 @@ class TestProject:
         sample_project_path.mkdir(parents=True)
         assert project.exists
 
-    def test_project_is_git_repo_property(self, sample_project_path):
-        """Test the is_git_repo property."""
-        sample_project_path.mkdir(parents=True)
-        project = Project(name="Test", path=sample_project_path)
-
-        assert not project.is_git_repo
-
-        (sample_project_path / ".git").mkdir()
-        assert project.is_git_repo
-
     def test_project_to_dict(self, sample_project_path):
         """Test project serialization."""
         project = Project(
             name="Test Project",
             path=sample_project_path,
             description="Test",
-            git_enabled=True,
         )
 
         data = project.to_dict()
@@ -87,7 +75,6 @@ class TestProject:
         assert data["name"] == "Test Project"
         assert data["path"] == str(sample_project_path)
         assert data["description"] == "Test"
-        assert data["git_enabled"] is True
         assert "created" in data
         assert "modified" in data
         assert "settings" in data
@@ -100,7 +87,6 @@ class TestProject:
             "created": "2024-01-01T12:00:00",
             "modified": "2024-01-02T12:00:00",
             "description": "Test",
-            "git_enabled": True,
             "settings": {"key": "value"},
         }
 
@@ -109,7 +95,6 @@ class TestProject:
         assert project.name == "Test Project"
         assert project.path == sample_project_path
         assert project.description == "Test"
-        assert project.git_enabled is True
         assert project.settings == {"key": "value"}
 
 
@@ -129,7 +114,6 @@ class TestProjectService:
             name="Test Project",
             path=sample_project_path,
             description="A test project",
-            git_enabled=False,
         )
 
         assert project.name == "Test Project"
