@@ -43,12 +43,18 @@ class TestLoggingService:
         assert service.max_file_size == 5242880
         assert service.backup_count == 3
 
-    def test_init_with_file_system_service(self, tmp_path):
+    def test_init_with_file_system_service(self, tmp_path, monkeypatch):
         """Test LoggingService uses FileSystemService for portable logs."""
         fs_service = FileSystemService(app_root=tmp_path)
+
+        # Mock drive root to use temp directory
+        mock_drive_root = tmp_path / "mock_drive"
+        mock_drive_root.mkdir()
+        monkeypatch.setattr(fs_service, "get_drive_root", lambda: mock_drive_root)
+
         service = LoggingService(file_system_service=fs_service)
 
-        expected_log_dir = fs_service.get_portable_folder("pyMM.Logs")
+        expected_log_dir = mock_drive_root / "pyMM.Logs"
         assert service.log_dir == expected_log_dir
 
     def test_setup_console_only(self, tmp_path):

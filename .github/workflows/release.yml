@@ -42,6 +42,55 @@ jobs:
           find artifacts/ -name "*.sha256" -exec cp {} release-assets/ \;
           ls -lah release-assets/
       
+      - name: Clean existing assets from latest-beta release
+        if: github.ref == 'refs/heads/dev'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the latest-beta release ID
+          RELEASE_ID=$(gh release view latest-beta --json id --jq '.id' 2>/dev/null || echo "")
+          
+          if [ -n "$RELEASE_ID" ]; then
+            echo "Found existing latest-beta release (ID: $RELEASE_ID)"
+            
+            # List and delete all assets from the release
+            gh release view latest-beta --json assets --jq '.assets[].name' | while read -r asset_name; do
+              if [ -n "$asset_name" ]; then
+                echo "Deleting asset: $asset_name"
+                gh release delete-asset latest-beta "$asset_name" --yes || echo "Failed to delete $asset_name"
+              fi
+            done
+            
+            echo "✅ All existing assets cleaned from latest-beta release"
+          else
+            echo "ℹ️  No existing latest-beta release found (will be created)"
+          fi
+      
+      - name: Update latest-beta tag to trigger source archive regeneration
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Delete remote tag if it exists (this will also delete the release)
+          if git ls-remote --tags origin | grep -q "refs/tags/latest-beta"; then
+            echo "Deleting existing latest-beta tag from remote..."
+            git push origin :refs/tags/latest-beta || echo "Tag already deleted"
+            
+            # Delete release (if still exists after tag deletion)
+            gh release delete latest-beta --yes 2>/dev/null || echo "Release already deleted"
+          fi
+          
+          # Create new tag at current commit
+          echo "Creating new latest-beta tag at current commit..."
+          git tag -f latest-beta
+          git push origin latest-beta
+          
+          echo "✅ Tag updated - GitHub will regenerate source archives"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Determine Release Tag & Changelog
         id: changelog
         run: |
@@ -65,6 +114,26 @@ jobs:
           # Extract changelog section for this version (if CHANGELOG.md exists)
           if [ -f CHANGELOG.md ] && [[ $GITHUB_REF == refs/tags/* ]]; then
             sed -n "/## \[$TAG_NAME\]/,/## \[/p" CHANGELOG.md | sed '$d' > release-notes.md
+          elif [[ $GITHUB_REF == refs/heads/dev ]]; then
+            # For latest-beta, generate release notes from recent commits
+            echo "# Latest Beta Release" > release-notes.md
+            echo "" >> release-notes.md
+            echo "**⚠️ Beta Build** - This is an automated rolling release from the \`dev\` branch." >> release-notes.md
+            echo "" >> release-notes.md
+            echo "**Build Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> release-notes.md
+            echo "**Commit:** \`${GITHUB_SHA:0:7}\`" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "## Recent Changes" >> release-notes.md
+            echo "" >> release-notes.md
+            
+            # Get recent commits (last 10)
+            git log --pretty=format:"- %s (\`%h\`)" -n 10 >> release-notes.md
+            
+            echo "" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "---" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "**Note:** Beta builds are updated automatically with each push to the dev branch. For stable releases, see tagged versions." >> release-notes.md
           else
             echo "Release $TAG_NAME" > release-notes.md
             echo "" >> release-notes.md
@@ -106,7 +175,7 @@ jobs:
           body_path: release-notes.md
           draft: false
           prerelease: ${{ steps.changelog.outputs.IS_PRERELEASE }}
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       

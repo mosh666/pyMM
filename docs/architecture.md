@@ -2,8 +2,8 @@
 
 > **Version:** Auto-detected from Git using setuptools_scm  
 > **Last Updated:** January 5, 2026  
-> **Python Support:** 3.12 | 3.13  
-> **Test Suite:** 137+ tests with 73% code coverage  
+> **Python Support:** 3.12 | 3.13 | 3.14  
+> **Test Suite:** 199 tests with 73% code coverage  
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview
@@ -51,7 +51,7 @@ modular architecture with clear separation of concerns.
 - **Fallback**: Graceful fallback to `importlib.metadata` or dev version if Git is missing
 - **UI Integration**: Version details displayed in Settings → About tab
 - **Branch Strategy**: `dev` branch for beta releases, `main` branch for stable releases
-- **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes
+- **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes with asset cleanup
 
 ### 6. UI Framework Stability
 - **QFluentWidgets Integration**: All navigation interfaces and views properly initialized
@@ -155,13 +155,26 @@ files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=Tr
 ```
 
 ### 2. StorageService
-**Purpose**: Detect and manage portable drives
+**Purpose**: Detect and manage portable drives with enhanced external drive detection
 
 **Key Features**:
 - Enumerate all drives (fixed and removable)
+- **Advanced external drive detection** using multiple methods:
+  - Windows `GetDriveTypeW` API for true removable drives (USB flash drives, SD cards)
+  - WMI (Windows Management Instrumentation) for detecting external USB/Thunderbolt drives
+  - Identifies drives marked as "External hard disk media" by Windows
+  - Detects drives even when Windows classifies them as "fixed" type
 - Track drive serial numbers for identification
 - Get drive capacity and free space
 - Detect if path is on removable drive
+- Graceful fallback when WMI is unavailable
+
+**Detection Heuristics**:
+1. Check Windows drive type (DRIVE_REMOVABLE)
+2. Query WMI for USB interface or external media type indicators
+3. Check partition options for "removable" flag
+4. Identify common removable filesystems (FAT32, exFAT) on non-system drives
+5. Exclude network drives, CD-ROMs, and RAM disks
 
 **Usage**:
 ```python
@@ -169,8 +182,25 @@ from pathlib import Path
 from app.core.services.storage_service import StorageService, DriveInfo
 
 storage = StorageService()
+
+# Get all removable/external drives (USB flash drives, external HDDs/SSDs)
 removable_drives: list[DriveInfo] = storage.get_removable_drives()
+
+# Get specific drive info
 drive_info: DriveInfo | None = storage.get_drive_info(Path("D:\\"))
+
+# Check if path is on removable/external drive
+is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
+```
+
+**DriveInfo Fields**:
+- `drive_letter`: Drive path (e.g., "K:\\")
+- `label`: Volume label
+- `file_system`: Filesystem type (NTFS, FAT32, exFAT)
+- `total_size`: Total capacity in bytes
+- `free_space`: Available space in bytes
+- `is_removable`: True if external/removable drive
+- `serial_number`: Volume serial number (hex string)
 ```
 
 ### 3. ConfigService
@@ -463,10 +493,13 @@ def test_button_click(qtbot: QtBot) -> None:
      - `dev` branch → Beta releases (prerelease flag)
      - `main` branch → Stable releases
    - **Automatic Tagging**: `latest-beta` rolling tag on `dev` pushes
+   - **Asset Management**: Automatically cleans old assets from `latest-beta` before uploading new builds
    - **GitHub Releases**: Created with changelog and download links
    - **Version Detection**: Uses setuptools_scm for automatic versioning
+   - **Multi-Python Support**: Builds for Python 3.12, 3.13, and 3.14
+   - **SHA256 Checksums**: Generated for all build artifacts
    - **Security**: Read-only permissions with minimal scope
-   - **Triggers**: Git tags matching `v*.*.*` pattern
+   - **Triggers**: Git tags matching `v*.*.*` pattern, pushes to `dev` branch
 
 ## Security Considerations
 
@@ -528,6 +561,64 @@ class CustomPlugin(PluginBase):
     def validate_installation(self) -> bool:
         # Custom validation
         return True
+```
+
+## Testing Architecture
+
+### Test Isolation
+
+The test suite implements automatic system drive protection to prevent tests from creating files
+on system drives during test execution.
+
+**Isolation Mechanism:**
+
+- **Global Fixture**: `mock_drive_root` in `tests/conftest.py` (autouse=True)
+- **Method**: Monkey-patches `FileSystemService.get_drive_root()` to return temporary directories
+- **Scope**: Applies to all 199 tests automatically
+- **Cleanup**: Pytest's `tmp_path` fixture handles automatic cleanup
+
+**Benefits:**
+
+- No `pyMM.Logs` or `pyMM.Projects` folders created on C:\ or other system drives
+- Tests run in complete isolation from production environment
+- Parallel test execution is safe
+- No manual cleanup required
+
+### Test Categories
+
+1. **Unit Tests** (98 tests): Test individual modules in isolation
+   - Service layer (config, file system, storage, logging)
+   - Plugin system (base, manager)
+   - Git integration
+   - Project models
+
+2. **Integration Tests** (12 tests): Test workflows across multiple components
+   - Plugin download and installation
+   - Project lifecycle management
+   - Git repository operations
+
+3. **GUI Tests** (89 tests): Test user interface components
+   - First-run wizard (17 tests)
+   - Project dialogs (16 tests)
+   - Views (6 tests)
+   - Settings dialog
+   - Main window navigation
+
+**Coverage:** 73% overall with focus on critical business logic
+
+### Running Tests
+
+```bash
+# All tests
+pytest
+
+# With coverage
+pytest --cov=app --cov-report=html
+
+# Specific category
+pytest tests/unit
+pytest tests/integration
+pytest tests/gui
 ```
 
 ## Troubleshooting

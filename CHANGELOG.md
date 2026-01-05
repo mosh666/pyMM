@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Enhanced External Drive Detection**
+  - Added WMI (Windows Management Instrumentation) integration for accurate drive detection
+  - Now detects USB flash drives, external HDDs/SSDs, and other removable media
+  - Multi-layered detection approach:
+    - Windows `GetDriveTypeW` API for standard removable drives
+    - WMI queries to identify drives with USB interface or "external" media type
+    - Detects external drives even when Windows classifies them as "fixed" (NTFS external drives)
+  - Graceful fallback to legacy detection methods if WMI is unavailable
+  - Supports all external drive types: USB flash drives, external SSDs, portable HDDs
+  - Added `WMI>=1.5.1` as Windows-only dependency in `pyproject.toml`
+
+- **Test Environment Isolation**
+  - Implemented automatic test isolation to prevent system drive pollution
+  - Added global `mock_drive_root` fixture to redirect all file operations to temporary directories
+  - Tests no longer create `pyMM.Logs` or `pyMM.Projects` folders on C:\ or other system drives
+  - All 199 tests now run in completely isolated temporary environments
+  - Automatic cleanup of test artifacts after test completion
+
 - **Automatic Version Management**
   - Implemented `setuptools_scm` for Git-based semantic versioning
   - Runtime version detection with fallback to `importlib.metadata`
@@ -18,15 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modernized CI/CD Pipeline**
   - Branch-based release flow: `dev` → Beta releases, `main` → Stable releases
   - Automated `latest-beta` rolling tag on `dev` branch pushes
+  - Automatic cleanup of old assets from `latest-beta` before uploading new builds
   - Python embeddable runtime caching to speed up builds
   - Added `contents: read` permissions for better security
   - Support for Python 3.14 in CI workflows (forward compatibility)
 
 ### Changed
 
+- Expanded test suite from 137 to 199 tests with improved coverage
 - Updated `pyproject.toml` to support semantic versioning with prerelease suffixes
-- Improved documentation structure and clarity
+- Improved documentation structure and clarity with accurate test counts
 - Enhanced test coverage for settings dialog (5 tabs expected)
+- Modernized all documentation to reflect current architecture and features
+- Refactored release workflow to clean old assets before updating `latest-beta`
 
 ### Fixed
 

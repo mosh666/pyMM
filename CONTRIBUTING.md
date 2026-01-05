@@ -271,6 +271,28 @@ pytest tests/unit/test_config_service.py::TestConfigService::test_load_default_c
 pytest --cov=app --cov-report=html
 ```
 
+### Test Isolation
+
+The test suite automatically isolates all file system operations to prevent polluting the system
+drive during test execution. This is handled transparently by the `mock_drive_root` fixture in
+`tests/conftest.py`.
+
+**Key Points:**
+
+- Tests never create folders on C:\ or other system drives
+- All `pyMM.Logs` and `pyMM.Projects` folders are created in temporary directories
+- Cleanup is automatic - no manual intervention needed
+- Test isolation is enabled for all 199 tests automatically
+
+**How It Works:**
+
+The `mock_drive_root` fixture (with `autouse=True`) monkey-patches
+`FileSystemService.get_drive_root()` to return temporary directories instead of actual drive roots.
+This ensures complete isolation without requiring changes to test code.
+
+If you're writing new tests that use `FileSystemService`, the isolation will work automatically.
+No special configuration is needed.
+
 ## Pull Request Process
 
 1. **Create a feature branch**:

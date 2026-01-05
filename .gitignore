@@ -27,6 +27,7 @@ requirements*.txt
 htmlcov/
 .pytest_cache/
 .tox/
+/test_p*
 
 # IDEs
 .vscode/

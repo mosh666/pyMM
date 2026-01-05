@@ -18,14 +18,15 @@ maintaining version control integration.
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
 - 💾 **100% Portable** - Zero system installation, runs from USB/external drives
-- 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
+- � **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
+- �🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and templates
 - 🔄 **Git Integration** - Built-in version control with GitPython
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - 137+ tests with 73% code coverage
+- 🧪 **Comprehensive Testing** - 199 tests with 73% code coverage and isolated test environment
 
 > **📖 Documentation:**  
 > [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Contributing](CONTRIBUTING.md) | [CHANGELOG](CHANGELOG.md)
@@ -251,17 +252,21 @@ Modern Fluent Design interface powered by PySide6 and QFluentWidgets.
 ### Main Views
 
 - **Home** - Dashboard with quick actions and recent projects
-- **Storage** - Drive detection, capacity monitoring, serial number tracking
+- **Storage** - Enhanced drive detection with WMI, capacity monitoring, serial number tracking
 - **Plugins** - Plugin installation, updates, and management
 - **Projects** - Project browser with search and filtering
 - **Settings** - Comprehensive configuration with 5 tabs
 
 ### First-Run Wizard
 
-Multi-step setup wizard for initial configuration:
+Multi-step setup wizard for initial configuration with intelligent drive detection:
 
 1. **Welcome** - Feature overview and introduction
-2. **Drive Detection** - Portable drive location confirmation
+2. **Drive Detection** - Enhanced portable drive selection
+   - Detects USB flash drives, SD cards, and removable media
+   - Identifies external HDDs and SSDs (even when classified as "fixed" by Windows)
+   - Uses WMI to detect USB interface and external media type
+   - Displays drive capacity, free space, and volume labels
 3. **Plugin Installation** - Install essential plugins (Git, ExifTool)
 4. **Settings** - Configure theme, language, and preferences
 5. **Complete** - Summary and "Don't show again" option
@@ -481,6 +486,22 @@ pyMM/
 ## CI/CD Pipeline
 
 Automated build and release workflow powered by GitHub Actions.
+
+### Release Strategy
+
+**Beta Releases (`dev` branch)**:
+- Automatic deployment on every push to `dev`
+- Tagged as `latest-beta` (rolling tag)
+- Old assets automatically cleaned before new builds uploaded
+- Includes Python 3.12, 3.13, and 3.14 builds
+- Pre-release flag enabled
+- Download: [latest-beta](https://github.com/mosh666/pyMM/releases/tag/latest-beta)
+
+**Stable Releases (`main` branch)**:
+- Manual deployment via version tags (e.g., `v1.0.0`)
+- Semantic versioning: `vX.Y.Z` or `vX.Y.Z-alpha.N`, `vX.Y.Z-beta.N`, `vX.Y.Z-rc.N`
+- Permanent releases with changelog
+- Download: [Releases Page](https://github.com/mosh666/pyMM/releases)
 
 ### Pipeline Features
 

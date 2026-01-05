@@ -1,13 +1,13 @@
 # Test Suite Documentation
 
-This directory contains the comprehensive test suite for pyMediaManager with 137+ tests covering
+This directory contains the comprehensive test suite for pyMediaManager with 199 tests covering
 unit, integration, and GUI components.
 
 ## Overview
 
 **Test Statistics:**
 
-- **Total Tests:** 137+
+- **Total Tests:** 199
 - **Code Coverage:** 73% on core modules
 - **Test Types:** Unit, Integration, GUI
 - **Framework:** pytest with pytest-qt for GUI tests
@@ -39,6 +39,50 @@ tests/
 ├── test_settings_dialog.py     # Manual settings dialog test
 └── README.md                   # This file
 ```
+
+---
+
+## Test Isolation
+
+### Automatic System Drive Protection
+
+The test suite includes automatic isolation to prevent tests from creating files and folders on
+system drives (C:\, D:\, etc.). This is achieved through a global `autouse` fixture in
+[conftest.py](conftest.py) that intercepts all file system operations.
+
+**Key Features:**
+
+- **Automatic Mocking:** All `FileSystemService.get_drive_root()` calls are automatically redirected
+  to temporary directories
+- **No System Pollution:** Tests never create `pyMM.Logs`, `pyMM.Projects`, or any other folders
+  on actual system drives
+- **Transparent Operation:** Tests work identically but in isolated environments
+- **Automatic Cleanup:** All test artifacts are cleaned up after test completion
+- **Zero Configuration:** Works automatically for all tests without changes to test code
+
+**How It Works:**
+
+```python
+# In conftest.py
+@pytest.fixture(autouse=True)
+def mock_drive_root(monkeypatch, tmp_path):
+    """Automatically mock FileSystemService.get_drive_root() to prevent 
+    tests from creating folders on the system drive."""
+    from app.core.services.file_system_service import FileSystemService
+    
+    mock_drive = tmp_path / "mock_drive_root"
+    mock_drive.mkdir(exist_ok=True)
+    
+    def mock_get_drive_root_method(self):
+        self._drive_root = mock_drive
+        return mock_drive
+    
+    monkeypatch.setattr(FileSystemService, "get_drive_root", mock_get_drive_root_method)
+    yield mock_drive
+```
+
+This ensures that even if tests create portable folders like `pyMM.Logs` or `pyMM.Projects`, they
+are created in isolated temporary directories that are automatically cleaned up.
 
 ---
 
@@ -273,20 +317,32 @@ def test_with_fixtures(config_service, file_system_service):
 
 ## CI/CD Integration
 
-Tests run automatically on GitHub Actions:
+Tests run automatically on GitHub Actions for every push and pull request.
 
 ### Workflows
 
 1. **CI Workflow** (`ci.yml`)
-   - Runs on: Push, Pull Request
-   - Python versions: 3.12, 3.13
-   - Tests: All tests with coverage
-   - Reports: Coverage uploaded to artifacts
+   - Runs on: Push to any branch, Pull Requests
+   - Python versions: 3.12, 3.13, 3.14
+   - Tests: Full test suite (199 tests) with coverage reporting
+   - Code quality: Ruff linting and formatting checks
+   - Reports: Coverage reports uploaded to artifacts
+   - Minimum coverage: 70% required
 
 2. **Build Workflow** (`build.yml`)
-   - Runs on: Tag push
-   - Tests: Full test suite before build
-   - Artifacts: Portable distributions
+   - Runs on: Push to `dev` branch, version tags (`v*`)
+   - Python versions: 3.12, 3.13, 3.14 (embeddable builds)
+   - Creates portable distributions with embedded Python runtimes
+   - Generates SHA256 checksums for all builds
+   - Artifacts: ZIP files with all dependencies included
+
+3. **Release Workflow** (`release.yml`)
+   - Runs on: Push to `dev` branch (beta), version tags (stable)
+   - Calls build workflow to create distributions
+   - **Beta releases**: Updates `latest-beta` tag, cleans old assets first
+   - **Stable releases**: Creates new release with changelog
+   - Uploads all build artifacts (3.12, 3.13, 3.14)
+   - Generates release notes with download instructions
 
 ### Local CI Simulation
 
