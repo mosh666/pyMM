@@ -1,0 +1,61 @@
+version: 2
+
+updates:
+  # Python dependencies via pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "mosh666"
+    assignees:
+      - "mosh666"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    # Group related updates
+    groups:
+      pyside6:
+        patterns:
+          - "PySide6*"
+      pytest:
+        patterns:
+          - "pytest*"
+      dev-dependencies:
+        patterns:
+          - "ruff"
+          - "black"
+          - "mypy"
+          - "types-*"
+    # Allow version updates
+    allow:
+      - dependency-type: "all"
+    # Ignore pre-releases for production dependencies
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "mosh666"
+    assignees:
+      - "mosh666"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci):"
+      include: "scope"

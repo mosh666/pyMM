@@ -208,5 +208,5 @@ class ProjectBrowserDialog(QDialog):
                 QMessageBox.critical(
                     self,
                     "Error",
-                    f"Failed to delete project:\n{str(e)}",
+                    f"Failed to delete project:\n{e!s}",
                 )

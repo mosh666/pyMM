@@ -2,8 +2,8 @@
 Plugin manager for discovering, installing, and managing plugins.
 """
 
-import logging
 from collections.abc import Callable
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -80,7 +80,7 @@ class PluginManager:
             # Extract source configuration
             source = data.get("source", {})
 
-            manifest = PluginManifest(
+            return PluginManifest(
                 name=data["name"],
                 version=data.get("version", "unknown"),
                 mandatory=data.get("mandatory", False),
@@ -96,9 +96,8 @@ class PluginManager:
                 dependencies=data.get("dependencies", []),
             )
 
-            return manifest
-        except Exception as e:
-            self.logger.error(f"Error parsing manifest: {e}")
+        except Exception:
+            self.logger.exception("Error parsing manifest")
             return None
 
     def _create_plugin_instance(self, manifest: PluginManifest) -> PluginBase | None:
@@ -217,8 +216,8 @@ class PluginManager:
             if not is_valid:
                 self.logger.error(f"Validation failed for {name}")
             return is_valid
-        except Exception as e:
-            self.logger.error(f"Exception during installation of {name}: {e}")
+        except Exception:
+            self.logger.exception(f"Exception during installation of {name}")
             import traceback
 
             traceback.print_exc()

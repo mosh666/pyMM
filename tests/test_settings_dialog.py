@@ -11,8 +11,8 @@ Note: This test uses pytest's built-in output capture.
 For verbose output, run with: pytest -v -s
 """
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -31,7 +31,7 @@ def qapp():
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
-    yield app
+    return app
     # Don't quit the app as other tests may need it
 
 

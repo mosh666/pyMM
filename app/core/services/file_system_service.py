@@ -4,8 +4,8 @@ Provides abstraction layer for file operations with portable path handling.
 """
 
 import logging
-import shutil
 from pathlib import Path
+import shutil
 
 
 class FileSystemService:
@@ -163,8 +163,7 @@ class FileSystemService:
 
         if recursive:
             return sorted(dir_path.rglob(pattern))
-        else:
-            return sorted(dir_path.glob(pattern))
+        return sorted(dir_path.glob(pattern))
 
     def copy_file(self, src: Path | str, dst: Path | str, overwrite: bool = False) -> Path:
         """

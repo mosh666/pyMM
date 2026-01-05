@@ -3,8 +3,8 @@ Main application entry point for pyMediaManager.
 Initializes services and launches the PySide6 GUI.
 """
 
-import sys
 from pathlib import Path
+import sys
 from typing import Any
 
 from PySide6.QtCore import Qt

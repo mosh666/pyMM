@@ -241,5 +241,5 @@ class ProjectWizard(QDialog):
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to create project:\n{str(e)}",
+                f"Failed to create project:\n{e!s}",
             )

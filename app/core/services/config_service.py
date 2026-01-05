@@ -7,8 +7,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field
+import yaml  # type: ignore[import-untyped]
 
 from app import __commit_id__, __version__
 
@@ -107,10 +107,9 @@ class AppConfig(BaseModel):
                 )
                 for key, value in data.items()
             }
-        elif isinstance(data, list):
+        if isinstance(data, list):
             return [self._redact_sensitive_data(item) for item in data]
-        else:
-            return data
+        return data
 
 
 class ConfigService:
@@ -152,9 +151,6 @@ class ConfigService:
             with open(self._user_config_path, encoding="utf-8") as f:
                 user_data = yaml.safe_load(f) or {}
                 config_data = self._merge_dicts(config_data, user_data)
-
-        # Layer 3: Override with environment variables (TODO: implement)
-        # config_data = self._apply_env_overrides(config_data)
 
         # Create Pydantic model from merged data
         self._config = AppConfig(**config_data)
