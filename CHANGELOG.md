@@ -7,16 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed - Documentation Update (2026-01-05)
+### Changed - Complete Documentation Rewrite (2026-01-05)
 
-- Updated all documentation to reflect latest codebase with 193 tests and 73% coverage
-  - README.md: Updated test count and added security focus feature
-  - docs/architecture.md: Updated test statistics, version roadmap, and Python 3.14 support
-  - docs/user-guide.md: Updated test count, version info, and support resources
-  - tests/README.md: Updated test count to reflect current state
-  - CONTRIBUTING.md: Updated test statistics throughout
-- All tests passing (193 tests with 73% code coverage)
-- All linters passing (Ruff, Black, MyPy with zero errors)
+- Comprehensive rewrite of all documentation files to accurately reflect current codebase
+  - README.md: Updated features, test statistics, and embedded Python 3.13 runtime information
+  - CHANGELOG.md: Enhanced with detailed feature additions and development timeline
+  - CONTRIBUTING.md: Updated test counts, pre-commit hooks (15+ checks), and CI/CD workflows
+  - docs/architecture.md: Current architecture with 193 tests, 73% coverage, Python 3.12-3.14 support
+  - docs/user-guide.md: Complete user guide with latest features, Git integration, and troubleshooting
+  - tests/README.md: Test suite documentation with automatic test isolation and coverage details
+- All documentation now reflects:
+  - 193 tests with 73% code coverage (all passing)
+  - 15+ pre-commit hooks including Ruff, MyPy, Bandit security scanning
+  - Automatic versioning with setuptools_scm and Git tags
+  - Embedded Python 3.13 runtime for true portability
+  - Enhanced external drive detection with WMI
+  - Structured logging (no print statements)
+  - Daily OpenSSF Scorecard security metrics
+  - Branch-based release workflow (dev → beta, main → stable)
+- All linters passing: Ruff (zero errors), MyPy (no issues)
 
 ### Changed - CI/CD Improvements (2026-01-05)
 

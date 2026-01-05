@@ -7,11 +7,12 @@ unit, integration, and GUI components.
 
 **Test Statistics:**
 
-- **Total Tests:** 193
-- **Code Coverage:** 73% on core modules
-- **Test Types:** Unit, Integration, GUI
-- **Framework:** pytest with pytest-qt for GUI tests
-- **All tests passing** with comprehensive validation
+- **Total Tests:** 193 (all passing)
+- **Code Coverage:** 73% overall (70% minimum enforced in CI)
+- **Test Types:** Unit (95), Integration (10), GUI (50), Manual (4)
+- **Framework:** pytest with pytest-qt for GUI tests, pytest-asyncio for async tests
+- **Test Isolation:** Automatic system drive protection with mock_drive_root fixture
+- **CI/CD:** Matrix testing on Python 3.12, 3.13, 3.14 with GitHub Actions
 
 ## Directory Structure
 

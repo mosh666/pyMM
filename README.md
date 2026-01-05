@@ -34,20 +34,24 @@ pyMediaManager is a fully portable, Python-based media management application de
 entirely from removable drives without system installation. It provides a modern Fluent Design
 interface for managing media projects and orchestrating external tools through plugins.
 
+Built with Python 3.12-3.14 support, the application includes an embedded Python runtime for true
+portability. Version management is automated using Git tags and setuptools_scm, supporting semantic
+versioning with prerelease tags (alpha, beta, rc).
+
 ### Key Features
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
-- 💾 **100% Portable** - Zero system installation, runs from USB/external drives
+- 💾 **100% Portable** - Zero system installation, runs from USB/external drives with embedded Python 3.13
 - 🔍 **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
 - 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
-- 📁 **Project Management** - Organize media projects with metadata and templates
+- 📁 **Project Management** - Organize media projects with metadata and optional Git integration
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
-- 📊 **Rich Logging** - Structured logging with console and rotating file output
+- 📊 **Rich Logging** - Structured logging with console and rotating file output (no print statements)
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - 193 tests with 73% code coverage and isolated test environment
-- 🎯 **Quality Gates** - Extensive pre-commit checks with Ruff, MyPy, and security validation
-- 🔐 **Security Focused** - CodeQL analysis, OpenSSF Scorecard, Dependabot, and Bandit scanning
+- 🧪 **Comprehensive Testing** - 193 tests with 73% code coverage and automatic test isolation
+- 🎯 **Quality Gates** - 15+ pre-commit hooks including Ruff, MyPy, and Bandit security scanning
+- 🔐 **Security Focused** - CodeQL analysis, OpenSSF Scorecard (daily), Dependabot, and comprehensive security scanning
 
 ---
 

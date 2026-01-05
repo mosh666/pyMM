@@ -100,10 +100,10 @@ contributions.
 5. **Run Tests:**
 
    ```bash
-   # Run full test suite
+   # Run full test suite (193 tests)
    pytest
 
-   # Run with coverage
+   # Run with coverage (73% overall)
    pytest --cov=app --cov-report=html
 
    # View coverage report
