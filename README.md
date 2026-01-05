@@ -482,6 +482,22 @@ pyMM/
 
 Automated build and release workflow powered by GitHub Actions.
 
+### Release Strategy
+
+**Beta Releases (`dev` branch)**:
+- Automatic deployment on every push to `dev`
+- Tagged as `latest-beta` (rolling tag)
+- Old assets automatically cleaned before new builds uploaded
+- Includes Python 3.12, 3.13, and 3.14 builds
+- Pre-release flag enabled
+- Download: [latest-beta](https://github.com/mosh666/pyMM/releases/tag/latest-beta)
+
+**Stable Releases (`main` branch)**:
+- Manual deployment via version tags (e.g., `v1.0.0`)
+- Semantic versioning: `vX.Y.Z` or `vX.Y.Z-alpha.N`, `vX.Y.Z-beta.N`, `vX.Y.Z-rc.N`
+- Permanent releases with changelog
+- Download: [Releases Page](https://github.com/mosh666/pyMM/releases)
+
 ### Pipeline Features
 
 - ✅ **Branch-Based Releases**

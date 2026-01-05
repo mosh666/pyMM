@@ -317,20 +317,32 @@ def test_with_fixtures(config_service, file_system_service):
 
 ## CI/CD Integration
 
-Tests run automatically on GitHub Actions:
+Tests run automatically on GitHub Actions for every push and pull request.
 
 ### Workflows
 
 1. **CI Workflow** (`ci.yml`)
-   - Runs on: Push, Pull Request
-   - Python versions: 3.12, 3.13
-   - Tests: All tests with coverage
-   - Reports: Coverage uploaded to artifacts
+   - Runs on: Push to any branch, Pull Requests
+   - Python versions: 3.12, 3.13, 3.14
+   - Tests: Full test suite (199 tests) with coverage reporting
+   - Code quality: Ruff linting and formatting checks
+   - Reports: Coverage reports uploaded to artifacts
+   - Minimum coverage: 70% required
 
 2. **Build Workflow** (`build.yml`)
-   - Runs on: Tag push
-   - Tests: Full test suite before build
-   - Artifacts: Portable distributions
+   - Runs on: Push to `dev` branch, version tags (`v*`)
+   - Python versions: 3.12, 3.13, 3.14 (embeddable builds)
+   - Creates portable distributions with embedded Python runtimes
+   - Generates SHA256 checksums for all builds
+   - Artifacts: ZIP files with all dependencies included
+
+3. **Release Workflow** (`release.yml`)
+   - Runs on: Push to `dev` branch (beta), version tags (stable)
+   - Calls build workflow to create distributions
+   - **Beta releases**: Updates `latest-beta` tag, cleans old assets first
+   - **Stable releases**: Creates new release with changelog
+   - Uploads all build artifacts (3.12, 3.13, 3.14)
+   - Generates release notes with download instructions
 
 ### Local CI Simulation
 

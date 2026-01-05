@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modernized CI/CD Pipeline**
   - Branch-based release flow: `dev` → Beta releases, `main` → Stable releases
   - Automated `latest-beta` rolling tag on `dev` branch pushes
+  - Automatic cleanup of old assets from `latest-beta` before uploading new builds
   - Python embeddable runtime caching to speed up builds
   - Added `contents: read` permissions for better security
   - Support for Python 3.14 in CI workflows (forward compatibility)
@@ -36,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved documentation structure and clarity with accurate test counts
 - Enhanced test coverage for settings dialog (5 tabs expected)
 - Modernized all documentation to reflect current architecture and features
+- Refactored release workflow to clean old assets before updating `latest-beta`
 
 ### Fixed
 

@@ -51,7 +51,7 @@ modular architecture with clear separation of concerns.
 - **Fallback**: Graceful fallback to `importlib.metadata` or dev version if Git is missing
 - **UI Integration**: Version details displayed in Settings → About tab
 - **Branch Strategy**: `dev` branch for beta releases, `main` branch for stable releases
-- **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes
+- **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes with asset cleanup
 
 ### 6. UI Framework Stability
 - **QFluentWidgets Integration**: All navigation interfaces and views properly initialized
@@ -463,10 +463,13 @@ def test_button_click(qtbot: QtBot) -> None:
      - `dev` branch → Beta releases (prerelease flag)
      - `main` branch → Stable releases
    - **Automatic Tagging**: `latest-beta` rolling tag on `dev` pushes
+   - **Asset Management**: Automatically cleans old assets from `latest-beta` before uploading new builds
    - **GitHub Releases**: Created with changelog and download links
    - **Version Detection**: Uses setuptools_scm for automatic versioning
+   - **Multi-Python Support**: Builds for Python 3.12, 3.13, and 3.14
+   - **SHA256 Checksums**: Generated for all build artifacts
    - **Security**: Read-only permissions with minimal scope
-   - **Triggers**: Git tags matching `v*.*.*` pattern
+   - **Triggers**: Git tags matching `v*.*.*` pattern, pushes to `dev` branch
 
 ## Security Considerations
 
