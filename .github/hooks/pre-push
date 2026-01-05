@@ -1,0 +1,42 @@
+#!/bin/sh
+# Pre-push hook to run comprehensive tests before pushing
+# This ensures all tests pass before code reaches the remote repository
+
+echo "🚀 Running pre-push validation..."
+
+# Run all tests with coverage
+echo "🧪 Running test suite..."
+pytest tests/ --cov=app --cov-fail-under=70 -v --tb=short -x
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Please fix failing tests before pushing."
+    echo "   Run: pytest tests/ -v"
+    exit 1
+fi
+
+# Run linting
+echo "🔍 Running linters..."
+ruff check app/ tests/
+if [ $? -ne 0 ]; then
+    echo "❌ Linting errors detected. Please fix before pushing."
+    echo "   Run: ruff check app/ tests/ --fix"
+    exit 1
+fi
+
+# Run formatting check
+echo "🎨 Checking code formatting..."
+ruff format --check app/ tests/
+if [ $? -ne 0 ]; then
+    echo "❌ Code formatting issues detected. Please format code before pushing."
+    echo "   Run: ruff format app/ tests/"
+    exit 1
+fi
+
+# Check documentation
+echo "📚 Validating documentation..."
+if [ ! -f "README.md" ] || [ ! -f "CHANGELOG.md" ]; then
+    echo "❌ Missing required documentation files"
+    exit 1
+fi
+
+echo "✅ All pre-push checks passed! Safe to push."
+exit 0

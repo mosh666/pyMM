@@ -1,0 +1,30 @@
+#!/bin/sh
+# Pre-commit hook to run all checks before allowing commit
+# This ensures code quality standards are met
+
+echo "🔍 Running pre-commit checks..."
+
+# Run pre-commit hooks
+if command -v pre-commit >/dev/null 2>&1; then
+    pre-commit run --all-files
+    if [ $? -ne 0 ]; then
+        echo "❌ Pre-commit hooks failed. Please fix the issues before committing."
+        exit 1
+    fi
+else
+    echo "⚠️  pre-commit not installed. Install with: pip install pre-commit"
+    echo "   Then run: pre-commit install"
+    
+    # Fallback to manual checks
+    echo "🔍 Running fallback checks..."
+    
+    # Check for Python syntax errors
+    python -m py_compile app/**/*.py tests/**/*.py 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "❌ Python syntax errors detected"
+        exit 1
+    fi
+fi
+
+echo "✅ Pre-commit checks passed!"
+exit 0

@@ -70,15 +70,31 @@ contributions.
 4. **Install Pre-commit Hooks:**
 
    ```bash
-   # Install pre-commit framework
+   # Automatic setup (recommended)
+   # Windows PowerShell:
+   .\scripts\setup-git-hooks.ps1
+   
+   # Linux/macOS/Git Bash:
+   bash scripts/setup-git-hooks.sh
+   
+   # Manual setup:
    pip install pre-commit
+   pre-commit install --install-hooks
+   pre-commit install --hook-type pre-push
    
-   # Install git hooks
-   pre-commit install
-   
-   # Test hooks (optional)
+   # Test hooks
    pre-commit run --all-files
    ```
+
+   **What pre-commit hooks do:**
+   - 🔍 **Ruff linting** - Auto-fix code style issues
+   - 🎨 **Code formatting** - Ensure consistent formatting
+   - ✅ **File checks** - Trailing whitespace, YAML/TOML syntax
+   - 🔐 **Security** - Detect private keys
+   - 📝 **Markdown linting** - Documentation quality
+   - 🧪 **Unit tests** - Run fast tests on commit
+   - 🚀 **Full test suite** - Run all tests before push
+   - 🔎 **Type checking** - MyPy validation
 
 5. **Run Tests:**
 
