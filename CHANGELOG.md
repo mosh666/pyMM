@@ -10,10 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed - CI/CD Improvements (2026-01-05)
 
 - Updated Codecov action from v4 to v5 with explicit token authentication for better reliability
-- Modified OpenSSF Scorecard schedule to run daily at 08:15 UTC (from weekly on Saturdays)
+- Modified OpenSSF Scorecard schedule to run daily at 07:15 UTC (from weekly on Saturdays)
   - Provides more frequent security metrics and faster vulnerability detection
   - Enables daily monitoring of security best practices compliance
-  - Optimized schedule timing for better resource utilization
+  - Optimized schedule timing for better resource utilization and earlier daily reports
 
 ### Added - GitHub Community Standards
 
