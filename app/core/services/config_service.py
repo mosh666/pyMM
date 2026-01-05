@@ -152,9 +152,6 @@ class ConfigService:
                 user_data = yaml.safe_load(f) or {}
                 config_data = self._merge_dicts(config_data, user_data)
 
-        # Layer 3: Override with environment variables (TODO: implement)
-        # config_data = self._apply_env_overrides(config_data)
-
         # Create Pydantic model from merged data
         self._config = AppConfig(**config_data)
         return self._config

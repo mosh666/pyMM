@@ -208,8 +208,8 @@ class PluginBase(ABC):
                 if attempt < max_retries - 1:
                     continue
                 return False
-            except Exception as e:
-                self.logger.exception(f"  Download exception: {type(e).__name__}: {e}")
+            except Exception:
+                self.logger.exception("  Download exception")
                 import traceback
 
                 traceback.print_exc()
@@ -246,8 +246,8 @@ class PluginBase(ABC):
             self.logger.error(f"  Expected: {expected}")
             self.logger.error(f"  Got:      {calculated}")
             return False
-        except Exception as e:
-            self.logger.exception(f"  Checksum verification error: {e}")
+        except Exception:
+            self.logger.exception("  Checksum verification error")
             return False
 
 
@@ -323,8 +323,8 @@ class SimplePluginImplementation(PluginBase):
             # Clean up archive
             self.archive_path.unlink()
             return True
-        except Exception as e:
-            self.logger.exception(f"  Extraction error: {type(e).__name__}: {e}")
+        except Exception:
+            self.logger.exception("  Extraction error")
             if temp_extract_dir.exists():
                 shutil.rmtree(temp_extract_dir, ignore_errors=True)
             return False
