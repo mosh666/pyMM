@@ -106,7 +106,7 @@ class ProjectService:
                 data = json.load(f)
             return Project.from_dict(data)
         except Exception as e:
-            self.logger.error(f"Error loading project metadata: {e}")
+            self.logger.exception(f"Error loading project metadata: {e}")
             return None
 
     def save_project(self, project: Project) -> None:
@@ -127,7 +127,7 @@ class ProjectService:
             with open(metadata_file, "w", encoding="utf-8") as f:
                 json.dump(project.to_dict(), f, indent=2)
         except Exception as e:
-            self.logger.error(f"Error saving project metadata: {e}")
+            self.logger.exception(f"Error saving project metadata: {e}")
             raise
 
     def delete_project(self, project: Project, delete_files: bool = False) -> None:

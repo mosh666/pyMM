@@ -209,7 +209,7 @@ class PluginBase(ABC):
                     continue
                 return False
             except Exception as e:
-                self.logger.error(f"  Download exception: {type(e).__name__}: {e}")
+                self.logger.exception(f"  Download exception: {type(e).__name__}: {e}")
                 import traceback
 
                 traceback.print_exc()
@@ -247,7 +247,7 @@ class PluginBase(ABC):
             self.logger.error(f"  Got:      {calculated}")
             return False
         except Exception as e:
-            self.logger.error(f"  Checksum verification error: {e}")
+            self.logger.exception(f"  Checksum verification error: {e}")
             return False
 
 
@@ -324,7 +324,7 @@ class SimplePluginImplementation(PluginBase):
             self.archive_path.unlink()
             return True
         except Exception as e:
-            self.logger.error(f"  Extraction error: {type(e).__name__}: {e}")
+            self.logger.exception(f"  Extraction error: {type(e).__name__}: {e}")
             if temp_extract_dir.exists():
                 shutil.rmtree(temp_extract_dir, ignore_errors=True)
             return False
