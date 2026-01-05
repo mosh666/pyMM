@@ -2,8 +2,8 @@
 
 > **Version:** Auto-detected from Git using setuptools_scm  
 > **Last Updated:** January 5, 2026  
-> **Python Support:** 3.12 | 3.13  
-> **Test Suite:** 137+ tests with 73% code coverage  
+> **Python Support:** 3.12 | 3.13 | 3.14  
+> **Test Suite:** 199 tests with 73% code coverage  
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview
@@ -528,6 +528,64 @@ class CustomPlugin(PluginBase):
     def validate_installation(self) -> bool:
         # Custom validation
         return True
+```
+
+## Testing Architecture
+
+### Test Isolation
+
+The test suite implements automatic system drive protection to prevent tests from creating files
+on system drives during test execution.
+
+**Isolation Mechanism:**
+
+- **Global Fixture**: `mock_drive_root` in `tests/conftest.py` (autouse=True)
+- **Method**: Monkey-patches `FileSystemService.get_drive_root()` to return temporary directories
+- **Scope**: Applies to all 199 tests automatically
+- **Cleanup**: Pytest's `tmp_path` fixture handles automatic cleanup
+
+**Benefits:**
+
+- No `pyMM.Logs` or `pyMM.Projects` folders created on C:\ or other system drives
+- Tests run in complete isolation from production environment
+- Parallel test execution is safe
+- No manual cleanup required
+
+### Test Categories
+
+1. **Unit Tests** (98 tests): Test individual modules in isolation
+   - Service layer (config, file system, storage, logging)
+   - Plugin system (base, manager)
+   - Git integration
+   - Project models
+
+2. **Integration Tests** (12 tests): Test workflows across multiple components
+   - Plugin download and installation
+   - Project lifecycle management
+   - Git repository operations
+
+3. **GUI Tests** (89 tests): Test user interface components
+   - First-run wizard (17 tests)
+   - Project dialogs (16 tests)
+   - Views (6 tests)
+   - Settings dialog
+   - Main window navigation
+
+**Coverage:** 73% overall with focus on critical business logic
+
+### Running Tests
+
+```bash
+# All tests
+pytest
+
+# With coverage
+pytest --cov=app --cov-report=html
+
+# Specific category
+pytest tests/unit
+pytest tests/integration
+pytest tests/gui
 ```
 
 ## Troubleshooting

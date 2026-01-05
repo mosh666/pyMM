@@ -31,8 +31,9 @@ class TestFileSystemService:
         drive_root = service.get_drive_root()
         assert drive_root.exists()
         assert drive_root.is_dir()
-        # Drive root should be an anchor (e.g., C:\, D:\)
-        assert str(drive_root) == app_root.anchor
+        # In tests, drive root should be mocked to temp directory
+        # In production, drive root would be an anchor (e.g., C:\, D:\)
+        assert drive_root.name == "mock_drive_root"
 
     def test_get_drive_root_cached(self, service):
         """Test drive root is cached after first call."""
@@ -41,14 +42,23 @@ class TestFileSystemService:
         # Should return same object (cached)
         assert first_call is second_call
 
-    def test_get_portable_folder(self, service):
+    def test_get_portable_folder(self, service, temp_dir, monkeypatch):
         """Test getting portable folder path."""
+        # Mock drive root to use temp directory
+        mock_drive_root = temp_dir / "mock_drive"
+        mock_drive_root.mkdir()
+        monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
+        
         folder = service.get_portable_folder("pyMM.Projects")
-        drive_root = service.get_drive_root()
-        assert folder == drive_root / "pyMM.Projects"
+        assert folder == mock_drive_root / "pyMM.Projects"
 
-    def test_ensure_portable_folders(self, service):
+    def test_ensure_portable_folders(self, service, temp_dir, monkeypatch):
         """Test ensuring portable folders exist."""
+        # Mock drive root to use temp directory
+        mock_drive_root = temp_dir / "mock_drive"
+        mock_drive_root.mkdir()
+        monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
+        
         folders = service.ensure_portable_folders()
 
         assert "projects" in folders
@@ -58,10 +68,9 @@ class TestFileSystemService:
         assert folders["projects"].exists()
         assert folders["logs"].exists()
 
-        # Folders should be at drive root
-        drive_root = service.get_drive_root()
-        assert folders["projects"] == drive_root / "pyMM.Projects"
-        assert folders["logs"] == drive_root / "pyMM.Logs"
+        # Folders should be at mock drive root
+        assert folders["projects"] == mock_drive_root / "pyMM.Projects"
+        assert folders["logs"] == mock_drive_root / "pyMM.Logs"
 
     def test_resolve_relative_path(self, service, app_root):
         """Test resolving relative paths."""

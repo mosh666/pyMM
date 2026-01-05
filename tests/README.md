@@ -1,13 +1,13 @@
 # Test Suite Documentation
 
-This directory contains the comprehensive test suite for pyMediaManager with 137+ tests covering
+This directory contains the comprehensive test suite for pyMediaManager with 199 tests covering
 unit, integration, and GUI components.
 
 ## Overview
 
 **Test Statistics:**
 
-- **Total Tests:** 137+
+- **Total Tests:** 199
 - **Code Coverage:** 73% on core modules
 - **Test Types:** Unit, Integration, GUI
 - **Framework:** pytest with pytest-qt for GUI tests
@@ -39,6 +39,50 @@ tests/
 ├── test_settings_dialog.py     # Manual settings dialog test
 └── README.md                   # This file
 ```
+
+---
+
+## Test Isolation
+
+### Automatic System Drive Protection
+
+The test suite includes automatic isolation to prevent tests from creating files and folders on
+system drives (C:\, D:\, etc.). This is achieved through a global `autouse` fixture in
+[conftest.py](conftest.py) that intercepts all file system operations.
+
+**Key Features:**
+
+- **Automatic Mocking:** All `FileSystemService.get_drive_root()` calls are automatically redirected
+  to temporary directories
+- **No System Pollution:** Tests never create `pyMM.Logs`, `pyMM.Projects`, or any other folders
+  on actual system drives
+- **Transparent Operation:** Tests work identically but in isolated environments
+- **Automatic Cleanup:** All test artifacts are cleaned up after test completion
+- **Zero Configuration:** Works automatically for all tests without changes to test code
+
+**How It Works:**
+
+```python
+# In conftest.py
+@pytest.fixture(autouse=True)
+def mock_drive_root(monkeypatch, tmp_path):
+    """Automatically mock FileSystemService.get_drive_root() to prevent 
+    tests from creating folders on the system drive."""
+    from app.core.services.file_system_service import FileSystemService
+    
+    mock_drive = tmp_path / "mock_drive_root"
+    mock_drive.mkdir(exist_ok=True)
+    
+    def mock_get_drive_root_method(self):
+        self._drive_root = mock_drive
+        return mock_drive
+    
+    monkeypatch.setattr(FileSystemService, "get_drive_root", mock_get_drive_root_method)
+    yield mock_drive
+```
+
+This ensures that even if tests create portable folders like `pyMM.Logs` or `pyMM.Projects`, they
+are created in isolated temporary directories that are automatically cleaned up.
 
 ---
 

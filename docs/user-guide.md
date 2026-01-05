@@ -29,7 +29,7 @@
 - **Python:** 3.12 or 3.13 (3.13 recommended) - Embedded runtime included
 - **Storage:** Minimum 500MB free space (more for plugins and projects)
 - **Recommended:** USB 3.0+ or SSD for portable installation
-- **Reliability:** 137+ tests ensuring stability and quality
+- **Reliability:** 199 tests ensuring stability and quality
 
 ### Installation
 
