@@ -114,6 +114,26 @@ jobs:
           # Extract changelog section for this version (if CHANGELOG.md exists)
           if [ -f CHANGELOG.md ] && [[ $GITHUB_REF == refs/tags/* ]]; then
             sed -n "/## \[$TAG_NAME\]/,/## \[/p" CHANGELOG.md | sed '$d' > release-notes.md
+          elif [[ $GITHUB_REF == refs/heads/dev ]]; then
+            # For latest-beta, generate release notes from recent commits
+            echo "# Latest Beta Release" > release-notes.md
+            echo "" >> release-notes.md
+            echo "**⚠️ Beta Build** - This is an automated rolling release from the \`dev\` branch." >> release-notes.md
+            echo "" >> release-notes.md
+            echo "**Build Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> release-notes.md
+            echo "**Commit:** \`${GITHUB_SHA:0:7}\`" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "## Recent Changes" >> release-notes.md
+            echo "" >> release-notes.md
+            
+            # Get recent commits (last 10)
+            git log --pretty=format:"- %s (\`%h\`)" -n 10 >> release-notes.md
+            
+            echo "" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "---" >> release-notes.md
+            echo "" >> release-notes.md
+            echo "**Note:** Beta builds are updated automatically with each push to the dev branch. For stable releases, see tagged versions." >> release-notes.md
           else
             echo "Release $TAG_NAME" > release-notes.md
             echo "" >> release-notes.md
