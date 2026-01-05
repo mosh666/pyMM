@@ -11,8 +11,7 @@
 
 pyMediaManager is a fully portable, Python-based media management application designed to run
 entirely from removable drives without system installation. It provides a modern Fluent Design
-interface for managing media projects, orchestrating external tools through plugins, and
-maintaining version control integration.
+interface for managing media projects and orchestrating external tools through plugins.
 
 ### Key Features
 
@@ -21,14 +20,14 @@ maintaining version control integration.
 - � **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
 - �🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and templates
-- 🔄 **Git Integration** - Built-in version control with GitPython
+
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
 - 🧪 **Comprehensive Testing** - 199 tests with 73% code coverage and isolated test environment
 
-> **📖 Documentation:**  
+> **📖 Documentation:**
 > [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Contributing](CONTRIBUTING.md) | [CHANGELOG](CHANGELOG.md)
 
 ---
@@ -163,12 +162,30 @@ venv\Scripts\activate  # Windows
 # 3. Install dependencies
 pip install -e ".[dev]"
 
-# 4. Run tests
+# 4. Setup Git hooks (ensures code quality)
+# Windows PowerShell:
+.\scripts\setup-git-hooks.ps1
+
+# Linux/macOS/Git Bash:
+bash scripts/setup-git-hooks.sh
+
+# 5. Run tests
 pytest
 
-# 5. Run application
+# 6. Run application
 python launcher.py
 ```
+
+**Development Workflow:**
+
+The project uses automated pre-commit hooks to ensure code quality:
+
+- ✅ **Pre-commit hooks** - Run linters and formatters automatically
+- ✅ **Pre-push hooks** - Run full test suite before pushing
+- ✅ **CI/CD pipeline** - Comprehensive checks on GitHub
+- ✅ **Coverage requirements** - Maintain 70%+ test coverage
+
+All checks must pass before code can be committed or pushed. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 **Build Portable Distribution:**
 ```bash
@@ -186,7 +203,7 @@ pyMediaManager orchestrates external media tools through a flexible, manifest-ba
 ### Available Plugins
 
 #### Mandatory Plugins
-- **Git** - Version control for projects (70MB)
+- **Git** - Version control system (available as plugin, 70MB)
 - **7-Zip** - Archive extraction for plugin installations (5MB)
 
 #### Optional Plugins
@@ -220,26 +237,18 @@ pyMediaManager orchestrates external media tools through a flexible, manifest-ba
 
 ## Project Management
 
-Organize your media projects with metadata, templates, and version control.
+Organize your media projects with metadata and templates.
 
 ### Features
 
 - ✅ **Create Projects** - Wizard-based project creation with templates
 - ✅ **Project Browser** - Search, filter, and browse projects
 - ✅ **Metadata Storage** - Project descriptions, tags, and custom fields
-- ✅ **Git Integration** - Automatic Git initialization with .gitignore templates
 - ✅ **Recent Projects** - Quick access to recently opened projects
 - ✅ **Project Templates** - Pre-configured templates for common workflows
 
-### Git Integration
-
-Built-in Git support powered by GitPython:
-
-- Initialize repositories for new projects
-- Commit changes with descriptive messages
-- View project history and status
-- Configure Git user (name, email, default branch)
-- Built-in .gitignore templates for media workflows
+**Note:** Git integration has been decoupled from project management. Projects can use Git through
+the Git plugin independently, allowing for flexible version control workflows.
 
 **Storage:** Project metadata stored in `D:\pyMM.Projects\.metadata\`
 
@@ -536,7 +545,7 @@ Automated build and release workflow powered by GitHub Actions.
 - Comprehensive test suite (137+ tests, 73% coverage)
 - Modern Fluent UI with theming
 - Plugin system with retry logic and checksums
-- Project management with Git integration
+- Project management system (decoupled from Git)
 - First-run wizard and settings dialog
 - Rich logging and configuration system
 

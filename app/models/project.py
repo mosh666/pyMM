@@ -21,7 +21,6 @@ class Project:
         created: Creation timestamp
         modified: Last modification timestamp
         description: Optional project description
-        git_enabled: Whether Git integration is enabled
         settings: Project-specific settings dictionary
     """
 
@@ -30,7 +29,6 @@ class Project:
     created: datetime = field(default_factory=datetime.now)
     modified: datetime = field(default_factory=datetime.now)
     description: str | None = None
-    git_enabled: bool = True
     settings: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -48,11 +46,6 @@ class Project:
         """Check if the project directory exists."""
         return self.path.exists()
 
-    @property
-    def is_git_repo(self) -> bool:
-        """Check if the project is a Git repository."""
-        return (self.path / ".git").exists()
-
     def to_dict(self) -> dict[str, Any]:
         """Convert project to dictionary for serialization."""
         return {
@@ -61,7 +54,6 @@ class Project:
             "created": self.created.isoformat(),
             "modified": self.modified.isoformat(),
             "description": self.description,
-            "git_enabled": self.git_enabled,
             "settings": self.settings,
         }
 
@@ -74,6 +66,5 @@ class Project:
             created=datetime.fromisoformat(data["created"]),
             modified=datetime.fromisoformat(data["modified"]),
             description=data.get("description"),
-            git_enabled=data.get("git_enabled", True),
             settings=data.get("settings", {}),
         )

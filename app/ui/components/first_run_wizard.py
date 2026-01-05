@@ -94,13 +94,13 @@ class WelcomePage(WizardPage):
             "• Project-based - organize your media projects<br>"
             "• Version control ready - Git integration built-in"
         )
-        features.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
+        features.setTextFormat(Qt.RichText)
         self.content_layout.addWidget(features)
 
         next_steps = QLabel(
             "<br><b>Next steps:</b><br>We'll help you configure storage and plugins."
         )
-        next_steps.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
+        next_steps.setTextFormat(Qt.RichText)
         self.content_layout.addWidget(next_steps)
 
 
@@ -158,7 +158,7 @@ class StoragePage(WizardPage):
             label += f" - {free_gb:.1f} GB free / {size_gb:.1f} GB total"
 
             item = QListWidgetItem(label)
-            item.setData(Qt.UserRole, drive.drive_letter)  # type: ignore[attr-defined]
+            item.setData(Qt.UserRole, drive.drive_letter)
             self.drive_list.addItem(item)
 
         # Auto-select first drive
@@ -169,7 +169,7 @@ class StoragePage(WizardPage):
         """Handle drive selection."""
         items = self.drive_list.selectedItems()
         if items:
-            drive_letter = items[0].data(Qt.UserRole)  # type: ignore[attr-defined]
+            drive_letter = items[0].data(Qt.UserRole)
             if drive_letter:
                 self.selected_drive = Path(drive_letter)
                 self.drive_selected.emit(self.selected_drive)
@@ -245,7 +245,7 @@ class CompletePage(WizardPage):
             "• Configure application settings<br>"
             "• Explore the documentation"
         )
-        summary.setTextFormat(Qt.RichText)  # type: ignore[attr-defined]
+        summary.setTextFormat(Qt.RichText)
         self.content_layout.addWidget(summary)
 
     def get_data(self) -> dict[str, bool]:
@@ -327,11 +327,11 @@ class FirstRunWizard(QWidget):
         current_page = self.stack.currentWidget()
 
         # Validate current page
-        if not current_page.validate():  # type: ignore[attr-defined]
+        if not current_page.validate():
             return
 
         # Collect data from current page
-        self.collected_data.update(current_page.get_data())  # type: ignore[attr-defined]
+        self.collected_data.update(current_page.get_data())
 
         # Move to next page or finish
         if self.stack.currentIndex() < len(self.pages) - 1:

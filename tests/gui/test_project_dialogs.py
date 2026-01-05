@@ -119,8 +119,6 @@ class TestProjectWizard:
         assert wizard.name_edit.text() == ""
         # Location should have a default
         assert wizard.location_edit.text() != ""  # Default location is set
-        # Git checkbox should exist
-        assert wizard.git_checkbox is not None
 
     def test_name_change_validation(self, qapp, project_service: ProjectService) -> None:
         """Test that changing name triggers validation."""
@@ -142,18 +140,6 @@ class TestProjectWizard:
 
         assert wizard.browse_button is not None
         assert wizard.browse_button.isEnabled()
-
-    def test_git_integration_checkbox(self, qapp, project_service: ProjectService) -> None:
-        """Test Git integration checkbox."""
-        wizard = ProjectWizard(project_service)
-
-        assert wizard.git_checkbox is not None
-        # Default should be checked
-        assert wizard.git_checkbox.isChecked()
-
-        # Can toggle
-        wizard.git_checkbox.setChecked(False)
-        assert not wizard.git_checkbox.isChecked()
 
     def test_create_button_exists(self, qapp, project_service: ProjectService) -> None:
         """Test that create button exists."""
@@ -184,10 +170,8 @@ class TestProjectWizard:
         wizard.name_edit.setText("Test Project")
         wizard.location_edit.setText(str(tmp_path))
         wizard.description_edit.setPlainText("Test description")
-        wizard.git_checkbox.setChecked(True)
 
         # Verify all fields
         assert wizard.name_edit.text() == "Test Project"
         assert wizard.location_edit.text() == str(tmp_path)
         assert wizard.description_edit.toPlainText() == "Test description"
-        assert wizard.git_checkbox.isChecked()

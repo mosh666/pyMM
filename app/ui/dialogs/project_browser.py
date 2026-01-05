@@ -111,9 +111,8 @@ class ProjectBrowserDialog(QDialog):
 
             # Format display text
             status = "✓" if project.exists else "✗"
-            git_icon = "📁" if project.is_git_repo else "📂"
 
-            name = f"{git_icon} {project.name}"
+            name = f"📁 {project.name}"
             path_str = str(project.path)
             modified_str = project.modified.strftime("%Y-%m-%d %H:%M")
 

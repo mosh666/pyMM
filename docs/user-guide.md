@@ -1,6 +1,6 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git (latest-beta)  
+**Version:** Auto-detected from Git (latest-beta)
 **Last Updated:** January 5, 2026
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
@@ -12,12 +12,11 @@
 3. [Project Management](#project-management)
 4. [Plugin Management](#plugin-management)
 5. [Storage & Portability](#storage--portability)
-6. [Git Integration](#git-integration)
-7. [Settings & Configuration](#settings--configuration)
-8. [Troubleshooting](#troubleshooting)
-9. [Keyboard Shortcuts](#keyboard-shortcuts)
-10. [Support & Resources](#support--resources)
-11. [Tips & Tricks](#tips--tricks)
+6. [Settings & Configuration](#settings--configuration)
+7. [Troubleshooting](#troubleshooting)
+8. [Keyboard Shortcuts](#keyboard-shortcuts)
+9. [Support & Resources](#support--resources)
+10. [Tips & Tricks](#tips--tricks)
 
 ---
 
@@ -84,14 +83,14 @@ All external drives are suitable for portable pyMediaManager installation.
 ### Recommended First Steps
 
 1. **Install Core Plugins** (Essential tools):
-   - Git - Version control for projects
    - ExifTool - Media metadata extraction
    - FFmpeg - Video processing
+   - Git - Version control system (available as plugin)
 
 2. **Create Your First Project**:
    - Click "New Project" in the toolbar
    - Choose a name and location
-   - Optionally initialize Git repository
+   - Select optional project template
 
 3. **Configure Settings**:
    - Open Settings (gear icon)
@@ -113,18 +112,18 @@ Projects are the primary way to organize your media work in pyMediaManager.
    - **Name:** Project identifier (e.g., "vacation-2026")
    - **Location:** Where to store project files
    - **Template:** Optional starter structure
-   - **Git:** Check to initialize version control
 3. Click **"Create"**
 
 **Project Structure:**
 ```
 D:\pyMM.Projects\vacation-2026\
-├── .git\              # Git repository (if enabled)
-├── .gitignore         # Ignore rules
 ├── photos\            # Organized media
 ├── videos\
 └── exports\
 ```
+
+**Note:** Git integration has been decoupled from project management. If you want to use
+version control, you can initialize a Git repository manually using the Git plugin.
 
 ### Managing Projects
 
@@ -293,7 +292,7 @@ pyMediaManager is designed to move seamlessly:
 - Install on fast drive (USB 3.0+, SSD)
 - Keep 500MB+ free space for plugins
 - Regular backups of `pyMM.Projects\`
-- Use Git for project version control
+- Consider using Git plugin for project version control if needed
 
 ### Moving Between Drives
 
@@ -361,13 +360,11 @@ Shows:
 
 **Git Configuration:**
 
-Configure Git settings in `Settings > Git`:
-- Set your name and email for commits
-- Choose default branch name (main/master)
-- Enable auto-initialization for new projects
-- Git path is auto-detected from installed plugin
+Git is available as a standalone plugin and can be configured independently
+for your project workflows. Use external Git tools or command line for
+repository management.
 
-### Git Best Practices
+### Version Control Best Practices
 
 **Good Commit Messages:**
 ```
@@ -386,7 +383,7 @@ Configure Git settings in `Settings > Git`:
 - ❌ Final exports (optional)
 
 **Using .gitignore:**
-Default `.gitignore` excludes:
+Recommended `.gitignore` entries:
 - `*.tmp`, `*.cache`
 - `__pycache__/`
 - `.DS_Store`, `Thumbs.db`

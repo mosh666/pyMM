@@ -28,8 +28,8 @@ def run_application() -> int:
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # type: ignore[attr-defined]
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # type: ignore[attr-defined]
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
     from app import __version__
 
@@ -99,7 +99,7 @@ def run_application() -> int:
         main_window.show()
 
         # Store reference to prevent garbage collection
-        app.main_window = main_window  # type: ignore[attr-defined]
+        app.main_window = main_window
 
     # Check first-run state
     if config.ui.show_first_run:
@@ -132,7 +132,7 @@ def run_application() -> int:
         # Show main window directly
         show_main_window()
 
-    return app.exec()
+    return int(app.exec())
 
 
 if __name__ == "__main__":

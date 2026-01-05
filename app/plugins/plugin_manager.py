@@ -7,7 +7,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 from app.plugins.plugin_base import PluginBase, PluginManifest, SimplePluginImplementation
 

@@ -36,7 +36,7 @@ class ProjectWizard(QDialog):
     - Project name
     - Project location
     - Description
-    - Git integration
+    - Project structure options
     """
 
     def __init__(self, project_service: ProjectService, parent: "QWidget | None" = None) -> None:
@@ -101,11 +101,6 @@ class ProjectWizard(QDialog):
         # Options section
         options_group = QGroupBox("Options")
         options_layout = QVBoxLayout(options_group)
-
-        self.git_checkbox = QCheckBox("Initialize Git repository")
-        self.git_checkbox.setChecked(True)
-        self.git_checkbox.setToolTip("Create a Git repository for version control")
-        options_layout.addWidget(self.git_checkbox)
 
         self.template_checkbox = QCheckBox("Use default project structure")
         self.template_checkbox.setChecked(True)
@@ -193,7 +188,6 @@ class ProjectWizard(QDialog):
         name = self.name_edit.text().strip()
         location = self.location_edit.text().strip()
         description = self.description_edit.toPlainText().strip()
-        git_enabled = self.git_checkbox.isChecked()
         use_template = self.template_checkbox.isChecked()
 
         # Sanitize project name for directory
@@ -224,7 +218,6 @@ class ProjectWizard(QDialog):
                     name=name,
                     path=project_path,
                     description=description if description else None,
-                    git_enabled=git_enabled,
                 )
                 self.project_service.save_project(self.created_project)
             else:
@@ -233,13 +226,8 @@ class ProjectWizard(QDialog):
                     name=name,
                     path=project_path,
                     description=description if description else None,
-                    git_enabled=git_enabled,
                     use_template="default" if use_template else None,
                 )
-
-            # Initialize Git if requested
-            if git_enabled and not self.created_project.is_git_repo:
-                self.project_service.init_git_repository(self.created_project, initial_commit=True)
 
             QMessageBox.information(
                 self,

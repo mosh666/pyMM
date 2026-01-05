@@ -1,5 +1,7 @@
 # Pre-commit hooks for pyMediaManager
 # See https://pre-commit.com for more information
+# Run: pre-commit install
+# Test: pre-commit run --all-files
 
 repos:
   # Ruff - fast Python linter and formatter
@@ -9,19 +11,118 @@ repos:
       # Run the linter
       - id: ruff
         args: [--fix]
+        name: Ruff Linter (auto-fix)
       # Run the formatter
       - id: ruff-format
+        name: Ruff Formatter
 
   # Basic file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        name: Trim Trailing Whitespace
       - id: end-of-file-fixer
+        name: Fix End of Files
       - id: check-yaml
+        name: Check YAML Syntax
       - id: check-added-large-files
         args: ['--maxkb=1000']
+        name: Check for Large Files (>1MB)
       - id: check-merge-conflict
+        name: Check for Merge Conflicts
       - id: check-toml
+        name: Check TOML Syntax
       - id: mixed-line-ending
         args: ['--fix=lf']
+        name: Fix Mixed Line Endings
+      - id: check-json
+        name: Check JSON Syntax
+      - id: check-case-conflict
+        name: Check Filename Case Conflicts
+      - id: detect-private-key
+        name: Detect Private Keys
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.42.0
+    hooks:
+      - id: markdownlint
+        name: Markdown Linter
+        args: [--fix, --disable, MD013, MD024, MD033, MD041]
+
+  # Python type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        name: MyPy Type Checker
+        additional_dependencies:
+          - types-PyYAML
+          - types-aiofiles
+          - pydantic>=2.5.0
+        args: [--ignore-missing-imports, --no-strict-optional]
+        files: ^app/
+
+  # Run pytest before commit (fast tests only)
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: PyTest - Unit Tests (Fast)
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        args:
+          - tests/unit/
+          - -v
+          - --tb=short
+          - -x
+          - --no-cov
+        stages: [pre-commit]
+
+      - id: pytest-full
+        name: PyTest - All Tests (Pre-Push)
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        args:
+          - tests/
+          - -v
+          - --cov=app
+          - --cov-report=term-missing:skip-covered
+          - --cov-fail-under=70
+        stages: [pre-push]
+
+      - id: docs-check
+        name: Documentation Validation
+        entry: python
+        language: system
+        pass_filenames: false
+        always_run: true
+        args:
+          - -c
+          - |
+            import re
+            import sys
+            from pathlib import Path
+
+            # Check for TODO/FIXME in docs
+            docs_path = Path('docs')
+            readme = Path('README.md')
+
+            issues = []
+            for doc in [readme] + list(docs_path.glob('*.md')):
+                content = doc.read_text(encoding='utf-8')
+                if 'TODO' in content or 'FIXME' in content:
+                    issues.append(f"{doc}: Contains TODO/FIXME")
+
+            if issues:
+                print("⚠️  Documentation issues found:")
+                for issue in issues:
+                    print(f"  - {issue}")
+                print("\n✅ Note: This is a warning, not blocking commit")
+            else:
+                print("✅ Documentation validation passed")
+        stages: [pre-push]
