@@ -145,6 +145,18 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 
 ## Core Components
 
+### Service Architecture
+
+pyMediaManager uses a service-oriented architecture with dependency injection:
+
+- **ConfigService**: YAML-based configuration with Pydantic validation and sensitive data redaction
+- **FileSystemService**: Portable path resolution and file operations
+- **StorageService**: Drive detection, management, and removable drive identification
+- **LoggingService**: Rich console and rotating file logs with structured logging
+- **ProjectService**: Project lifecycle management and metadata
+- **GitService**: Git repository operations using GitPython library
+- **PluginManager**: Plugin discovery, installation, and lifecycle management
+
 ### 1. FileSystemService
 
 **Purpose**: Abstraction layer for file operations with portable path handling
@@ -223,21 +235,63 @@ is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
 ```text
 
 ### 3. ConfigService
-**Purpose**: Layered configuration management with Pydantic validation
+
+**Purpose**: Layered configuration management with Pydantic validation and security
 
 **Configuration Layers** (in order of precedence):
-1. **Defaults**: Built-in defaults in Pydantic models
-2. **Default File**: `config/app.yaml` (version controlled)
-3. **User File**: `config/user.yaml` (gitignored)
-4. **Environment**: Environment variable overrides (future)
 
-**Features**:
-- Type-safe configuration with Pydantic
-- Automatic validation
-- Sensitive data redaction
-- Export with/without secrets
+1. **Defaults**: Built-in defaults in Pydantic models
+2. **Default File**: `config/app.yaml` (version controlled, read-only)
+3. **User File**: `config/user.yaml` (gitignored, user customizations)
+4. **Environment**: Environment variable overrides (future enhancement)
+
+**Security Features**:
+
+- **Automatic Redaction**: Sensitive fields (password, token, api_key, secret) automatically redacted in logs and exports
+- **Type Validation**: Pydantic ensures all config values match expected types
+- **Schema Evolution**: Forward-compatible configuration loading
+- **Export Control**: `redact_sensitive=True` option for safe config sharing
+
+**Configuration Structure**:
+
+```yaml
+app:
+  name: pyMediaManager
+  version: auto  # Managed by setuptools_scm
+  
+ui:
+  theme: auto  # light, dark, or auto
+  show_first_run: true
+  language: en
+
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  console: true
+  file: true
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
+plugins:
+  auto_install_mandatory: true
+  download_timeout: 300
+  retry_attempts: 3
+  verify_checksums: true
+
+storage:
+  default_drive: null
+  project_root: pyMM.Projects
+  plugin_dir: pyMM.Plugins
+  log_dir: pyMM.Logs
+
+git:
+  user_name: ""
+  user_email: ""
+  auto_initialize: false
+  default_branch: main
+```
 
 **Usage**:
+
 ```python
 from pathlib import Path
 from app.core.services.config_service import ConfigService, AppConfig
@@ -289,7 +343,88 @@ logger.info("Application started")
 - **Benefits**: Better debugging, production monitoring, log filtering by level, centralized output control
 - **Consistency**: All 15+ modules now use logger instances from `logging.getLogger(__name__)`
 
-### 5. PluginManager
+### 5. ProjectService
+
+**Purpose**: Manage project lifecycle and metadata
+
+**Features**:
+
+- Project creation with templates
+- Metadata tracking (created date, last modified, Git status)
+- Project validation and integrity checks
+- Recent projects list management
+- Project browser integration
+
+**Usage**:
+
+```python
+from pathlib import Path
+from app.services.project_service import ProjectService, Project
+
+project_service = ProjectService(file_system_service, config_service)
+
+# Create new project
+project: Project = await project_service.create_project(
+    name="vacation-2026",
+    location=Path("D:\\pyMM.Projects"),
+    initialize_git=False  # Git is now optional
+)
+
+# List all projects
+projects: list[Project] = project_service.list_projects()
+
+# Get project metadata
+project_info: dict[str, Any] = project_service.get_project_info(project_path)
+```
+
+### 6. GitService
+
+**Purpose**: Git repository operations using GitPython
+
+**Features**:
+
+- Initialize repositories with custom branch names
+- Commit changes with author information
+- Check repository status (modified, staged, untracked files)
+- View commit history with pagination
+- Branch management
+- Remote repository operations (future)
+
+**Usage**:
+
+```python
+from pathlib import Path
+from app.services.git_service import GitService, CommitInfo
+
+git_service = GitService()
+
+# Initialize repository
+repo_path = Path("D:\\pyMM.Projects\\my-project")
+git_service.init_repository(
+    repo_path,
+    initial_branch="main",
+    user_name="John Doe",
+    user_email="john@example.com"
+)
+
+# Check status
+status: dict[str, list[str]] = git_service.get_status(repo_path)
+print(f"Modified: {status['modified']}")
+print(f"Untracked: {status['untracked']}")
+
+# Commit changes
+git_service.commit(
+    repo_path,
+    message="Add new photos from beach shoot",
+    author_name="John Doe",
+    author_email="john@example.com"
+)
+
+# View history
+commits: list[CommitInfo] = git_service.get_log(repo_path, max_count=10)
+```
+
+### 7. PluginManager
 
 **Purpose**: Discover, install, and manage plugins
 
@@ -301,24 +436,39 @@ logger.info("Application started")
 4. **Usage**: Execute plugin commands
 5. **Uninstallation**: Remove plugin directory
 
-**Plugin Manifest Structure**:
+**Plugin Security**:
+
+- **Download Verification**: SHA256 checksum validation (when enabled in config)
+- **Retry Logic**: Automatic retry on network failures (up to 3 attempts with exponential backoff)
+- **Timeout Protection**: Configurable download timeout (default 300 seconds)
+- **Progress Tracking**: Real-time download progress callbacks for UI integration
+- **Source Validation**: Downloads only from URLs specified in manifests
+- **Integrity Checks**: Validates plugin structure after extraction
 
 ```yaml
 name: FFmpeg
 version: "7.1.0"
-mandatory: false
-enabled: true
+mandatory: false  # Required for core functionality
+enabled: true     # Auto-enable after installation
 
 source:
   type: url
   base_uri: https://example.com/ffmpeg.zip
+  checksum: sha256:abc123...  # Optional SHA256 for verification
 
 command:
-  path: bin
+  path: bin       # Relative path to executable directory
   executable: ffmpeg.exe
 
-register_to_path: true
-dependencies: []
+register_to_path: true  # Add to process PATH
+dependencies: []        # Other plugins required
+
+metadata:
+  description: "Video and audio processing"
+  homepage: "https://ffmpeg.org"
+  license: "GPL-3.0"
+  platform: windows
+  architecture: x64
 ```
 
 **Usage**:
@@ -350,42 +500,127 @@ os.environ['PATH'] = os.pathsep.join([str(p) for p in paths]) + os.pathsep + os.
 
 pyMediaManager uses **PyQt-Fluent-Widgets** for modern, consistent UI:
 
-- **NavigationInterface**: Side navigation with collapsible menu
-- **FluentWindow**: Main window with fluent styling
-- **Theme Support**: Light, dark, and auto (system) themes
-- **Acrylic Effects**: Transparency and blur effects
+- **FluentWindow**: Main window with fluent styling and acrylic effects
+- **NavigationInterface**: Side navigation with collapsible menu and smooth transitions
+- **Theme Support**: Light, dark, and auto (follows system theme)
+- **Acrylic Effects**: Transparency and blur effects for modern appearance
+- **Responsive Layout**: Adapts to different window sizes
 
-### View Pattern
+### UI Components
 
-Each major feature has a dedicated view:
+#### Main Window (MainWindow)
 
-- **StorageView**: Manage drives
-- **PluginView**: Install/update plugins
-- **ProjectView**: Create/manage projects
-- **Settings**: Configure application
+**Navigation Structure**:
 
-### First-Run Wizard
+- **Top Navigation**:
+  - Home: Dashboard and quick actions
+  - Storage View: Drive management and status
+  - Plugin View: Plugin installation and updates
+  - Project View: Project browser and management
+  
+- **Bottom Navigation**:
+  - Settings: Application configuration (5 tabs)
+
+**All views properly initialized** with:
+
+- `setObjectName()` set to prevent Qt warnings
+- Proper parent-child relationships
+- Signal/slot connections for inter-component communication
+
+#### Storage View
+
+**Features**:
+
+- Display all available drives (fixed, removable, external)
+- Enhanced external drive detection using WMI
+- Show drive capacity, free space, and file system
+- Identify removable/external drives with indicators
+- Select default drive for portable operation
+
+#### Plugin View
+
+**Features**:
+
+- Grid layout showing all available plugins
+- Status indicators (installed, available, error)
+- Install/uninstall buttons with progress tracking
+- Plugin details (version, size, description)
+- Automatic detection of plugin availability
+- Batch operations (install multiple plugins)
+
+#### Project View
+
+**Features**:
+
+- Recent projects list
+- Project browser with search and filtering
+- Quick actions (New Project, Open, Delete)
+- Project metadata display (Git status, size, dates)
+- Integration with ProjectWizard for creation
+
+### Dialog Components
+
+#### FirstRunWizard
 
 **Purpose**: Guide new users through initial setup
 
 **Pages**:
 
-1. **Welcome**: Introduction and features
-2. **Storage**: Select portable drive for projects/logs
-3. **Plugins**: Choose optional plugins to install
-4. **Complete**: Summary and "don't show again" option
+1. **Welcome Page**: Introduction and feature overview
+2. **Storage Page**: Select portable drive for projects/logs with enhanced drive detection
+3. **Plugin Page**: Choose optional plugins to install (mandatory plugins installed automatically)
+4. **Complete Page**: Summary and "don't show again" option
 
-**Integration**:
+**Features**:
 
-```python
-from app.ui.components.first_run_wizard import FirstRunWizard
+- Comprehensive validation at each step
+- Progress tracking (page 1 of 4)
+- Skip option after first completion
+- Persistent settings in user.yaml
 
-# Check if first run
-if config.ui.show_first_run:
-    wizard: FirstRunWizard = FirstRunWizard(storage_service, optional_plugins)
-    wizard.finished.connect(on_setup_complete)
-    wizard.show()
-```
+#### ProjectWizard
+
+**Purpose**: Create new projects with templates
+
+**Fields**:
+
+- Project name (validated, no special characters)
+- Location selection with browse button
+- Optional Git initialization (now optional, not automatic)
+- Template selection (None, Basic, Photography, Video)
+- Description and metadata
+
+#### ProjectBrowser
+
+**Purpose**: Browse and manage all projects
+
+**Features**:
+
+- Search by name or location
+- Filter by Git status, date range
+- Sort by name, date, size
+- Context menu (Open, Delete, Show in Explorer)
+- Keyboard navigation and shortcuts
+
+#### SettingsDialog
+
+**Purpose**: Configure all application settings
+
+**Tabs** (5 total):
+
+1. **General**: Theme, language, logging level, application name
+2. **Plugins**: Auto-install, timeout, retry, checksum verification, paths
+3. **Storage**: Default drive, project root, log location, max log size
+4. **Git**: User name/email, auto-initialize, default branch, executable path
+5. **About**: Version info (auto-detected from Git), Python version, dependencies, test coverage
+
+**Features**:
+
+- Real-time validation
+- Apply/OK/Cancel buttons
+- Tabbed interface for organization
+- Help tooltips on hover
+- Version information with setuptools_scm integration
 
 ## Portable Path Management
 
@@ -513,51 +748,188 @@ def test_button_click(qtbot: QtBot) -> None:
 **GitHub Actions Workflows**:
 
 1. **ci.yml** - Continuous Integration
-   - **Matrix Testing**: Python 3.12, 3.13, 3.14 (forward compatibility)
-   - **Code Quality**: Ruff linting and formatting checks
-   - **Test Execution**: Full test suite with pytest
-   - **Coverage Reports**: 70% minimum enforced, HTML reports in artifacts
-   - **Triggers**: Push to all branches, pull requests
+   - **Matrix Testing**: Python 3.12, 3.13, 3.14 for forward compatibility
+   - **Code Quality**:
+     - Ruff linting with auto-fix suggestions
+     - Ruff formatting checks
+     - MyPy static type checking
+     - Bandit security scanning
+   - **Test Execution**: Full test suite (193 tests) with pytest
+   - **Coverage Reports**:
+     - 70% minimum enforced (fails build if below)
+     - HTML reports uploaded as artifacts
+     - Codecov integration for tracking
+   - **Triggers**: Push to all branches, all pull requests
+   - **Runtime**: ~5-8 minutes per Python version
 
 2. **build.yml** - Build Automation
-   - **Python Embeddable Caching**: Speeds up builds by caching runtimes
-   - **Multi-Version Builds**: Separate packages for Python 3.12 and 3.13
+   - **Python Embeddable Caching**: Speeds up builds by caching downloaded runtimes
+   - **Multi-Version Builds**:
+     - Separate ZIP packages for Python 3.12, 3.13, 3.14
+     - Each includes embedded runtime + dependencies
    - **Pre-Build Testing**: Full test suite runs before building
-   - **Artifact Upload**: ZIP packages uploaded as workflow artifacts
+   - **Artifact Upload**: ZIP packages available for download in workflow artifacts
+   - **Naming Convention**: `pyMM-vX.Y.Z-py3XX-win64.zip`
    - **Triggers**: Manual workflow dispatch
+   - **Runtime**: ~15-20 minutes for all versions
 
 3. **release.yml** - Release Management
    - **Branch-Based Releases**:
-     - `dev` branch → Beta releases (prerelease flag)
+     - `dev` branch → Beta releases (prerelease flag set)
      - `main` branch → Stable releases
-   - **Automatic Tagging**: `latest-beta` rolling tag on `dev` pushes
-   - **Asset Management**: Automatically cleans old assets from `latest-beta` before uploading new builds
-   - **GitHub Releases**: Created with changelog and download links
-   - **Version Detection**: Uses setuptools_scm for automatic versioning
-   - **Multi-Python Support**: Builds for Python 3.12, 3.13, and 3.14
-   - **SHA256 Checksums**: Generated for all build artifacts
-   - **Security**: Read-only permissions with minimal scope
-   - **Triggers**: Git tags matching `v*.*.*` pattern, pushes to `dev` branch
+     - Git tags (`v*.*.*` pattern) → Version-specific releases
+   - **Automatic Tagging**:
+     - `latest-beta` rolling tag on `dev` branch pushes
+     - Automatically updated with each dev push
+     - Old assets cleaned before new upload
+   - **Asset Management**:
+     - Builds for Python 3.12, 3.13, 3.14
+     - SHA256 checksums for all artifacts
+     - Automatic cleanup of old assets from rolling tags
+   - **GitHub Releases**:
+     - Created with changelog extraction
+     - Download links for all Python versions
+     - Source code archives (zip, tar.gz)
+   - **Version Detection**: setuptools_scm for automatic versioning
+   - **Security**:
+     - Read-only permissions by default
+     - Minimal scope for write operations
+     - No secrets exposed in logs
+   - **Triggers**:
+     - Git tags matching `v*.*.*`
+     - Pushes to `dev` branch (beta releases)
+   - **Runtime**: ~25-30 minutes for full release
+
+4. **security.yml** - Security Scanning (CodeQL)
+   - **Scheduled**: Weekly on Mondays at 00:00 UTC
+   - **On-Demand**: Pull requests affecting code
+   - **Analysis**:
+     - CodeQL for Python security issues
+     - SQL injection detection
+     - Command injection detection
+     - Path traversal vulnerabilities
+     - Insecure cryptography usage
+   - **Integration**: Results appear in GitHub Security tab
+   - **Runtime**: ~5-10 minutes
+
+5. **scorecard.yml** - OpenSSF Scorecard
+   - **Scheduled**: Daily at 08:00 UTC
+   - **On-Demand**: Pushes to `main` branch
+   - **Checks**:
+     - Branch protection enforcement
+     - Code review requirements
+     - CI test coverage
+     - Dependency update practices
+     - Security policy presence
+     - SAST tool usage
+     - Signed releases
+     - Token permissions
+   - **Publishing**:
+     - Results published to OpenSSF database
+     - Badge available for README
+     - Trends tracked over time
+   - **Runtime**: ~3-5 minutes
+
+**Dependabot Configuration**:
+
+- **pip Dependencies**: Daily checks
+- **GitHub Actions**: Daily checks
+- **Grouped Updates**: Related updates batched together
+- **Auto-Merge**: Not enabled (manual review required)
+- **Security Updates**: Immediate notification
+
+**Workflow Best Practices**:
+
+- All workflows use minimal permissions
+- Caching for Python dependencies and embeddable runtimes
+- Fail-fast strategy for quick feedback
+- Comprehensive logging for debugging
+- Artifact retention: 90 days
 
 ## Security Considerations
 
 ### Sensitive Data Handling
 
-- Config redaction: `password`, `token`, `api_key`, `secret` auto-redacted
-- Logs: Sensitive values never logged
-- Export: `redact_sensitive=True` option for config export
+**Configuration Security**:
+
+- **Automatic Redaction**: Fields named `password`, `token`, `api_key`, `secret` automatically redacted
+- **Export Control**: `redact_sensitive=True` option for safe config sharing
+- **No Logging**: Sensitive values never appear in log files
+- **Validation**: Pydantic ensures type safety prevents injection attacks
+
+**Example Redaction**:
+
+```yaml
+# Original config
+database:
+  host: localhost
+  password: super_secret_123
+  
+# Exported with redaction
+database:
+  host: localhost
+  password: "***REDACTED***"
+```
 
 ### Plugin Security
 
-- **Source Verification**: Download URLs in manifests
-- **Checksum Validation**: Future enhancement
-- **Sandboxing**: Plugins run in same process (trust model)
+**Download Security**:
 
-### Future Enhancements
+- **SHA256 Checksums**: Optional checksum verification in manifests (planned)
+- **HTTPS Only**: Plugin downloads require HTTPS URLs
+- **Retry Logic**: Automatic retry with exponential backoff (3 attempts)
+- **Timeout Protection**: Configurable download timeout (default 300s)
+- **Progress Tracking**: Real-time monitoring for hung downloads
 
-- Digital signatures for plugins
-- SHA-256 checksums in manifests
-- Plugin permission system
+**Current Security Model**:
+
+- Plugins run in same process (trusted plugin model)
+- Plugins have full file system access
+- Manual review of plugin manifests before merging
+- Community-maintained plugin repository
+
+### Security Scanning
+
+**Pre-commit Hooks**:
+
+- **Bandit**: Python security linter scans for:
+  - Hardcoded passwords and secrets
+  - SQL injection vulnerabilities
+  - Use of insecure functions (eval, exec)
+  - Weak cryptography
+  - Path traversal vulnerabilities
+  - Shell injection risks
+
+**Continuous Integration**:
+
+- **CodeQL**: Daily automated security scanning
+  - Detects complex security vulnerabilities
+  - Tracks security advisories
+  - Integration with GitHub Security tab
+  
+- **OpenSSF Scorecard**: Weekly security posture assessment
+  - Branch protection enforcement
+  - Code review requirements
+  - Dependency update practices
+  - SAST (Static Application Security Testing)
+  - Vulnerability disclosure
+  - Published to OpenSSF database
+
+- **Dependabot**: Automated dependency updates
+  - Daily checks for vulnerabilities
+  - Automatic PR creation for updates
+  - Grouped updates for efficiency
+  - Security advisories integration
+
+### Future Security Enhancements
+
+**Planned Improvements**:
+
+1. **Plugin Signatures**: Digital signatures for plugin verification
+2. **Plugin Sandboxing**: Process isolation for untrusted plugins
+3. **Permission System**: Granular plugin permissions (file access, network, etc.)
+4. **SBOM Generation**: Software Bill of Materials for supply chain security
+5. **Reproducible Builds**: Bit-for-bit reproducible releases
 
 ## Performance Considerations
 
