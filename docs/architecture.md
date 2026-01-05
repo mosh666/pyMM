@@ -3,7 +3,8 @@
 > **Version:** Auto-detected from Git using setuptools_scm
 > **Last Updated:** January 5, 2026
 > **Python Support:** 3.12 | 3.13 | 3.14
-> **Test Suite:** 199 tests with 73% code coverage
+> **Test Suite:** 193 tests with 72.77% code coverage
+> **Quality Gates:** 15+ pre-commit checks (Ruff, Black, MyPy, Security)
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview

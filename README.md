@@ -2,10 +2,12 @@
 
 Portable Python-based media management application with modern Fluent Design UI
 
-[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue)](https://www.python.org)
+[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)](https://www.python.org)
 [![Status](https://img.shields.io/badge/status-beta-yellow)](https://github.com/mosh666/pyMM)
+[![Tests](https://img.shields.io/badge/tests-193%20passing-brightgreen)](https://github.com/mosh666/pyMM)
+[![Coverage](https://img.shields.io/badge/coverage-72.77%25-success)](https://github.com/mosh666/pyMM)
 
 ## Overview
 
@@ -17,15 +19,15 @@ interface for managing media projects and orchestrating external tools through p
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
 - 💾 **100% Portable** - Zero system installation, runs from USB/external drives
-- � **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
-- �🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
+- 🔍 **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
+- 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and templates
-
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - 199 tests with 73% code coverage and isolated test environment
+- 🧪 **Comprehensive Testing** - 193 tests with 72.77% code coverage and isolated test environment
+- 🎯 **Quality Gates** - 15+ pre-commit checks with Ruff, Black, MyPy, and security validation
 
 > **📖 Documentation:**
 > [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Contributing](CONTRIBUTING.md) | [CHANGELOG](CHANGELOG.md)
@@ -208,21 +210,20 @@ pyMediaManager orchestrates external media tools through a flexible, manifest-ba
 
 #### Mandatory Plugins
 
-- **Git** - Version control system (available as plugin, 70MB)
-- **7-Zip** - Archive extraction for plugin installations (5MB)
+- **Git** (v2.48.1) - Distributed version control system
+- **digiKam** (v8.5.0) - Professional photo management application
+- **MariaDB** (v11.6.2) - Database backend for digiKam
 
 #### Optional Plugins
 
-| Plugin | Purpose | Size |
+| Plugin | Purpose | Latest Version |
 | --- | --- | --- |
-| **ExifTool** | Metadata extraction/editing | 8MB |
-| **FFmpeg** | Video/audio processing | 100MB |
-| **digiKam** | Photo management suite | 500MB |
-| **ImageMagick** | Image manipulation | 30MB |
-| **MKVToolNix** | Matroska container tools | 35MB |
-| **Git LFS** | Large file storage for Git | 10MB |
-| **GitVersion** | Semantic versioning from Git | 15MB |
-| **MariaDB** | Database backend | 200MB |
+| **ExifTool** | Metadata extraction/editing | Latest |
+| **FFmpeg** | Video/audio processing | Latest |
+| **ImageMagick** | Image manipulation | Latest |
+| **MKVToolNix** | Matroska container tools | Latest |
+| **Git LFS** | Large file storage for Git | Latest |
+| **GitVersion** | Semantic versioning from Git | Latest |
 
 ### Plugin Features
 
@@ -433,10 +434,11 @@ pytest tests/unit tests/integration
 
 **Test Statistics:**
 
-- **Total Tests:** 137+
-- **Code Coverage:** 73% on core modules
+- **Total Tests:** 193 passing
+- **Code Coverage:** 72.77% (exceeds 70% requirement)
 - **Test Types:** Unit, Integration, GUI (pytest-qt)
 - **Markers:** `integration`, `slow`, `ui`
+- **Test Environment:** Isolated with automatic temp directory fixtures
 
 ### Code Quality Tools
 

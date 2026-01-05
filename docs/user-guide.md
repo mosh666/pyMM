@@ -2,6 +2,8 @@
 
 **Version:** Auto-detected from Git (latest-beta)
 **Last Updated:** January 5, 2026
+**Test Suite:** 193 tests with 72.77% coverage
+**Python Support:** 3.12, 3.13, 3.14
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
 
@@ -25,10 +27,10 @@
 ### System Requirements
 
 - **Operating System:** Windows 10/11 (64-bit)
-- **Python:** 3.12 or 3.13 (3.13 recommended) - Embedded runtime included
+- **Python:** 3.12, 3.13, or 3.14 (3.13 recommended) - Embedded runtime included
 - **Storage:** Minimum 500MB free space (more for plugins and projects)
 - **Recommended:** USB 3.0+ or SSD for portable installation
-- **Reliability:** 199 tests ensuring stability and quality
+- **Reliability:** 193 tests ensuring stability and quality
 
 ### Installation
 

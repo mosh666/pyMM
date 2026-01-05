@@ -26,7 +26,7 @@ contributions.
 
 ### Prerequisites
 
-- **Python:** 3.12 or 3.13 (3.13 recommended)
+- **Python:** 3.12, 3.13, or 3.14 (3.13 recommended)
 - **Git:** Latest version
 - **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
 - **IDE:** VS Code recommended (with Python extension)
@@ -150,19 +150,44 @@ mypy app/
 We use [pre-commit](https://pre-commit.com/) to automatically run code quality checks before each
 commit. The hooks are configured in [.pre-commit-config.yaml](.pre-commit-config.yaml) and include:
 
+**Code Quality:**
+
 - **ruff** - Linter with auto-fix (replaces flake8, isort, and more)
 - **ruff-format** - Code formatter (replaces Black)
+- **mypy** - Static type checking for type safety
+
+**File Checks:**
+
 - **trailing-whitespace** - Remove trailing whitespace
 - **end-of-file-fixer** - Ensure files end with newline
 - **check-yaml** - Validate YAML files
 - **check-toml** - Validate TOML files
+- **check-json** - Validate JSON files
 - **check-merge-conflict** - Check for merge conflict markers
 - **mixed-line-ending** - Ensure consistent line endings
+
+**Security:**
+
+- **detect-private-key** - Prevent committing private keys
+
+**Documentation:**
+
+- **markdownlint** - Strict markdown linting for documentation quality
+
+**Tests:**
+
+- **unit-tests** - Run fast unit tests on commit (140 tests)
+- **full-tests** - Run complete test suite before push (193 tests)
 
 **Install hooks** (one-time setup):
 
 ```bash
-pre-commit install
+# Automatic setup (recommended)
+# Windows PowerShell:
+.\scripts\setup-git-hooks.ps1
+
+# Linux/macOS/Git Bash:
+bash scripts/setup-git-hooks.sh
 ```
 
 **Run manually** (optional):
@@ -171,7 +196,9 @@ pre-commit install
 pre-commit run --all-files
 ```
 
-The hooks run automatically on `git commit`. If any hook fails, the commit will be blocked until you fix the issues.
+The hooks run automatically on `git commit` and `git push`. If any hook fails, the commit/push
+will be blocked until you fix the issues. This ensures all code meets quality standards before
+entering the repository.
 
 ### Pre-commit Checks
 
