@@ -175,7 +175,7 @@ jobs:
           body_path: release-notes.md
           draft: false
           prerelease: ${{ steps.changelog.outputs.IS_PRERELEASE }}
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
