@@ -43,6 +43,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Decoupled Git Integration from Project Management**
+  - Git integration removed from project management system for cleaner architecture
+  - GitService remains available as standalone service for plugin use
+  - Projects no longer have `git_enabled` field or `is_git_repo` property
+  - Removed automatic git repository initialization from project creation
+  - Removed git-related methods from ProjectService (init_git_repository, get_git_status, commit_changes, get_git_log)
+  - Updated project wizard to remove git checkbox
+  - Simplified project browser and views by removing git-specific UI elements
+  - Users can now use external git tools and workflows independently
+  - Updated documentation to reflect new architecture and recommend external git clients
 - Expanded test suite from 137 to 199 tests with improved coverage
 - Updated `pyproject.toml` to support semantic versioning with prerelease suffixes
 - Improved documentation structure and clarity with accurate test counts
