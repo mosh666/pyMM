@@ -10,7 +10,7 @@ repos:
     hooks:
       # Run the linter
       - id: ruff
-        args: [--fix]
+        args: [--fix, --exit-non-zero-on-fix]
         name: Ruff Linter (auto-fix)
       # Run the formatter
       - id: ruff-format
@@ -42,6 +42,27 @@ repos:
         name: Check Filename Case Conflicts
       - id: detect-private-key
         name: Detect Private Keys
+      - id: check-ast
+        name: Check Python AST
+      - id: check-builtin-literals
+        name: Check Builtin Type Constructor Use
+      - id: check-docstring-first
+        name: Check Docstring First
+      - id: debug-statements
+        name: Check for Debugger Imports
+      - id: name-tests-test
+        name: Check Test Naming
+        args: ['--pytest-test-first']
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.7.9'
+    hooks:
+      - id: bandit
+        name: Bandit Security Linter
+        args: ['-c', 'pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
+        exclude: ^tests/
 
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
@@ -63,6 +84,8 @@ repos:
           - pydantic>=2.5.0
         args: [--ignore-missing-imports, --no-strict-optional]
         files: ^app/
+
+  # Note: Safety check removed as it only supports Poetry projects
 
   # Run pytest before commit (fast tests only)
   - repo: local
@@ -126,3 +149,16 @@ repos:
             else:
                 print("✅ Documentation validation passed")
         stages: [pre-push]
+
+# CI configuration
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [pytest-check, pytest-full, docs-check]
+  submodules: false
