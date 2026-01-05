@@ -155,21 +155,123 @@ version control, you can initialize a Git repository manually using the Git plug
 
 ### Project Workflows
 
-**Basic Workflow:**
+pyMediaManager supports flexible project workflows tailored to different use cases.
 
-1. Create project
-2. Add media files to project folders
-3. Use plugins to process media
-4. Commit changes to Git
-5. Export final results
+#### Basic Workflow (No Version Control)
 
-**Git-Enabled Workflow:**
+Perfect for simple projects or when you don't need history tracking:
 
-1. Create project with Git
-2. Add files and make changes
-3. Review status: `View > Git Status`
-4. Commit changes with message
-5. View history: `View > Git Log`
+1. **Create Project**:
+   - Click "New Project" or press `Ctrl+N`
+   - Enter project name: `beach-photos-2026`
+   - Choose location (default: `D:\pyMM.Projects`)
+   - **Do not** check "Initialize Git repository"
+   - Click "Create"
+
+2. **Add Media Files**:
+   - Copy photos/videos into project folders
+   - Organize into subdirectories (`raw/`, `edited/`, `exports/`)
+   - Use file explorer or drag-and-drop (future feature)
+
+3. **Process Media**:
+   - Use installed plugins (ExifTool, FFmpeg, ImageMagick)
+   - Run batch operations on files
+   - Export final results to `exports/` folder
+
+4. **Backup**:
+   - Copy entire project folder to external backup drive
+   - Or use cloud sync (OneDrive, Dropbox)
+
+**Pros**: Simple, fast, no learning curve
+**Cons**: No history, no undo, manual backups
+
+#### Git-Enabled Workflow (Version Control)
+
+Best for important projects where you need history and collaboration:
+
+1. **Create Project with Git**:
+   - Click "New Project" or press `Ctrl+N`
+   - Enter project name: `wedding-video-2026`
+   - Choose location
+   - **Check** "Initialize Git repository"
+   - Click "Create"
+
+2. **Add Files and Commit**:
+   - Add raw media files to project
+   - Open Git Status view: `View > Git Status`
+   - Review changed files (all new files shown in green)
+   - Click "Commit" button
+   - Enter commit message: `feat: add raw wedding footage`
+   - Confirm commit
+
+3. **Work and Commit Regularly**:
+   - Edit files, process media
+   - Check status frequently: `View > Git Status`
+   - Commit after each logical change:
+     - `feat(audio): add background music track`
+     - `fix(color): correct white balance on ceremony clips`
+     - `docs: add project notes and timeline`
+
+4. **View History**:
+   - Open Git Log: `View > Git Log`
+   - See all commits with dates, authors, messages
+   - Track progress over time
+   - Identify when changes were made
+
+5. **Backup**:
+   - Git provides local version history
+   - Optionally push to remote (GitHub, GitLab)
+   - Copy entire project folder for offline backup
+
+**Pros**: Complete history, undo capability, professional workflow
+**Cons**: Slightly more complex, requires Git plugin
+
+#### Collaborative Workflow (Remote Repository)
+
+For team projects requiring coordination:
+
+1. **Create Project with Git**
+2. **Add Remote Repository**:
+   - Create repository on GitHub/GitLab
+   - In project folder, open terminal
+   - Add remote: `git remote add origin https://github.com/user/project.git`
+   - Push commits: `git push -u origin main`
+
+3. **Team Workflow**:
+   - Team members clone repository
+   - Each person commits their work
+   - Push changes to remote
+   - Pull others' changes regularly
+   - Resolve conflicts if needed
+
+4. **Benefits**:
+   - Centralized backup
+   - Team collaboration
+   - Issue tracking integration
+   - CI/CD possibilities
+
+**Note**: Git plugin provides local Git operations. Remote operations require Git command-line or external tools.
+
+#### Template-Based Workflow (Consistent Structure)
+
+For standardized project structures (future feature):
+
+1. **Create Template**:
+   - Set up ideal project structure once
+   - Save as template in `config/templates/`
+   - Include folders, .gitignore, README, etc.
+
+2. **Use Template**:
+   - Select template when creating new project
+   - Project automatically includes all template files
+   - Customize as needed
+
+3. **Benefits**:
+   - Consistent structure across projects
+   - Faster project setup
+   - Standardized organization
+
+**Status**: Template support is planned for v1.1.0
 
 ---
 
@@ -236,17 +338,17 @@ Shows:
 
 ### Available Plugins
 
-|Plugin|Type|Description|Size|
-|---|---|---|---|
-|Git|Mandatory|Version control system|~61MB|
-|Git-LFS|Mandatory|Git extension for large files|~5MB|
-|GitVersion|Mandatory|Semantic versioning tool|~3MB|
-|digiKam|Mandatory|Photo management|~300MB+|
-|MariaDB|Mandatory|Database backend for digiKam|~200MB+|
-|ExifTool|Mandatory|Metadata extraction|~11MB|
-|FFmpeg|Optional|Video/audio processing|~202MB|
-|ImageMagick|Optional|Image manipulation|~21MB|
-|MKVToolNix|Optional|MKV video tools|~20MB+|
+|Plugin|Type|Description|Size|Status|
+|---|---|---|---|---|
+|Git|Mandatory|Version control system|~61MB|Core functionality|
+|Git-LFS|Mandatory|Git extension for large files|~5MB|Large file support|
+|GitVersion|Optional|Semantic versioning from Git|~3MB|Version management|
+|ExifTool|Optional|Metadata extraction and editing|~11MB|Media metadata|
+|FFmpeg|Optional|Video/audio processing|~202MB|Media conversion|
+|ImageMagick|Optional|Image manipulation|~21MB|Image processing|
+|MKVToolNix|Optional|MKV video tools|~20MB+|Video container tools|
+|digiKam|Planned|Photo management application|~300MB+|Future release|
+|MariaDB|Planned|Database backend for digiKam|~200MB+|Future release|
 
 ---
 
@@ -336,23 +438,26 @@ If moving projects separately, they will be auto-detected in the new drive root.
 
 ### Git Repository Basics
 
-Projects can optionally use Git for version control:
+Projects can **optionally** use Git for version control:
 
 - Track all changes to project files
 - Commit snapshots with descriptive messages
 - View complete history of modifications
 - Collaborate with team members
-- Git LFS support for large media files
+- Git LFS support for large media files (optional plugin)
+
+**Note**: Git integration is now **optional** and decoupled from project management. Projects work perfectly without Git.
 
 ### Using Git
 
-**Initialize Repository:**
+**Initialize Repository (Optional)**:
 
-- Enable "Initialize Git" when creating project
-- Or: `Project > Initialize Git` on existing project
+- Choose "Initialize Git repository" when creating project (checkbox in ProjectWizard)
+- Or manually: `Project > Initialize Git` on existing project
 - Automatically creates `.gitignore` with media-friendly defaults
+- Git plugin must be installed first
 
-**Check Status:**
+**Check Status**:
 
 ```text
 View > Git Status
@@ -360,11 +465,11 @@ View > Git Status
 
 Shows:
 
-- Modified files (yellow)
-- New files (green)
-- Deleted files (red)
+- Modified files (yellow indicator)
+- New files (green indicator)
+- Deleted files (red indicator)
 - Untracked files
-- Current branch name
+- Current branch name and commit count
 
 **Commit Changes:**
 
@@ -397,32 +502,69 @@ repository management.
 
 ### Version Control Best Practices
 
-**Good Commit Messages:**
+**Good Commit Messages** (follow Conventional Commits):
 
 ```text
-✅ Good: "Add raw photos from beach shoot"
-✅ Good: "Export final video in 4K"
-❌ Bad: "changes"
-❌ Bad: "update"
+✅ Good: "feat(photos): add raw photos from beach shoot"
+✅ Good: "fix(export): correct 4K video export settings"
+✅ Good: "docs: update project README with workflow notes"
+❌ Bad: "changes" - too vague
+❌ Bad: "update" - no context
+❌ Bad: "stuff" - unprofessional
 ```
 
-**What to Commit:**
+**Message Format**:
+
+```text
+<type>(<scope>): <subject>
+
+<optional body>
+
+<optional footer>
+```
+
+**Types**: feat, fix, docs, style, refactor, test, chore
+
+**What to Commit**:
 
 - ✅ Raw source files (photos, videos)
 - ✅ Project configurations
-- ✅ Export settings
-- ❌ Large temporary files
-- ❌ Cache directories
-- ❌ Final exports (optional)
+- ✅ Export settings and presets
+- ✅ Documentation (README, notes)
+- ❌ Large temporary files (use .gitignore)
+- ❌ Cache directories (.cache, `__pycache__`)
+- ❌ Final exports (optional - use Git LFS if needed)
+- ❌ System files (.DS_Store, Thumbs.db)
 
-**Using .gitignore:**
+**Using .gitignore**:
 
-Recommended `.gitignore` entries:
+Recommended `.gitignore` entries for media projects:
 
-- `*.tmp`, `*.cache`
-- `__pycache__/`
-- `.DS_Store`, `Thumbs.db`
-- `exports/` (optional)
+```gitignore
+# Temporary files
+*.tmp
+*.cache
+*.log
+
+# System files  
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Exports (optional - comment out if you want to track)
+exports/
+*.mp4
+*.mov
+
+# Large working files (use Git LFS if needed)
+*.psd
+*.ai
+```
 
 ---
 
@@ -438,53 +580,112 @@ Access settings via:
 
 ### Settings Sections
 
-The Settings dialog includes 5 tabs for comprehensive configuration:
+The Settings dialog includes **5 comprehensive tabs** for complete application configuration:
 
 #### General Tab
 
-- **Application Name:** Display name for the window title
-- **Theme:** Light, Dark, or Auto (follows system)
-- **Language:** Interface language selection
-- **Logging Level:** DEBUG, INFO, WARNING, ERROR, or CRITICAL
-- **Check Updates:** Automatic update checking (when available)
+**Application Settings**:
+
+- **Application Name**: Display name for window title (default: "pyMediaManager")
+- **Theme**: Visual appearance
+  - Light: Bright, high-contrast interface
+  - Dark: Low-light optimized interface  
+  - Auto: Follows system theme (Windows 10/11)
+- **Language**: Interface language selection (currently English, i18n planned)
+- **Logging Level**: Console and file log verbosity
+  - DEBUG: Detailed diagnostic information (development)
+  - INFO: General informational messages (recommended)
+  - WARNING: Warning messages for potential issues
+  - ERROR: Error messages for failures
+  - CRITICAL: Critical errors causing shutdown
+- **Check Updates**: Automatic update checking (future feature)
 
 #### Plugins Tab
 
-- **Auto-Install:** Install mandatory plugins automatically on first run
-- **Download Timeout:** Network timeout in seconds (default: 300)
-- **Retry Attempts:** Number of download retry attempts (default: 3)
-- **Verify Checksums:** Enable SHA256 checksum verification for security
-- **Plugin Directory:** Custom plugin installation location
-- **Plugin Paths:** Configure paths for specific plugins
+**Plugin Management**:
+
+- **Auto-Install Mandatory**: Install required plugins automatically on first run
+- **Download Timeout**: Network timeout in seconds (default: 300)
+- **Retry Attempts**: Number of download retry attempts on failure (default: 3)
+- **Verify Checksums**: Enable SHA256 checksum verification for security
+- **Plugin Directory**: Custom installation location (default: drive_root/pyMM.Plugins)
+- **Individual Plugin Paths**: Override paths for specific plugins
+
+**Security Note**: Checksum verification helps ensure downloaded plugins haven't been tampered with.
 
 #### Storage Tab
 
-- **Default Drive:** Preferred storage location for portable operation
-- **Project Root:** Base directory where new projects are created
-- **Log Location:** Application log directory (pyMM.Logs)
-- **Max Log Size:** File size before log rotation (default: 10MB)
-- **Log Retention:** Number of backup log files to keep
+**Storage Configuration**:
+
+- **Default Drive**: Preferred storage location for portable operation
+  - Automatically detected on first run
+  - Can be changed to any available drive
+  - Drive detection includes USB, external HDDs/SSDs, and Thunderbolt drives
+- **Project Root**: Base directory for new projects (default: pyMM.Projects)
+- **Log Location**: Application log directory (default: pyMM.Logs)
+- **Max Log Size**: File size before rotation in bytes (default: 10MB)
+- **Log Retention**: Number of backup log files to keep (default: 5)
+
+**Path Management**: All paths support both absolute and relative paths. Relative paths resolved from drive root.
 
 #### Git Tab
 
-- **User Name:** Your full name for Git commits
-- **User Email:** Your email address for Git commits
-- **Auto-Initialize:** Create Git repositories by default for new projects
-- **Default Branch:** Branch name for new repositories (main/master)
-- **Git Executable Path:** Custom path to git.exe (auto-detected)
+**Git Configuration** (optional, for version control features):
+
+- **User Name**: Your full name for Git commits
+  - Used in commit author field
+  - Example: "John Doe"
+- **User Email**: Your email address for Git commits  
+  - Used in commit author field
+  - Example: `john.doe@example.com`
+- **Auto-Initialize**: Create Git repositories by default for new projects
+  - Disabled: Projects created without Git (recommended)
+  - Enabled: All new projects get Git repository automatically
+- **Default Branch**: Branch name for new repositories
+  - "main" (modern standard)
+  - "master" (legacy)
+- **Git Executable Path**: Custom path to git.exe
+  - Auto-detected from plugin installation
+  - Override if using system Git or custom location
+
+**Note**: Git plugin must be installed for these features to work.
 
 #### About Tab
 
-- **Version:** Current application version (auto-detected from Git)
-  - Automatically managed using setuptools_scm and Git tags
-  - Development builds show commit hash and distance from last tag
-  - Supports alpha, beta, and rc prerelease versions (e.g., v1.0.0-beta.1)
-  - Stable releases from `main` branch, beta releases from `dev` branch
-- **Commit Hash:** Git commit SHA (for development builds)
-- **Python Version:** Embedded Python runtime version (3.13 recommended, 3.12 and 3.14 also supported)
-- **Application Info:** License, author, and project details
-- **Dependencies:** Installed package versions (PySide6, GitPython, Pydantic, etc.)
-- **Test Coverage:** 193 tests with 73% coverage ensuring reliability
+**Version and System Information**:
+
+- **Version**: Current application version
+  - Automatically managed using setuptools_scm from Git tags
+  - Format: v1.0.0 (stable) or v1.0.0-beta.1 (prerelease)
+  - Development builds show: v1.0.0.dev5+g1a2b3c4 (commit hash and distance)
+  - Stable releases from `main` branch
+  - Beta releases from `dev` branch with `latest-beta` tag
+  
+- **Commit Hash**: Git commit SHA for development builds
+  - Full 40-character hash for precise version tracking
+  - Useful for bug reports and debugging
+  
+- **Python Version**: Embedded Python runtime version
+  - Python 3.13 (recommended, included by default)
+  - Python 3.12 and 3.14 also supported
+  - Shows exact version (e.g., 3.13.1)
+  
+- **Test Coverage**: Quality metrics
+  - 193 tests with 73% code coverage
+  - All tests passing status
+  - Ensures application reliability and stability
+  
+- **Application Info**: License, author, and project details
+  - MIT License
+  - GitHub repository link
+  - Homepage and documentation links
+  
+- **Dependencies**: Installed package versions
+  - PySide6 (Qt framework)
+  - GitPython (Git integration)
+  - Pydantic (configuration validation)
+  - Rich (console logging)
+  - And more...
 
 ### Saving Settings
 
@@ -551,23 +752,69 @@ Settings are stored in:
 
 ### Getting Logs
 
-Application logs are stored at: `D:\pyMM.Logs\pymediamanager.log`
+Application logs are your best friend for troubleshooting. Logs are stored at:
 
-**Log Levels:**
+**Location**: `D:\pyMM.Logs\pymediamanager.log` (or your drive letter)
 
-- `DEBUG`: Detailed diagnostic information
-- `INFO`: General informational messages
-- `WARNING`: Warning messages (non-critical)
-- `ERROR`: Error messages (operation failed)
-- `CRITICAL`: Critical errors (application failure)
+**Log Rotation**:
 
-**Change Log Level:**
+- Maximum file size: 10MB (configurable)
+- Backup files: 5 generations kept
+- Format: `pymediamanager.log`, `pymediamanager.log.1`, etc.
 
-```python
+**Log Levels and Usage**:
+
+| Level | When to Use | What It Shows |
+| ----- | ----------- | ------------- |
+| **DEBUG** | Development, detailed troubleshooting | Every operation, variable values, function calls |
+| **INFO** | Normal operation (recommended) | Application events, user actions, plugin installs |
+| **WARNING** | Production, stability focus | Potential issues, deprecated features, recoverable errors |
+| **ERROR** | When something's wrong | Failed operations, exceptions, error details |
+| **CRITICAL** | Application failures | Fatal errors causing shutdown |
+
+**Change Log Level**:
+
+1. Open Settings (`Ctrl+,`)
+2. Go to General tab
+3. Select desired Logging Level
+4. Click Apply or OK
+5. Restart application for full effect
+
+**Or edit config file**:
+
+```yaml
 # In config/user.yaml
 logging:
-  level: DEBUG  # or INFO, WARNING, ERROR
+  level: DEBUG  # or INFO, WARNING, ERROR, CRITICAL
+  console: true
+  file: true
 ```
+
+**Reading Logs**:
+
+```plaintext
+2026-01-05 14:30:22 | INFO     | app.main:42 - Application starting
+2026-01-05 14:30:22 | DEBUG    | app.core.services.config_service:78 - Loading config from D:\pyMM\config\app.yaml
+2026-01-05 14:30:23 | INFO     | app.plugins.plugin_manager:145 - Discovered 9 plugins
+2026-01-05 14:30:23 | WARNING  | app.plugins.plugin_base:234 - Plugin FFmpeg not installed
+2026-01-05 14:30:24 | ERROR    | app.services.git_service:89 - Git repository not initialized: D:\pyMM.Projects\test
+```
+
+**Log Fields**:
+
+- **Timestamp**: When the event occurred
+- **Level**: Severity (DEBUG/INFO/WARNING/ERROR/CRITICAL)
+- **Module**: Which part of code logged it (e.g., `app.plugins.plugin_manager`)
+- **Line**: Line number in source file
+- **Message**: What happened
+
+**Attaching Logs to Bug Reports**:
+
+1. Reproduce the issue
+2. Immediately copy latest log file
+3. Zip the log file (may contain system info)
+4. Attach to GitHub issue
+5. Remove any sensitive information if needed
 
 ### Performance Issues
 
