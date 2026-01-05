@@ -30,13 +30,9 @@
 
 ## Overview
 
-pyMediaManager is a fully portable, Python-based media management application designed to run
-entirely from removable drives without system installation. It provides a modern Fluent Design
-interface for managing media projects and orchestrating external tools through plugins.
+pyMediaManager (pyMM) is a fully portable, Python-based media management application designed to run entirely from removable drives without requiring system installation. It provides a modern Fluent Design interface for managing media projects and orchestrating external tools through an extensible plugin system.
 
-Built with Python 3.12-3.14 support, the application includes an embedded Python runtime for true
-portability. Version management is automated using Git tags and setuptools_scm, supporting semantic
-versioning with prerelease tags (alpha, beta, rc).
+Built with Python 3.12-3.14 support, the application includes an embedded Python runtime for true portability across Windows systems. Version management is automated using Git tags and setuptools_scm, supporting semantic versioning with prerelease tags (alpha, beta, rc).
 
 ### Key Features
 
@@ -45,9 +41,9 @@ versioning with prerelease tags (alpha, beta, rc).
 - 🔍 **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
 - 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and optional Git integration
-- 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
-- 📊 **Rich Logging** - Structured logging with console and rotating file output (no print statements)
-- ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
+- 🔒 **Secure Configuration** - Layered YAML-based settings with sensitive data redaction
+- 📊 **Rich Logging** - Structured logging with console and rotating file output
+- ✅ **Reliable Downloads** - Plugin downloads with retry logic, SHA256 checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
 - 🧪 **Comprehensive Testing** - 193 tests with 73% code coverage and automatic test isolation
 - 🎯 **Quality Gates** - 15+ pre-commit hooks including Ruff, MyPy, and Bandit security scanning
@@ -103,17 +99,17 @@ For portable deployment instructions, see the [User Guide](docs/user-guide.md).
 ### Setup Development Environment
 
 ```bash
-# Install pre-commit hooks
+# Install pre-commit hooks for automated quality checks
 pip install pre-commit
 pre-commit install --install-hooks
 pre-commit install --hook-type pre-push
 
-# Run tests
+# Run full test suite with coverage
 pytest
 
-# Run linting
-ruff check app/ tests/
-ruff format app/ tests/
+# Run linting and formatting
+ruff check app/ tests/ launcher.py
+ruff format app/ tests/ launcher.py
 
 # Run type checking
 mypy app/
@@ -125,19 +121,31 @@ mypy app/
 pyMM/
 ├── .github/              # GitHub workflows, templates, and configurations
 ├── app/                  # Application source code
-│   ├── core/            # Core services (config, logging, file system)
-│   ├── ui/              # User interface components
-│   ├── plugins/         # Plugin system
-│   ├── services/        # Business logic services
-│   └── models/          # Data models
-├── config/              # Configuration files
-├── docs/                # Documentation
-├── plugins/             # Plugin manifests
-├── scripts/             # Utility scripts
-├── tests/               # Test suite
-├── pyproject.toml       # Project metadata and dependencies
-└── launcher.py          # Application entry point
+│   ├── core/            # Core services (config, logging, file system, storage)
+│   ├── ui/              # User interface components and views
+│   ├── plugins/         # Plugin system base and manager
+│   ├── services/        # Business logic services (git, project)
+│   └── models/          # Data models (project, etc.)
+├── config/              # Configuration files (YAML)
+├── docs/                # Comprehensive documentation
+├── plugins/             # Plugin manifests for external tools
+├── scripts/             # Utility scripts (git hooks setup)
+├── tests/               # Comprehensive test suite (unit, integration, GUI)
+│   ├── unit/           # Unit tests for individual components
+│   ├── integration/    # Integration tests for workflows
+│   └── gui/            # GUI component tests
+├── pyproject.toml       # Project metadata, dependencies, and tool configs
+└── launcher.py          # Application entry point with path setup
 ```
+
+### Architecture Highlights
+
+- **Service-Oriented Design**: Dependency injection with clear separation of concerns
+- **Type Safety**: Comprehensive type hints validated by MyPy
+- **Modern Python**: Native generic types (list, dict, tuple) instead of typing imports
+- **Structured Logging**: Logger instances throughout, no print statements in production code
+- **Testing**: Unit tests, integration tests, and GUI tests with pytest-qt
+- **Quality Gates**: Ruff linting/formatting, MyPy type checking, Bandit security scanning
 
 ---
 
@@ -165,6 +173,15 @@ Security is a top priority. Please see our [Security Policy](.github/SECURITY.md
 - Safe harbor for researchers
 
 **Do not report security vulnerabilities through public GitHub issues.**
+
+### Security Features
+
+- Daily OpenSSF Scorecard metrics
+- CodeQL static analysis
+- Bandit security scanning in pre-commit hooks
+- Dependabot for automated dependency updates
+- SHA256 checksum verification for plugin downloads
+- Sensitive data redaction in configuration exports
 
 ---
 
@@ -199,26 +216,15 @@ Built with:
 - [PySide6](https://doc.qt.io/qtforpython/) - Qt for Python framework
 - [QFluentWidgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets) - Modern Fluent Design UI components
 - [Pydantic](https://docs.pydantic.dev/) - Data validation and settings management
-- [GitPython](https://gitpython.readthedocs.io/) - Git integration
-- [pytest](https://pytest.org/) - Testing framework
-
-Special thanks to all [contributors](https://github.com/mosh666/pyMM/graphs/contributors).
-
----
-
-## Support
-
-- 🐛 [Report a Bug](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
-- 💡 [Request a Feature](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)
-- 💬 [Join Discussions](https://github.com/mosh666/pyMM/discussions)
-- 📧 [Contact Maintainers](mailto:24556349+mosh666@users.noreply.github.com)
+- [pytest](https://pytest.org/) - Testing framework with extensive plugin ecosystem
+- [Ruff](https://docs.astral.sh/ruff/) - Fast Python linter and formatter
 
 ---
 
 <div align="center">
 
-**[⬆ Back to Top](#pymediamanager)**
+Made with ❤️ by the pyMediaManager community
 
-Made with ❤️ by [mosh666](https://github.com/mosh666)
+[Report Bug](https://github.com/mosh666/pyMM/issues) • [Request Feature](https://github.com/mosh666/pyMM/discussions) • [Discussions](https://github.com/mosh666/pyMM/discussions)
 
 </div>
