@@ -18,7 +18,8 @@ maintaining version control integration.
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
 - 💾 **100% Portable** - Zero system installation, runs from USB/external drives
-- 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
+- � **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
+- �🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and templates
 - 🔄 **Git Integration** - Built-in version control with GitPython
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
@@ -251,17 +252,21 @@ Modern Fluent Design interface powered by PySide6 and QFluentWidgets.
 ### Main Views
 
 - **Home** - Dashboard with quick actions and recent projects
-- **Storage** - Drive detection, capacity monitoring, serial number tracking
+- **Storage** - Enhanced drive detection with WMI, capacity monitoring, serial number tracking
 - **Plugins** - Plugin installation, updates, and management
 - **Projects** - Project browser with search and filtering
 - **Settings** - Comprehensive configuration with 5 tabs
 
 ### First-Run Wizard
 
-Multi-step setup wizard for initial configuration:
+Multi-step setup wizard for initial configuration with intelligent drive detection:
 
 1. **Welcome** - Feature overview and introduction
-2. **Drive Detection** - Portable drive location confirmation
+2. **Drive Detection** - Enhanced portable drive selection
+   - Detects USB flash drives, SD cards, and removable media
+   - Identifies external HDDs and SSDs (even when classified as "fixed" by Windows)
+   - Uses WMI to detect USB interface and external media type
+   - Displays drive capacity, free space, and volume labels
 3. **Plugin Installation** - Install essential plugins (Git, ExifTool)
 4. **Settings** - Configure theme, language, and preferences
 5. **Complete** - Summary and "Don't show again" option

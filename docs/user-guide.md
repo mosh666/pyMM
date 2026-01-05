@@ -61,8 +61,25 @@ When you first launch pyMediaManager, the First Run Wizard will guide you throug
 
 1. **Welcome Screen** - Introduction to pyMediaManager and key features
 2. **Storage Page** - Select your portable drive and confirm installation location
+   - **Enhanced Drive Detection**: The wizard now detects all external drives including:
+     - USB flash drives and SD cards
+     - External USB HDDs and SSDs
+     - Thunderbolt/USB-C external drives
+     - Portable drives even when Windows shows them as "fixed" drives
+   - The application uses Windows Management Instrumentation (WMI) for accurate detection
+   - Simply select your preferred external drive from the list
 3. **Plugin Page** - Choose optional plugins to install (mandatory plugins installed automatically)
 4. **Complete Page** - Setup summary with option to skip wizard on future launches
+
+### Storage Drive Selection
+
+The application's intelligent drive detection identifies:
+- **True Removable Drives**: USB flash drives, SD cards, memory sticks
+- **External Storage**: USB HDDs, external SSDs, portable drives
+- **Interface Detection**: USB, USB-C, Thunderbolt connections
+- **Media Type Recognition**: Devices marked as "External hard disk media" by Windows
+
+All external drives are suitable for portable pyMediaManager installation.
 
 ### Recommended First Steps
 
@@ -224,13 +241,41 @@ Shows:
 pyMediaManager uses drive-root folders for maximum portability:
 
 ```
-D:\                              # Your drive root
+K:\                              # Your removable/external drive root
 ├── pyMM\                        # Application (contains embedded Python 3.13)
 │   ├── python313\               # Embedded Python 3.13 runtime
 │   ├── lib-py313\               # Python dependencies
 │   ├── app\                     # Application code
 │   └── launcher.py              # Entry point
 ├── pyMM.Projects\               # Your media projects
+├── pyMM.Logs\                   # Application logs
+└── pyMM.Plugins\                # Installed plugin binaries
+```
+
+### Supported Drive Types
+
+The application automatically detects and works with:
+
+**True Removable Media:**
+- USB flash drives (any capacity)
+- SD cards and memory sticks
+- Other media marked as "DRIVE_REMOVABLE" by Windows
+
+**External Storage Devices:**
+- External USB HDDs (any size, any filesystem)
+- External USB SSDs (NTFS, FAT32, exFAT)
+- Portable drives connected via USB-C or Thunderbolt
+- Drives with "External hard disk media" designation
+
+**Detection Technology:**
+- **Primary**: Windows `GetDriveTypeW` API for removable drives
+- **Enhanced**: WMI queries for USB interface and external media type
+- **Automatic**: Detects drives regardless of Windows classification
+- **Reliable**: Works with both consumer and professional storage devices
+
+### Moving Between Computers
+
+pyMediaManager is designed to move seamlessly:
 ├── pyMM.Plugins\                # Installed plugin binaries
 ├── pyMM.Logs\                   # Application logs
 └── pyMM.Config\                 # User settings (optional)

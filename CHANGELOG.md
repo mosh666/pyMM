@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Enhanced External Drive Detection**
+  - Added WMI (Windows Management Instrumentation) integration for accurate drive detection
+  - Now detects USB flash drives, external HDDs/SSDs, and other removable media
+  - Multi-layered detection approach:
+    - Windows `GetDriveTypeW` API for standard removable drives
+    - WMI queries to identify drives with USB interface or "external" media type
+    - Detects external drives even when Windows classifies them as "fixed" (NTFS external drives)
+  - Graceful fallback to legacy detection methods if WMI is unavailable
+  - Supports all external drive types: USB flash drives, external SSDs, portable HDDs
+  - Added `WMI>=1.5.1` as Windows-only dependency in `pyproject.toml`
+
 - **Test Environment Isolation**
   - Implemented automatic test isolation to prevent system drive pollution
   - Added global `mock_drive_root` fixture to redirect all file operations to temporary directories

@@ -155,13 +155,26 @@ files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=Tr
 ```
 
 ### 2. StorageService
-**Purpose**: Detect and manage portable drives
+**Purpose**: Detect and manage portable drives with enhanced external drive detection
 
 **Key Features**:
 - Enumerate all drives (fixed and removable)
+- **Advanced external drive detection** using multiple methods:
+  - Windows `GetDriveTypeW` API for true removable drives (USB flash drives, SD cards)
+  - WMI (Windows Management Instrumentation) for detecting external USB/Thunderbolt drives
+  - Identifies drives marked as "External hard disk media" by Windows
+  - Detects drives even when Windows classifies them as "fixed" type
 - Track drive serial numbers for identification
 - Get drive capacity and free space
 - Detect if path is on removable drive
+- Graceful fallback when WMI is unavailable
+
+**Detection Heuristics**:
+1. Check Windows drive type (DRIVE_REMOVABLE)
+2. Query WMI for USB interface or external media type indicators
+3. Check partition options for "removable" flag
+4. Identify common removable filesystems (FAT32, exFAT) on non-system drives
+5. Exclude network drives, CD-ROMs, and RAM disks
 
 **Usage**:
 ```python
@@ -169,8 +182,25 @@ from pathlib import Path
 from app.core.services.storage_service import StorageService, DriveInfo
 
 storage = StorageService()
+
+# Get all removable/external drives (USB flash drives, external HDDs/SSDs)
 removable_drives: list[DriveInfo] = storage.get_removable_drives()
+
+# Get specific drive info
 drive_info: DriveInfo | None = storage.get_drive_info(Path("D:\\"))
+
+# Check if path is on removable/external drive
+is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
+```
+
+**DriveInfo Fields**:
+- `drive_letter`: Drive path (e.g., "K:\\")
+- `label`: Volume label
+- `file_system`: Filesystem type (NTFS, FAT32, exFAT)
+- `total_size`: Total capacity in bytes
+- `free_space`: Available space in bytes
+- `is_removable`: True if external/removable drive
+- `serial_number`: Volume serial number (hex string)
 ```
 
 ### 3. ConfigService
