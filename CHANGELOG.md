@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Comprehensive Pre-Commit Quality Gates**
+  - Implemented 15+ automated checks that run before every commit:
+    - Ruff linting with auto-fix for code quality
+    - Ruff formatting for consistent code style
+    - MyPy type checking for type safety
+    - Markdown linting for documentation quality
+    - YAML, TOML, and JSON validation
+    - Security checks (private key detection)
+    - Fast unit tests (140 tests) on commit
+    - Full test suite (193 tests) on push
+  - Created automated setup script for Windows (`scripts/setup-git-hooks.ps1`)
+  - Created automated setup script for Linux/macOS (`scripts/setup-git-hooks.sh`)
+  - Added `.pre-commit-config.yaml` with comprehensive hook configuration
+  - PowerShell-based Git hooks for native Windows compatibility
+
+- **Enhanced CI/CD Pipeline**
+  - 6 separate validation jobs with fail-fast strategy:
+    - Lint job with strict Ruff checking
+    - Type-check job with MyPy validation
+    - Test matrix for Python 3.12, 3.13, 3.14 on Windows
+    - Lint-docs job for documentation validation
+    - Validate-config job for YAML/TOML files
+    - Summary job for overall status reporting
+  - No continue-on-error flags - all checks must pass
+  - Automatic formatting of setuptools_scm generated files
+  - Coverage requirement enforced at 70% minimum
+
 - **Enhanced External Drive Detection**
   - Added WMI (Windows Management Instrumentation) integration for accurate drive detection
   - Now detects USB flash drives, external HDDs/SSDs, and other removable media
@@ -51,6 +78,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed git-related methods from ProjectService (init_git_repository, get_git_status, commit_changes, get_git_log)
   - Updated project wizard to remove git checkbox
   - Simplified project browser and views by removing git-specific UI elements
+  - Total: 338 lines of coupling code removed across 18 files
+
+- **Code Quality Improvements**
+  - Removed all unused `type: ignore` comments flagged by MyPy
+  - Fixed all import statement formatting issues
+  - Auto-formatted entire codebase with Ruff
+  - All code now passes strict linting and type checking
+  - Test coverage maintained at 71.87% (exceeds 70% requirement)
+
+- **Development Workflow Enhancement**
+  - Updated CONTRIBUTING.md with comprehensive pre-commit workflow documentation
+  - Updated README.md with development setup instructions
+  - All Git hooks now use PowerShell for Windows compatibility
+  - Removed bash dependency for Git hooks (was causing issues on Windows)
   - Users can now use external git tools and workflows independently
   - Updated documentation to reflect new architecture and recommend external git clients
 - Expanded test suite from 137 to 199 tests with improved coverage
