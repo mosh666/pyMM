@@ -1,6 +1,6 @@
 # pyMediaManager
 
-**Portable Python-based media management application with modern Fluent Design UI**
+Portable Python-based media management application with modern Fluent Design UI
 
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -48,7 +48,7 @@ pyMediaManager is engineered for true portability with zero system footprint:
 
 ### Directory Structure
 
-```
+```text
 D:\pyMM\                          # Application directory (portable)
 ├── python313\                    # Embedded Python 3.13 runtime (win64)
 │   ├── python.exe
@@ -125,11 +125,13 @@ move the `pyMM\` application folder.
    - **Recommended:** `pyMM-latest-beta-py3.13-win64.zip` (Python 3.13)
 
 2. **Extract to your portable drive:**
+
    ```cmd
    # Extract to D:\pyMM\ (or any drive letter)
    ```
 
 3. **Run the application:**
+
    ```cmd
    D:\pyMM\python313\python.exe D:\pyMM\launcher.py
    ```
@@ -145,6 +147,7 @@ move the `pyMM\` application folder.
 ### Option 2: Build From Source
 
 **Prerequisites:**
+
 - Python 3.12 or 3.13 (3.13 recommended)
 - Git
 
@@ -188,6 +191,7 @@ The project uses automated pre-commit hooks to ensure code quality:
 All checks must pass before code can be committed or pushed. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 **Build Portable Distribution:**
+
 ```bash
 # Automated via GitHub Actions CI/CD
 # Manual build (if needed):
@@ -203,6 +207,7 @@ pyMediaManager orchestrates external media tools through a flexible, manifest-ba
 ### Available Plugins
 
 #### Mandatory Plugins
+
 - **Git** - Version control system (available as plugin, 70MB)
 - **7-Zip** - Archive extraction for plugin installations (5MB)
 
@@ -427,6 +432,7 @@ pytest tests/unit tests/integration
 ```
 
 **Test Statistics:**
+
 - **Total Tests:** 137+
 - **Code Coverage:** 73% on core modules
 - **Test Types:** Unit, Integration, GUI (pytest-qt)
@@ -457,7 +463,7 @@ pre-commit run --all-files
 
 ### Project Structure
 
-```
+```text
 pyMM/
 ├── app/                      # Application code
 │   ├── core/                 # Core services
@@ -499,6 +505,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### Release Strategy
 
 **Beta Releases (`dev` branch)**:
+
 - Automatic deployment on every push to `dev`
 - Tagged as `latest-beta` (rolling tag)
 - Old assets automatically cleaned before new builds uploaded
@@ -507,6 +514,7 @@ Automated build and release workflow powered by GitHub Actions.
 - Download: [latest-beta](https://github.com/mosh666/pyMM/releases/tag/latest-beta)
 
 **Stable Releases (`main` branch)**:
+
 - Manual deployment via version tags (e.g., `v1.0.0`)
 - Semantic versioning: `vX.Y.Z` or `vX.Y.Z-alpha.N`, `vX.Y.Z-beta.N`, `vX.Y.Z-rc.N`
 - Permanent releases with changelog
@@ -539,6 +547,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### Current Version: Beta (Unreleased on `dev`)
 
 ✅ **Completed Features:**
+
 - Automatic version management with setuptools_scm
 - Modernized CI/CD with branch-based releases
 - QFluentWidgets navigation error fixes
@@ -552,6 +561,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### v0.2.0 (Planned - Q1 2026)
 
 🔄 **Upcoming Features:**
+
 - Media import and organization tools
 - Batch metadata editing with ExifTool integration
 - Export presets and profiles
@@ -562,6 +572,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### v0.3.0 (Planned - Q2 2026)
 
 🔮 **Future Vision:**
+
 - Cloud storage integration (OneDrive, Google Drive, Dropbox)
 - Team collaboration features
 - Advanced search and filtering

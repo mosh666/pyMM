@@ -73,6 +73,7 @@ When you first launch pyMediaManager, the First Run Wizard will guide you throug
 ### Storage Drive Selection
 
 The application's intelligent drive detection identifies:
+
 - **True Removable Drives**: USB flash drives, SD cards, memory sticks
 - **External Storage**: USB HDDs, external SSDs, portable drives
 - **Interface Detection**: USB, USB-C, Thunderbolt connections
@@ -115,7 +116,8 @@ Projects are the primary way to organize your media work in pyMediaManager.
 3. Click **"Create"**
 
 **Project Structure:**
-```
+
+```text
 D:\pyMM.Projects\vacation-2026\
 ├── photos\            # Organized media
 ├── videos\
@@ -128,16 +130,19 @@ version control, you can initialize a Git repository manually using the Git plug
 ### Managing Projects
 
 **Open Recent Project:**
+
 - Projects appear in the "Recent Projects" list
 - Double-click to open
 - Recently used projects stay at the top
 
 **Project Browser:**
+
 - Click "Browse Projects" to see all projects
 - Search and filter projects
 - View project metadata (created date, size, Git status)
 
 **Delete Project:**
+
 - Right-click project in browser
 - Select "Delete Project"
 - Choose whether to delete files or just metadata
@@ -145,6 +150,7 @@ version control, you can initialize a Git repository manually using the Git plug
 ### Project Workflows
 
 **Basic Workflow:**
+
 1. Create project
 2. Add media files to project folders
 3. Use plugins to process media
@@ -152,6 +158,7 @@ version control, you can initialize a Git repository manually using the Git plug
 5. Export final results
 
 **Git-Enabled Workflow:**
+
 1. Create project with Git
 2. Add files and make changes
 3. Review status: `View > Git Status`
@@ -184,6 +191,7 @@ Plugins are external tools integrated into pyMediaManager:
 5. Status changes to "Installed" when ready
 
 **Download Details:**
+
 - Plugins download from official sources
 - SHA256 checksum verification for security
 - Automatic retry on network errors (up to 3 attempts)
@@ -201,17 +209,20 @@ For plugins not in the catalog:
 ### Plugin Status
 
 **Check Plugin Status:**
-```
+
+```text
 Plugin View → Select Plugin → View Status
 ```
 
 Shows:
+
 - Installation status (Installed/Not Installed)
 - Version detected
 - Executable path
 - Installation date
 
 **Common Plugin Actions:**
+
 - **Install:** Download and set up plugin
 - **Uninstall:** Remove plugin files
 - **Refresh:** Re-check installation status
@@ -239,7 +250,7 @@ Shows:
 
 pyMediaManager uses drive-root folders for maximum portability:
 
-```
+```text
 K:\                              # Your removable/external drive root
 ├── pyMM\                        # Application (contains embedded Python 3.13)
 │   ├── python313\               # Embedded Python 3.13 runtime
@@ -256,17 +267,20 @@ K:\                              # Your removable/external drive root
 The application automatically detects and works with:
 
 **True Removable Media:**
+
 - USB flash drives (any capacity)
 - SD cards and memory sticks
 - Other media marked as "DRIVE_REMOVABLE" by Windows
 
 **External Storage Devices:**
+
 - External USB HDDs (any size, any filesystem)
 - External USB SSDs (NTFS, FAT32, exFAT)
 - Portable drives connected via USB-C or Thunderbolt
 - Drives with "External hard disk media" designation
 
 **Detection Technology:**
+
 - **Primary**: Windows `GetDriveTypeW` API for removable drives
 - **Enhanced**: WMI queries for USB interface and external media type
 - **Automatic**: Detects drives regardless of Windows classification
@@ -275,6 +289,8 @@ The application automatically detects and works with:
 ### Moving Between Computers
 
 pyMediaManager is designed to move seamlessly:
+
+```text
 ├── pyMM.Plugins\                # Installed plugin binaries
 ├── pyMM.Logs\                   # Application logs
 └── pyMM.Config\                 # User settings (optional)
@@ -283,12 +299,14 @@ pyMediaManager is designed to move seamlessly:
 ### Drive Management
 
 **Storage View** shows:
+
 - Available drives and their status
 - Free space on each drive
 - Whether drive is removable
 - Current application location
 
 **Best Practices:**
+
 - Install on fast drive (USB 3.0+, SSD)
 - Keep 500MB+ free space for plugins
 - Regular backups of `pyMM.Projects\`
@@ -323,15 +341,19 @@ Projects can optionally use Git for version control:
 ### Using Git
 
 **Initialize Repository:**
+
 - Enable "Initialize Git" when creating project
 - Or: `Project > Initialize Git` on existing project
 - Automatically creates `.gitignore` with media-friendly defaults
 
 **Check Status:**
-```
+
+```text
 View > Git Status
 ```
+
 Shows:
+
 - Modified files (yellow)
 - New files (green)
 - Deleted files (red)
@@ -348,10 +370,13 @@ Shows:
 6. Confirm commit
 
 **View History:**
-```
+
+```text
 View > Git Log
 ```
+
 Shows:
+
 - Commit messages with full descriptions
 - Author name and email
 - Commit date and time
@@ -367,7 +392,8 @@ repository management.
 ### Version Control Best Practices
 
 **Good Commit Messages:**
-```
+
+```text
 ✅ Good: "Add raw photos from beach shoot"
 ✅ Good: "Export final video in 4K"
 ❌ Bad: "changes"
@@ -375,6 +401,7 @@ repository management.
 ```
 
 **What to Commit:**
+
 - ✅ Raw source files (photos, videos)
 - ✅ Project configurations
 - ✅ Export settings
@@ -383,7 +410,9 @@ repository management.
 - ❌ Final exports (optional)
 
 **Using .gitignore:**
+
 Recommended `.gitignore` entries:
+
 - `*.tmp`, `*.cache`
 - `__pycache__/`
 - `.DS_Store`, `Thumbs.db`
@@ -396,6 +425,7 @@ Recommended `.gitignore` entries:
 ### Opening Settings
 
 Access settings via:
+
 - Menu: `Edit > Settings`
 - Keyboard: `Ctrl+,`
 - Toolbar: Settings icon (gear)
@@ -456,6 +486,7 @@ The Settings dialog includes 5 tabs for comprehensive configuration:
 - Click **"Cancel"** to discard changes and close
 
 Settings are stored in:
+
 - System: `config/app.yaml` (default configuration, read-only)
 - User: `D:\pyMM.Config\user.yaml` (your custom settings)
 
@@ -470,6 +501,7 @@ Settings are stored in:
 **Symptoms:** Double-clicking `launcher.py` does nothing
 
 **Solutions:**
+
 1. Verify Python 3.13 runtime: Check `pyMM\python313\` directory exists
 2. Run from terminal: `python launcher.py` or `.\python313\python.exe launcher.py`
 3. Check logs: `D:\pyMM.Logs\pymediamanager.log`
@@ -481,6 +513,7 @@ Settings are stored in:
 **Symptoms:** Download stuck or error message
 
 **Solutions:**
+
 1. Check internet connection
 2. Verify firewall allows Python
 3. Try manual download from plugin homepage
@@ -492,6 +525,7 @@ Settings are stored in:
 **Symptoms:** Error when creating new project
 
 **Solutions:**
+
 1. Verify project path is writable
 2. Check disk space
 3. Avoid special characters in project name
@@ -502,6 +536,7 @@ Settings are stored in:
 **Symptoms:** Git commands fail or Git not detected
 
 **Solutions:**
+
 1. Install Git plugin: `Plugin View > Git > Install`
 2. Verify Git is in path: `Settings > Plugins > Git Path`
 3. Configure Git user: `Settings > Git > User Name/Email`
@@ -512,6 +547,7 @@ Settings are stored in:
 Application logs are stored at: `D:\pyMM.Logs\pymediamanager.log`
 
 **Log Levels:**
+
 - `DEBUG`: Detailed diagnostic information
 - `INFO`: General informational messages
 - `WARNING`: Warning messages (non-critical)
@@ -519,6 +555,7 @@ Application logs are stored at: `D:\pyMM.Logs\pymediamanager.log`
 - `CRITICAL`: Critical errors (application failure)
 
 **Change Log Level:**
+
 ```python
 # In config/user.yaml
 logging:
@@ -528,16 +565,19 @@ logging:
 ### Performance Issues
 
 **Slow Application Start:**
+
 - Check antivirus (may scan Python files)
 - Move to faster drive (USB 3.0+, SSD)
 - Reduce plugin count
 
 **Plugin Download Slow:**
+
 - Check internet speed
 - Try different network
 - Download manually and extract
 
 **Project Operations Slow:**
+
 - Move project to faster drive
 - Check disk space
 - Reduce project size (archive old files)
@@ -601,4 +641,4 @@ If you encounter a bug:
 
 ---
 
-**Happy media managing! 🎬📸🎵**
+Happy media managing! 🎬📸🎵
