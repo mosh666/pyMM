@@ -59,7 +59,7 @@ jobs:
 
       - name: Cache embeddable Python
         id: cache-python
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: python-embed.zip
           key: python-embed-${{ matrix.python-version }}-${{ matrix.python-url }}
