@@ -33,21 +33,8 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Copy custom Git hooks
-$hooksDir = ".git/hooks"
-if (Test-Path $hooksDir) {
-    Write-Host "📋 Installing custom Git hooks..." -ForegroundColor Yellow
-
-    if (Test-Path ".github/hooks/pre-commit") {
-        Copy-Item ".github/hooks/pre-commit" "$hooksDir/pre-commit" -Force
-        Write-Host "  ✅ pre-commit hook installed" -ForegroundColor Green
-    }
-
-    if (Test-Path ".github/hooks/pre-push") {
-        Copy-Item ".github/hooks/pre-push" "$hooksDir/pre-push" -Force
-        Write-Host "  ✅ pre-push hook installed" -ForegroundColor Green
-    }
-}
+# Note: pre-commit framework creates its own hooks in .git/hooks/
+# The custom PowerShell hooks in .github/hooks/ are for reference only
 
 # Test pre-commit installation
 Write-Host "`n🧪 Testing pre-commit installation..." -ForegroundColor Yellow
