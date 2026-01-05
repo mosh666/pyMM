@@ -46,12 +46,12 @@ class TestLoggingService:
     def test_init_with_file_system_service(self, tmp_path, monkeypatch):
         """Test LoggingService uses FileSystemService for portable logs."""
         fs_service = FileSystemService(app_root=tmp_path)
-        
+
         # Mock drive root to use temp directory
         mock_drive_root = tmp_path / "mock_drive"
         mock_drive_root.mkdir()
         monkeypatch.setattr(fs_service, "get_drive_root", lambda: mock_drive_root)
-        
+
         service = LoggingService(file_system_service=fs_service)
 
         expected_log_dir = mock_drive_root / "pyMM.Logs"

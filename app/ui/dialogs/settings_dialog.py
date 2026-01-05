@@ -207,7 +207,7 @@ class SettingsDialog(QDialog):
         paths_layout = QFormLayout(paths_group)
 
         info_label = QLabel(
-            "These paths are relative to the drive root.\n" "Changes require application restart."
+            "These paths are relative to the drive root.\nChanges require application restart."
         )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: gray; font-style: italic;")

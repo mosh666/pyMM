@@ -48,7 +48,7 @@ class TestFileSystemService:
         mock_drive_root = temp_dir / "mock_drive"
         mock_drive_root.mkdir()
         monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
-        
+
         folder = service.get_portable_folder("pyMM.Projects")
         assert folder == mock_drive_root / "pyMM.Projects"
 
@@ -58,7 +58,7 @@ class TestFileSystemService:
         mock_drive_root = temp_dir / "mock_drive"
         mock_drive_root.mkdir()
         monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
-        
+
         folders = service.ensure_portable_folders()
 
         assert "projects" in folders

@@ -181,7 +181,7 @@ class PluginBase(ABC):
                             return False
 
                         total_size = int(response.headers.get("content-length", 0))
-                        self.logger.info(f"  Download size: {total_size / (1024*1024):.2f} MB")
+                        self.logger.info(f"  Download size: {total_size / (1024 * 1024):.2f} MB")
                         downloaded = 0
 
                         with open(destination, "wb") as f:
