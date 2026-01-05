@@ -135,7 +135,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report-py${{ matrix.python-version }}
           path: htmlcov/

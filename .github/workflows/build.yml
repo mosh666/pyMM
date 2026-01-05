@@ -139,7 +139,7 @@ jobs:
           echo "Checksum: $hash"
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pyMM-py${{ matrix.python-version }}-build
           path: |
@@ -166,7 +166,7 @@ jobs:
           echo "For most users, download the Python 3.13 build for best compatibility." >> RECOMMENDED.txt
 
       - name: Upload recommended metadata
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: recommended-metadata
           path: RECOMMENDED.txt
