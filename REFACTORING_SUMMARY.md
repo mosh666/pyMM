@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document summarizes the comprehensive refactoring of the pyMediaManager repository to align with the latest Python and GitHub best practices and community standards for 2026.
+This document summarizes the comprehensive refactoring of the pyMediaManager
+repository to align with the latest Python and GitHub best practices and
+community standards for 2026.
 
 ## Changes Implemented
 

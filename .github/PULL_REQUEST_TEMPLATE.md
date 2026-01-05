@@ -135,7 +135,6 @@ Related to #
 
 **Benchmark Results** (if applicable):
 
-
 ## Additional Notes
 
 <!-- Any additional information that reviewers should know -->

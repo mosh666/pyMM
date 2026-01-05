@@ -3,7 +3,7 @@
 
 # pyMediaManager
 
-### Portable Python-based media management application with modern Fluent Design UI
+## Portable Python-based media management application with modern Fluent Design UI
 
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue?logo=python&logoColor=white)](https://www.python.org)
 [![License](https://img.shields.io/github/license/mosh666/pyMM)](LICENSE)

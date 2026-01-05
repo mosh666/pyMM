@@ -18,13 +18,15 @@ The pyMediaManager team takes security bugs seriously. We appreciate your effort
 **Please do not report security vulnerabilities through public GitHub issues.**
 
 Instead, please report them via email to:
-**24556349+mosh666@users.noreply.github.com**
+**<24556349+mosh666@users.noreply.github.com>**
 
-You should receive a response within 48 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
+You should receive a response within 48 hours. If for some reason you do not,
+please follow up via email to ensure we received your original message.
 
 Please include the following information in your report:
 
-* Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting, etc.)
+* Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting,
+  etc.)
 * Full paths of source file(s) related to the manifestation of the issue
 * The location of the affected source code (tag/branch/commit or direct URL)
 * Any special configuration required to reproduce the issue
@@ -78,4 +80,6 @@ We support safe harbor for security researchers who:
 
 ## Recognition
 
-We appreciate the security research community's efforts in keeping pyMediaManager and our users safe. Reporters who follow this policy will be acknowledged in our security advisories (unless they prefer to remain anonymous).
+We appreciate the security research community's efforts in keeping pyMediaManager
+and our users safe. Reporters who follow this policy will be acknowledged in our
+security advisories (unless they prefer to remain anonymous).
