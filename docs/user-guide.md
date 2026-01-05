@@ -546,7 +546,7 @@ Recommended `.gitignore` entries for media projects:
 *.cache
 *.log
 
-# System files  
+# System files
 .DS_Store
 Thumbs.db
 desktop.ini
@@ -589,7 +589,7 @@ The Settings dialog includes **5 comprehensive tabs** for complete application c
 - **Application Name**: Display name for window title (default: "pyMediaManager")
 - **Theme**: Visual appearance
   - Light: Bright, high-contrast interface
-  - Dark: Low-light optimized interface  
+  - Dark: Low-light optimized interface
   - Auto: Follows system theme (Windows 10/11)
 - **Language**: Interface language selection (currently English, i18n planned)
 - **Logging Level**: Console and file log verbosity
@@ -635,7 +635,7 @@ The Settings dialog includes **5 comprehensive tabs** for complete application c
 - **User Name**: Your full name for Git commits
   - Used in commit author field
   - Example: "John Doe"
-- **User Email**: Your email address for Git commits  
+- **User Email**: Your email address for Git commits
   - Used in commit author field
   - Example: `john.doe@example.com`
 - **Auto-Initialize**: Create Git repositories by default for new projects
@@ -660,26 +660,26 @@ The Settings dialog includes **5 comprehensive tabs** for complete application c
   - Development builds show: v1.0.0.dev5+g1a2b3c4 (commit hash and distance)
   - Stable releases from `main` branch
   - Beta releases from `dev` branch with `latest-beta` tag
-  
+
 - **Commit Hash**: Git commit SHA for development builds
   - Full 40-character hash for precise version tracking
   - Useful for bug reports and debugging
-  
+
 - **Python Version**: Embedded Python runtime version
   - Python 3.13 (recommended, included by default)
   - Python 3.12 and 3.14 also supported
   - Shows exact version (e.g., 3.13.1)
-  
+
 - **Test Coverage**: Quality metrics
   - 193 tests with 73% code coverage
   - All tests passing status
   - Ensures application reliability and stability
-  
+
 - **Application Info**: License, author, and project details
   - MIT License
   - GitHub repository link
   - Homepage and documentation links
-  
+
 - **Dependencies**: Installed package versions
   - PySide6 (Qt framework)
   - GitPython (Git integration)

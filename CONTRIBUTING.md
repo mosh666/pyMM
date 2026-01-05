@@ -170,7 +170,7 @@ We follow PEP 8 with these tools and standards:
    def get_items() -> list[str]: ...
    def get_config() -> dict[str, Any]: ...
    def get_pair() -> tuple[int, str]: ...
-   
+
    # ❌ Wrong (old style)
    from typing import List, Dict, Tuple
    def get_items() -> List[str]: ...
@@ -182,13 +182,13 @@ We follow PEP 8 with these tools and standards:
    def calculate_total(items: list[float]) -> float:
        """
        Calculate total from list of numbers.
-       
+
        Args:
            items: List of numbers to sum
-           
+
        Returns:
            Total sum of all items
-           
+
        Raises:
            ValueError: If items list is empty
        """
@@ -383,7 +383,7 @@ def test_config_service_loads_defaults(tmp_path):
     """Test that config service loads default values correctly."""
     config_service = ConfigService(tmp_path)
     config = config_service.load()
-    
+
     assert config.app.name == "pyMediaManager"
     assert config.logging.level == "INFO"
     assert config.plugins.retry_attempts == 3
@@ -391,13 +391,13 @@ def test_config_service_loads_defaults(tmp_path):
 def test_config_service_redacts_sensitive_data(tmp_path):
     """Test that sensitive fields are redacted in exports."""
     config_service = ConfigService(tmp_path)
-    
+
     # Set sensitive data
     config_service.update_config(database={"password": "secret123"})
-    
+
     # Export with redaction
     exported = config_service.export_config(redact_sensitive=True)
-    
+
     assert exported["database"]["password"] == "***REDACTED***"
 ```
 
@@ -429,10 +429,10 @@ def test_project_wizard_validation(qtbot: QtBot):
     """Test that project wizard validates input correctly."""
     wizard = ProjectWizard()
     qtbot.addWidget(wizard)
-    
+
     # Try to proceed with empty name
     assert not wizard.validateCurrentPage()
-    
+
     # Enter valid name
     wizard.name_input.setText("test-project")
     assert wizard.validateCurrentPage()
@@ -441,15 +441,15 @@ def test_project_wizard_creates_project(qtbot: QtBot, tmp_path):
     """Test that wizard creates project successfully."""
     wizard = ProjectWizard()
     qtbot.addWidget(wizard)
-    
+
     # Fill in project details
     wizard.name_input.setText("vacation-2026")
     wizard.location_input.setText(str(tmp_path))
-    
+
     # Create project
     with qtbot.waitSignal(wizard.finished, timeout=1000):
         wizard.accept()
-    
+
     # Verify project exists
     project_path = tmp_path / "vacation-2026"
     assert project_path.exists()
@@ -691,12 +691,12 @@ Services follow dependency injection patterns:
    # app/core/services/my_service.py
    import logging
    from pathlib import Path
-   
+
    logger = logging.getLogger(__name__)
-   
+
    class MyService:
        """Service for managing X functionality."""
-       
+
        def __init__(self, config_service: ConfigService):
            """Initialize service with dependencies."""
            self.config = config_service
@@ -704,10 +704,10 @@ Services follow dependency injection patterns:
 
        def do_something(self, input_path: Path) -> dict[str, Any]:
            """Perform service operation.
-           
+
            Args:
                input_path: Path to process
-               
+
            Returns:
                Dictionary of results
            """
@@ -722,17 +722,17 @@ Services follow dependency injection patterns:
    import pytest
    from pathlib import Path
    from app.core.services.my_service import MyService
-   
+
    @pytest.fixture
    def service(mock_config_service):
        return MyService(mock_config_service)
-   
+
    def test_my_service_basic_operation(service):
        """Test basic service operation."""
        result = service.do_something(Path("test.txt"))
        assert isinstance(result, dict)
        assert "key" in result
-   
+
    def test_my_service_error_handling(service):
        """Test service handles errors correctly."""
        with pytest.raises(ValueError):

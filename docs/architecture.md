@@ -258,7 +258,7 @@ is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
 app:
   name: pyMediaManager
   version: auto  # Managed by setuptools_scm
-  
+
 ui:
   theme: auto  # light, dark, or auto
   show_first_run: true
@@ -517,7 +517,7 @@ pyMediaManager uses **PyQt-Fluent-Widgets** for modern, consistent UI:
   - Storage View: Drive management and status
   - Plugin View: Plugin installation and updates
   - Project View: Project browser and management
-  
+
 - **Bottom Navigation**:
   - Settings: Application configuration (5 tabs)
 
@@ -864,7 +864,7 @@ def test_button_click(qtbot: QtBot) -> None:
 database:
   host: localhost
   password: super_secret_123
-  
+
 # Exported with redaction
 database:
   host: localhost
@@ -906,7 +906,7 @@ database:
   - Detects complex security vulnerabilities
   - Tracks security advisories
   - Integration with GitHub Security tab
-  
+
 - **OpenSSF Scorecard**: Weekly security posture assessment
   - Branch protection enforcement
   - Code review requirements
