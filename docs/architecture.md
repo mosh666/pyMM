@@ -3,9 +3,10 @@
 > **Version:** Auto-detected from Git using setuptools_scm
 > **Last Updated:** January 5, 2026
 > **Python Support:** 3.12 | 3.13 | 3.14
-> **Test Suite:** 193 tests with 72.75% code coverage
+> **Test Suite:** 193 tests with 73% code coverage
 > **Quality Gates:** 15+ pre-commit hooks (Ruff linting/formatting, MyPy type checking, Security scanning)
-> **CI/CD:** GitHub Actions (CI, Security CodeQL, OpenSSF Scorecard)
+> **CI/CD:** GitHub Actions (CI/CD with matrix testing, Security CodeQL, OpenSSF Scorecard)
+> **Build Pipeline:** Automated builds for Python 3.12, 3.13, 3.14 with branch-based releases
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview
@@ -454,7 +455,7 @@ Python 3.12 and 3.13 explicitly supported with separate builds:
 
 ### Comprehensive Test Suite
 
-**Current Stats**: 137+ tests with 73% code coverage
+**Current Stats**: 193 tests with 73% code coverage
 **Coverage Target**: 70% minimum (enforced in CI)
 
 **Test Structure**:
@@ -619,7 +620,7 @@ on system drives during test execution.
 
 - **Global Fixture**: `mock_drive_root` in `tests/conftest.py` (autouse=True)
 - **Method**: Monkey-patches `FileSystemService.get_drive_root()` to return temporary directories
-- **Scope**: Applies to all 199 tests automatically
+- **Scope**: Applies to all 193 tests automatically
 - **Cleanup**: Pytest's `tmp_path` fixture handles automatic cleanup
 
 **Benefits:**
@@ -631,25 +632,32 @@ on system drives during test execution.
 
 ### Test Categories
 
-1. **Unit Tests** (98 tests): Test individual modules in isolation
+1. **Unit Tests** (~95 tests): Test individual modules in isolation
    - Service layer (config, file system, storage, logging)
    - Plugin system (base, manager)
    - Git integration
-   - Project models
+   - Project models and services
 
-2. **Integration Tests** (12 tests): Test workflows across multiple components
-   - Plugin download and installation
+2. **Integration Tests** (~10 tests): Test workflows across multiple components
+   - Plugin download and installation workflows
    - Project lifecycle management
    - Git repository operations
 
-3. **GUI Tests** (89 tests): Test user interface components
+3. **GUI Tests** (~50 tests): Test user interface components
    - First-run wizard (17 tests)
-   - Project dialogs (16 tests)
-   - Views (6 tests)
+   - Project dialogs and browser (14 tests)
+   - Views (storage, plugin, project views)
    - Settings dialog
-   - Main window navigation
 
+4. **Manual Integration Tests** (~4 tests): Higher-level integration tests
+   - Git service integration
+   - Plugin download testing
+   - Project management workflows
+   - Settings dialog behavior
+
+**Total Tests:** 193
 **Coverage:** 73% overall with focus on critical business logic
+**All tests passing** with comprehensive validation
 
 ### Running Tests
 
@@ -684,28 +692,42 @@ pytest tests/gui
 
 ## Future Roadmap
 
-### v0.1.0 (Current Beta)
+### v1.0.0 (Current - January 2026)
 
 - ✅ Complete project management implementation
 - ✅ Git integration for version control
 - ✅ Automatic version management with setuptools_scm
-- ✅ Comprehensive test suite (137+ tests, 73% coverage)
-- ✅ CI/CD pipeline with branch-based releases
-- 🔄 digiKam integration for media management (in progress)
+- ✅ Comprehensive test suite (193 tests, 73% coverage)
+- ✅ CI/CD pipeline with matrix testing (Python 3.12, 3.13, 3.14)
+- ✅ Branch-based release workflow (dev → beta, main → stable)
+- ✅ Rolling beta releases with latest-beta tag
+- ✅ Pre-commit hooks with security scanning (Bandit, Ruff, MyPy)
+- ✅ Security analysis (CodeQL, OpenSSF Scorecard, Dependabot)
+- ✅ Complete documentation (User Guide, Architecture, Contributing)
+- ✅ GitHub community standards (CODE_OF_CONDUCT, SECURITY, issue templates)
 
-### v0.2.0 (Planned)
+### v1.1.0 (Q1 2026 - Planned)
+
+- digiKam integration for media management
+- Enhanced plugin marketplace discovery
+- Plugin auto-update notifications
+- Plugin SHA-256 checksum verification for downloads
+- Advanced project templates with custom wizards
+
+### v1.2.0 (Q2 2026 - Planned)
 
 - Cross-platform support (Linux, macOS)
-- Plugin auto-updates with version checking
-- Enhanced settings UI with advanced options
-- Plugin SHA-256 checksum verification
+- Enhanced settings UI with advanced configuration options
+- Project export/import functionality
+- Plugin dependency resolution improvements
 
-### v0.3.0 (Future)
+### v2.0.0 (Future)
 
-- Plugin marketplace discovery
 - Cloud sync support for projects
-- Advanced project templates with wizards
 - Digital signatures for plugin security
+- Plugin sandboxing and permissions system
+- Advanced media processing workflows
+- Multi-language support (i18n)
 
 ## Contributing
 

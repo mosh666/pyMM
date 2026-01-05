@@ -176,8 +176,8 @@ commit. The hooks are configured in [.pre-commit-config.yaml](.pre-commit-config
 
 **Tests:**
 
-- **unit-tests** - Run fast unit tests on commit (140 tests)
-- **full-tests** - Run complete test suite before push (193 tests)
+- **unit-tests** - Run fast unit tests on commit (~140 tests)
+- **full-tests** - Run complete test suite before push (193 tests with 73% coverage)
 
 **Install hooks** (one-time setup):
 
@@ -339,7 +339,7 @@ drive during test execution. This is handled transparently by the `mock_drive_ro
 - Tests never create folders on C:\ or other system drives
 - All `pyMM.Logs` and `pyMM.Projects` folders are created in temporary directories
 - Cleanup is automatic - no manual intervention needed
-- Test isolation is enabled for all 199 tests automatically
+- Test isolation is enabled for all 193 tests automatically
 
 **How It Works:**
 

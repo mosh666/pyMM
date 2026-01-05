@@ -1,10 +1,10 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git (latest-beta)
+**Version:** Auto-detected from Git (v1.0.0 stable, latest-beta for dev builds)
 **Last Updated:** January 5, 2026
-**Test Suite:** 193 tests with 72.75% coverage
-**Python Support:** 3.12, 3.13, 3.14
-**Quality:** 15+ pre-commit hooks, Ruff linting, MyPy type checking
+**Test Suite:** 193 tests with 73% coverage
+**Python Support:** 3.12, 3.13, 3.14 (3.13 recommended in embedded runtime)
+**Quality:** 15+ pre-commit hooks, Ruff linting, MyPy type checking, Security scanning
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
 > **See also:** [Architecture Guide](architecture.md) for technical details
@@ -477,12 +477,13 @@ The Settings dialog includes 5 tabs for comprehensive configuration:
 - **Version:** Current application version (auto-detected from Git)
   - Automatically managed using setuptools_scm and Git tags
   - Development builds show commit hash and distance from last tag
-  - Supports alpha, beta, and rc prerelease versions
+  - Supports alpha, beta, and rc prerelease versions (e.g., v1.0.0-beta.1)
+  - Stable releases from `main` branch, beta releases from `dev` branch
 - **Commit Hash:** Git commit SHA (for development builds)
-- **Python Version:** Embedded Python runtime version (3.13 recommended)
+- **Python Version:** Embedded Python runtime version (3.13 recommended, 3.12 and 3.14 also supported)
 - **Application Info:** License, author, and project details
-- **Dependencies:** Installed package versions (PySide6, GitPython, etc.)
-- **Test Coverage:** 137+ tests ensuring reliability
+- **Dependencies:** Installed package versions (PySide6, GitPython, Pydantic, etc.)
+- **Test Coverage:** 193 tests with 73% coverage ensuring reliability
 
 ### Saving Settings
 
@@ -619,10 +620,12 @@ If you encounter a bug:
 ## Support & Resources
 
 - **Documentation:** [GitHub Docs](https://github.com/mosh666/pyMM/tree/main/docs)
-- **Issues:** [Report Bugs](https://github.com/mosh666/pyMM/issues)
+- **Issues:** [Report Bugs](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
+- **Feature Requests:** [Request Features](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)
 - **Discussions:** [Community Forum](https://github.com/mosh666/pyMM/discussions)
-- **Test Suite:** 137+ tests ensuring reliability and stability
+- **Test Suite:** 193 tests with 73% coverage ensuring reliability and stability
 - **Changelog:** [Version History](../CHANGELOG.md)
+- **Security:** [Security Policy](../.github/SECURITY.md)
 
 ---
 

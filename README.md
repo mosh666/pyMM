@@ -45,8 +45,9 @@ interface for managing media projects and orchestrating external tools through p
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - High test coverage with isolated test environment
+- 🧪 **Comprehensive Testing** - 193 tests with 73% code coverage and isolated test environment
 - 🎯 **Quality Gates** - Extensive pre-commit checks with Ruff, MyPy, and security validation
+- 🔐 **Security Focused** - CodeQL analysis, OpenSSF Scorecard, Dependabot, and Bandit scanning
 
 ---
 
