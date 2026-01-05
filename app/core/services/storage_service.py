@@ -10,6 +10,7 @@ import psutil
 
 try:
     import wmi
+
     WMI_AVAILABLE = True
 except ImportError:
     WMI_AVAILABLE = False
@@ -128,7 +129,7 @@ class StorageService:
         if not WMI_AVAILABLE:
             self._external_drive_cache = {}
             return
-        
+
         try:
             self._external_drive_cache = self._detect_external_drives_via_wmi()
         except Exception:
@@ -137,34 +138,34 @@ class StorageService:
     def _detect_external_drives_via_wmi(self) -> dict[str, bool]:
         """
         Detect USB and external drives using WMI.
-        
+
         Returns:
             Dictionary mapping drive letters to whether they're USB/external drives
         """
         usb_drives = {}
-        
+
         try:
             c = wmi.WMI()
-            
+
             # Get all disk drives
             for disk in c.Win32_DiskDrive():
                 # Check if it's a USB or external drive
                 is_external = False
-                
+
                 # Check interface type for USB
-                if disk.InterfaceType and 'USB' in disk.InterfaceType.upper():
+                if disk.InterfaceType and "USB" in disk.InterfaceType.upper():
                     is_external = True
-                
+
                 # Check PNPDeviceID for USB signature
-                if disk.PNPDeviceID and 'USB' in disk.PNPDeviceID.upper():
+                if disk.PNPDeviceID and "USB" in disk.PNPDeviceID.upper():
                     is_external = True
-                
+
                 # Check MediaType for removable or external
                 if disk.MediaType:
                     media_type = disk.MediaType.lower()
-                    if any(keyword in media_type for keyword in ['removable', 'external']):
+                    if any(keyword in media_type for keyword in ["removable", "external"]):
                         is_external = True
-                
+
                 if is_external:
                     # Get partitions for this disk
                     for partition in disk.associators("Win32_DiskDriveToDiskPartition"):
@@ -173,30 +174,30 @@ class StorageService:
                             if logical_disk.DeviceID:
                                 drive_letter = logical_disk.DeviceID
                                 usb_drives[drive_letter] = True
-        
+
         except Exception:
             pass
-        
+
         return usb_drives
 
     def _is_external_drive(self, drive_letter: str) -> bool:
         """
         Check if a drive is an external drive (USB, external HDD/SSD, etc.).
-        
+
         Args:
             drive_letter: Drive letter (e.g., "D:\\")
-        
+
         Returns:
             True if drive is external/removable
         """
         if self._external_drive_cache is None:
             return False
-        
+
         # Normalize drive letter
-        normalized = drive_letter.rstrip('\\').upper()
-        if not normalized.endswith(':'):
-            normalized += ':'
-        
+        normalized = drive_letter.rstrip("\\").upper()
+        if not normalized.endswith(":"):
+            normalized += ":"
+
         return self._external_drive_cache.get(normalized, False)
 
     def get_drive_root(self, path: Path | str) -> Path | None:
@@ -237,42 +238,40 @@ class StorageService:
         # On Windows, use GetDriveTypeW API for accurate detection
         try:
             import ctypes
-            
+
             # Drive types from Windows API
-            DRIVE_UNKNOWN = 0
-            DRIVE_NO_ROOT_DIR = 1
             DRIVE_REMOVABLE = 2
             DRIVE_FIXED = 3
             DRIVE_REMOTE = 4
             DRIVE_CDROM = 5
             DRIVE_RAMDISK = 6
-            
+
             kernel32 = ctypes.windll.kernel32
             drive_type = kernel32.GetDriveTypeW(ctypes.c_wchar_p(partition.mountpoint))
-            
+
             # 1. Check Windows drive type for true removable
             if drive_type == DRIVE_REMOVABLE:
                 return True
-            
+
             # 2. Skip network drives and CD-ROMs
             if drive_type in [DRIVE_REMOTE, DRIVE_CDROM, DRIVE_RAMDISK]:
                 return False
-            
+
             # 3. Check if drive is external (USB, external HDD/SSD) using WMI
             if self._is_external_drive(partition.mountpoint):
                 return True
-            
+
             # 4. Fallback: Check partition options
             opts = partition.opts.lower()
             if "removable" in opts:
                 return True
-            
+
             # 5. Additional heuristic: Common removable filesystems on non-system drives
             if partition.fstype in ["vfat", "exfat", "fat32"]:
                 # If it's a common USB filesystem and not explicitly fixed/remote, consider it removable
                 if drive_type not in [DRIVE_FIXED, DRIVE_REMOTE]:
                     return True
-            
+
             return False
         except Exception:
             # Fallback to original method if Windows API fails
