@@ -36,12 +36,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0  # Required for setuptools-scm
 
       - name: Set up Python ${{ matrix.python-version }} for building
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Cache embeddable Python
         id: cache-python
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: python-embed.zip
           key: python-embed-${{ matrix.python-version }}-${{ matrix.python-url }}
@@ -139,7 +139,7 @@ jobs:
           echo "Checksum: $hash"
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pyMM-py${{ matrix.python-version }}-build
           path: |
@@ -155,7 +155,7 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: artifacts/
 
@@ -166,7 +166,7 @@ jobs:
           echo "For most users, download the Python 3.13 build for best compatibility." >> RECOMMENDED.txt
 
       - name: Upload recommended metadata
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: recommended-metadata
           path: RECOMMENDED.txt
