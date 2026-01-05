@@ -26,7 +26,7 @@ contributions.
 
 ### Prerequisites
 
-- **Python:** 3.12 or 3.13 (3.13 recommended)
+- **Python:** 3.12, 3.13, or 3.14 (3.13 recommended)
 - **Git:** Latest version
 - **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
 - **IDE:** VS Code recommended (with Python extension)
@@ -87,6 +87,7 @@ contributions.
    ```
 
    **What pre-commit hooks do:**
+
    - 🔍 **Ruff linting** - Auto-fix code style issues
    - 🎨 **Code formatting** - Ensure consistent formatting
    - ✅ **File checks** - Trailing whitespace, YAML/TOML syntax
@@ -125,7 +126,9 @@ contributions.
 ## Code Style
 
 ### Python Style Guide
+
 We follow PEP 8 with these tools:
+
 - **Ruff**: Fast linting with auto-fix and formatting (replaces Black, flake8, isort)
 - **MyPy**: Static type checking
 - **Modern Type Hints**: Use Python 3.12+ native types (`list`, `dict`, `tuple`) instead of
@@ -147,29 +150,60 @@ mypy app/
 We use [pre-commit](https://pre-commit.com/) to automatically run code quality checks before each
 commit. The hooks are configured in [.pre-commit-config.yaml](.pre-commit-config.yaml) and include:
 
+**Code Quality:**
+
 - **ruff** - Linter with auto-fix (replaces flake8, isort, and more)
 - **ruff-format** - Code formatter (replaces Black)
+- **mypy** - Static type checking for type safety
+
+**File Checks:**
+
 - **trailing-whitespace** - Remove trailing whitespace
 - **end-of-file-fixer** - Ensure files end with newline
 - **check-yaml** - Validate YAML files
 - **check-toml** - Validate TOML files
+- **check-json** - Validate JSON files
 - **check-merge-conflict** - Check for merge conflict markers
 - **mixed-line-ending** - Ensure consistent line endings
 
+**Security:**
+
+- **detect-private-key** - Prevent committing private keys
+
+**Documentation:**
+
+- **markdownlint** - Strict markdown linting for documentation quality
+
+**Tests:**
+
+- **unit-tests** - Run fast unit tests on commit (140 tests)
+- **full-tests** - Run complete test suite before push (193 tests)
+
 **Install hooks** (one-time setup):
+
 ```bash
-pre-commit install
+# Automatic setup (recommended)
+# Windows PowerShell:
+.\scripts\setup-git-hooks.ps1
+
+# Linux/macOS/Git Bash:
+bash scripts/setup-git-hooks.sh
 ```
 
 **Run manually** (optional):
+
 ```bash
 pre-commit run --all-files
 ```
 
-The hooks run automatically on `git commit`. If any hook fails, the commit will be blocked until you fix the issues.
+The hooks run automatically on `git commit` and `git push`. If any hook fails, the commit/push
+will be blocked until you fix the issues. This ensures all code meets quality standards before
+entering the repository.
 
 ### Pre-commit Checks
+
 Before committing, ensure:
+
 ```bash
 # All tests pass
 pytest
@@ -202,7 +236,7 @@ We follow a branch-based release flow:
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -211,6 +245,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -220,7 +255,8 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 ### Examples
-```
+
+```text
 feat(plugins): add support for custom plugin loaders
 
 Implement plugin loader interface to allow custom plugin types
@@ -229,7 +265,7 @@ beyond the standard SimplePluginImplementation.
 Closes #123
 ```
 
-```
+```text
 fix(storage): correct drive serial number detection on USB drives
 
 The serial number detection was failing for some USB drives due to
@@ -241,12 +277,14 @@ Fixes #456
 ## Testing Guidelines
 
 ### Unit Tests
+
 - Located in `tests/unit/`
 - Test individual functions/methods in isolation
 - Use mocks for external dependencies
 - Aim for 70%+ coverage
 
 Example:
+
 ```python
 def test_file_system_service_resolve_path(service, app_root):
     """Test resolving relative paths."""
@@ -256,11 +294,13 @@ def test_file_system_service_resolve_path(service, app_root):
 ```
 
 ### GUI Tests
+
 - Located in `tests/gui/`
 - Use pytest-qt for widget testing
 - Test user interactions and signals
 
 Example:
+
 ```python
 def test_button_click(qtbot):
     """Test button click handling."""
@@ -273,6 +313,7 @@ def test_button_click(qtbot):
 ```
 
 ### Running Specific Tests
+
 ```bash
 # Run unit tests only
 pytest tests/unit/
@@ -312,6 +353,7 @@ No special configuration is needed.
 ## Pull Request Process
 
 1. **Create a feature branch**:
+
    ```bash
    git checkout -b feature/my-new-feature
    ```
@@ -323,12 +365,14 @@ No special configuration is needed.
    - Ensure tests pass
 
 3. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "feat: add my new feature"
    ```
 
 4. **Push to your fork**:
+
    ```bash
    git push origin feature/my-new-feature
    ```
@@ -339,6 +383,7 @@ No special configuration is needed.
    - Ensure CI passes
 
 ### PR Checklist
+
 - [ ] Tests added/updated
 - [ ] Documentation updated
 - [ ] Code formatted (Black)
@@ -351,6 +396,7 @@ No special configuration is needed.
 ### Adding a New Service
 
 1. Create service file in `app/core/services/`:
+
    ```python
    # app/core/services/my_service.py
    class MyService:
@@ -362,6 +408,7 @@ No special configuration is needed.
    ```
 
 2. Create tests in `tests/unit/`:
+
    ```python
    # tests/unit/test_my_service.py
    def test_my_service():
@@ -375,6 +422,7 @@ No special configuration is needed.
 ### Adding a New Plugin
 
 1. Create plugin manifest:
+
    ```yaml
    # plugins/myplugin/plugin.yaml
    name: MyPlugin
@@ -395,6 +443,7 @@ No special configuration is needed.
 ### Adding a New UI View
 
 1. Create view class:
+
    ```python
    # app/ui/views/my_view.py
    from PySide6.QtWidgets import QWidget
@@ -410,6 +459,7 @@ No special configuration is needed.
    ```
 
 2. Register in MainWindow:
+
    ```python
    self.my_view = MyView()
    self.addSubInterface(
@@ -425,6 +475,7 @@ No special configuration is needed.
 ## Documentation
 
 ### Docstring Format
+
 Use Google-style docstrings:
 
 ```python
@@ -449,12 +500,14 @@ def my_function(param1: str, param2: int) -> bool:
 ```
 
 ### Documentation Files
+
 - **README.md**: User-facing overview
 - **docs/architecture.md**: Technical architecture
 - **docs/plugin-development.md**: Plugin development guide
 - **CONTRIBUTING.md**: This file
 
 ### Updating Documentation
+
 - Update relevant docs with code changes
 - Add examples for new features
 - Keep docs in sync with code
@@ -462,7 +515,9 @@ def my_function(param1: str, param2: int) -> bool:
 ## Issue Reporting
 
 ### Bug Reports
+
 Include:
+
 - Python version
 - Operating system
 - Steps to reproduce
@@ -470,15 +525,17 @@ Include:
 - Error messages/logs
 
 ### Feature Requests
+
 Include:
+
 - Use case description
 - Proposed solution
 - Alternative approaches considered
 
 ## Questions?
 
-- **Discussions**: https://github.com/mosh666/pyMM/discussions
-- **Issues**: https://github.com/mosh666/pyMM/issues
+- **Discussions**: <https://github.com/mosh666/pyMM/discussions>
+- **Issues**: <https://github.com/mosh666/pyMM/issues>
 
 ## License
 

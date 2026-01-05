@@ -186,7 +186,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore
             "Install with: pip install PySide6-Fluent-Widgets\n\n"
             "Running in fallback mode..."
         )
-        warning.setAlignment(Qt.AlignCenter)
+        warning.setAlignment(Qt.AlignCenter)  # type: ignore[attr-defined]
         layout.addWidget(warning)
 
     def _apply_theme(self) -> None:

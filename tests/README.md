@@ -14,7 +14,7 @@ unit, integration, and GUI components.
 
 ## Directory Structure
 
-```
+```text
 tests/
 ├── unit/                       # Unit tests for individual modules
 │   ├── test_config_service.py
@@ -424,14 +424,14 @@ pytest -x --pdb
 
 ### Common Issues
 
-**Issue: Tests fail with "Module not found"**
+#### Issue: Tests fail with "Module not found"
 
 ```bash
 # Solution: Install in development mode
 pip install -e ".[dev]"
 ```
 
-**Issue: GUI tests fail with "Could not find the Qt platform plugin"**
+#### Issue: GUI tests fail with "Could not find the Qt platform plugin"
 
 ```bash
 # Solution: Set QT_QPA_PLATFORM
@@ -439,7 +439,7 @@ export QT_QPA_PLATFORM=offscreen  # Linux/macOS
 $env:QT_QPA_PLATFORM="offscreen"  # Windows PowerShell
 ```
 
-**Issue: Slow test execution**
+#### Issue: Slow test execution
 
 ```bash
 # Solution: Run in parallel
@@ -447,7 +447,7 @@ pip install pytest-xdist
 pytest -n auto
 ```
 
-**Issue: Coverage not generated**
+#### Issue: Coverage not generated
 
 ```bash
 # Solution: Check pytest-cov is installed

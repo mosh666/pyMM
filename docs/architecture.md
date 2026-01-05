@@ -3,7 +3,8 @@
 > **Version:** Auto-detected from Git using setuptools_scm
 > **Last Updated:** January 5, 2026
 > **Python Support:** 3.12 | 3.13 | 3.14
-> **Test Suite:** 199 tests with 73% code coverage
+> **Test Suite:** 193 tests with 72.77% code coverage
+> **Quality Gates:** 15+ pre-commit checks (Ruff, Black, MyPy, Security)
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for version history
 
 ## Overview
@@ -15,6 +16,7 @@ modular architecture with clear separation of concerns.
 ## Design Principles
 
 ### 1. Portability First
+
 - **No System Installation**: All files contained within application directory
 - **No PATH Pollution**: Environment variables modified only for current process
 - **No Registry Modifications**: All settings stored in portable config files
@@ -22,18 +24,21 @@ modular architecture with clear separation of concerns.
 - **Relative Paths**: All internal references use paths relative to app root
 
 ### 2. Service-Oriented Architecture
+
 - **Dependency Injection**: Services injected where needed
 - **Single Responsibility**: Each service handles one aspect
 - **Testability**: All services have comprehensive unit tests
 - **Loose Coupling**: Services communicate through interfaces
 
 ### 3. Plugin-Based Extensibility
+
 - **Manifest-Driven**: Plugins described in YAML manifests
 - **Lazy Loading**: Plugins loaded on demand
 - **Isolated Installation**: Each plugin in separate directory
 - **Version Management**: Plugins track their own versions
 
 ### 4. Code Quality Standards
+
 - **Structured Logging**: All modules use proper logger instances instead of print statements
 - **Type Safety**: Comprehensive return type hints on all functions and methods
 - **Modern Type Hints**: Use Python 3.12+ native generic types (`list`, `dict`, `tuple`) instead
@@ -45,6 +50,7 @@ modular architecture with clear separation of concerns.
 - **Linting**: Ruff linter with auto-fix for code quality
 
 ### 5. Version Management
+
 - **Automatic Detection**: Version derived from Git tags using `setuptools_scm`
 - **Semantic Versioning**: Supports alpha, beta, rc prerelease tags (e.g., v1.0.0-beta.1)
 - **Runtime Access**: Version and commit hash available at runtime via `app.__version__` and `app.__commit_id__`
@@ -54,13 +60,14 @@ modular architecture with clear separation of concerns.
 - **Rolling Tags**: `latest-beta` tag automatically updated on `dev` branch pushes with asset cleanup
 
 ### 6. UI Framework Stability
+
 - **QFluentWidgets Integration**: All navigation interfaces and views properly initialized
 - **Object Names**: All views set `setObjectName()` to prevent "object name can't be empty string" errors
 - **Fixed Interfaces**: Home, Settings, Storage, Plugin, and Project views properly configured
 
 ## Directory Structure
 
-```
+```text
 D:\pyMM\                          # Application root
 │
 ├── python313\                    # Embedded Python runtime (3.13 default)
@@ -136,15 +143,18 @@ D:\pyMM.Logs\                     # Application logs (drive root)
 ## Core Components
 
 ### 1. FileSystemService
+
 **Purpose**: Abstraction layer for file operations with portable path handling
 
 **Key Features**:
+
 - Resolves relative paths to application root
 - Ensures directories exist before operations
 - Provides cross-platform path operations
 - Tracks free disk space
 
 **Usage**:
+
 ```python
 from pathlib import Path
 from app.core.services.file_system_service import FileSystemService
@@ -155,9 +165,11 @@ files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=Tr
 ```
 
 ### 2. StorageService
+
 **Purpose**: Detect and manage portable drives with enhanced external drive detection
 
 **Key Features**:
+
 - Enumerate all drives (fixed and removable)
 - **Advanced external drive detection** using multiple methods:
   - Windows `GetDriveTypeW` API for true removable drives (USB flash drives, SD cards)
@@ -170,6 +182,7 @@ files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=Tr
 - Graceful fallback when WMI is unavailable
 
 **Detection Heuristics**:
+
 1. Check Windows drive type (DRIVE_REMOVABLE)
 2. Query WMI for USB interface or external media type indicators
 3. Check partition options for "removable" flag
@@ -177,6 +190,7 @@ files: list[Path] = fs.list_directory(project_dir, pattern="*.jpg", recursive=Tr
 5. Exclude network drives, CD-ROMs, and RAM disks
 
 **Usage**:
+
 ```python
 from pathlib import Path
 from app.core.services.storage_service import StorageService, DriveInfo
@@ -194,6 +208,7 @@ is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
 ```
 
 **DriveInfo Fields**:
+
 - `drive_letter`: Drive path (e.g., "K:\\")
 - `label`: Volume label
 - `file_system`: Filesystem type (NTFS, FAT32, exFAT)
@@ -201,7 +216,8 @@ is_portable: bool = storage.is_path_on_removable_drive("D:\\pyMM")
 - `free_space`: Available space in bytes
 - `is_removable`: True if external/removable drive
 - `serial_number`: Volume serial number (hex string)
-```
+
+```text
 
 ### 3. ConfigService
 **Purpose**: Layered configuration management with Pydantic validation
@@ -234,15 +250,18 @@ config_service.export_config(Path("config_export.yaml"), redact_sensitive=True)
 ```
 
 ### 4. LoggingService
+
 **Purpose**: Rich console and rotating file logs
 
 **Features**:
+
 - Rich-formatted console output with colors
 - Rotating file logs (10MB, 5 backups)
 - Configurable log levels
 - Separate loggers for modules
 
 **Usage**:
+
 ```python
 from pathlib import Path
 from logging import Logger
@@ -258,6 +277,7 @@ logger.info("Application started")
 ```
 
 **Code Quality Improvements**:
+
 - **Migration from print()**: All print statements replaced with structured logging calls
   - Debug information: `logger.debug()`
   - General progress: `logger.info()`
@@ -267,9 +287,11 @@ logger.info("Application started")
 - **Consistency**: All 15+ modules now use logger instances from `logging.getLogger(__name__)`
 
 ### 5. PluginManager
+
 **Purpose**: Discover, install, and manage plugins
 
 **Plugin Lifecycle**:
+
 1. **Discovery**: Scan `plugins/` for `plugin.yaml` manifests
 2. **Installation**: Download → Extract → Validate
 3. **Registration**: Add to process PATH if configured
@@ -277,6 +299,7 @@ logger.info("Application started")
 5. **Uninstallation**: Remove plugin directory
 
 **Plugin Manifest Structure**:
+
 ```yaml
 name: FFmpeg
 version: "7.1.0"
@@ -296,6 +319,7 @@ dependencies: []
 ```
 
 **Usage**:
+
 ```python
 import os
 from pathlib import Path
@@ -320,6 +344,7 @@ os.environ['PATH'] = os.pathsep.join([str(p) for p in paths]) + os.pathsep + os.
 ## UI Architecture
 
 ### Fluent Design System
+
 pyMediaManager uses **PyQt-Fluent-Widgets** for modern, consistent UI:
 
 - **NavigationInterface**: Side navigation with collapsible menu
@@ -328,6 +353,7 @@ pyMediaManager uses **PyQt-Fluent-Widgets** for modern, consistent UI:
 - **Acrylic Effects**: Transparency and blur effects
 
 ### View Pattern
+
 Each major feature has a dedicated view:
 
 - **StorageView**: Manage drives
@@ -336,15 +362,18 @@ Each major feature has a dedicated view:
 - **Settings**: Configure application
 
 ### First-Run Wizard
+
 **Purpose**: Guide new users through initial setup
 
 **Pages**:
+
 1. **Welcome**: Introduction and features
 2. **Storage**: Select portable drive for projects/logs
 3. **Plugins**: Choose optional plugins to install
 4. **Complete**: Summary and "don't show again" option
 
 **Integration**:
+
 ```python
 from app.ui.components.first_run_wizard import FirstRunWizard
 
@@ -390,12 +419,14 @@ Config:            D:\pyMM\config\
 ### Embedded Python Approach
 
 **Benefits**:
+
 - No system Python required
 - Version consistency
 - Isolated dependencies
 - True portability
 
 **Trade-offs**:
+
 - Larger download size (~200MB with deps)
 - Manual updates required
 - Platform-specific builds
@@ -421,10 +452,12 @@ Python 3.12 and 3.13 explicitly supported with separate builds:
 ## Testing Strategy
 
 ### Comprehensive Test Suite
+
 **Current Stats**: 137+ tests with 73% code coverage
 **Coverage Target**: 70% minimum (enforced in CI)
 
 **Test Structure**:
+
 ```plaintext
 tests/
 ├── unit/                         # Core service unit tests
@@ -451,9 +484,11 @@ tests/
 ```
 
 ### GUI Tests (pytest-qt)
+
 **Tools**: pytest-qt, QTest
 
 **Key Patterns**:
+
 ```python
 from pytestqt.qtbot import QtBot
 from PySide6.QtCore import Qt
@@ -504,16 +539,19 @@ def test_button_click(qtbot: QtBot) -> None:
 ## Security Considerations
 
 ### Sensitive Data Handling
+
 - Config redaction: `password`, `token`, `api_key`, `secret` auto-redacted
 - Logs: Sensitive values never logged
 - Export: `redact_sensitive=True` option for config export
 
 ### Plugin Security
+
 - **Source Verification**: Download URLs in manifests
 - **Checksum Validation**: Future enhancement
 - **Sandboxing**: Plugins run in same process (trust model)
 
 ### Future Enhancements
+
 - Digital signatures for plugins
 - SHA-256 checksums in manifests
 - Plugin permission system
@@ -521,34 +559,40 @@ def test_button_click(qtbot: QtBot) -> None:
 ## Performance Considerations
 
 ### Startup Time
+
 - **Cold Start**: ~2-3 seconds (including Qt initialization)
 - **Warm Start**: ~1-2 seconds (OS cached)
 
 ### Optimization Strategies
+
 - Lazy plugin discovery (on-demand)
 - Async plugin downloads (aiohttp)
 - Cached configuration (loaded once)
 - Minimal imports in launcher
 
 ### Memory Usage
+
 - **Base**: ~80MB (PySide6 + app)
 - **Per Plugin**: ~10-50MB (depending on plugin)
 
 ## Extension Points
 
 ### Adding New Plugins
+
 1. Create `plugins/{name}/plugin.yaml` manifest
 2. Test download URL
 3. Verify executable path
 4. Commit manifest to repository
 
 ### Adding New Views
+
 1. Create view class in `app/ui/views/`
 2. Inherit from QWidget
 3. Register in `MainWindow._init_navigation()`
 4. Add tests in `tests/gui/test_views.py`
 
 ### Custom Plugin Implementations
+
 ```python
 from collections.abc import Callable
 from app.plugins.plugin_base import PluginBase
@@ -640,6 +684,7 @@ pytest tests/gui
 ## Future Roadmap
 
 ### v0.1.0 (Current Beta)
+
 - ✅ Complete project management implementation
 - ✅ Git integration for version control
 - ✅ Automatic version management with setuptools_scm
@@ -648,12 +693,14 @@ pytest tests/gui
 - 🔄 digiKam integration for media management (in progress)
 
 ### v0.2.0 (Planned)
+
 - Cross-platform support (Linux, macOS)
 - Plugin auto-updates with version checking
 - Enhanced settings UI with advanced options
 - Plugin SHA-256 checksum verification
 
 ### v0.3.0 (Future)
+
 - Plugin marketplace discovery
 - Cloud sync support for projects
 - Advanced project templates with wizards

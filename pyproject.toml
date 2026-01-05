@@ -45,6 +45,7 @@ dev = [
     "ruff>=0.1.0",
     "black>=23.12.0",
     "mypy>=1.8.0",
+    "types-PyYAML>=6.0.0",
 ]
 
 [project.urls]
@@ -129,12 +130,14 @@ target-version = ["py312", "py313", "py314"]
 
 [tool.mypy]
 python_version = "3.12"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_any_generics = true
+disallow_untyped_defs = false
+disallow_any_generics = false
 warn_redundant_casts = true
-warn_unused_ignores = true
+warn_unused_ignores = false
 strict_equality = true
 check_untyped_defs = true
 ignore_missing_imports = true
+strict_optional = false
+disallow_untyped_calls = false

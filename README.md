@@ -1,11 +1,13 @@
 # pyMediaManager
 
-**Portable Python-based media management application with modern Fluent Design UI**
+Portable Python-based media management application with modern Fluent Design UI
 
-[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue)](https://www.python.org)
+[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)](https://www.python.org)
 [![Status](https://img.shields.io/badge/status-beta-yellow)](https://github.com/mosh666/pyMM)
+[![Tests](https://img.shields.io/badge/tests-193%20passing-brightgreen)](https://github.com/mosh666/pyMM)
+[![Coverage](https://img.shields.io/badge/coverage-72.77%25-success)](https://github.com/mosh666/pyMM)
 
 ## Overview
 
@@ -17,15 +19,15 @@ interface for managing media projects and orchestrating external tools through p
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
 - 💾 **100% Portable** - Zero system installation, runs from USB/external drives
-- � **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
-- �🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
+- 🔍 **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
+- 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and templates
-
 - 🔒 **Secure Configuration** - Layered settings with sensitive data redaction
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, checksums, and progress tracking
 - ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - 199 tests with 73% code coverage and isolated test environment
+- 🧪 **Comprehensive Testing** - 193 tests with 72.77% code coverage and isolated test environment
+- 🎯 **Quality Gates** - 15+ pre-commit checks with Ruff, Black, MyPy, and security validation
 
 > **📖 Documentation:**
 > [User Guide](docs/user-guide.md) | [Architecture Guide](docs/architecture.md) | [Contributing](CONTRIBUTING.md) | [CHANGELOG](CHANGELOG.md)
@@ -48,7 +50,7 @@ pyMediaManager is engineered for true portability with zero system footprint:
 
 ### Directory Structure
 
-```
+```text
 D:\pyMM\                          # Application directory (portable)
 ├── python313\                    # Embedded Python 3.13 runtime (win64)
 │   ├── python.exe
@@ -125,11 +127,13 @@ move the `pyMM\` application folder.
    - **Recommended:** `pyMM-latest-beta-py3.13-win64.zip` (Python 3.13)
 
 2. **Extract to your portable drive:**
+
    ```cmd
    # Extract to D:\pyMM\ (or any drive letter)
    ```
 
 3. **Run the application:**
+
    ```cmd
    D:\pyMM\python313\python.exe D:\pyMM\launcher.py
    ```
@@ -145,6 +149,7 @@ move the `pyMM\` application folder.
 ### Option 2: Build From Source
 
 **Prerequisites:**
+
 - Python 3.12 or 3.13 (3.13 recommended)
 - Git
 
@@ -188,6 +193,7 @@ The project uses automated pre-commit hooks to ensure code quality:
 All checks must pass before code can be committed or pushed. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 **Build Portable Distribution:**
+
 ```bash
 # Automated via GitHub Actions CI/CD
 # Manual build (if needed):
@@ -203,21 +209,21 @@ pyMediaManager orchestrates external media tools through a flexible, manifest-ba
 ### Available Plugins
 
 #### Mandatory Plugins
-- **Git** - Version control system (available as plugin, 70MB)
-- **7-Zip** - Archive extraction for plugin installations (5MB)
+
+- **Git** (v2.48.1) - Distributed version control system
+- **digiKam** (v8.5.0) - Professional photo management application
+- **MariaDB** (v11.6.2) - Database backend for digiKam
 
 #### Optional Plugins
 
-| Plugin | Purpose | Size |
+| Plugin | Purpose | Latest Version |
 | --- | --- | --- |
-| **ExifTool** | Metadata extraction/editing | 8MB |
-| **FFmpeg** | Video/audio processing | 100MB |
-| **digiKam** | Photo management suite | 500MB |
-| **ImageMagick** | Image manipulation | 30MB |
-| **MKVToolNix** | Matroska container tools | 35MB |
-| **Git LFS** | Large file storage for Git | 10MB |
-| **GitVersion** | Semantic versioning from Git | 15MB |
-| **MariaDB** | Database backend | 200MB |
+| **ExifTool** | Metadata extraction/editing | Latest |
+| **FFmpeg** | Video/audio processing | Latest |
+| **ImageMagick** | Image manipulation | Latest |
+| **MKVToolNix** | Matroska container tools | Latest |
+| **Git LFS** | Large file storage for Git | Latest |
+| **GitVersion** | Semantic versioning from Git | Latest |
 
 ### Plugin Features
 
@@ -427,10 +433,12 @@ pytest tests/unit tests/integration
 ```
 
 **Test Statistics:**
-- **Total Tests:** 137+
-- **Code Coverage:** 73% on core modules
+
+- **Total Tests:** 193 passing
+- **Code Coverage:** 72.77% (exceeds 70% requirement)
 - **Test Types:** Unit, Integration, GUI (pytest-qt)
 - **Markers:** `integration`, `slow`, `ui`
+- **Test Environment:** Isolated with automatic temp directory fixtures
 
 ### Code Quality Tools
 
@@ -457,7 +465,7 @@ pre-commit run --all-files
 
 ### Project Structure
 
-```
+```text
 pyMM/
 ├── app/                      # Application code
 │   ├── core/                 # Core services
@@ -499,6 +507,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### Release Strategy
 
 **Beta Releases (`dev` branch)**:
+
 - Automatic deployment on every push to `dev`
 - Tagged as `latest-beta` (rolling tag)
 - Old assets automatically cleaned before new builds uploaded
@@ -507,6 +516,7 @@ Automated build and release workflow powered by GitHub Actions.
 - Download: [latest-beta](https://github.com/mosh666/pyMM/releases/tag/latest-beta)
 
 **Stable Releases (`main` branch)**:
+
 - Manual deployment via version tags (e.g., `v1.0.0`)
 - Semantic versioning: `vX.Y.Z` or `vX.Y.Z-alpha.N`, `vX.Y.Z-beta.N`, `vX.Y.Z-rc.N`
 - Permanent releases with changelog
@@ -539,6 +549,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### Current Version: Beta (Unreleased on `dev`)
 
 ✅ **Completed Features:**
+
 - Automatic version management with setuptools_scm
 - Modernized CI/CD with branch-based releases
 - QFluentWidgets navigation error fixes
@@ -552,6 +563,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### v0.2.0 (Planned - Q1 2026)
 
 🔄 **Upcoming Features:**
+
 - Media import and organization tools
 - Batch metadata editing with ExifTool integration
 - Export presets and profiles
@@ -562,6 +574,7 @@ Automated build and release workflow powered by GitHub Actions.
 ### v0.3.0 (Planned - Q2 2026)
 
 🔮 **Future Vision:**
+
 - Cloud storage integration (OneDrive, Google Drive, Dropbox)
 - Team collaboration features
 - Advanced search and filtering
