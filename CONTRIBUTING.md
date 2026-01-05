@@ -88,19 +88,21 @@ contributions.
 
    **What pre-commit hooks do:**
 
-   - 🔍 **Ruff linting** - Auto-fix code style issues
-   - 🎨 **Code formatting** - Ensure consistent formatting
-   - ✅ **File checks** - Trailing whitespace, YAML/TOML syntax
-   - 🔐 **Security** - Detect private keys
-   - 📝 **Markdown linting** - Documentation quality
-   - 🧪 **Unit tests** - Run fast tests on commit
-   - 🚀 **Full test suite** - Run all tests before push
-   - 🔎 **Type checking** - MyPy validation
+   - 🔍 **Ruff linting** - Auto-fix code style issues (replaces flake8, isort)
+   - 🎨 **Ruff formatting** - Ensure consistent code formatting (replaces Black)
+   - 🔎 **MyPy** - Static type checking for type safety
+   - 🔐 **Bandit** - Security vulnerability scanning (hardcoded passwords, SQL injection, etc.)
+   - ✅ **File checks** - Trailing whitespace, YAML/TOML/JSON syntax, merge conflicts
+   - 🔒 **Security** - Detect private keys and credentials
+   - 📝 **Markdown linting** - Documentation quality and consistency
+   - 🧪 **Unit tests** - Run fast unit tests on commit (~140 tests)
+   - 🚀 **Full test suite** - Run all 193 tests before push (73% coverage)
+   - 📊 **Coverage check** - Ensure minimum coverage thresholds met
 
 5. **Run Tests:**
 
    ```bash
-   # Run full test suite (193 tests)
+   # Run full test suite (193 tests, all passing)
    pytest
 
    # Run with coverage (73% overall)
@@ -108,6 +110,11 @@ contributions.
 
    # View coverage report
    # Open htmlcov/index.html in browser
+
+   # Run specific test categories
+   pytest tests/unit/          # Unit tests (~140 tests)
+   pytest tests/integration/   # Integration tests
+   pytest tests/gui/           # GUI tests with pytest-qt
    ```
 
 6. **Configure Git:**
@@ -127,12 +134,73 @@ contributions.
 
 ### Python Style Guide
 
-We follow PEP 8 with these tools:
+We follow PEP 8 with these tools and standards:
 
 - **Ruff**: Fast linting with auto-fix and formatting (replaces Black, flake8, isort)
-- **MyPy**: Static type checking
+- **MyPy**: Static type checking for type safety
+- **Bandit**: Security vulnerability scanning
 - **Modern Type Hints**: Use Python 3.12+ native types (`list`, `dict`, `tuple`) instead of
   `typing.List`, `typing.Dict`, etc.
+
+### Code Quality Standards
+
+**All production code must follow these standards:**
+
+1. **Structured Logging**: Use `LoggingService` and logger instances, never `print()` statements
+
+   ```python
+   import logging
+   logger = logging.getLogger(__name__)
+   logger.info("Processing started")
+   logger.debug(f"Processing {count} items")
+   ```
+
+2. **Type Hints**: All functions must have complete type hints including return types
+
+   ```python
+   def process_items(items: list[str], count: int) -> dict[str, int]:
+       """Process items and return results."""
+       return {}
+   ```
+
+3. **Modern Generic Types**: Use built-in generic types (Python 3.12+)
+
+   ```python
+   # ✅ Correct (Python 3.12+)
+   def get_items() -> list[str]: ...
+   def get_config() -> dict[str, Any]: ...
+   def get_pair() -> tuple[int, str]: ...
+   
+   # ❌ Wrong (old style)
+   from typing import List, Dict, Tuple
+   def get_items() -> List[str]: ...
+   ```
+
+4. **Docstrings**: All public functions, classes, and methods must have docstrings
+
+   ```python
+   def calculate_total(items: list[float]) -> float:
+       """
+       Calculate total from list of numbers.
+       
+       Args:
+           items: List of numbers to sum
+           
+       Returns:
+           Total sum of all items
+           
+       Raises:
+           ValueError: If items list is empty
+       """
+       if not items:
+           raise ValueError("Items list cannot be empty")
+       return sum(items)
+   ```
+
+5. **YAML Configuration**: Use Pydantic models with validation
+   - Sensitive data redaction for passwords, tokens, API keys
+   - Type-safe configuration with validation
+   - Layered config: defaults → app.yaml → user.yaml
 
 ### Running Code Quality Tools
 
@@ -276,57 +344,128 @@ Fixes #456
 
 ## Testing Guidelines
 
-### Unit Tests
+### Test Philosophy
 
-- Located in `tests/unit/`
-- Test individual functions/methods in isolation
-- Use mocks for external dependencies
-- Aim for 70%+ coverage
+- **Test-Driven Development (TDD)**: Write tests before implementation when possible
+- **Coverage Target**: Maintain 70%+ code coverage (enforced in CI)
+- **Isolation**: Tests use automatic drive mocking to prevent system pollution
+- **Fast Feedback**: Unit tests run in <5 seconds, full suite in <30 seconds
+- **Comprehensive**: Unit, integration, and GUI tests for complete coverage
 
-Example:
+### Test Categories
+
+#### Unit Tests (~140 tests)
+
+Located in `tests/unit/`, these test individual components in isolation:
+
+**Service Tests**:
+
+- `test_config_service.py`: Configuration loading, validation, redaction
+- `test_file_system_service.py`: Path resolution, file operations
+- `test_storage_service.py`: Drive detection, removable drive identification
+- `test_logging_service.py`: Logger setup, file rotation, formatting
+- `test_project_service.py`: Project creation, metadata management
+- `test_git_service.py`: Git operations, repository management
+
+**Plugin Tests**:
+
+- `test_plugin_manager.py`: Plugin discovery, installation, PATH registration
+- `test_plugin_base.py`: Plugin base class, validation, download logic
+
+**Example Unit Test**:
 
 ```python
-def test_file_system_service_resolve_path(service, app_root):
-    """Test resolving relative paths."""
-    rel_path = Path("test/file.txt")
-    resolved = service.resolve_path(rel_path)
-    assert resolved == app_root / "test" / "file.txt"
+import pytest
+from pathlib import Path
+from app.core.services.config_service import ConfigService
+
+def test_config_service_loads_defaults(tmp_path):
+    """Test that config service loads default values correctly."""
+    config_service = ConfigService(tmp_path)
+    config = config_service.load()
+    
+    assert config.app.name == "pyMediaManager"
+    assert config.logging.level == "INFO"
+    assert config.plugins.retry_attempts == 3
+
+def test_config_service_redacts_sensitive_data(tmp_path):
+    """Test that sensitive fields are redacted in exports."""
+    config_service = ConfigService(tmp_path)
+    
+    # Set sensitive data
+    config_service.update_config(database={"password": "secret123"})
+    
+    # Export with redaction
+    exported = config_service.export_config(redact_sensitive=True)
+    
+    assert exported["database"]["password"] == "***REDACTED***"
 ```
 
-### GUI Tests
+#### Integration Tests (~10 tests)
 
-- Located in `tests/gui/`
-- Use pytest-qt for widget testing
-- Test user interactions and signals
+Located in `tests/integration/`, these test workflows across multiple components:
 
-Example:
+- `test_plugin_workflow.py`: Complete plugin download and installation
+- `test_project_workflow.py`: End-to-end project creation with Git
+
+#### GUI Tests (~50 tests)
+
+Located in `tests/gui/`, these test UI components using pytest-qt:
+
+- `test_first_run_wizard.py` (17 tests): Wizard pages, navigation, validation
+- `test_project_browser.py`: Project list, search, filtering
+- `test_project_wizard.py`: Project creation dialog
+- `test_settings_dialog.py`: Settings tabs, validation, persistence
+- `test_views.py`: Storage, Plugin, and Project views
+
+**Example GUI Test**:
 
 ```python
-def test_button_click(qtbot):
-    """Test button click handling."""
-    widget = MyWidget()
-    qtbot.addWidget(widget)
+from pytestqt.qtbot import QtBot
+from PySide6.QtCore import Qt
+from app.ui.dialogs.project_wizard import ProjectWizard
 
-    qtbot.mouseClick(widget.button, Qt.MouseButton.LeftButton)
+def test_project_wizard_validation(qtbot: QtBot):
+    """Test that project wizard validates input correctly."""
+    wizard = ProjectWizard()
+    qtbot.addWidget(wizard)
+    
+    # Try to proceed with empty name
+    assert not wizard.validateCurrentPage()
+    
+    # Enter valid name
+    wizard.name_input.setText("test-project")
+    assert wizard.validateCurrentPage()
 
-    assert widget.clicked is True
+def test_project_wizard_creates_project(qtbot: QtBot, tmp_path):
+    """Test that wizard creates project successfully."""
+    wizard = ProjectWizard()
+    qtbot.addWidget(wizard)
+    
+    # Fill in project details
+    wizard.name_input.setText("vacation-2026")
+    wizard.location_input.setText(str(tmp_path))
+    
+    # Create project
+    with qtbot.waitSignal(wizard.finished, timeout=1000):
+        wizard.accept()
+    
+    # Verify project exists
+    project_path = tmp_path / "vacation-2026"
+    assert project_path.exists()
+    assert (project_path / ".pymm").exists()
 ```
 
-### Running Specific Tests
+### Test Fixtures
 
-```bash
-# Run unit tests only
-pytest tests/unit/
+Common fixtures in `tests/conftest.py`:
 
-# Run specific test file
-pytest tests/unit/test_config_service.py
-
-# Run specific test
-pytest tests/unit/test_config_service.py::TestConfigService::test_load_default_config
-
-# Run with coverage
-pytest --cov=app --cov-report=html
-```
+- `mock_drive_root`: Automatically mocks drive root for all tests (autouse=True)
+- `app_root`: Temporary application root directory
+- `mock_config_service`: Pre-configured ConfigService for testing
+- `mock_file_system_service`: FileSystemService with mocked paths
+- `mock_storage_service`: StorageService with test drives
+- `qapp`: Qt application instance for GUI tests (pytest-qt)
 
 ### Test Isolation
 
@@ -533,29 +672,76 @@ Use the pull request template (`.github/PULL_REQUEST_TEMPLATE.md`) which include
 
 ### Adding a New Service
 
+**Service Architecture:**
+
+Services follow dependency injection patterns:
+
+- **ConfigService**: YAML-based configuration with Pydantic validation
+- **FileSystemService**: Portable path handling and file operations
+- **StorageService**: Drive detection and management
+- **LoggingService**: Structured logging with Rich console and rotating files
+- **ProjectService**: Project lifecycle management
+- **GitService**: Git repository operations using GitPython
+
+**Creating a new service:**
+
 1. Create service file in `app/core/services/`:
 
    ```python
    # app/core/services/my_service.py
+   import logging
+   from pathlib import Path
+   
+   logger = logging.getLogger(__name__)
+   
    class MyService:
-       def __init__(self):
-           pass
+       """Service for managing X functionality."""
+       
+       def __init__(self, config_service: ConfigService):
+           """Initialize service with dependencies."""
+           self.config = config_service
+           logger.info("MyService initialized")
 
-       def do_something(self):
-           pass
+       def do_something(self, input_path: Path) -> dict[str, Any]:
+           """Perform service operation.
+           
+           Args:
+               input_path: Path to process
+               
+           Returns:
+               Dictionary of results
+           """
+           logger.debug(f"Processing {input_path}")
+           return {}
    ```
 
-2. Create tests in `tests/unit/`:
+2. Create comprehensive tests in `tests/unit/`:
 
    ```python
    # tests/unit/test_my_service.py
-   def test_my_service():
-       service = MyService()
-       assert service.do_something() == expected
+   import pytest
+   from pathlib import Path
+   from app.core.services.my_service import MyService
+   
+   @pytest.fixture
+   def service(mock_config_service):
+       return MyService(mock_config_service)
+   
+   def test_my_service_basic_operation(service):
+       """Test basic service operation."""
+       result = service.do_something(Path("test.txt"))
+       assert isinstance(result, dict)
+       assert "key" in result
+   
+   def test_my_service_error_handling(service):
+       """Test service handles errors correctly."""
+       with pytest.raises(ValueError):
+           service.do_something(None)
    ```
 
-3. Register in main application
-4. Update documentation
+3. Register in main application with dependency injection
+4. Update architecture documentation in `docs/architecture.md`
+5. Add integration tests if service interacts with other components
 
 ### Adding a New Plugin
 
