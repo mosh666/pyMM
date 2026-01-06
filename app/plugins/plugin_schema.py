@@ -50,7 +50,8 @@ class PluginCommand(BaseModel):
     """Plugin command configuration for executable location."""
 
     path: str = Field(
-        ..., description="Relative path to executable directory from plugin root (empty string for root)"
+        ...,
+        description="Relative path to executable directory from plugin root (empty string for root)",
     )
     executable: str = Field(..., description="Filename of the executable")
 

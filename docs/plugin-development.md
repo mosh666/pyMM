@@ -77,7 +77,7 @@ class CustomPlugin(SimplePluginImplementation):
         """Custom installation check."""
         # Your custom logic here
         return super().check_installed()
-    
+
     def get_version(self) -> str | None:
         """Custom version detection."""
         # Parse version from tool output
@@ -111,19 +111,19 @@ from app.plugins.plugin_base import PluginBase, PluginManifest
 class MyToolPlugin(PluginBase):
     def __init__(self, manifest: PluginManifest, install_dir: Path):
         super().__init__(manifest, install_dir)
-    
+
     def check_installed(self) -> bool:
         # Custom check logic
         pass
-    
+
     def install(self, progress_callback=None) -> bool:
         # Custom install logic
         return self.download_and_extract_binary(progress_callback)
-    
+
     def uninstall(self) -> bool:
         # Custom uninstall logic
         pass
-    
+
     def get_version(self) -> str | None:
         # Custom version detection
         pass
@@ -156,7 +156,7 @@ source:
   type: string
     # Download method (currently only "url" supported)
     # Example: "url"
-  
+
   base_uri: string
     # Download URL for the plugin archive
     # Example: "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe"
@@ -166,7 +166,7 @@ command:
     # Relative path to executable directory from plugin root
     # Use empty string ("") if executable is in root
     # Example: "bin" or ""
-  
+
   executable: string
     # Filename of the executable
     # Example: "git.exe"
@@ -192,11 +192,11 @@ source:
   checksum_sha256: string
     # SHA-256 hash (uppercase hex) for integrity verification
     # Example: "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-  
+
   file_size: integer
     # Expected file size in bytes (for progress tracking)
     # Example: 52428800
-  
+
   asset_pattern: string
     # Pattern for GitHub release assets (not yet implemented)
     # Example: "PortableGit-.*-64-bit\\.7z\\.exe"
@@ -272,14 +272,14 @@ def install(self, progress_callback=None) -> bool:
     # Download and extract
     if not self.download_and_extract_binary(progress_callback):
         return False
-    
+
     # Post-install configuration
     config_file = self.install_dir / "config.ini"
     config_file.write_text("[Settings]\nkey=value")
-    
+
     # Create symlinks or shortcuts
     self._create_shortcuts()
-    
+
     return True
 ```
 
@@ -315,12 +315,12 @@ def check_installed(self) -> bool:
     # Check executable exists
     if not self.executable_path.exists():
         return False
-    
+
     # Check required files
     required_files = ["lib/library.dll", "config/default.cfg"]
     if not all((self.install_dir / f).exists() for f in required_files):
         return False
-    
+
     # Verify executable runs
     try:
         subprocess.run(
@@ -381,7 +381,7 @@ def test_mytool_discovery(temp_dir):
     """Test MyTool plugin is discovered."""
     plugin_dir = temp_dir / "plugins"
     plugin_dir.mkdir()
-    
+
     # Create test plugin.yaml
     mytool_dir = plugin_dir / "mytool"
     mytool_dir.mkdir()
@@ -398,11 +398,11 @@ command:
   executable: "mytool.exe"
 register_to_path: true
 """)
-    
+
     # Test discovery
     manager = PluginManager(temp_dir)
     plugins = manager.get_all_plugins()
-    
+
     assert "mytool" in plugins
     assert plugins["mytool"].manifest.name == "MyTool"
     assert plugins["mytool"].manifest.version == "1.0.0"
@@ -412,7 +412,7 @@ def test_mytool_installation(temp_dir, mock_download):
     # Set up plugin
     manager = PluginManager(temp_dir)
     plugin = manager.get_plugin("mytool")
-    
+
     # Mock download and install
     assert plugin.install() is True
     assert plugin.check_installed() is True
@@ -477,14 +477,14 @@ def install(self, progress_callback=None) -> bool:
         if not self.download_and_extract_binary(progress_callback):
             logger.error(f"Failed to download {self.manifest.name}")
             return False
-        
+
         # Post-install steps
         self._configure()
-        
+
         if not self.check_installed():
             logger.error(f"{self.manifest.name} installation verification failed")
             return False
-        
+
         return True
     except Exception as e:
         logger.exception(f"Installation failed for {self.manifest.name}: {e}")
@@ -620,7 +620,7 @@ import platform
 class CrossPlatformPlugin(PluginBase):
     def __init__(self, manifest: PluginManifest, install_dir: Path):
         super().__init__(manifest, install_dir)
-        
+
         # Platform-specific configuration
         self.system = platform.system()
         if self.system == "Windows":
@@ -640,18 +640,18 @@ def install(self, progress_callback=None) -> bool:
     """Install with detailed progress."""
     if progress_callback:
         progress_callback("Starting download...")
-    
+
     # Download with progress
     result = self.download_and_extract_binary(progress_callback)
-    
+
     if progress_callback:
         progress_callback("Configuring plugin...")
-    
+
     self._configure()
-    
+
     if progress_callback:
         progress_callback("Installation complete!")
-    
+
     return result
 ```
 

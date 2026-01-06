@@ -43,12 +43,12 @@ def main() -> int:
         from app.main import run_application
 
         return run_application()
-    except ImportError as e:
-        logger.error("Failed to import application: %s", e)
-        logger.error("APP_ROOT: %s", APP_ROOT)
-        logger.error("PYTHON_VERSION: %s", PYTHON_VERSION)
-        logger.error("lib_dir: %s", lib_dir)
-        logger.error("sys.path: %s", sys.path)
+    except ImportError:
+        logger.exception("Failed to import application")
+        logger.exception("APP_ROOT: %s", APP_ROOT)
+        logger.exception("PYTHON_VERSION: %s", PYTHON_VERSION)
+        logger.exception("lib_dir: %s", lib_dir)
+        logger.exception("sys.path: %s", sys.path)
         return 1
     except Exception as e:
         logger.critical("Application crashed: %s", e, exc_info=True)

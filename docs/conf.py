@@ -1,16 +1,15 @@
 """Sphinx configuration file for pyMediaManager documentation."""
 
-import os
-import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
+import sys
 
 # Add project root to Python path for autodoc
 sys.path.insert(0, str(Path(__file__).parent.parent.absolute()))
 
 # -- Project information -----------------------------------------------------
 project = "pyMediaManager"
-copyright = f"2024-{datetime.now().year}, mosh666"
+project_copyright = f"2024-{datetime.now(tz=UTC).year}, mosh666"
 author = "mosh666"
 
 # The full version, including alpha/beta/rc tags
@@ -81,13 +80,6 @@ html_sidebars = {
         "searchbox.html",
     ]
 }
-
-# The name of an image file (relative to this directory) to place at the top
-# of the sidebar
-# html_logo = None
-
-# The name of an image file (within the static path) to use as favicon
-# html_favicon = None
 
 # Output file base name for HTML help builder
 htmlhelp_basename = "pyMediaManagerdoc"

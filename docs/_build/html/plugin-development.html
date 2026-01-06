@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
-  
+
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=01f34227"></script>
@@ -20,17 +20,17 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="api/index.html" />
-    <link rel="prev" title="pyMediaManager Architecture Documentation" href="architecture.html" /> 
+    <link rel="prev" title="pyMediaManager Architecture Documentation" href="architecture.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-          
-          
+
+
           <a href="index.html" class="icon icon-home">
             pyMediaManager
           </a>
@@ -430,7 +430,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+
   <section id="plugin-development-guide">
 <h1>Plugin Development Guide<a class="headerlink" href="#plugin-development-guide" title="Link to this heading"></a></h1>
 <p>This guide explains how to create and configure plugins for pyMediaManager (pyMM).</p>
@@ -508,7 +508,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom installation check.&quot;&quot;&quot;</span>
         <span class="c1"># Your custom logic here</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">check_installed</span><span class="p">()</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom version detection.&quot;&quot;&quot;</span>
         <span class="c1"># Parse version from tool output</span>
@@ -541,19 +541,19 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">MyToolPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">check_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># Custom check logic</span>
         <span class="k">pass</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># Custom install logic</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">uninstall</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># Custom uninstall logic</span>
         <span class="k">pass</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Custom version detection</span>
         <span class="k">pass</span>
@@ -705,14 +705,14 @@
     <span class="c1"># Download and extract</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
-    
+
     <span class="c1"># Post-install configuration</span>
     <span class="n">config_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_dir</span> <span class="o">/</span> <span class="s2">&quot;config.ini&quot;</span>
     <span class="n">config_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;[Settings]</span><span class="se">\n</span><span class="s2">key=value&quot;</span><span class="p">)</span>
-    
+
     <span class="c1"># Create symlinks or shortcuts</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_shortcuts</span><span class="p">()</span>
-    
+
     <span class="k">return</span> <span class="kc">True</span>
 </pre></div>
 </div>
@@ -746,12 +746,12 @@
     <span class="c1"># Check executable exists</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
-    
+
     <span class="c1"># Check required files</span>
     <span class="n">required_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lib/library.dll&quot;</span><span class="p">,</span> <span class="s2">&quot;config/default.cfg&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">install_dir</span> <span class="o">/</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">required_files</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
-    
+
     <span class="c1"># Verify executable runs</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
@@ -822,7 +822,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Test MyTool plugin is discovered.&quot;&quot;&quot;</span>
     <span class="n">plugin_dir</span> <span class="o">=</span> <span class="n">temp_dir</span> <span class="o">/</span> <span class="s2">&quot;plugins&quot;</span>
     <span class="n">plugin_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
-    
+
     <span class="c1"># Create test plugin.yaml</span>
     <span class="n">mytool_dir</span> <span class="o">=</span> <span class="n">plugin_dir</span> <span class="o">/</span> <span class="s2">&quot;mytool&quot;</span>
     <span class="n">mytool_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
@@ -839,11 +839,11 @@
 <span class="s2">  executable: &quot;mytool.exe&quot;</span>
 <span class="s2">register_to_path: true</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-    
+
     <span class="c1"># Test discovery</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">PluginManager</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
     <span class="n">plugins</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_all_plugins</span><span class="p">()</span>
-    
+
     <span class="k">assert</span> <span class="s2">&quot;mytool&quot;</span> <span class="ow">in</span> <span class="n">plugins</span>
     <span class="k">assert</span> <span class="n">plugins</span><span class="p">[</span><span class="s2">&quot;mytool&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MyTool&quot;</span>
     <span class="k">assert</span> <span class="n">plugins</span><span class="p">[</span><span class="s2">&quot;mytool&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0.0&quot;</span>
@@ -853,7 +853,7 @@
     <span class="c1"># Set up plugin</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">PluginManager</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
     <span class="n">plugin</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_plugin</span><span class="p">(</span><span class="s2">&quot;mytool&quot;</span><span class="p">)</span>
-    
+
     <span class="c1"># Mock download and install</span>
     <span class="k">assert</span> <span class="n">plugin</span><span class="o">.</span><span class="n">install</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span>
     <span class="k">assert</span> <span class="n">plugin</span><span class="o">.</span><span class="n">check_installed</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -916,14 +916,14 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to download </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
-        
+
         <span class="c1"># Post-install steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_installed</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> installation verification failed&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
-        
+
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Installation failed for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1085,7 +1085,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CrossPlatformPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">)</span>
-        
+
         <span class="c1"># Platform-specific configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
@@ -1104,18 +1104,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Install with detailed progress.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
         <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Starting download...&quot;</span><span class="p">)</span>
-    
+
     <span class="c1"># Download with progress</span>
     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
         <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Configuring plugin...&quot;</span><span class="p">)</span>
-    
+
     <span class="bp">self</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
-    
+
     <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
         <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Installation complete!&quot;</span><span class="p">)</span>
-    
+
     <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
@@ -1176,7 +1176,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -1187,7 +1187,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>
