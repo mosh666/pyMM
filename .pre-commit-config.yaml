@@ -92,7 +92,7 @@ repos:
     hooks:
       - id: pytest-check
         name: PyTest - Unit Tests (Fast)
-        entry: D:/pyMM/.venv/Scripts/pytest.exe
+        entry: .venv/Scripts/pytest.exe
         language: system
         pass_filenames: false
         always_run: true
@@ -106,7 +106,7 @@ repos:
 
       - id: pytest-full
         name: PyTest - All Tests (Pre-Push)
-        entry: D:/pyMM/.venv/Scripts/pytest.exe
+        entry: .venv/Scripts/pytest.exe
         language: system
         pass_filenames: false
         always_run: true
