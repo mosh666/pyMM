@@ -30,7 +30,7 @@ from app.plugins.plugin_manager import PluginManager
 from app.services.project_service import ProjectService
 
 
-class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):  # type: ignore[misc]
+class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
     """Main application window with Fluent Design interface."""
 
     def __init__(

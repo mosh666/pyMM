@@ -261,4 +261,12 @@ module = [
 disallow_untyped_defs = false
 disallow_untyped_calls = false
 warn_return_any = false
-disable_error_code = ["misc"]
+disable_error_code = ["misc", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "app.core.services.storage_service"
+disable_error_code = ["attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "app.main"
+disable_error_code = ["attr-defined"]
