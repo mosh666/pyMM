@@ -14,7 +14,9 @@ This guide explains how to create and configure plugins for pyMediaManager (pyMM
 
 ## Overview
 
-pyMM uses a plugin system to manage external tools and dependencies. Each plugin represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can download, install, and manage automatically.
+pyMM uses a plugin system to manage external tools and dependencies. Each plugin
+represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can
+download, install, and manage automatically.
 
 Plugins are defined by:
 
