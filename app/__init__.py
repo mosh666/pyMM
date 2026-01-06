@@ -13,6 +13,6 @@ except ImportError:
     __commit_id__ = None
 
 __all__ = [
-    "__version__",
     "__commit_id__",
+    "__version__",
 ]

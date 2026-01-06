@@ -4,6 +4,6 @@ __all__ = [
     "PluginBase",
     "PluginManager",
     "PluginManifest",
-    "SimplePluginImplementation",
     "PluginManifestSchema",
+    "SimplePluginImplementation",
 ]

@@ -56,14 +56,13 @@ class PluginManager:
                     plugin = self._create_plugin_instance(manifest)
                     if plugin:
                         self.plugins[manifest.name] = plugin
-            except ValidationError as e:
+            except ValidationError:
                 # Log detailed validation errors and fail fast
-                self.logger.error(f"Plugin manifest validation failed: {manifest_file}")
-                self.logger.error(f"Validation errors: {e}")
+                self.logger.exception(f"Plugin manifest validation failed: {manifest_file}")
                 raise
-            except Exception as e:
+            except Exception:
                 # Log error and fail fast on any other errors
-                self.logger.error(f"Error loading manifest {manifest_file}: {e}")
+                self.logger.exception(f"Error loading manifest {manifest_file}")
                 raise
 
         return len(self.plugins)
@@ -85,19 +84,19 @@ class PluginManager:
             with open(manifest_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
 
+            def raise_empty_manifest() -> None:
+                msg = f"Empty manifest file: {manifest_file}"
+                self.logger.error(msg)
+                raise ValueError(msg)
+
             if not data:
-                self.logger.error(f"Empty manifest file: {manifest_file}")
-                raise ValueError(f"Empty manifest file: {manifest_file}")
+                raise_empty_manifest()
 
             # Validate against Pydantic schema (fails fast on validation errors)
             try:
                 validated_data = PluginManifestSchema(**data)
-            except ValidationError as e:
-                self.logger.error(f"Schema validation failed for {manifest_file}:")
-                for error in e.errors():
-                    field = " -> ".join(str(loc) for loc in error["loc"])
-                    self.logger.error(f"  {field}: {error['msg']}")
-                # Re-raise to fail fast
+            except ValidationError:
+                self.logger.exception(f"Schema validation failed for {manifest_file}")
                 raise
 
             # Extract source configuration

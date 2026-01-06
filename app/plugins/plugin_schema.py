@@ -105,9 +105,8 @@ class PluginManifestSchema(BaseModel):
     @classmethod
     def validate_dependencies(cls, v: list[str] | None) -> list[str] | None:
         """Validate dependencies list contains no empty strings."""
-        if v is not None:
-            if not all(dep and dep.strip() for dep in v):
-                raise ValueError("Dependency list cannot contain empty strings")
+        if v is not None and not all(dep and dep.strip() for dep in v):
+            raise ValueError("Dependency list cannot contain empty strings")
         return v
 
     model_config = {
