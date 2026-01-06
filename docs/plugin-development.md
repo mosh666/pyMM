@@ -17,6 +17,7 @@ This guide explains how to create and configure plugins for pyMediaManager (pyMM
 pyMM uses a plugin system to manage external tools and dependencies. Each plugin represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can download, install, and manage automatically.
 
 Plugins are defined by:
+
 1. A YAML manifest file (`plugin.yaml`) defining metadata and download information
 2. An optional Python implementation extending `PluginBase` for custom behavior
 
@@ -90,7 +91,7 @@ class CustomPlugin(SimplePluginImplementation):
 
 Create a directory in `plugins/` with your tool name:
 
-```
+```text
 plugins/
   mytool/
     plugin.yaml
@@ -339,7 +340,8 @@ def check_installed(self) -> bool:
 ### Manual Testing
 
 1. **Place your plugin in the plugins directory**:
-   ```
+
+   ```text
    plugins/
      mytool/
        plugin.yaml
@@ -460,6 +462,7 @@ dependencies:
 ### 5. Test on Clean Installs
 
 Always test plugin installation on a machine without the tool pre-installed to verify:
+
 - Download URLs are accessible
 - Archive extraction works correctly
 - Executable paths are correct
@@ -494,6 +497,7 @@ def install(self, progress_callback=None) -> bool:
 ### 7. Use Portable Versions
 
 Prefer portable/standalone versions of tools that don't require system installation:
+
 - PortableGit instead of Git installer
 - Portable FFmpeg builds
 - Standalone executables
@@ -510,6 +514,7 @@ description: "Windows-only photo management tool"
 ### 9. Keep Plugins Updated
 
 Regularly update plugin versions and checksums:
+
 - Monitor upstream releases
 - Test new versions before updating
 - Update CHANGELOG.md when bumping versions
