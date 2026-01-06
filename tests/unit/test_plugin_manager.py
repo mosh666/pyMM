@@ -112,6 +112,7 @@ source:
 command:
   path: ""
   executable: mandatory.exe
+register_to_path: true
 """
         (mandatory_dir / "plugin.yaml").write_text(mandatory_manifest)
 
@@ -129,6 +130,7 @@ source:
 command:
   path: ""
   executable: optional.exe
+register_to_path: true
 """
         (optional_dir / "plugin.yaml").write_text(optional_manifest)
 
@@ -146,10 +148,12 @@ command:
         (mandatory_dir / "plugin.yaml").write_text(
             """
 name: MandatoryPlugin
+version: "1.0"
 mandatory: true
 enabled: true
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
+register_to_path: true
 """
         )
 
@@ -158,10 +162,12 @@ command: {path: "", executable: "test.exe"}
         (optional_dir / "plugin.yaml").write_text(
             """
 name: OptionalPlugin
+version: "1.0"
 mandatory: false
 enabled: true
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
+register_to_path: true
 """
         )
 
@@ -179,10 +185,12 @@ command: {path: "", executable: "test.exe"}
         (enabled_dir / "plugin.yaml").write_text(
             """
 name: EnabledPlugin
+version: "1.0"
 enabled: true
 mandatory: false
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
+register_to_path: true
 """
         )
 
@@ -192,10 +200,12 @@ command: {path: "", executable: "test.exe"}
         (disabled_dir / "plugin.yaml").write_text(
             """
 name: DisabledPlugin
+version: "1.0"
 enabled: false
 mandatory: false
 source: {type: url, base_uri: "https://example.com"}
 command: {path: "", executable: "test.exe"}
+register_to_path: true
 """
         )
 

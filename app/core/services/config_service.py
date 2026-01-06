@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 from app import __commit_id__, __version__
 

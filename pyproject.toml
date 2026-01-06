@@ -72,9 +72,12 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "pytest-mock>=3.12.0",
     "ruff>=0.1.0",
-    "black>=23.12.0",
     "mypy>=1.8.0",
     "types-PyYAML>=6.0.0",
+    "types-psutil>=5.9.0",
+    "sphinx>=7.2.0",
+    "sphinx-rtd-theme>=2.0.0",
+    "myst-parser>=2.0.0",
 ]
 
 [project.scripts]
@@ -239,20 +242,22 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.black]
-line-length = 100
-target-version = ["py312", "py313", "py314"]
-
 [tool.mypy]
 python_version = "3.12"
-warn_return_any = false
+strict = true
 warn_unused_configs = true
-disallow_untyped_defs = false
-disallow_any_generics = false
 warn_redundant_casts = true
-warn_unused_ignores = false
 strict_equality = true
-check_untyped_defs = true
 ignore_missing_imports = true
-strict_optional = false
+
+# Per-module overrides for gradual strict adoption
+[[tool.mypy.overrides]]
+module = [
+    "app.ui.*",
+    "app.ui.components.*",
+    "app.ui.dialogs.*",
+    "app.ui.views.*",
+]
+disallow_untyped_defs = false
 disallow_untyped_calls = false
+warn_return_any = false

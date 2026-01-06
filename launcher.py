@@ -5,6 +5,7 @@ Entry point for the portable Python application.
 Configures paths for embeddable Python and launches the main application.
 """
 
+import logging
 from pathlib import Path
 import sys
 
@@ -26,6 +27,14 @@ if lib_dir.exists():
 
 sys.path.insert(0, str(APP_ROOT / "app"))
 
+# Initialize basic logging for launcher errors
+logging.basicConfig(
+    level=logging.ERROR,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    stream=sys.stderr,
+)
+logger = logging.getLogger(__name__)
+
 
 def main() -> int:
     """Main entry point for pyMediaManager."""
@@ -35,17 +44,14 @@ def main() -> int:
 
         return run_application()
     except ImportError as e:
-        print(f"ERROR: Failed to import application: {e}", file=sys.stderr)
-        print(f"\nAPP_ROOT: {APP_ROOT}", file=sys.stderr)
-        print(f"PYTHON_VERSION: {PYTHON_VERSION}", file=sys.stderr)
-        print(f"lib_dir: {lib_dir}", file=sys.stderr)
-        print(f"sys.path: {sys.path}", file=sys.stderr)
+        logger.error("Failed to import application: %s", e)
+        logger.error("APP_ROOT: %s", APP_ROOT)
+        logger.error("PYTHON_VERSION: %s", PYTHON_VERSION)
+        logger.error("lib_dir: %s", lib_dir)
+        logger.error("sys.path: %s", sys.path)
         return 1
     except Exception as e:
-        print(f"ERROR: Application crashed: {e}", file=sys.stderr)
-        import traceback
-
-        traceback.print_exc()
+        logger.critical("Application crashed: %s", e, exc_info=True)
         return 1
 
 

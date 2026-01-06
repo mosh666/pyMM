@@ -1,0 +1,1399 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Core Services &mdash; pyMediaManager 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Plugin System" href="plugins.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyMediaManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user-guide.html">pyMediaManager User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#first-time-setup">First-Time Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#initial-launch">Initial Launch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#storage-drive-selection">Storage Drive Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#recommended-first-steps">Recommended First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#project-management">Project Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#creating-a-project">Creating a Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#managing-projects">Managing Projects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#project-workflows">Project Workflows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#basic-workflow-no-version-control">Basic Workflow (No Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#git-enabled-workflow-version-control">Git-Enabled Workflow (Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#collaborative-workflow-remote-repository">Collaborative Workflow (Remote Repository)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#template-based-workflow-consistent-structure">Template-Based Workflow (Consistent Structure)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#plugin-management">Plugin Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#understanding-plugins">Understanding Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#installing-plugins">Installing Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#plugin-status">Plugin Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#available-plugins">Available Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#storage-portability">Storage &amp; Portability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#portable-folders">Portable Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#supported-drive-types">Supported Drive Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#moving-between-computers">Moving Between Computers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#drive-management">Drive Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#moving-between-drives">Moving Between Drives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#git-integration">Git Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#git-repository-basics">Git Repository Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#using-git">Using Git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#version-control-best-practices">Version Control Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#settings-configuration">Settings &amp; Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#opening-settings">Opening Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#settings-sections">Settings Sections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#general-tab">General Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#plugins-tab">Plugins Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#storage-tab">Storage Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#git-tab">Git Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#about-tab">About Tab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#saving-settings">Saving Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#common-issues">Common Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#application-won-t-start">Application Won’t Start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#plugin-installation-fails">Plugin Installation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#project-creation-fails">Project Creation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user-guide.html#git-operations-don-t-work">Git Operations Don’t Work</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#getting-logs">Getting Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#performance-issues">Performance Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide.html#reporting-bugs">Reporting Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#support-resources">Support &amp; Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide.html#tips-tricks">Tips &amp; Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">pyMediaManager Architecture Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#design-principles">Design Principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#portability-first">1. Portability First</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#service-oriented-architecture">2. Service-Oriented Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#plugin-based-extensibility">3. Plugin-Based Extensibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#code-quality-standards">4. Code Quality Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#version-management">5. Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#ui-framework-stability">6. UI Framework Stability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#directory-structure">Directory Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#service-architecture">Service Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#filesystemservice">1. FileSystemService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#storageservice">2. StorageService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#loggingservice">4. LoggingService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#projectservice">5. ProjectService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#gitservice">6. GitService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#pluginmanager">7. PluginManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#ui-architecture">UI Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#fluent-design-system">Fluent Design System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#ui-components">UI Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#main-window-mainwindow">Main Window (MainWindow)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#storage-view">Storage View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#plugin-view">Plugin View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#project-view">Project View</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#dialog-components">Dialog Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#firstrunwizard">FirstRunWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#projectwizard">ProjectWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#projectbrowser">ProjectBrowser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture.html#settingsdialog">SettingsDialog</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#portable-path-management">Portable Path Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#path-resolution-strategy">Path Resolution Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#example-path-resolution">Example Path Resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#why-this-structure">Why This Structure?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#dependency-management">Dependency Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#embedded-python-approach">Embedded Python Approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#build-process">Build Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#version-matrix">Version Matrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#testing-strategy">Testing Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#gui-tests-pytest-qt">GUI Tests (pytest-qt)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#ci-cd-pipeline">CI/CD Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#security-considerations">Security Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#sensitive-data-handling">Sensitive Data Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#plugin-security">Plugin Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#security-scanning">Security Scanning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#future-security-enhancements">Future Security Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#startup-time">Startup Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#optimization-strategies">Optimization Strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#memory-usage">Memory Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#extension-points">Extension Points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#adding-new-plugins">Adding New Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#adding-new-views">Adding New Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#custom-plugin-implementations">Custom Plugin Implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#test-isolation">Test Isolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#future-roadmap">Future Roadmap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#current-version-january-2026">Current Version (January 2026)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#v1-1-0-q1-2026-planned">v1.1.0 (Q1 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#v1-2-0-q2-2026-planned">v1.2.0 (Q2 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture.html#v2-0-0-future">v2.0.0 (Future)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plugin-development.html">Plugin Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#plugin-architecture">Plugin Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#plugin-base-class">Plugin Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#abstract-methods">Abstract Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#simple-plugin-implementation">Simple Plugin Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#creating-a-plugin">Creating a Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#step-1-create-plugin-directory">Step 1: Create Plugin Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#step-2-define-plugin-manifest">Step 2: Define Plugin Manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#step-3-optional-create-custom-implementation">Step 3: (Optional) Create Custom Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#plugin-yaml-schema">Plugin YAML Schema</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#required-fields">Required Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#optional-fields">Optional Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#complete-example">Complete Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#basic-plugin-ffmpeg">Basic Plugin: FFmpeg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#advanced-plugin-digikam-with-dependencies">Advanced Plugin: digiKam (with dependencies)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#implementing-plugin-logic">Implementing Plugin Logic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#using-default-implementation">Using Default Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#custom-installation-logic">Custom Installation Logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#custom-version-detection">Custom Version Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#custom-installation-check">Custom Installation Check</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#testing-your-plugin">Testing Your Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#manual-testing">Manual Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#automated-testing">Automated Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#always-provide-checksums">1. Always Provide Checksums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#use-semantic-versioning">2. Use Semantic Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#specify-file-sizes">3. Specify File Sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#document-dependencies">4. Document Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#test-on-clean-installs">5. Test on Clean Installs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#handle-installation-failures-gracefully">6. Handle Installation Failures Gracefully</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#use-portable-versions">7. Use Portable Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#document-platform-requirements">8. Document Platform Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#keep-plugins-updated">9. Keep Plugins Updated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#follow-security-best-practices">10. Follow Security Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#plugin-lifecycle">Plugin Lifecycle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#discovery-phase">Discovery Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#installation-phase">Installation Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#runtime-phase">Runtime Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#uninstallation-phase">Uninstallation Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#plugin-not-discovered">Plugin Not Discovered</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#download-fails">Download Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#extraction-fails">Extraction Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#executable-not-found">Executable Not Found</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#version-detection-fails">Version Detection Fails</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#github-release-asset-pattern-future-feature">GitHub Release Asset Pattern (Future Feature)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#multi-platform-support">Multi-Platform Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../plugin-development.html#custom-progress-callbacks">Custom Progress Callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#resources">Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../plugin-development.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Core Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.core.logging_service">Logging Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.logging_service.LoggingService"><code class="docutils literal notranslate"><span class="pre">LoggingService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.core.services.config_service">Configuration Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.PathConfig"><code class="docutils literal notranslate"><span class="pre">PathConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.LoggingConfig"><code class="docutils literal notranslate"><span class="pre">LoggingConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.UIConfig"><code class="docutils literal notranslate"><span class="pre">UIConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.PluginConfig"><code class="docutils literal notranslate"><span class="pre">PluginConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.AppConfig"><code class="docutils literal notranslate"><span class="pre">AppConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.config_service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.core.services.file_system_service">File System Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.file_system_service.FileSystemService"><code class="docutils literal notranslate"><span class="pre">FileSystemService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.core.services.storage_service">Storage Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.storage_service.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.core.services.storage_service.StorageService"><code class="docutils literal notranslate"><span class="pre">StorageService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugins.html#module-app.plugins.plugin_base">Plugin Base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#app.plugins.plugin_base.PluginManifest"><code class="docutils literal notranslate"><span class="pre">PluginManifest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#app.plugins.plugin_base.PluginBase"><code class="docutils literal notranslate"><span class="pre">PluginBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#app.plugins.plugin_base.SimplePluginImplementation"><code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#app.plugins.plugin_manager.PluginManager"><code class="docutils literal notranslate"><span class="pre">PluginManager</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#module-app.services.project_service">Project Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#app.services.project_service.ProjectService"><code class="docutils literal notranslate"><span class="pre">ProjectService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#module-app.services.git_service">Git Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#app.services.git_service.GitService"><code class="docutils literal notranslate"><span class="pre">GitService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#module-app.models.project">Project Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.html#app.models.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ui.html#main-window">Main Window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui.html#views">Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui.html#components">Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#core-services">Core Services</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Core Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-app.core.logging_service">Logging Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-app.core.services.config_service">Configuration Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-app.core.services.file_system_service">File System Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-app.core.services.storage_service">Storage Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#plugin-system">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugins.html">Plugin System</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#module-app.plugins.plugin_base">Plugin Base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#application-services">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html">Application Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="services.html#module-app.services.project_service">Project Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="services.html#module-app.services.git_service">Git Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#data-models">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Data Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.html#module-app.models.project">Project Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#user-interface">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ui.html">User Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ui.html#main-window">Main Window</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ui.html#views">Views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ui.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyMediaManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Core Services</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-services">
+<h1>Core Services<a class="headerlink" href="#core-services" title="Link to this heading"></a></h1>
+<section id="module-app.core.logging_service">
+<span id="logging-service"></span><h2>Logging Service<a class="headerlink" href="#module-app.core.logging_service" title="Link to this heading"></a></h2>
+<p>Logging service for pyMediaManager.
+Provides rich console logging and rotating file logs.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.logging_service.</span></span><span class="sig-name descname"><span class="pre">LoggingService</span></span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Service for configuring application logging with console and file outputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pyMediaManager'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_system_service</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize logging service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Application name for logger</p></li>
+<li><p><strong>log_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><em>None</em>) – Directory for log files (if None, uses portable folder from file_system_service)</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)</p></li>
+<li><p><strong>console_enabled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Enable console logging with rich formatting</p></li>
+<li><p><strong>file_enabled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Enable file logging with rotation</p></li>
+<li><p><strong>max_file_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum log file size in bytes before rotation</p></li>
+<li><p><strong>backup_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of backup log files to keep</p></li>
+<li><p><strong>file_system_service</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em> | </em><em>None</em>) – FileSystemService instance for portable folder detection</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.setup" title="Link to this definition"></a></dt>
+<dd><p>Setup logging configuration with console and file handlers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configured logger instance</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>Logger</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.get_logger">
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.get_logger" title="Link to this definition"></a></dt>
+<dd><p>Get a logger instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – Logger name (defaults to app_name)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger instance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>Logger</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.set_level">
+<span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.set_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.set_level" title="Link to this definition"></a></dt>
+<dd><p>Change logging level dynamically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – New logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.get_log_file_path">
+<span class="sig-name descname"><span class="pre">get_log_file_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.get_log_file_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.get_log_file_path" title="Link to this definition"></a></dt>
+<dd><p>Get the current log file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to log file or None if file logging disabled</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.logging_service.LoggingService.get_all_log_files">
+<span class="sig-name descname"><span class="pre">get_all_log_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/logging_service.html#LoggingService.get_all_log_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.logging_service.LoggingService.get_all_log_files" title="Link to this definition"></a></dt>
+<dd><p>Get all log files (current and rotated).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of log file paths</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-app.core.services.config_service">
+<span id="configuration-service"></span><h2>Configuration Service<a class="headerlink" href="#module-app.core.services.config_service" title="Link to this heading"></a></h2>
+<p>Configuration service for pyMediaManager.
+Handles layered configuration (defaults → environment → user) with Pydantic models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">LogLevel</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#LogLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.LogLevel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Logging levels.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.DEBUG">
+<span class="sig-name descname"><span class="pre">DEBUG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DEBUG'</span></em><a class="headerlink" href="#app.core.services.config_service.LogLevel.DEBUG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.INFO">
+<span class="sig-name descname"><span class="pre">INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INFO'</span></em><a class="headerlink" href="#app.core.services.config_service.LogLevel.INFO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.WARNING">
+<span class="sig-name descname"><span class="pre">WARNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WARNING'</span></em><a class="headerlink" href="#app.core.services.config_service.LogLevel.WARNING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ERROR'</span></em><a class="headerlink" href="#app.core.services.config_service.LogLevel.ERROR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.CRITICAL">
+<span class="sig-name descname"><span class="pre">CRITICAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CRITICAL'</span></em><a class="headerlink" href="#app.core.services.config_service.LogLevel.CRITICAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.LogLevel.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.core.services.config_service.LogLevel.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">PathConfig</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#PathConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.PathConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Configuration for application paths.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig.projects_dir">
+<span class="sig-name descname"><span class="pre">projects_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.PathConfig.projects_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig.logs_dir">
+<span class="sig-name descname"><span class="pre">logs_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.PathConfig.logs_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig.plugins_dir">
+<span class="sig-name descname"><span class="pre">plugins_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.PathConfig.plugins_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig.config_dir">
+<span class="sig-name descname"><span class="pre">config_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.PathConfig.config_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PathConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.core.services.config_service.PathConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">LoggingConfig</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#LoggingConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.LoggingConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Configuration for logging.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.level">
+<span class="sig-name descname"><span class="pre">level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.core.services.config_service.LogLevel" title="app.core.services.config_service.LogLevel"><span class="pre">LogLevel</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.level" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.console_enabled">
+<span class="sig-name descname"><span class="pre">console_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.console_enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.file_enabled">
+<span class="sig-name descname"><span class="pre">file_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.file_enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.max_file_size">
+<span class="sig-name descname"><span class="pre">max_file_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.max_file_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.backup_count">
+<span class="sig-name descname"><span class="pre">backup_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.backup_count" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.format">
+<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.LoggingConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.core.services.config_service.LoggingConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">UIConfig</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#UIConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.UIConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Configuration for UI settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig.theme">
+<span class="sig-name descname"><span class="pre">theme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.UIConfig.theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig.show_first_run">
+<span class="sig-name descname"><span class="pre">show_first_run</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#app.core.services.config_service.UIConfig.show_first_run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig.window_width">
+<span class="sig-name descname"><span class="pre">window_width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.UIConfig.window_width" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig.window_height">
+<span class="sig-name descname"><span class="pre">window_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.UIConfig.window_height" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.UIConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.core.services.config_service.UIConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.PluginConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">PluginConfig</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#PluginConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.PluginConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Configuration for plugin system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PluginConfig.auto_update_check">
+<span class="sig-name descname"><span class="pre">auto_update_check</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#app.core.services.config_service.PluginConfig.auto_update_check" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PluginConfig.download_timeout">
+<span class="sig-name descname"><span class="pre">download_timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.PluginConfig.download_timeout" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PluginConfig.parallel_downloads">
+<span class="sig-name descname"><span class="pre">parallel_downloads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.config_service.PluginConfig.parallel_downloads" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.PluginConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.core.services.config_service.PluginConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">AppConfig</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#AppConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.AppConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Main application configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'allow'}</span></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.app_name">
+<span class="sig-name descname"><span class="pre">app_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.app_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.app_version">
+<span class="sig-name descname"><span class="pre">app_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.app_version" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.app_commit">
+<span class="sig-name descname"><span class="pre">app_commit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.app_commit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.paths">
+<span class="sig-name descname"><span class="pre">paths</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.core.services.config_service.PathConfig" title="app.core.services.config_service.PathConfig"><span class="pre">PathConfig</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.paths" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.logging">
+<span class="sig-name descname"><span class="pre">logging</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.core.services.config_service.LoggingConfig" title="app.core.services.config_service.LoggingConfig"><span class="pre">LoggingConfig</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.logging" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.ui">
+<span class="sig-name descname"><span class="pre">ui</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.core.services.config_service.UIConfig" title="app.core.services.config_service.UIConfig"><span class="pre">UIConfig</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.ui" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.plugins">
+<span class="sig-name descname"><span class="pre">plugins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.core.services.config_service.PluginConfig" title="app.core.services.config_service.PluginConfig"><span class="pre">PluginConfig</span></a></em><a class="headerlink" href="#app.core.services.config_service.AppConfig.plugins" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">redact_sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#AppConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.AppConfig.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Convert config to dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>redact_sensitive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, replace sensitive values with [REDACTED]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary representation of config</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.AppConfig.model_post_init">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.core.services.config_service.AppConfig.model_post_init" title="Link to this definition"></a></dt>
+<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>BaseModel</em>) – The BaseModel instance.</p></li>
+<li><p><strong>context</strong> (<em>Any</em>) – The context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.config_service.</span></span><span class="sig-name descname"><span class="pre">ConfigService</span></span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Service for managing layered application configuration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize configuration service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app_root</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – Application root directory</p></li>
+<li><p><strong>config_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><em>None</em>) – Configuration directory (defaults to app_root/config)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.load" title="Link to this definition"></a></dt>
+<dd><p>Load configuration from all layers (defaults → file → environment → user).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Loaded AppConfig object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#app.core.services.config_service.AppConfig" title="app.core.services.config_service.AppConfig"><em>AppConfig</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.save_user_config">
+<span class="sig-name descname"><span class="pre">save_user_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.save_user_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.save_user_config" title="Link to this definition"></a></dt>
+<dd><p>Save user configuration to user.yaml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#app.core.services.config_service.AppConfig" title="app.core.services.config_service.AppConfig"><em>AppConfig</em></a>) – AppConfig object to save</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.get_config" title="Link to this definition"></a></dt>
+<dd><p>Get current configuration, loading it if not already loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current AppConfig object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#app.core.services.config_service.AppConfig" title="app.core.services.config_service.AppConfig"><em>AppConfig</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.update_config">
+<span class="sig-name descname"><span class="pre">update_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.update_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.update_config" title="Link to this definition"></a></dt>
+<dd><p>Update configuration values and save to user config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>) – Configuration values to update</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated AppConfig object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#app.core.services.config_service.AppConfig" title="app.core.services.config_service.AppConfig"><em>AppConfig</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.reset_to_defaults">
+<span class="sig-name descname"><span class="pre">reset_to_defaults</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.reset_to_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.reset_to_defaults" title="Link to this definition"></a></dt>
+<dd><p>Reset configuration to defaults by removing user config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default AppConfig object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#app.core.services.config_service.AppConfig" title="app.core.services.config_service.AppConfig"><em>AppConfig</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.config_service.ConfigService.export_config">
+<span class="sig-name descname"><span class="pre">export_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redact_sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/config_service.html#ConfigService.export_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.config_service.ConfigService.export_config" title="Link to this definition"></a></dt>
+<dd><p>Export current configuration to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – Path to output file</p></li>
+<li><p><strong>redact_sensitive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, redact sensitive values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-app.core.services.file_system_service">
+<span id="file-system-service"></span><h2>File System Service<a class="headerlink" href="#module-app.core.services.file_system_service" title="Link to this heading"></a></h2>
+<p>File system service for pyMediaManager.
+Provides abstraction layer for file operations with portable path handling.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.file_system_service.</span></span><span class="sig-name descname"><span class="pre">FileSystemService</span></span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Service for file system operations with portable path handling.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize file system service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>app_root</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><em>None</em>) – Application root directory. If None, auto-detects from module path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_app_root">
+<span class="sig-name descname"><span class="pre">get_app_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_app_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_app_root" title="Link to this definition"></a></dt>
+<dd><p>Get the application root directory.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_drive_root">
+<span class="sig-name descname"><span class="pre">get_drive_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_drive_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_drive_root" title="Link to this definition"></a></dt>
+<dd><p>Get the root of the drive containing the app.</p>
+<p>Returns the drive root (e.g., D:if app is at D:pyMM).
+Caches the result after first call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to drive root directory</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_portable_folder">
+<span class="sig-name descname"><span class="pre">get_portable_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_portable_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_portable_folder" title="Link to this definition"></a></dt>
+<dd><p>Get path to a portable folder at the drive root.</p>
+<p>For portable operation, certain folders (Projects, Logs) should be
+at the drive root rather than within the app directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the folder (e.g., “pyMM.Projects”, “pyMM.Logs”)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the portable folder at drive root</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.ensure_portable_folders">
+<span class="sig-name descname"><span class="pre">ensure_portable_folders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.ensure_portable_folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.ensure_portable_folders" title="Link to this definition"></a></dt>
+<dd><p>Ensure all portable folders exist at the drive root.</p>
+<p>Creates pyMM.Projects and pyMM.Logs folders at the root of the
+drive containing the application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping folder names to their resolved paths</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_relative_path">
+<span class="sig-name descname"><span class="pre">get_relative_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_relative_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_relative_path" title="Link to this definition"></a></dt>
+<dd><p>Get path relative to base directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – Absolute path to convert</p></li>
+<li><p><strong>base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><em>None</em>) – Base directory (defaults to app_root)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Relative path from base to path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.resolve_path">
+<span class="sig-name descname"><span class="pre">resolve_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.resolve_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.resolve_path" title="Link to this definition"></a></dt>
+<dd><p>Resolve a path that may be relative or absolute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to resolve (string or Path object)</p></li>
+<li><p><strong>relative_to</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><em>None</em>) – Base directory for relative paths (defaults to app_root)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resolved absolute path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.ensure_directory">
+<span class="sig-name descname"><span class="pre">ensure_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.ensure_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.ensure_directory" title="Link to this definition"></a></dt>
+<dd><p>Ensure a directory exists, creating it if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory path to create</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resolved path to the directory</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#OSError" title="(in Python v3.14)"><strong>OSError</strong></a> – If directory creation fails</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.list_directory">
+<span class="sig-name descname"><span class="pre">list_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.list_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.list_directory" title="Link to this definition"></a></dt>
+<dd><p>List files in a directory matching a pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory to list</p></li>
+<li><p><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Glob pattern to match (default: “*”)</p></li>
+<li><p><strong>recursive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, search recursively with rglob</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of matching paths</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.copy_file">
+<span class="sig-name descname"><span class="pre">copy_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.copy_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.copy_file" title="Link to this definition"></a></dt>
+<dd><p>Copy a file from source to destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Source file path</p></li>
+<li><p><strong>dst</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Destination file path</p></li>
+<li><p><strong>overwrite</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, overwrite existing destination</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the copied file</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If source doesn’t exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileExistsError" title="(in Python v3.14)"><strong>FileExistsError</strong></a> – If destination exists and overwrite=False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.move_file">
+<span class="sig-name descname"><span class="pre">move_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.move_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.move_file" title="Link to this definition"></a></dt>
+<dd><p>Move a file from source to destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Source file path</p></li>
+<li><p><strong>dst</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Destination file path</p></li>
+<li><p><strong>overwrite</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, overwrite existing destination</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the moved file</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If source doesn’t exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileExistsError" title="(in Python v3.14)"><strong>FileExistsError</strong></a> – If destination exists and overwrite=False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.delete_file">
+<span class="sig-name descname"><span class="pre">delete_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.delete_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.delete_file" title="Link to this definition"></a></dt>
+<dd><p>Delete a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – File path to delete</p></li>
+<li><p><strong>missing_ok</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, don’t raise error if file doesn’t exist</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if file was deleted, False if it didn’t exist</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If file doesn’t exist and missing_ok=False</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.delete_directory">
+<span class="sig-name descname"><span class="pre">delete_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.delete_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.delete_directory" title="Link to this definition"></a></dt>
+<dd><p>Delete a directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory path to delete</p></li>
+<li><p><strong>missing_ok</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, don’t raise error if directory doesn’t exist</p></li>
+<li><p><strong>recursive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, delete recursively (rmtree)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if directory was deleted, False if it didn’t exist</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If directory doesn’t exist and missing_ok=False</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#OSError" title="(in Python v3.14)"><strong>OSError</strong></a> – If directory is not empty and recursive=False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_file_size">
+<span class="sig-name descname"><span class="pre">get_file_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_file_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_file_size" title="Link to this definition"></a></dt>
+<dd><p>Get file size in bytes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – File path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File size in bytes</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If file doesn’t exist</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.file_system_service.FileSystemService.get_free_space">
+<span class="sig-name descname"><span class="pre">get_free_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/file_system_service.html#FileSystemService.get_free_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.file_system_service.FileSystemService.get_free_space" title="Link to this definition"></a></dt>
+<dd><p>Get free disk space for the drive containing the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Any path on the drive</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Free space in bytes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-app.core.services.storage_service">
+<span id="storage-service"></span><h2>Storage Service<a class="headerlink" href="#module-app.core.services.storage_service" title="Link to this heading"></a></h2>
+<p>Storage service for detecting and managing portable drives.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.storage_service.</span></span><span class="sig-name descname"><span class="pre">DriveInfo</span></span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#DriveInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.DriveInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a storage drive.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.drive_letter">
+<span class="sig-name descname"><span class="pre">drive_letter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.drive_letter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.label" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.file_system">
+<span class="sig-name descname"><span class="pre">file_system</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.file_system" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.total_size">
+<span class="sig-name descname"><span class="pre">total_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.total_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.free_space">
+<span class="sig-name descname"><span class="pre">free_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.free_space" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.is_removable">
+<span class="sig-name descname"><span class="pre">is_removable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.is_removable" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.serial_number">
+<span class="sig-name descname"><span class="pre">serial_number</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.serial_number" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.used_space">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">used_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.used_space" title="Link to this definition"></a></dt>
+<dd><p>Calculate used space in bytes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.used_percent">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">used_percent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.used_percent" title="Link to this definition"></a></dt>
+<dd><p>Calculate used space as percentage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.DriveInfo.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive_letter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_removable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serial_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.core.services.storage_service.DriveInfo.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.core.services.storage_service.</span></span><span class="sig-name descname"><span class="pre">StorageService</span></span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Service for detecting and managing portable storage drives.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize storage service.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.get_all_drives">
+<span class="sig-name descname"><span class="pre">get_all_drives</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.get_all_drives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.get_all_drives" title="Link to this definition"></a></dt>
+<dd><p>Get information about all mounted drives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of DriveInfo objects for all drives</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference internal" href="#app.core.services.storage_service.DriveInfo" title="app.core.services.storage_service.DriveInfo"><em>DriveInfo</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.get_removable_drives">
+<span class="sig-name descname"><span class="pre">get_removable_drives</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.get_removable_drives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.get_removable_drives" title="Link to this definition"></a></dt>
+<dd><p>Get information about removable drives only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of DriveInfo objects for removable drives</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference internal" href="#app.core.services.storage_service.DriveInfo" title="app.core.services.storage_service.DriveInfo"><em>DriveInfo</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.get_drive_info">
+<span class="sig-name descname"><span class="pre">get_drive_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.get_drive_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.get_drive_info" title="Link to this definition"></a></dt>
+<dd><p>Get drive information for the drive containing the given path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Any path on the drive</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DriveInfo object or None if drive not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#app.core.services.storage_service.DriveInfo" title="app.core.services.storage_service.DriveInfo"><em>DriveInfo</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.is_path_on_removable_drive">
+<span class="sig-name descname"><span class="pre">is_path_on_removable_drive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.is_path_on_removable_drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.is_path_on_removable_drive" title="Link to this definition"></a></dt>
+<dd><p>Check if a path is on a removable drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if path is on a removable drive</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.core.services.storage_service.StorageService.get_drive_root">
+<span class="sig-name descname"><span class="pre">get_drive_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/core/services/storage_service.html#StorageService.get_drive_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.core.services.storage_service.StorageService.get_drive_root" title="Link to this definition"></a></dt>
+<dd><p>Get the root path of the drive containing the given path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Any path on the drive</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path object pointing to drive root, or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plugins.html" class="btn btn-neutral float-right" title="Plugin System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, mosh666.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

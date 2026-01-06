@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.core.services.config_service &mdash; pyMediaManager 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            pyMediaManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user-guide.html">pyMediaManager User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#first-time-setup">First-Time Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#initial-launch">Initial Launch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#storage-drive-selection">Storage Drive Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#recommended-first-steps">Recommended First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#project-management">Project Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#creating-a-project">Creating a Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#managing-projects">Managing Projects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#project-workflows">Project Workflows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#basic-workflow-no-version-control">Basic Workflow (No Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#git-enabled-workflow-version-control">Git-Enabled Workflow (Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#collaborative-workflow-remote-repository">Collaborative Workflow (Remote Repository)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#template-based-workflow-consistent-structure">Template-Based Workflow (Consistent Structure)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#plugin-management">Plugin Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#understanding-plugins">Understanding Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#installing-plugins">Installing Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#plugin-status">Plugin Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#available-plugins">Available Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#storage-portability">Storage &amp; Portability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#portable-folders">Portable Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#supported-drive-types">Supported Drive Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#moving-between-computers">Moving Between Computers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#drive-management">Drive Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#moving-between-drives">Moving Between Drives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#git-integration">Git Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#git-repository-basics">Git Repository Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#using-git">Using Git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#version-control-best-practices">Version Control Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#settings-configuration">Settings &amp; Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#opening-settings">Opening Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#settings-sections">Settings Sections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#general-tab">General Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#plugins-tab">Plugins Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#storage-tab">Storage Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#git-tab">Git Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#about-tab">About Tab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#saving-settings">Saving Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#common-issues">Common Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#application-won-t-start">Application Won’t Start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#plugin-installation-fails">Plugin Installation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#project-creation-fails">Project Creation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../user-guide.html#git-operations-don-t-work">Git Operations Don’t Work</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#getting-logs">Getting Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#performance-issues">Performance Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../user-guide.html#reporting-bugs">Reporting Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#support-resources">Support &amp; Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user-guide.html#tips-tricks">Tips &amp; Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">pyMediaManager Architecture Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#design-principles">Design Principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#portability-first">1. Portability First</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#service-oriented-architecture">2. Service-Oriented Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#plugin-based-extensibility">3. Plugin-Based Extensibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#code-quality-standards">4. Code Quality Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#version-management">5. Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#ui-framework-stability">6. UI Framework Stability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#directory-structure">Directory Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#service-architecture">Service Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#filesystemservice">1. FileSystemService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#storageservice">2. StorageService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#loggingservice">4. LoggingService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#projectservice">5. ProjectService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#gitservice">6. GitService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#pluginmanager">7. PluginManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#ui-architecture">UI Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#fluent-design-system">Fluent Design System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#ui-components">UI Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#main-window-mainwindow">Main Window (MainWindow)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#storage-view">Storage View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#plugin-view">Plugin View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#project-view">Project View</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#dialog-components">Dialog Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#firstrunwizard">FirstRunWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#projectwizard">ProjectWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#projectbrowser">ProjectBrowser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../architecture.html#settingsdialog">SettingsDialog</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#portable-path-management">Portable Path Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#path-resolution-strategy">Path Resolution Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#example-path-resolution">Example Path Resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#why-this-structure">Why This Structure?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#dependency-management">Dependency Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#embedded-python-approach">Embedded Python Approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#build-process">Build Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#version-matrix">Version Matrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#testing-strategy">Testing Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#gui-tests-pytest-qt">GUI Tests (pytest-qt)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#ci-cd-pipeline">CI/CD Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#security-considerations">Security Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#sensitive-data-handling">Sensitive Data Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#plugin-security">Plugin Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#security-scanning">Security Scanning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#future-security-enhancements">Future Security Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#startup-time">Startup Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#optimization-strategies">Optimization Strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#memory-usage">Memory Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#extension-points">Extension Points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#adding-new-plugins">Adding New Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#adding-new-views">Adding New Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#custom-plugin-implementations">Custom Plugin Implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#test-isolation">Test Isolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#future-roadmap">Future Roadmap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#current-version-january-2026">Current Version (January 2026)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#v1-1-0-q1-2026-planned">v1.1.0 (Q1 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#v1-2-0-q2-2026-planned">v1.2.0 (Q2 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../architecture.html#v2-0-0-future">v2.0.0 (Future)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../plugin-development.html">Plugin Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#plugin-architecture">Plugin Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#plugin-base-class">Plugin Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#abstract-methods">Abstract Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#simple-plugin-implementation">Simple Plugin Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#creating-a-plugin">Creating a Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#step-1-create-plugin-directory">Step 1: Create Plugin Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#step-2-define-plugin-manifest">Step 2: Define Plugin Manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#step-3-optional-create-custom-implementation">Step 3: (Optional) Create Custom Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#plugin-yaml-schema">Plugin YAML Schema</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#required-fields">Required Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#optional-fields">Optional Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#complete-example">Complete Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#basic-plugin-ffmpeg">Basic Plugin: FFmpeg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#advanced-plugin-digikam-with-dependencies">Advanced Plugin: digiKam (with dependencies)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#implementing-plugin-logic">Implementing Plugin Logic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#using-default-implementation">Using Default Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#custom-installation-logic">Custom Installation Logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#custom-version-detection">Custom Version Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#custom-installation-check">Custom Installation Check</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#testing-your-plugin">Testing Your Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#manual-testing">Manual Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#automated-testing">Automated Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#always-provide-checksums">1. Always Provide Checksums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#use-semantic-versioning">2. Use Semantic Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#specify-file-sizes">3. Specify File Sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#document-dependencies">4. Document Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#test-on-clean-installs">5. Test on Clean Installs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#handle-installation-failures-gracefully">6. Handle Installation Failures Gracefully</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#use-portable-versions">7. Use Portable Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#document-platform-requirements">8. Document Platform Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#keep-plugins-updated">9. Keep Plugins Updated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#follow-security-best-practices">10. Follow Security Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#plugin-lifecycle">Plugin Lifecycle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#discovery-phase">Discovery Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#installation-phase">Installation Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#runtime-phase">Runtime Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#uninstallation-phase">Uninstallation Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#plugin-not-discovered">Plugin Not Discovered</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#download-fails">Download Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#extraction-fails">Extraction Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#executable-not-found">Executable Not Found</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#version-detection-fails">Version Detection Fails</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#github-release-asset-pattern-future-feature">GitHub Release Asset Pattern (Future Feature)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#multi-platform-support">Multi-Platform Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../plugin-development.html#custom-progress-callbacks">Custom Progress Callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#resources">Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../plugin-development.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/core.html">Core Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/core.html#module-app.core.logging_service">Logging Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.logging_service.LoggingService"><code class="docutils literal notranslate"><span class="pre">LoggingService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.config_service">Configuration Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.PathConfig"><code class="docutils literal notranslate"><span class="pre">PathConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.LoggingConfig"><code class="docutils literal notranslate"><span class="pre">LoggingConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.UIConfig"><code class="docutils literal notranslate"><span class="pre">UIConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.PluginConfig"><code class="docutils literal notranslate"><span class="pre">PluginConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.AppConfig"><code class="docutils literal notranslate"><span class="pre">AppConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.config_service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.file_system_service">File System Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.file_system_service.FileSystemService"><code class="docutils literal notranslate"><span class="pre">FileSystemService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.storage_service">Storage Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.storage_service.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#app.core.services.storage_service.StorageService"><code class="docutils literal notranslate"><span class="pre">StorageService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/plugins.html">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/plugins.html#module-app.plugins.plugin_base">Plugin Base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#app.plugins.plugin_base.PluginManifest"><code class="docutils literal notranslate"><span class="pre">PluginManifest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#app.plugins.plugin_base.PluginBase"><code class="docutils literal notranslate"><span class="pre">PluginBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#app.plugins.plugin_base.SimplePluginImplementation"><code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#app.plugins.plugin_manager.PluginManager"><code class="docutils literal notranslate"><span class="pre">PluginManager</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/services.html">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/services.html#module-app.services.project_service">Project Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/services.html#app.services.project_service.ProjectService"><code class="docutils literal notranslate"><span class="pre">ProjectService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/services.html#module-app.services.git_service">Git Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/services.html#app.services.git_service.GitService"><code class="docutils literal notranslate"><span class="pre">GitService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/models.html">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/models.html#module-app.models.project">Project Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/models.html#app.models.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/ui.html">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ui.html#main-window">Main Window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ui.html#views">Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ui.html#components">Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/index.html#core-services">Core Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/core.html">Core Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#module-app.core.logging_service">Logging Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.config_service">Configuration Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.file_system_service">File System Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/core.html#module-app.core.services.storage_service">Storage Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/index.html#plugin-system">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/plugins.html">Plugin System</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#module-app.plugins.plugin_base">Plugin Base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/index.html#application-services">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/services.html">Application Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/services.html#module-app.services.project_service">Project Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/services.html#module-app.services.git_service">Git Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/index.html#data-models">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/models.html">Data Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/models.html#module-app.models.project">Project Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/index.html#user-interface">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ui.html">User Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/ui.html#main-window">Main Window</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/ui.html#views">Views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/ui.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pyMediaManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">app.core.services.config_service</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for app.core.services.config_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Configuration service for pyMediaManager.</span>
+<span class="sd">Handles layered configuration (defaults → environment → user) with Pydantic models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>  <span class="c1"># type: ignore[import-untyped]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">app</span><span class="w"> </span><span class="kn">import</span> <span class="n">__commit_id__</span><span class="p">,</span> <span class="n">__version__</span>
+
+
+<div class="viewcode-block" id="LogLevel">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.LogLevel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogLevel</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Logging levels.&quot;&quot;&quot;</span>
+
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span>
+    <span class="n">INFO</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="s2">&quot;WARNING&quot;</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;ERROR&quot;</span>
+    <span class="n">CRITICAL</span> <span class="o">=</span> <span class="s2">&quot;CRITICAL&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="PathConfig">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.PathConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for application paths.&quot;&quot;&quot;</span>
+
+    <span class="n">projects_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;pyMM.Projects&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Projects directory name&quot;</span><span class="p">)</span>
+    <span class="n">logs_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;pyMM.Logs&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Logs directory name&quot;</span><span class="p">)</span>
+    <span class="n">plugins_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;pyMM.Plugins&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Plugins directory name&quot;</span><span class="p">)</span>
+    <span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Config directory name&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LoggingConfig">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.LoggingConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoggingConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for logging.&quot;&quot;&quot;</span>
+
+    <span class="n">level</span><span class="p">:</span> <span class="n">LogLevel</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">LogLevel</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Default log level&quot;</span><span class="p">)</span>
+    <span class="n">console_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enable console logging&quot;</span><span class="p">)</span>
+    <span class="n">file_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enable file logging&quot;</span><span class="p">)</span>
+    <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">10485760</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Max log file size (10MB)&quot;</span><span class="p">)</span>
+    <span class="n">backup_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of backup log files&quot;</span><span class="p">)</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Log format string&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UIConfig">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.UIConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UIConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for UI settings.&quot;&quot;&quot;</span>
+
+    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;UI theme (light/dark/auto)&quot;</span><span class="p">)</span>
+    <span class="n">show_first_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Show first-run wizard&quot;</span><span class="p">)</span>
+    <span class="n">window_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Default window width&quot;</span><span class="p">)</span>
+    <span class="n">window_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Default window height&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PluginConfig">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.PluginConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for plugin system.&quot;&quot;&quot;</span>
+
+    <span class="n">auto_update_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Check for plugin updates&quot;</span><span class="p">)</span>
+    <span class="n">download_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download timeout in seconds&quot;</span><span class="p">)</span>
+    <span class="n">parallel_downloads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Max parallel downloads&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AppConfig">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.AppConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main application configuration.&quot;&quot;&quot;</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">)</span>
+
+    <span class="n">app_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;pyMediaManager&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Application name&quot;</span><span class="p">)</span>
+    <span class="n">app_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">__version__</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Application version&quot;</span><span class="p">)</span>
+    <span class="n">app_commit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">__commit_id__</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Git commit hash&quot;</span><span class="p">)</span>
+    <span class="n">paths</span><span class="p">:</span> <span class="n">PathConfig</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">PathConfig</span><span class="p">)</span>
+    <span class="n">logging</span><span class="p">:</span> <span class="n">LoggingConfig</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">LoggingConfig</span><span class="p">)</span>
+    <span class="n">ui</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">UIConfig</span><span class="p">)</span>
+    <span class="n">plugins</span><span class="p">:</span> <span class="n">PluginConfig</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">PluginConfig</span><span class="p">)</span>
+
+    <span class="c1"># Sensitive fields that should be redacted in logs</span>
+    <span class="n">_sensitive_fields</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="s2">&quot;secret&quot;</span><span class="p">,</span> <span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="s2">&quot;api_key&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AppConfig.to_dict">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.AppConfig.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redact_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert config to dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            redact_sensitive: If True, replace sensitive values with [REDACTED]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary representation of config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">redact_sensitive</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact_sensitive_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_redact_sensitive_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively redact sensitive data in configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">key</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;[REDACTED]&quot;</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">sensitive</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">sensitive</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensitive_fields</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact_sensitive_data</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_redact_sensitive_data</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="ConfigService">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for managing layered application configuration.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigService.__init__">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">config_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize configuration service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            app_root: Application root directory</span>
+<span class="sd">            config_dir: Configuration directory (defaults to app_root/config)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">config_dir</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_root</span> <span class="o">/</span> <span class="s2">&quot;config&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span> <span class="n">AppConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">/</span> <span class="s2">&quot;user.yaml&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_config_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">/</span> <span class="s2">&quot;app.yaml&quot;</span></div>
+
+
+<div class="viewcode-block" id="ConfigService.load">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load configuration from all layers (defaults → file → environment → user).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Loaded AppConfig object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Start with default config</span>
+        <span class="n">config_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Layer 1: Load from default config file if exists</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_config_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_config_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">default_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="n">config_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">default_data</span><span class="p">)</span>
+
+        <span class="c1"># Layer 2: Load from user config file if exists</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">user_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="n">config_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_dicts</span><span class="p">(</span><span class="n">config_data</span><span class="p">,</span> <span class="n">user_data</span><span class="p">)</span>
+
+        <span class="c1"># Create Pydantic model from merged data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">AppConfig</span><span class="p">(</span><span class="o">**</span><span class="n">config_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span></div>
+
+
+<div class="viewcode-block" id="ConfigService.save_user_config">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.save_user_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_user_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AppConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save user configuration to user.yaml.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: AppConfig object to save</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConfigService.get_config">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.get_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get current configuration, loading it if not already loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Current AppConfig object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span></div>
+
+
+<div class="viewcode-block" id="ConfigService.update_config">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.update_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update configuration values and save to user config.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Configuration values to update</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Updated AppConfig object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+
+        <span class="c1"># Update config with new values</span>
+        <span class="n">updated_data</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+        <span class="n">updated_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Create new config and save</span>
+        <span class="n">new_config</span> <span class="o">=</span> <span class="n">AppConfig</span><span class="p">(</span><span class="o">**</span><span class="n">updated_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_user_config</span><span class="p">(</span><span class="n">new_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">new_config</span>
+
+        <span class="k">return</span> <span class="n">new_config</span></div>
+
+
+<div class="viewcode-block" id="ConfigService.reset_to_defaults">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.reset_to_defaults">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_to_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset configuration to defaults by removing user config.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Default AppConfig object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_user_config_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_merge_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">override</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively merge two dictionaries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            base: Base dictionary</span>
+<span class="sd">            override: Dictionary with override values</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Merged dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">override</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">result</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_dicts</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="ConfigService.export_config">
+<a class="viewcode-back" href="../../../../api/core.html#app.core.services.config_service.ConfigService.export_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">redact_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export current configuration to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_path: Path to output file</span>
+<span class="sd">            redact_sensitive: If True, redact sensitive values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">redact_sensitive</span><span class="o">=</span><span class="n">redact_sensitive</span><span class="p">)</span>
+
+        <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, mosh666.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

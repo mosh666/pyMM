@@ -1,0 +1,1193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plugin Development Guide &mdash; pyMediaManager 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/index.html" />
+    <link rel="prev" title="pyMediaManager Architecture Documentation" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyMediaManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">pyMediaManager User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#first-time-setup">First-Time Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#initial-launch">Initial Launch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#storage-drive-selection">Storage Drive Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#recommended-first-steps">Recommended First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#project-management">Project Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#creating-a-project">Creating a Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#managing-projects">Managing Projects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#project-workflows">Project Workflows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#basic-workflow-no-version-control">Basic Workflow (No Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#git-enabled-workflow-version-control">Git-Enabled Workflow (Version Control)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#collaborative-workflow-remote-repository">Collaborative Workflow (Remote Repository)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#template-based-workflow-consistent-structure">Template-Based Workflow (Consistent Structure)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#plugin-management">Plugin Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#understanding-plugins">Understanding Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#installing-plugins">Installing Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#plugin-status">Plugin Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#available-plugins">Available Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#storage-portability">Storage &amp; Portability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#portable-folders">Portable Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#supported-drive-types">Supported Drive Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#moving-between-computers">Moving Between Computers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#drive-management">Drive Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#moving-between-drives">Moving Between Drives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#git-integration">Git Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#git-repository-basics">Git Repository Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#using-git">Using Git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#version-control-best-practices">Version Control Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#settings-configuration">Settings &amp; Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#opening-settings">Opening Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#settings-sections">Settings Sections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#general-tab">General Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#plugins-tab">Plugins Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#storage-tab">Storage Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#git-tab">Git Tab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#about-tab">About Tab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#saving-settings">Saving Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#common-issues">Common Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#application-won-t-start">Application Won’t Start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#plugin-installation-fails">Plugin Installation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#project-creation-fails">Project Creation Fails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user-guide.html#git-operations-don-t-work">Git Operations Don’t Work</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#getting-logs">Getting Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#performance-issues">Performance Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user-guide.html#reporting-bugs">Reporting Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#support-resources">Support &amp; Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#tips-tricks">Tips &amp; Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">pyMediaManager Architecture Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#design-principles">Design Principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#portability-first">1. Portability First</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#service-oriented-architecture">2. Service-Oriented Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plugin-based-extensibility">3. Plugin-Based Extensibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#code-quality-standards">4. Code Quality Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#version-management">5. Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#ui-framework-stability">6. UI Framework Stability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#directory-structure">Directory Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#service-architecture">Service Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#filesystemservice">1. FileSystemService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#storageservice">2. StorageService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#loggingservice">4. LoggingService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#projectservice">5. ProjectService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#gitservice">6. GitService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#pluginmanager">7. PluginManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#ui-architecture">UI Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#fluent-design-system">Fluent Design System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#ui-components">UI Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#main-window-mainwindow">Main Window (MainWindow)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#storage-view">Storage View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#plugin-view">Plugin View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#project-view">Project View</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#dialog-components">Dialog Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#firstrunwizard">FirstRunWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#projectwizard">ProjectWizard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#projectbrowser">ProjectBrowser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="architecture.html#settingsdialog">SettingsDialog</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#portable-path-management">Portable Path Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#path-resolution-strategy">Path Resolution Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#example-path-resolution">Example Path Resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#why-this-structure">Why This Structure?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#dependency-management">Dependency Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#embedded-python-approach">Embedded Python Approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#build-process">Build Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#version-matrix">Version Matrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#testing-strategy">Testing Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#gui-tests-pytest-qt">GUI Tests (pytest-qt)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#ci-cd-pipeline">CI/CD Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#security-considerations">Security Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#sensitive-data-handling">Sensitive Data Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plugin-security">Plugin Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#security-scanning">Security Scanning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#future-security-enhancements">Future Security Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#startup-time">Startup Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#optimization-strategies">Optimization Strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#memory-usage">Memory Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#extension-points">Extension Points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-plugins">Adding New Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-views">Adding New Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#custom-plugin-implementations">Custom Plugin Implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-isolation">Test Isolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#future-roadmap">Future Roadmap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#current-version-january-2026">Current Version (January 2026)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#v1-1-0-q1-2026-planned">v1.1.0 (Q1 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#v1-2-0-q2-2026-planned">v1.2.0 (Q2 2026 - Planned)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#v2-0-0-future">v2.0.0 (Future)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plugin Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plugin-architecture">Plugin Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#plugin-base-class">Plugin Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-methods">Abstract Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simple-plugin-implementation">Simple Plugin Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-plugin">Creating a Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-create-plugin-directory">Step 1: Create Plugin Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-define-plugin-manifest">Step 2: Define Plugin Manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-optional-create-custom-implementation">Step 3: (Optional) Create Custom Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plugin-yaml-schema">Plugin YAML Schema</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#required-fields">Required Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-fields">Optional Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-example">Complete Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-plugin-ffmpeg">Basic Plugin: FFmpeg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-plugin-digikam-with-dependencies">Advanced Plugin: digiKam (with dependencies)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-plugin-logic">Implementing Plugin Logic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-default-implementation">Using Default Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-installation-logic">Custom Installation Logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-version-detection">Custom Version Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-installation-check">Custom Installation Check</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-your-plugin">Testing Your Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#manual-testing">Manual Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automated-testing">Automated Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#always-provide-checksums">1. Always Provide Checksums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-semantic-versioning">2. Use Semantic Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specify-file-sizes">3. Specify File Sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#document-dependencies">4. Document Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-on-clean-installs">5. Test on Clean Installs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handle-installation-failures-gracefully">6. Handle Installation Failures Gracefully</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-portable-versions">7. Use Portable Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#document-platform-requirements">8. Document Platform Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keep-plugins-updated">9. Keep Plugins Updated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#follow-security-best-practices">10. Follow Security Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plugin-lifecycle">Plugin Lifecycle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#discovery-phase">Discovery Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-phase">Installation Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#runtime-phase">Runtime Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uninstallation-phase">Uninstallation Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#plugin-not-discovered">Plugin Not Discovered</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-fails">Download Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extraction-fails">Extraction Fails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#executable-not-found">Executable Not Found</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#version-detection-fails">Version Detection Fails</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#github-release-asset-pattern-future-feature">GitHub Release Asset Pattern (Future Feature)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-platform-support">Multi-Platform Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-progress-callbacks">Custom Progress Callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/core.html">Core Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/core.html#module-app.core.logging_service">Logging Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.logging_service.LoggingService"><code class="docutils literal notranslate"><span class="pre">LoggingService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/core.html#module-app.core.services.config_service">Configuration Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.PathConfig"><code class="docutils literal notranslate"><span class="pre">PathConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.LoggingConfig"><code class="docutils literal notranslate"><span class="pre">LoggingConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.UIConfig"><code class="docutils literal notranslate"><span class="pre">UIConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.PluginConfig"><code class="docutils literal notranslate"><span class="pre">PluginConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.AppConfig"><code class="docutils literal notranslate"><span class="pre">AppConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.config_service.ConfigService"><code class="docutils literal notranslate"><span class="pre">ConfigService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/core.html#module-app.core.services.file_system_service">File System Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.file_system_service.FileSystemService"><code class="docutils literal notranslate"><span class="pre">FileSystemService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/core.html#module-app.core.services.storage_service">Storage Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.storage_service.DriveInfo"><code class="docutils literal notranslate"><span class="pre">DriveInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#app.core.services.storage_service.StorageService"><code class="docutils literal notranslate"><span class="pre">StorageService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/plugins.html">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/plugins.html#module-app.plugins.plugin_base">Plugin Base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#app.plugins.plugin_base.PluginManifest"><code class="docutils literal notranslate"><span class="pre">PluginManifest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#app.plugins.plugin_base.PluginBase"><code class="docutils literal notranslate"><span class="pre">PluginBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#app.plugins.plugin_base.SimplePluginImplementation"><code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#app.plugins.plugin_manager.PluginManager"><code class="docutils literal notranslate"><span class="pre">PluginManager</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/services.html">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/services.html#module-app.services.project_service">Project Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/services.html#app.services.project_service.ProjectService"><code class="docutils literal notranslate"><span class="pre">ProjectService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/services.html#module-app.services.git_service">Git Service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/services.html#app.services.git_service.GitService"><code class="docutils literal notranslate"><span class="pre">GitService</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/models.html">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/models.html#module-app.models.project">Project Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/models.html#app.models.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ui.html">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ui.html#main-window">Main Window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ui.html#views">Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ui.html#components">Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#core-services">Core Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/core.html">Core Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#module-app.core.logging_service">Logging Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#module-app.core.services.config_service">Configuration Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#module-app.core.services.file_system_service">File System Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/core.html#module-app.core.services.storage_service">Storage Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#plugin-system">Plugin System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/plugins.html">Plugin System</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#module-app.plugins.plugin_base">Plugin Base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/plugins.html#module-app.plugins.plugin_manager">Plugin Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#application-services">Application Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/services.html">Application Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/services.html#module-app.services.project_service">Project Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/services.html#module-app.services.git_service">Git Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#data-models">Data Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/models.html">Data Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/models.html#module-app.models.project">Project Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#user-interface">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ui.html">User Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ui.html#main-window">Main Window</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ui.html#views">Views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ui.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ui.html#dialogs">Dialogs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyMediaManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Plugin Development Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/plugin-development.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plugin-development-guide">
+<h1>Plugin Development Guide<a class="headerlink" href="#plugin-development-guide" title="Link to this heading"></a></h1>
+<p>This guide explains how to create and configure plugins for pyMediaManager (pyMM).</p>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview"><span class="xref myst">Overview</span></a></p></li>
+<li><p><a class="reference internal" href="#plugin-architecture"><span class="xref myst">Plugin Architecture</span></a></p></li>
+<li><p><a class="reference internal" href="#creating-a-plugin"><span class="xref myst">Creating a Plugin</span></a></p></li>
+<li><p><a class="reference internal" href="#plugin-yaml-schema"><span class="xref myst">Plugin YAML Schema</span></a></p></li>
+<li><p><a class="reference internal" href="#implementing-plugin-logic"><span class="xref myst">Implementing Plugin Logic</span></a></p></li>
+<li><p><a class="reference internal" href="#testing-your-plugin"><span class="xref myst">Testing Your Plugin</span></a></p></li>
+<li><p><a class="reference internal" href="#best-practices"><span class="xref myst">Best Practices</span></a></p></li>
+</ul>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>pyMM uses a plugin system to manage external tools and dependencies. Each plugin represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can download, install, and manage automatically.</p>
+<p>Plugins are defined by:</p>
+<ol class="arabic simple">
+<li><p>A YAML manifest file (<code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code>) defining metadata and download information</p></li>
+<li><p>An optional Python implementation extending <code class="docutils literal notranslate"><span class="pre">PluginBase</span></code> for custom behavior</p></li>
+</ol>
+</section>
+<section id="plugin-architecture">
+<h2>Plugin Architecture<a class="headerlink" href="#plugin-architecture" title="Link to this heading"></a></h2>
+<section id="plugin-base-class">
+<h3>Plugin Base Class<a class="headerlink" href="#plugin-base-class" title="Link to this heading"></a></h3>
+<p>All plugins inherit from <code class="docutils literal notranslate"><span class="pre">app.plugins.plugin_base.PluginBase</span></code>, which provides:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">download_and_extract_binary()</span></code></strong>: Built-in download and extraction with retry logic, checksum verification, and progress callbacks</p></li>
+<li><p><strong>Archive extraction</strong>: Automatic handling of ZIP, 7z, and self-extracting .exe archives</p></li>
+<li><p><strong>Directory flattening</strong>: Removes unnecessary nested directories after extraction</p></li>
+<li><p><strong>Special case handling</strong>: Custom logic for specific tools (e.g., ExifTool renaming)</p></li>
+</ul>
+</section>
+<section id="abstract-methods">
+<h3>Abstract Methods<a class="headerlink" href="#abstract-methods" title="Link to this heading"></a></h3>
+<p>Plugins must implement these methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@abstractmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the plugin is properly installed.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="nd">@abstractmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install the plugin.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="nd">@abstractmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">uninstall</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uninstall the plugin.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="nd">@abstractmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the installed version of the plugin.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-plugin-implementation">
+<h3>Simple Plugin Implementation<a class="headerlink" href="#simple-plugin-implementation" title="Link to this heading"></a></h3>
+<p>Most plugins use <code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code>, which provides default behavior:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">app.plugins.plugin_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimplePluginImplementation</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyToolPlugin</span><span class="p">(</span><span class="n">SimplePluginImplementation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin for MyTool.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>  <span class="c1"># Uses default implementation</span>
+</pre></div>
+</div>
+<p>For custom behavior, override specific methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CustomPlugin</span><span class="p">(</span><span class="n">SimplePluginImplementation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom installation check.&quot;&quot;&quot;</span>
+        <span class="c1"># Your custom logic here</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">check_installed</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom version detection.&quot;&quot;&quot;</span>
+        <span class="c1"># Parse version from tool output</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="creating-a-plugin">
+<h2>Creating a Plugin<a class="headerlink" href="#creating-a-plugin" title="Link to this heading"></a></h2>
+<section id="step-1-create-plugin-directory">
+<h3>Step 1: Create Plugin Directory<a class="headerlink" href="#step-1-create-plugin-directory" title="Link to this heading"></a></h3>
+<p>Create a directory in <code class="docutils literal notranslate"><span class="pre">plugins/</span></code> with your tool name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plugins</span><span class="o">/</span>
+  <span class="n">mytool</span><span class="o">/</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-define-plugin-manifest">
+<h3>Step 2: Define Plugin Manifest<a class="headerlink" href="#step-2-define-plugin-manifest" title="Link to this heading"></a></h3>
+<p>Create <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> with your plugin configuration (see <a class="reference internal" href="#plugin-yaml-schema"><span class="xref myst">Plugin YAML Schema</span></a> below).</p>
+</section>
+<section id="step-3-optional-create-custom-implementation">
+<h3>Step 3: (Optional) Create Custom Implementation<a class="headerlink" href="#step-3-optional-create-custom-implementation" title="Link to this heading"></a></h3>
+<p>If you need custom behavior beyond <code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code>, create a Python module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plugins/mytool/mytool_plugin.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.plugins.plugin_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginBase</span><span class="p">,</span> <span class="n">PluginManifest</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyToolPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Custom check logic</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Custom install logic</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">uninstall</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Custom uninstall logic</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Custom version detection</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="plugin-yaml-schema">
+<h2>Plugin YAML Schema<a class="headerlink" href="#plugin-yaml-schema" title="Link to this heading"></a></h2>
+<section id="required-fields">
+<h3>Required Fields<a class="headerlink" href="#required-fields" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Display name of the plugin</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Git&quot;</span>
+
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Version of the plugin/tool</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;2.43.0&quot;</span>
+
+<span class="nt">mandatory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># true = Required for pyMM to function</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># false = Optional plugin</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># true = Plugin is active</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># false = Plugin is disabled</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Download method (currently only &quot;url&quot; supported)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;url&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="nt">base_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Download URL for the plugin archive</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe&quot;</span>
+
+<span class="nt">command</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Relative path to executable directory from plugin root</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Use empty string (&quot;&quot;) if executable is in root</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;bin&quot;</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or &quot;&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Filename of the executable</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;git.exe&quot;</span>
+
+<span class="nt">register_to_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># true = Add executable directory to PATH</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># false = Don&#39;t modify PATH</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
+<section id="optional-fields">
+<h3>Optional Fields<a class="headerlink" href="#optional-fields" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Human-readable description of the plugin</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Distributed</span><span class="nv"> </span><span class="s">version</span><span class="nv"> </span><span class="s">control</span><span class="nv"> </span><span class="s">system&quot;</span>
+
+<span class="nt">dependencies</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list[string]</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># List of plugin names this plugin depends on</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;git&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;mariadb&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">checksum_sha256</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># SHA-256 hash (uppercase hex) for integrity verification</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="nt">file_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Expected file size in bytes (for progress tracking)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52428800</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="nt">asset_pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Pattern for GitHub release assets (not yet implemented)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;PortableGit-.*-64-bit\\.7z\\.exe&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="complete-example">
+<h2>Complete Example<a class="headerlink" href="#complete-example" title="Link to this heading"></a></h2>
+<section id="basic-plugin-ffmpeg">
+<h3>Basic Plugin: FFmpeg<a class="headerlink" href="#basic-plugin-ffmpeg" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;FFmpeg&quot;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7.0.1&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Complete</span><span class="nv"> </span><span class="s">multimedia</span><span class="nv"> </span><span class="s">framework</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">video/audio</span><span class="nv"> </span><span class="s">processing&quot;</span>
+<span class="nt">mandatory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;url&quot;</span>
+<span class="w">  </span><span class="nt">base_uri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/GyanD/codexffmpeg/releases/download/7.0.1/ffmpeg-7.0.1-full_build.7z&quot;</span>
+<span class="w">  </span><span class="nt">checksum_sha256</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF&quot;</span>
+<span class="w">  </span><span class="nt">file_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123456789</span>
+
+<span class="nt">command</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bin&quot;</span>
+<span class="w">  </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ffmpeg.exe&quot;</span>
+
+<span class="nt">register_to_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-plugin-digikam-with-dependencies">
+<h3>Advanced Plugin: digiKam (with dependencies)<a class="headerlink" href="#advanced-plugin-digikam-with-dependencies" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;digiKam&quot;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8.5.0&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Professional</span><span class="nv"> </span><span class="s">photo</span><span class="nv"> </span><span class="s">management</span><span class="nv"> </span><span class="s">application&quot;</span>
+<span class="nt">mandatory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;mariadb&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;exiftool&quot;</span>
+
+<span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;url&quot;</span>
+<span class="w">  </span><span class="nt">base_uri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe&quot;</span>
+<span class="w">  </span><span class="nt">file_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">387654321</span>
+
+<span class="nt">command</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;digikam.exe&quot;</span>
+
+<span class="nt">register_to_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="implementing-plugin-logic">
+<h2>Implementing Plugin Logic<a class="headerlink" href="#implementing-plugin-logic" title="Link to this heading"></a></h2>
+<section id="using-default-implementation">
+<h3>Using Default Implementation<a class="headerlink" href="#using-default-implementation" title="Link to this heading"></a></h3>
+<p>Most plugins can use <code class="docutils literal notranslate"><span class="pre">SimplePluginImplementation</span></code> which provides:</p>
+<ol class="arabic simple">
+<li><p><strong>Installation</strong>: Downloads and extracts to <code class="docutils literal notranslate"><span class="pre">&lt;storage_dir&gt;/plugins/&lt;plugin_name&gt;/</span></code></p></li>
+<li><p><strong>Version Check</strong>: Runs <code class="docutils literal notranslate"><span class="pre">&lt;executable&gt;</span> <span class="pre">--version</span></code> and parses output</p></li>
+<li><p><strong>Installation Check</strong>: Verifies executable exists and can run</p></li>
+<li><p><strong>Uninstallation</strong>: Removes plugin directory</p></li>
+</ol>
+</section>
+<section id="custom-installation-logic">
+<h3>Custom Installation Logic<a class="headerlink" href="#custom-installation-logic" title="Link to this heading"></a></h3>
+<p>Override the <code class="docutils literal notranslate"><span class="pre">install()</span></code> method for custom behavior:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom installation with post-processing.&quot;&quot;&quot;</span>
+    <span class="c1"># Download and extract</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1"># Post-install configuration</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_dir</span> <span class="o">/</span> <span class="s2">&quot;config.ini&quot;</span>
+    <span class="n">config_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;[Settings]</span><span class="se">\n</span><span class="s2">key=value&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create symlinks or shortcuts</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_shortcuts</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-version-detection">
+<h3>Custom Version Detection<a class="headerlink" href="#custom-version-detection" title="Link to this heading"></a></h3>
+<p>Override <code class="docutils literal notranslate"><span class="pre">get_version()</span></code> for non-standard version output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse version from tool-specific output.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="p">,</span> <span class="s2">&quot;--version&quot;</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span>
+        <span class="p">)</span>
+        <span class="c1"># Parse version with regex</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;v(\d+\.\d+\.\d+)&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-installation-check">
+<h3>Custom Installation Check<a class="headerlink" href="#custom-installation-check" title="Link to this heading"></a></h3>
+<p>Override <code class="docutils literal notranslate"><span class="pre">check_installed()</span></code> for complex verification:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify installation with multiple checks.&quot;&quot;&quot;</span>
+    <span class="c1"># Check executable exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1"># Check required files</span>
+    <span class="n">required_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lib/library.dll&quot;</span><span class="p">,</span> <span class="s2">&quot;config/default.cfg&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">install_dir</span> <span class="o">/</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">required_files</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1"># Verify executable runs</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-your-plugin">
+<h2>Testing Your Plugin<a class="headerlink" href="#testing-your-plugin" title="Link to this heading"></a></h2>
+<section id="manual-testing">
+<h3>Manual Testing<a class="headerlink" href="#manual-testing" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Place your plugin in the plugins directory</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plugins</span><span class="o">/</span>
+  <span class="n">mytool</span><span class="o">/</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Launch pyMM</strong> and check the Plugin Manager view</p></li>
+<li><p><strong>Verify plugin is discovered</strong>:</p>
+<ul class="simple">
+<li><p>Should appear in the plugin list</p></li>
+<li><p>Check mandatory/enabled status</p></li>
+<li><p>Verify dependencies are shown</p></li>
+</ul>
+</li>
+<li><p><strong>Test installation</strong>:</p>
+<ul class="simple">
+<li><p>Click Install button</p></li>
+<li><p>Monitor progress callback</p></li>
+<li><p>Verify files are extracted to <code class="docutils literal notranslate"><span class="pre">&lt;storage&gt;/plugins/mytool/</span></code></p></li>
+<li><p>Check executable is registered to PATH</p></li>
+</ul>
+</li>
+<li><p><strong>Test version detection</strong>:</p>
+<ul class="simple">
+<li><p>Should display version after installation</p></li>
+<li><p>Verify version string is parsed correctly</p></li>
+</ul>
+</li>
+<li><p><strong>Test uninstallation</strong>:</p>
+<ul class="simple">
+<li><p>Click Uninstall button</p></li>
+<li><p>Verify all files are removed</p></li>
+<li><p>Check PATH is cleaned up</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="automated-testing">
+<h3>Automated Testing<a class="headerlink" href="#automated-testing" title="Link to this heading"></a></h3>
+<p>Create a test file in <code class="docutils literal notranslate"><span class="pre">tests/unit/test_mytool_plugin.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Tests for MyTool plugin.&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.plugins.plugin_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginManager</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_mytool_discovery</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test MyTool plugin is discovered.&quot;&quot;&quot;</span>
+    <span class="n">plugin_dir</span> <span class="o">=</span> <span class="n">temp_dir</span> <span class="o">/</span> <span class="s2">&quot;plugins&quot;</span>
+    <span class="n">plugin_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    
+    <span class="c1"># Create test plugin.yaml</span>
+    <span class="n">mytool_dir</span> <span class="o">=</span> <span class="n">plugin_dir</span> <span class="o">/</span> <span class="s2">&quot;mytool&quot;</span>
+    <span class="n">mytool_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">mytool_dir</span> <span class="o">/</span> <span class="s2">&quot;plugin.yaml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">name: &quot;MyTool&quot;</span>
+<span class="s2">version: &quot;1.0.0&quot;</span>
+<span class="s2">mandatory: false</span>
+<span class="s2">enabled: true</span>
+<span class="s2">source:</span>
+<span class="s2">  type: &quot;url&quot;</span>
+<span class="s2">  base_uri: &quot;https://example.com/mytool.zip&quot;</span>
+<span class="s2">command:</span>
+<span class="s2">  path: &quot;&quot;</span>
+<span class="s2">  executable: &quot;mytool.exe&quot;</span>
+<span class="s2">register_to_path: true</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test discovery</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">PluginManager</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+    <span class="n">plugins</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_all_plugins</span><span class="p">()</span>
+    
+    <span class="k">assert</span> <span class="s2">&quot;mytool&quot;</span> <span class="ow">in</span> <span class="n">plugins</span>
+    <span class="k">assert</span> <span class="n">plugins</span><span class="p">[</span><span class="s2">&quot;mytool&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MyTool&quot;</span>
+    <span class="k">assert</span> <span class="n">plugins</span><span class="p">[</span><span class="s2">&quot;mytool&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_mytool_installation</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">,</span> <span class="n">mock_download</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test MyTool installation.&quot;&quot;&quot;</span>
+    <span class="c1"># Set up plugin</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">PluginManager</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+    <span class="n">plugin</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_plugin</span><span class="p">(</span><span class="s2">&quot;mytool&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Mock download and install</span>
+    <span class="k">assert</span> <span class="n">plugin</span><span class="o">.</span><span class="n">install</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">plugin</span><span class="o">.</span><span class="n">check_installed</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">plugin</span><span class="o">.</span><span class="n">get_version</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;1.0.0&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="always-provide-checksums">
+<h3>1. Always Provide Checksums<a class="headerlink" href="#always-provide-checksums" title="Link to this heading"></a></h3>
+<p>Include SHA-256 checksums for security and integrity verification:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">checksum_sha256</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ABC123...&quot;</span><span class="w">  </span><span class="c1"># Generate with: certutil -hashfile file.exe SHA256</span>
+</pre></div>
+</div>
+</section>
+<section id="use-semantic-versioning">
+<h3>2. Use Semantic Versioning<a class="headerlink" href="#use-semantic-versioning" title="Link to this heading"></a></h3>
+<p>Follow <a class="reference external" href="https://semver.org">semver.org</a> for version numbers:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.1.3&quot;</span><span class="w">  </span><span class="c1"># MAJOR.MINOR.PATCH</span>
+</pre></div>
+</div>
+</section>
+<section id="specify-file-sizes">
+<h3>3. Specify File Sizes<a class="headerlink" href="#specify-file-sizes" title="Link to this heading"></a></h3>
+<p>Include file sizes for accurate progress tracking:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">file_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52428800</span><span class="w">  </span><span class="c1"># 50 MB in bytes</span>
+</pre></div>
+</div>
+</section>
+<section id="document-dependencies">
+<h3>4. Document Dependencies<a class="headerlink" href="#document-dependencies" title="Link to this heading"></a></h3>
+<p>Explicitly list dependencies to ensure correct installation order:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;git&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;git-lfs&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="test-on-clean-installs">
+<h3>5. Test on Clean Installs<a class="headerlink" href="#test-on-clean-installs" title="Link to this heading"></a></h3>
+<p>Always test plugin installation on a machine without the tool pre-installed to verify:</p>
+<ul class="simple">
+<li><p>Download URLs are accessible</p></li>
+<li><p>Archive extraction works correctly</p></li>
+<li><p>Executable paths are correct</p></li>
+<li><p>Version detection works</p></li>
+<li><p>PATH registration is functional</p></li>
+</ul>
+</section>
+<section id="handle-installation-failures-gracefully">
+<h3>6. Handle Installation Failures Gracefully<a class="headerlink" href="#handle-installation-failures-gracefully" title="Link to this heading"></a></h3>
+<p>Implement proper error handling in custom implementations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install with error handling.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to download </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="c1"># Post-install steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_installed</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> installation verification failed&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Installation failed for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+<section id="use-portable-versions">
+<h3>7. Use Portable Versions<a class="headerlink" href="#use-portable-versions" title="Link to this heading"></a></h3>
+<p>Prefer portable/standalone versions of tools that don’t require system installation:</p>
+<ul class="simple">
+<li><p>PortableGit instead of Git installer</p></li>
+<li><p>Portable FFmpeg builds</p></li>
+<li><p>Standalone executables</p></li>
+</ul>
+</section>
+<section id="document-platform-requirements">
+<h3>8. Document Platform Requirements<a class="headerlink" href="#document-platform-requirements" title="Link to this heading"></a></h3>
+<p>If your plugin is platform-specific, document it:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows-only</span><span class="nv"> </span><span class="s">photo</span><span class="nv"> </span><span class="s">management</span><span class="nv"> </span><span class="s">tool&quot;</span>
+<span class="c1"># Or implement platform checks in code</span>
+</pre></div>
+</div>
+</section>
+<section id="keep-plugins-updated">
+<h3>9. Keep Plugins Updated<a class="headerlink" href="#keep-plugins-updated" title="Link to this heading"></a></h3>
+<p>Regularly update plugin versions and checksums:</p>
+<ul class="simple">
+<li><p>Monitor upstream releases</p></li>
+<li><p>Test new versions before updating</p></li>
+<li><p>Update CHANGELOG.md when bumping versions</p></li>
+</ul>
+</section>
+<section id="follow-security-best-practices">
+<h3>10. Follow Security Best Practices<a class="headerlink" href="#follow-security-best-practices" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Only download from official sources (GitHub releases, official websites)</p></li>
+<li><p>Always verify checksums</p></li>
+<li><p>Use HTTPS URLs</p></li>
+<li><p>Scan downloaded files for malware before extraction (if implementing custom logic)</p></li>
+</ul>
+</section>
+</section>
+<section id="plugin-lifecycle">
+<h2>Plugin Lifecycle<a class="headerlink" href="#plugin-lifecycle" title="Link to this heading"></a></h2>
+<section id="discovery-phase">
+<h3>Discovery Phase<a class="headerlink" href="#discovery-phase" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PluginManager</span></code> scans <code class="docutils literal notranslate"><span class="pre">plugins/</span></code> directory</p></li>
+<li><p>Reads all <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> files</p></li>
+<li><p>Validates schema (strict validation - fails fast on errors)</p></li>
+<li><p>Creates <code class="docutils literal notranslate"><span class="pre">PluginManifest</span></code> objects</p></li>
+<li><p>Instantiates plugin implementations</p></li>
+</ol>
+</section>
+<section id="installation-phase">
+<h3>Installation Phase<a class="headerlink" href="#installation-phase" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>User clicks Install in UI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PluginManager.install_plugin()</span></code> called</p></li>
+<li><p>Plugin’s <code class="docutils literal notranslate"><span class="pre">install()</span></code> method executes:</p>
+<ul class="simple">
+<li><p>Downloads archive from <code class="docutils literal notranslate"><span class="pre">base_uri</span></code></p></li>
+<li><p>Verifies checksum (if provided)</p></li>
+<li><p>Extracts to <code class="docutils literal notranslate"><span class="pre">&lt;storage&gt;/plugins/&lt;name&gt;/</span></code></p></li>
+<li><p>Flattens directory structure</p></li>
+<li><p>Handles special cases (ExifTool renaming, etc.)</p></li>
+</ul>
+</li>
+<li><p>Executable registered to PATH</p></li>
+<li><p>Version verification</p></li>
+<li><p>UI updates installation status</p></li>
+</ol>
+</section>
+<section id="runtime-phase">
+<h3>Runtime Phase<a class="headerlink" href="#runtime-phase" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Application checks plugin status via <code class="docutils literal notranslate"><span class="pre">check_installed()</span></code></p></li>
+<li><p>Gets version via <code class="docutils literal notranslate"><span class="pre">get_version()</span></code></p></li>
+<li><p>Executes plugin commands with executable path</p></li>
+<li><p>Monitors plugin health</p></li>
+</ol>
+</section>
+<section id="uninstallation-phase">
+<h3>Uninstallation Phase<a class="headerlink" href="#uninstallation-phase" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>User clicks Uninstall in UI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plugin.uninstall()</span></code> removes installation directory</p></li>
+<li><p>PATH registration cleaned up</p></li>
+<li><p>UI updates status</p></li>
+</ol>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="plugin-not-discovered">
+<h3>Plugin Not Discovered<a class="headerlink" href="#plugin-not-discovered" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Check YAML syntax</strong>: Ensure valid YAML formatting</p></li>
+<li><p><strong>Verify required fields</strong>: All required fields must be present</p></li>
+<li><p><strong>Check directory structure</strong>: <code class="docutils literal notranslate"><span class="pre">plugins/&lt;name&gt;/plugin.yaml</span></code></p></li>
+<li><p><strong>Review logs</strong>: Check <code class="docutils literal notranslate"><span class="pre">logs/</span></code> for validation errors</p></li>
+</ul>
+</section>
+<section id="download-fails">
+<h3>Download Fails<a class="headerlink" href="#download-fails" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Verify URL</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">base_uri</span></code> is accessible</p></li>
+<li><p><strong>Check network</strong>: Firewall or proxy issues</p></li>
+<li><p><strong>Validate SSL</strong>: Some corporate networks block certain certificates</p></li>
+<li><p><strong>Try manual download</strong>: Test URL in browser</p></li>
+</ul>
+</section>
+<section id="extraction-fails">
+<h3>Extraction Fails<a class="headerlink" href="#extraction-fails" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Check archive format</strong>: ZIP, 7z, or self-extracting .exe supported</p></li>
+<li><p><strong>Verify file integrity</strong>: Checksum mismatch indicates corruption</p></li>
+<li><p><strong>Check disk space</strong>: Ensure sufficient space for extraction</p></li>
+<li><p><strong>Review permissions</strong>: Write permissions in storage directory</p></li>
+</ul>
+</section>
+<section id="executable-not-found">
+<h3>Executable Not Found<a class="headerlink" href="#executable-not-found" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Verify path</strong>: Check <code class="docutils literal notranslate"><span class="pre">command.path</span></code> is correct relative to archive root</p></li>
+<li><p><strong>Check extraction</strong>: Ensure archive extracted properly</p></li>
+<li><p><strong>Verify executable name</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">command.executable</span></code> matches actual filename</p></li>
+<li><p><strong>Test manually</strong>: Navigate to plugin directory and try running executable</p></li>
+</ul>
+</section>
+<section id="version-detection-fails">
+<h3>Version Detection Fails<a class="headerlink" href="#version-detection-fails" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Check executable output</strong>: Run <code class="docutils literal notranslate"><span class="pre">&lt;executable&gt;</span> <span class="pre">--version</span></code> manually</p></li>
+<li><p><strong>Implement custom parser</strong>: Override <code class="docutils literal notranslate"><span class="pre">get_version()</span></code> for non-standard output</p></li>
+<li><p><strong>Verify executable works</strong>: Ensure tool runs correctly</p></li>
+</ul>
+</section>
+</section>
+<section id="advanced-topics">
+<h2>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Link to this heading"></a></h2>
+<section id="github-release-asset-pattern-future-feature">
+<h3>GitHub Release Asset Pattern (Future Feature)<a class="headerlink" href="#github-release-asset-pattern-future-feature" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">asset_pattern</span></code> field is defined but not yet implemented. Future versions will support:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">source</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-release&quot;</span>
+<span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner/repo&quot;</span>
+<span class="w">  </span><span class="nt">asset_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mytool-.*-windows-x64\\.zip&quot;</span>
+</pre></div>
+</div>
+<p>This will automatically fetch the latest matching asset from GitHub releases.</p>
+</section>
+<section id="multi-platform-support">
+<h3>Multi-Platform Support<a class="headerlink" href="#multi-platform-support" title="Link to this heading"></a></h3>
+<p>To support multiple platforms, you can implement platform detection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CrossPlatformPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">install_dir</span><span class="p">)</span>
+        
+        <span class="c1"># Platform-specific configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executable_name</span> <span class="o">=</span> <span class="s2">&quot;tool.exe&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executable_name</span> <span class="o">=</span> <span class="s2">&quot;tool&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executable_name</span> <span class="o">=</span> <span class="s2">&quot;tool&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-progress-callbacks">
+<h3>Custom Progress Callbacks<a class="headerlink" href="#custom-progress-callbacks" title="Link to this heading"></a></h3>
+<p>Implement detailed progress reporting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install with detailed progress.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+        <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Starting download...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Download with progress</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_and_extract_binary</span><span class="p">(</span><span class="n">progress_callback</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+        <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Configuring plugin...&quot;</span><span class="p">)</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+        <span class="n">progress_callback</span><span class="p">(</span><span class="s2">&quot;Installation complete!&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>When contributing new plugins to pyMM:</p>
+<ol class="arabic simple">
+<li><p>Follow this guide for plugin structure</p></li>
+<li><p>Include checksums for all downloads</p></li>
+<li><p>Test thoroughly on clean installations</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">docs/architecture.md</span></code> if adding new patterns</p></li>
+<li><p>Add tests in <code class="docutils literal notranslate"><span class="pre">tests/unit/test_&lt;plugin&gt;_plugin.py</span></code></p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> with plugin addition</p></li>
+<li><p>Submit PR with plugin manifest and implementation</p></li>
+</ol>
+</section>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Plugin Base Implementation</strong>: <code class="docutils literal notranslate"><span class="pre">app/plugins/plugin_base.py</span></code></p></li>
+<li><p><strong>Plugin Manager</strong>: <code class="docutils literal notranslate"><span class="pre">app/plugins/plugin_manager.py</span></code></p></li>
+<li><p><strong>Existing Plugins</strong>: <code class="docutils literal notranslate"><span class="pre">plugins/</span></code> directory</p></li>
+<li><p><strong>Architecture Documentation</strong>: <code class="docutils literal notranslate"><span class="pre">docs/architecture.md</span></code></p></li>
+<li><p><strong>Contributing Guide</strong>: <code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code></p></li>
+</ul>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
+<p>For questions or issues with plugin development:</p>
+<ol class="arabic simple">
+<li><p>Check existing plugin implementations in <code class="docutils literal notranslate"><span class="pre">plugins/</span></code></p></li>
+<li><p>Review architecture documentation in <code class="docutils literal notranslate"><span class="pre">docs/architecture.md</span></code></p></li>
+<li><p>Open an issue on GitHub with the <code class="docutils literal notranslate"><span class="pre">plugin</span></code> label</p></li>
+<li><p>Join discussions in the pyMM community</p></li>
+</ol>
+<hr class="docutils" />
+<p><strong>Last Updated</strong>: January 2026
+<strong>Version</strong>: 1.0.0</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="architecture.html" class="btn btn-neutral float-left" title="pyMediaManager Architecture Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, mosh666.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

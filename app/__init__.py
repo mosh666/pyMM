@@ -11,3 +11,8 @@ except ImportError:
     except PackageNotFoundError:
         __version__ = "0.0.0-dev"
     __commit_id__ = None
+
+__all__ = [
+    "__version__",
+    "__commit_id__",
+]

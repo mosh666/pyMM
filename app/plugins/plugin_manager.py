@@ -7,9 +7,11 @@ import logging
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+from pydantic import ValidationError
+import yaml
 
 from app.plugins.plugin_base import PluginBase, PluginManifest, SimplePluginImplementation
+from app.plugins.plugin_schema import PluginManifestSchema
 
 
 class PluginManager:
@@ -54,51 +56,75 @@ class PluginManager:
                     plugin = self._create_plugin_instance(manifest)
                     if plugin:
                         self.plugins[manifest.name] = plugin
+            except ValidationError as e:
+                # Log detailed validation errors and fail fast
+                self.logger.error(f"Plugin manifest validation failed: {manifest_file}")
+                self.logger.error(f"Validation errors: {e}")
+                raise
             except Exception as e:
-                # Log error but continue discovering
-                self.logger.warning(f"Error loading manifest {manifest_file}: {e}")
+                # Log error and fail fast on any other errors
+                self.logger.error(f"Error loading manifest {manifest_file}: {e}")
+                raise
 
         return len(self.plugins)
 
     def _load_manifest(self, manifest_file: Path) -> PluginManifest | None:
         """
-        Load plugin manifest from YAML file.
+        Load plugin manifest from YAML file with strict schema validation.
 
         Args:
             manifest_file: Path to plugin.yaml file
 
         Returns:
             PluginManifest object or None if loading fails
+
+        Raises:
+            ValidationError: If manifest fails schema validation (fails fast)
         """
         try:
             with open(manifest_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
 
             if not data:
-                return None
+                self.logger.error(f"Empty manifest file: {manifest_file}")
+                raise ValueError(f"Empty manifest file: {manifest_file}")
+
+            # Validate against Pydantic schema (fails fast on validation errors)
+            try:
+                validated_data = PluginManifestSchema(**data)
+            except ValidationError as e:
+                self.logger.error(f"Schema validation failed for {manifest_file}:")
+                for error in e.errors():
+                    field = " -> ".join(str(loc) for loc in error["loc"])
+                    self.logger.error(f"  {field}: {error['msg']}")
+                # Re-raise to fail fast
+                raise
 
             # Extract source configuration
-            source = data.get("source", {})
+            source = validated_data.source
 
             return PluginManifest(
-                name=data["name"],
-                version=data.get("version", "unknown"),
-                mandatory=data.get("mandatory", False),
-                enabled=data.get("enabled", True),
-                source_type=source.get("type", "url"),
-                source_uri=source.get("base_uri", ""),
-                asset_pattern=source.get("asset_pattern"),
-                checksum_sha256=source.get("checksum_sha256"),
-                file_size=source.get("file_size"),
-                command_path=data.get("command", {}).get("path", ""),
-                command_executable=data.get("command", {}).get("executable", ""),
-                register_to_path=data.get("register_to_path", False),
-                dependencies=data.get("dependencies", []),
+                name=validated_data.name,
+                version=validated_data.version,
+                mandatory=validated_data.mandatory,
+                enabled=validated_data.enabled,
+                source_type=source.type,
+                source_uri=source.base_uri,
+                asset_pattern=source.asset_pattern,
+                checksum_sha256=source.checksum_sha256,
+                file_size=source.file_size,
+                command_path=validated_data.command.path,
+                command_executable=validated_data.command.executable,
+                register_to_path=validated_data.register_to_path,
+                dependencies=validated_data.dependencies or [],
             )
 
+        except ValidationError:
+            # Re-raise validation errors to fail fast
+            raise
         except Exception:
-            self.logger.exception("Error parsing manifest")
-            return None
+            self.logger.exception(f"Error parsing manifest {manifest_file}")
+            raise
 
     def _create_plugin_instance(self, manifest: PluginManifest) -> PluginBase | None:
         """

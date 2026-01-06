@@ -246,7 +246,7 @@ class StorageService:
             DRIVE_CDROM = 5
             DRIVE_RAMDISK = 6
 
-            kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+            kernel32 = ctypes.windll.kernel32
             drive_type = kernel32.GetDriveTypeW(ctypes.c_wchar_p(partition.mountpoint))
 
             # 1. Check Windows drive type for true removable
@@ -291,7 +291,7 @@ class StorageService:
         try:
             import ctypes
 
-            kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+            kernel32 = ctypes.windll.kernel32
             volumeNameBuffer = ctypes.create_unicode_buffer(1024)
             fileSystemNameBuffer = ctypes.create_unicode_buffer(1024)
             serial_number = None
@@ -326,7 +326,7 @@ class StorageService:
         try:
             import ctypes
 
-            kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+            kernel32 = ctypes.windll.kernel32
             volumeNameBuffer = ctypes.create_unicode_buffer(1024)
             fileSystemNameBuffer = ctypes.create_unicode_buffer(1024)
             serial_number = ctypes.c_ulong()

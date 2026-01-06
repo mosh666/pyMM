@@ -2,4 +2,7 @@
 
 __all__ = [
     "LoggingService",
+    "ConfigService",
+    "FileSystemService",
+    "StorageService",
 ]

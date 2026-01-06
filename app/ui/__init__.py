@@ -2,4 +2,11 @@
 
 __all__ = [
     "MainWindow",
+    "StorageView",
+    "PluginView",
+    "ProjectView",
+    "FirstRunWizard",
+    "ProjectBrowser",
+    "ProjectWizard",
+    "SettingsDialog",
 ]
