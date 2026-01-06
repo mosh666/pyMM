@@ -62,7 +62,8 @@ body:
       label: pyMediaManager Version
       description: What version of pyMediaManager are you running?
       options:
-        - 1.0.0 (latest)
+        - 0.x series
+        - latest-beta
         - Development (dev branch)
         - Other (please specify in additional context)
     validations:

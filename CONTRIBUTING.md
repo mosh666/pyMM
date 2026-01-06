@@ -750,7 +750,7 @@ Services follow dependency injection patterns:
    ```yaml
    # plugins/myplugin/plugin.yaml
    name: MyPlugin
-   version: "1.0.0"
+   version: "X.Y.Z"
    mandatory: false
    enabled: false
    source:
