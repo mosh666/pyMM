@@ -18,7 +18,8 @@ pyMM uses a plugin system to manage external tools and dependencies. Each plugin
 
 Plugins are defined by:
 
-1. A YAML manifest file (`plugin.yaml`) defining metadata and download information
+1. A YAML manifest file (`plugin.yaml`) defining metadata and download
+   information
 2. An optional Python implementation extending `PluginBase` for custom behavior
 
 ## Plugin Architecture
@@ -27,8 +28,10 @@ Plugins are defined by:
 
 All plugins inherit from `app.plugins.plugin_base.PluginBase`, which provides:
 
-- **`download_and_extract_binary()`**: Built-in download and extraction with retry logic, checksum verification, and progress callbacks
-- **Archive extraction**: Automatic handling of ZIP, 7z, and self-extracting .exe archives
+- **`download_and_extract_binary()`**: Built-in download and extraction with retry
+  logic, checksum verification, and progress callbacks
+- **Archive extraction**: Automatic handling of ZIP, 7z, and self-extracting .exe
+  archives
 - **Directory flattening**: Removes unnecessary nested directories after extraction
 - **Special case handling**: Custom logic for specific tools (e.g., ExifTool renaming)
 
