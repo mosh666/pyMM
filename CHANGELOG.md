@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Automatic security vulnerability alerts
 - Pre-commit hooks (`.pre-commit-config.yaml`) with 15+ checks
   - **Code Quality:** Ruff linting and formatting, MyPy type checking
-  - **Security:** Bandit vulnerability scanning, secret detection
+  - **Security:** Ruff security checks (S-prefix rules), secret detection
   - **File Validation:** YAML, JSON, TOML syntax checking
   - **Git Hygiene:** Trailing whitespace, EOF fixes, merge conflict detection
   - **Testing:** Unit tests on commit, full suite on push
@@ -89,7 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `settings.json` - Python, Ruff, MyPy, editor settings
   - `extensions.json` - Recommended extensions for development
   - `launch.json` - Debug configurations
-- Bandit configuration (`.bandit`) for security baseline
 - CITATION.cff for academic citations (CFF 1.2.0 format)
   - Structured metadata for research citation
   - BibTeX export support
@@ -110,16 +109,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - pytest configuration with coverage thresholds
 
 ### Changed
-
-#### Security Tooling Consolidation (2026-01-07)
-
-- **Removed Bandit** in favor of Ruff security checks (S-prefix rules)
-  - Ruff includes all Bandit rules natively, eliminating duplicate scanning
-  - Simplified pre-commit configuration by removing redundant security linter
-  - Removed `.bandit` configuration file
-  - Updated all documentation to reference Ruff security checks
-  - Removed Bandit job from GitHub Actions security workflow
-  - No functionality lost - all security checks now handled by Ruff
 
 #### Documentation Improvements (2026-01-07)
 
@@ -179,7 +168,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `N` - pep8-naming conventions
     - `UP` - pyupgrade for modern Python syntax
     - `B` - flake8-bugbear bug detection
-    - `S` - Security checks (Bandit rules in Ruff)
+    - `S` - Security checks
     - `A` - flake8-builtins shadowing prevention
     - `C4` - flake8-comprehensions optimization
     - `DTZ` - flake8-datetimez timezone awareness
@@ -224,7 +213,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Dependabot for automated dependency updates
   - Branch protection rules enforced
 - Pre-commit security validation
-  - Bandit security linting for Python code
+  - Ruff security checks (S-prefix rules) for Python code
   - Secret scanning to prevent credential leaks
   - License compliance checking
   - Large file detection
@@ -303,7 +292,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Grouped updates to reduce PR noise
   - pip and GitHub Actions ecosystems covered
 - Pre-commit security scanning
-  - Bandit security linter for Python code
+  - Ruff security linting (S-prefix rules) for Python code
   - Secret detection to prevent credential leaks
   - License compliance verification
 - SHA-256 checksum verification for plugin downloads
