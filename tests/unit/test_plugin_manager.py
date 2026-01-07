@@ -130,6 +130,16 @@ platforms:
     download_url: https://example.com/mandatory.zip
     command_path: ""
     command_executable: mandatory.exe
+  linux:
+    source: url
+    download_url: https://example.com/mandatory.zip
+    command_path: ""
+    command_executable: mandatory
+  macos:
+    source: url
+    download_url: https://example.com/mandatory.zip
+    command_path: ""
+    command_executable: mandatory
 """
         (mandatory_dir / "plugin.yaml").write_text(mandatory_manifest)
 
@@ -150,6 +160,16 @@ platforms:
     download_url: https://example.com/optional.zip
     command_path: ""
     command_executable: optional.exe
+  linux:
+    source: url
+    download_url: https://example.com/optional.zip
+    command_path: ""
+    command_executable: optional
+  macos:
+    source: url
+    download_url: https://example.com/optional.zip
+    command_path: ""
+    command_executable: optional
 """
         (optional_dir / "plugin.yaml").write_text(optional_manifest)
 
@@ -179,6 +199,16 @@ platforms:
     download_url: https://example.com/test.zip
     command_path: ""
     command_executable: test.exe
+  linux:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
+  macos:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
 """
         )
 
@@ -199,6 +229,16 @@ platforms:
     download_url: https://example.com/test.zip
     command_path: ""
     command_executable: test.exe
+  linux:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
+  macos:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
 """
         )
 
@@ -228,6 +268,16 @@ platforms:
     download_url: https://example.com/test.zip
     command_path: ""
     command_executable: test.exe
+  linux:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
+  macos:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
 """
         )
 
@@ -249,6 +299,16 @@ platforms:
     download_url: https://example.com/test.zip
     command_path: ""
     command_executable: test.exe
+  linux:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
+  macos:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test
 """
         )
 
