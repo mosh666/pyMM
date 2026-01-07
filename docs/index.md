@@ -1,5 +1,10 @@
 # pyMediaManager Documentation
 
+```{note}
+**Version Selector**: Use the sidebar menu to switch between documentation versions (Main/Dev).
+You can also visit the [documentation home](https://mosh666.github.io/pyMM/) to select your version.
+```
+
 ```{toctree}
 ---
 maxdepth: 2
