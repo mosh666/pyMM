@@ -87,7 +87,7 @@ clean:
     # Root patterns
     root_patterns = [
         "python3*", "lib-py3*", "*.zip", "*.sha256", "build", "dist",
-        "requirements*.txt", ".coverage", "htmlcov"
+        "requirements*.txt", ".coverage", "htmlcov", "get-pip.py"
     ]
 
     # Recursive patterns (cleans subdirectories too)
