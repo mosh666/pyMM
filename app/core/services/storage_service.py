@@ -100,16 +100,24 @@ class StorageService:
         path = Path(path).resolve()
 
         # Get all drives and find the one matching this path
+        # Try to find the drive with the longest matching mountpoint
+        best_match = None
+        best_match_len = 0
+
         for drive in self.get_all_drives():
             drive_path = Path(drive.drive_letter)
             try:
                 # Check if path is on this drive
                 path.relative_to(drive_path)
-                return drive
+                # Keep track of the longest matching path (most specific mount)
+                path_len = len(str(drive_path))
+                if path_len > best_match_len:
+                    best_match = drive
+                    best_match_len = path_len
             except ValueError:
                 continue
 
-        return None
+        return best_match
 
     def is_path_on_removable_drive(self, path: Path | str) -> bool:
         """
