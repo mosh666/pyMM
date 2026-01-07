@@ -3,7 +3,7 @@
 from importlib.metadata import PackageNotFoundError, version
 
 try:
-    from ._version import commit_id as __commit_id__
+    from ._version import commit_id as __commit_id__  # type: ignore[attr-defined]
     from ._version import version as __version__
 except ImportError:
     try:

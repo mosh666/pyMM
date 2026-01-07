@@ -17,16 +17,16 @@ def main() -> None:
     # Pass through arguments (like --version)
     args = sys.argv[1:]
 
-    print(f"🏗️  Build Manager: Detected platform '{system}'")
+    print(f"[BUILD] Build Manager: Detected platform '{system}'")
 
     if system == "Windows":
         script = script_dir / "build_windows.py"
         if not script.exists():
-            print(f"❌ Error: {script.name} not found!")
+            print(f"[ERROR] {script.name} not found!")
             sys.exit(1)
 
         cmd = [sys.executable, str(script), *args]
-        print("🚀 Launching Windows build...")
+        print("[INFO] Launching Windows build...")
         try:
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
@@ -35,15 +35,15 @@ def main() -> None:
     elif system == "Linux":
         script = script_dir / "build_linux.py"
         if script.exists():
-            print("🐧 Launching Linux build...")
+            print("[INFO] Launching Linux build...")
             cmd = [sys.executable, str(script), *args]
             try:
                 subprocess.run(cmd, check=True)
             except subprocess.CalledProcessError as e:
                 sys.exit(e.returncode)
         else:
-            print("ℹ️  Linux build script not found.")
-            print("📦 To build for Linux, please use Flatpak.")
+            print("[INFO] Linux build script not found.")
+            print("[INFO] To build for Linux, please use Flatpak.")
             print("   Manifest location: dist/flatpak/org.pymmediamanager.yaml")
             print("\n   Example command:")
             print(
@@ -51,11 +51,11 @@ def main() -> None:
             )
 
     elif system == "Darwin":
-        print("🍎 macOS builds are not yet fully automated.")
+        print("[INFO] macOS builds are not yet fully automated.")
         print("   Please use py2app or similar tools manually for now.")
 
     else:
-        print(f"⚠️  Unsupported platform for automated build: {system}")
+        print(f"[WARNING] Unsupported platform for automated build: {system}")
         sys.exit(1)
 
 
