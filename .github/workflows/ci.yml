@@ -257,11 +257,11 @@ jobs:
         timeout-minutes: 15
         run: |
           echo "🧪 Running tests in Docker container..."
-          docker run --rm \
+          docker run --rm -t \
             -e PYMM_DISABLE_TEMPLATE_WATCH=1 \
             -e PYTHONUNBUFFERED=1 \
             pymm-ci:${{ github.sha }} \
-            bash -c "xvfb-run -a pytest tests/ --cov=app --cov-report=term --tb=short -v"
+            bash -c "xvfb-run -a pytest tests/ --cov=app --cov-report=term --tb=short -v || exit 1"
           echo "✅ Docker tests passed"
 
       - name: Verify application startup
