@@ -154,5 +154,11 @@ try:
     # If true, `todo` and `todoList` produce output, else they produce nothing
     todo_include_todos = True
 except Exception:
-    traceback.print_exc()
+    import os
+
+    temp_dir = os.getenv("TEMP", ".")
+    log_file = os.path.join(temp_dir, "sphinx_error.txt")  # noqa: PTH118
+    with open(log_file, "w") as f:  # noqa: PTH123
+        traceback.print_exc(file=f)
+    print("Check sphinx_error.txt for traceback", file=sys.stderr)  # noqa: T201
     raise
