@@ -12,6 +12,7 @@ import logging
 from typing import Any
 
 from PySide6.QtWidgets import (
+    QButtonGroup,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -22,13 +23,18 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QRadioButton,
+    QScrollArea,
     QSpinBox,
     QTabWidget,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
 
-from app.core.services.config_service import ConfigService
+from app.core.services.config_service import ConfigService, ExecutionPreference
+from app.plugins.plugin_base import PluginManifest
+from app.plugins.system_tool_detector import SystemToolDetector
 
 
 class SettingsDialog(QDialog):
@@ -69,6 +75,9 @@ class SettingsDialog(QDialog):
 
         self.plugins_tab = self._create_plugins_tab()
         self.tabs.addTab(self.plugins_tab, "Plugins")
+
+        self.plugin_prefs_tab = self._create_plugin_preferences_tab()
+        self.tabs.addTab(self.plugin_prefs_tab, "Plugin Preferences")
 
         self.storage_tab = self._create_storage_tab()
         self.tabs.addTab(self.storage_tab, "Storage")
@@ -196,6 +205,202 @@ class SettingsDialog(QDialog):
 
         return widget
 
+    def _create_plugin_preferences_tab(self) -> QWidget:
+        """Create the Plugin Preferences settings tab."""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Info label
+        info_label = QLabel(
+            "Configure execution preferences for each plugin.\n"
+            "Auto: Use plugin's default | System: Prefer system packages | Portable: Use portable binaries"
+        )
+        info_label.setWordWrap(True)
+        info_label.setStyleSheet("color: gray; font-style: italic; margin-bottom: 10px;")
+        layout.addWidget(info_label)
+
+        # Scroll area for plugin preferences
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
+
+        scroll_widget = QWidget()
+        scroll_layout = QVBoxLayout(scroll_widget)
+        scroll_layout.setSpacing(15)
+
+        # Create preference widget for each plugin
+        self.plugin_pref_widgets = {}
+
+        try:
+            # Get available plugins
+            plugins = self._get_available_plugins()
+
+            if plugins:
+                for plugin_name, manifest in plugins.items():
+                    pref_widget = self._create_plugin_preference_widget(plugin_name, manifest)
+                    self.plugin_pref_widgets[plugin_name] = pref_widget
+                    scroll_layout.addWidget(pref_widget)
+            else:
+                placeholder = QLabel("No plugins available. Discover plugins from main window.")
+                placeholder.setStyleSheet("color: gray; font-style: italic;")
+                scroll_layout.addWidget(placeholder)
+        except Exception as e:
+            self.logger.warning(f"Could not load plugin list: {e}")
+            placeholder = QLabel(f"Error loading plugins: {e}")
+            placeholder.setStyleSheet("color: red;")
+            scroll_layout.addWidget(placeholder)
+
+        scroll_layout.addStretch()
+        scroll_area.setWidget(scroll_widget)
+        layout.addWidget(scroll_area)
+
+        return widget
+
+    def _get_available_plugins(self) -> dict[str, PluginManifest]:
+        """Get available plugins from discovered manifests."""
+        # Try to get from parent window's plugin manager
+        if hasattr(self.parent(), "plugin_manager"):
+            return self.parent().plugin_manager.manifests
+
+        # Fallback: create temporary plugin manager to discover plugins
+        from pathlib import Path
+
+        plugins_dir = Path(self.config.paths.plugins_dir)
+        manifests_dir = Path(__file__).parent.parent.parent.parent / "plugins"
+
+        if manifests_dir.exists():
+            from app.plugins.plugin_manager import PluginManager
+
+            temp_manager = PluginManager(plugins_dir, manifests_dir)
+            temp_manager.discover_plugins()
+            return temp_manager.manifests
+
+        return {}
+
+    def _create_plugin_preference_widget(
+        self, plugin_name: str, manifest: PluginManifest
+    ) -> QGroupBox:
+        """Create a preference widget for a single plugin."""
+        group = QGroupBox(manifest.name)
+        layout = QVBoxLayout(group)
+
+        # Plugin info
+        info_layout = QHBoxLayout()
+        info_label = QLabel(f"v{manifest.version} - {manifest.description}")
+        info_label.setStyleSheet("color: gray; font-style: italic;")
+        info_layout.addWidget(info_label)
+        info_layout.addStretch()
+        layout.addLayout(info_layout)
+
+        # Execution preference radio buttons
+        pref_layout = QHBoxLayout()
+        pref_label = QLabel("Execution Mode:")
+        pref_layout.addWidget(pref_label)
+
+        button_group = QButtonGroup(group)
+        button_group.setObjectName(f"pref_group_{plugin_name}")
+
+        auto_radio = QRadioButton("Auto")
+        auto_radio.setToolTip("Use plugin's default prefer_system setting")
+        button_group.addButton(auto_radio, 0)
+        pref_layout.addWidget(auto_radio)
+
+        system_radio = QRadioButton("System Package")
+        system_radio.setToolTip("Prefer system-installed package")
+        button_group.addButton(system_radio, 1)
+        pref_layout.addWidget(system_radio)
+
+        portable_radio = QRadioButton("Portable Binary")
+        portable_radio.setToolTip("Use portable binary distribution")
+        button_group.addButton(portable_radio, 2)
+        pref_layout.addWidget(portable_radio)
+
+        pref_layout.addStretch()
+        layout.addLayout(pref_layout)
+
+        # System availability status
+        status_layout = QHBoxLayout()
+        status_label = QLabel("System Status:")
+        status_layout.addWidget(status_label)
+
+        system_status = self._check_system_availability(plugin_name, manifest)
+        status_value = QLabel(system_status)
+        if "Available" in system_status:
+            status_value.setStyleSheet("color: green; font-weight: bold;")
+        elif "Not found" in system_status:
+            status_value.setStyleSheet("color: orange;")
+        else:
+            status_value.setStyleSheet("color: gray;")
+        status_layout.addWidget(status_value)
+        status_layout.addStretch()
+        layout.addLayout(status_layout)
+
+        # Enabled checkbox
+        enabled_layout = QHBoxLayout()
+        enabled_check = QCheckBox("Plugin Enabled")
+        enabled_check.setObjectName(f"enabled_{plugin_name}")
+        enabled_check.setChecked(True)
+        enabled_layout.addWidget(enabled_check)
+        enabled_layout.addStretch()
+        layout.addLayout(enabled_layout)
+
+        # Notes field
+        notes_label = QLabel("Notes:")
+        layout.addWidget(notes_label)
+
+        notes_edit = QTextEdit()
+        notes_edit.setObjectName(f"notes_{plugin_name}")
+        notes_edit.setMaximumHeight(60)
+        notes_edit.setPlaceholderText("Optional notes about this plugin...")
+        layout.addWidget(notes_edit)
+
+        # Store references for later access
+        group.setProperty("button_group", button_group)
+        group.setProperty("enabled_check", enabled_check)
+        group.setProperty("notes_edit", notes_edit)
+        group.setProperty("plugin_id", plugin_name)
+
+        return group
+
+    def _check_system_availability(self, plugin_name: str, manifest: PluginManifest) -> str:
+        """Check if system package is available for this plugin."""
+        import sys
+
+        # Get platform config
+        platform_key = (
+            "windows"
+            if sys.platform == "win32"
+            else ("macos" if sys.platform == "darwin" else "linux")
+        )
+
+        # Check if manifest has platform configs (v2 schema)
+        if not hasattr(manifest, "platforms") or not manifest.platforms:
+            return "Legacy plugin (no platform config)"
+
+        platform_config = manifest.platforms.get(platform_key)
+        if not platform_config:
+            return f"Not supported on {platform_key}"
+
+        # Check if has system package info
+        if not hasattr(platform_config, "system_package") or not platform_config.system_package:
+            return "No system package available"
+
+        # Try to detect system tool
+        try:
+            detector = SystemToolDetector()
+            tool_info = detector.find_system_tool(
+                platform_config.system_package, platform_config.version_constraint
+            )
+
+            if tool_info.status.value == "found_valid":
+                return f"Available: {platform_config.system_package} v{tool_info.version}"
+            if tool_info.status.value == "found_invalid":
+                return f"Found but wrong version: v{tool_info.version}"
+            return f"Not found: {platform_config.system_package}"
+        except Exception:
+            return "Error checking system"
+
     def _create_storage_tab(self) -> QWidget:
         """Create the Storage settings tab."""
         widget = QWidget()
@@ -303,6 +508,63 @@ class SettingsDialog(QDialog):
             # Git not available or config error - use empty values
             pass
 
+        # Plugin Preferences tab
+        self._load_plugin_preferences()
+
+    def _load_plugin_preferences(self) -> None:
+        """Load plugin preferences into UI widgets."""
+        for plugin_id, widget in self.plugin_pref_widgets.items():
+            # Get preference from config
+            pref = self.config_service.get_plugin_preference(plugin_id)
+
+            # Set radio button based on execution_preference
+            button_group = widget.property("button_group")
+            if pref.execution_preference == ExecutionPreference.AUTO:
+                button_group.button(0).setChecked(True)
+            elif pref.execution_preference == ExecutionPreference.SYSTEM:
+                button_group.button(1).setChecked(True)
+            elif pref.execution_preference == ExecutionPreference.PORTABLE:
+                button_group.button(2).setChecked(True)
+
+            # Set enabled checkbox
+            enabled_check = widget.property("enabled_check")
+            enabled_check.setChecked(pref.enabled)
+
+            # Set notes
+            notes_edit = widget.property("notes_edit")
+            notes_edit.setPlainText(pref.notes)
+
+    def _save_plugin_preferences(self) -> None:
+        """Save plugin preferences from UI widgets."""
+        from app.core.services.config_service import PluginPreferences
+
+        for plugin_id, widget in self.plugin_pref_widgets.items():
+            # Get values from UI
+            button_group = widget.property("button_group")
+            checked_id = button_group.checkedId()
+
+            # Map button ID to ExecutionPreference
+            if checked_id == 0:
+                exec_pref = ExecutionPreference.AUTO
+            elif checked_id == 1:
+                exec_pref = ExecutionPreference.SYSTEM
+            elif checked_id == 2:
+                exec_pref = ExecutionPreference.PORTABLE
+            else:
+                exec_pref = ExecutionPreference.AUTO
+
+            # Get enabled state
+            enabled_check = widget.property("enabled_check")
+            enabled = enabled_check.isChecked()
+
+            # Get notes
+            notes_edit = widget.property("notes_edit")
+            notes = notes_edit.toPlainText()
+
+            # Create and save preference
+            pref = PluginPreferences(execution_preference=exec_pref, enabled=enabled, notes=notes)
+            self.config_service.set_plugin_preference(plugin_id, pref)
+
     def _apply_settings(self) -> None:
         """Apply settings without closing dialog."""
         try:
@@ -345,6 +607,9 @@ class SettingsDialog(QDialog):
 
             # Save configuration
             self.config_service.update_config(**updates)
+
+            # Save plugin preferences
+            self._save_plugin_preferences()
 
             # Update Git config
             self._update_git_config()

@@ -132,6 +132,27 @@ build v=version:
 run:
     {{python}} launcher.py
 
+# Plugin migration tasks
+# Show what would change when migrating plugins to v2 schema (dry-run)
+migrate-plugins-dry-run:
+    {{python}} -m app.plugins.plugin_migrator dry-run --plugins-dir plugins
+
+# Migrate all plugins to v2 schema with backups
+migrate-plugins:
+    {{python}} -m app.plugins.plugin_migrator migrate --plugins-dir plugins
+
+# Migrate a specific plugin to v2 schema
+migrate-plugin PLUGIN:
+    {{python}} -m app.plugins.plugin_migrator migrate --plugins-dir plugins --plugin {{PLUGIN}}
+
+# Rollback all plugin migrations
+rollback-plugins:
+    {{python}} -m app.plugins.plugin_migrator rollback --plugins-dir plugins
+
+# Rollback a specific plugin migration
+rollback-plugin PLUGIN:
+    {{python}} -m app.plugins.plugin_migrator rollback --plugins-dir plugins --plugin {{PLUGIN}}
+
 # Docker CI Testing - Build image and run complete CI pipeline
 ci-docker: ci-docker-build ci-docker-test
 

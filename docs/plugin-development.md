@@ -1039,7 +1039,319 @@ asset_pattern: "tool-.*-windows-x64\\.zip$"
 
 ---
 
-## 📚 API Reference
+## � Plugin System v2: Hybrid Executable Resolution
+
+### Overview
+
+Plugin System v2 introduces **hybrid executable resolution** that supports both system-installed tools and portable versions, giving users flexibility in how they configure their environment.
+
+### Key Features
+
+✅ **System Tool Detection**: Automatically finds tools in PATH
+✅ **Version Validation**: Ensures system tools meet minimum version requirements
+✅ **User Preferences**: Configure per-plugin execution preferences
+✅ **Fallback Logic**: Graceful fallback from system to portable
+✅ **Plugin Migration**: Automated v1→v2 migration with rollback support
+
+### Platform Configuration
+
+Plugin manifests now support platform-specific configurations:
+
+```yaml
+schema_version: 2
+
+name: Git
+version: 2.47.1
+description: Distributed version control system
+homepage: https://git-scm.com
+mandatory: false
+enabled: true
+
+# Platform configurations (new in v2)
+platforms:
+  windows:
+    source:
+      type: github
+      uri: git-for-windows/git
+      asset_pattern: "PortableGit-.*-64-bit\\.7z\\.exe$"
+      checksum_sha256: "f9a9d5c1..."
+
+    command:
+      path: cmd
+      executable: git.exe
+      register_to_path: true
+
+    system_detection:
+      executable_name: git
+      version_command: ["git", "--version"]
+      version_pattern: "git version (\\d+\\.\\d+\\.\\d+)"
+      minimum_version: "2.40.0"
+
+  linux:
+    system_detection:
+      executable_name: git
+      version_command: ["git", "--version"]
+      version_pattern: "git version (\\d+\\.\\d+\\.\\d+)"
+      minimum_version: "2.40.0"
+
+  macos:
+    system_detection:
+      executable_name: git
+      version_command: ["git", "--version"]
+      version_pattern: "git version (\\d+\\.\\d+\\.\\d+)"
+      minimum_version: "2.40.0"
+
+dependencies: []
+```
+
+### System Tool Detection
+
+The `SystemToolDetector` discovers system-installed tools:
+
+```python
+from app.plugins.system_tool_detector import SystemToolDetector
+
+detector = SystemToolDetector()
+
+# Detect Git in PATH
+result = detector.detect_tool(
+    executable_name="git",
+    version_command=["git", "--version"],
+    version_pattern=r"git version (\d+\.\d+\.\d+)",
+    minimum_version="2.40.0"
+)
+
+if result:
+    print(f"Found: {result.path}")
+    print(f"Version: {result.version}")
+    print(f"Meets minimum: {result.meets_minimum_version}")
+```
+
+### ExecutableSource Enum
+
+Plugins now support explicit source selection:
+
+```python
+class ExecutableSource(str, Enum):
+    """Source of plugin executable."""
+    SYSTEM = "system"      # Use system-installed tool
+    PORTABLE = "portable"  # Use portable version
+    AUTO = "auto"          # Try system first, fallback to portable
+```
+
+### User Preferences
+
+Users can configure per-plugin execution preferences:
+
+```yaml
+# config/plugins.yaml
+plugin_preferences:
+  git:
+    execution_preference: system  # Always use system Git
+    enabled: true
+    notes: "Using system Git for better integration"
+
+  ffmpeg:
+    execution_preference: portable  # Always use portable FFmpeg
+    enabled: true
+    notes: "Portable version includes custom codecs"
+
+  exiftool:
+    execution_preference: auto  # Auto-detect (default)
+    enabled: true
+    notes: ""
+```
+
+**Configuration via UI:**
+
+1. Open **Settings** → **Plugin Preferences**
+2. Select plugin from list
+3. Choose execution preference:
+   - **Auto**: Try system first, fallback to portable
+   - **System Only**: Only use system-installed tool
+   - **Portable Only**: Only use portable version
+4. Click **Save**
+
+### Version Validation Dialog
+
+When a system tool doesn't meet version requirements, users see:
+
+```
+┌─────────────────────────────────────────┐
+│ Version Mismatch Detected               │
+├─────────────────────────────────────────┤
+│ Plugin: Git                             │
+│                                         │
+│ System version: 2.35.1                  │
+│ Required version: ≥2.40.0               │
+│                                         │
+│ The system-installed version does not   │
+│ meet the minimum requirement.           │
+│                                         │
+│ Choose an action:                       │
+│  ○ Use system version anyway            │
+│  ● Download and use portable version    │
+│  ○ Disable this plugin                  │
+│                                         │
+│           [ Cancel ]    [ OK ]          │
+└─────────────────────────────────────────┘
+```
+
+### Migration from v1 to v2
+
+The plugin migrator automatically upgrades v1 manifests:
+
+**Using justfile:**
+```bash
+# Dry run (preview changes)
+just migrate-plugins dry-run
+
+# Apply migration
+just migrate-plugins apply
+
+# Rollback if needed
+just migrate-plugins rollback
+```
+
+**Using Python:**
+```python
+from app.plugins.plugin_migrator import PluginMigrator
+from pathlib import Path
+
+migrator = PluginMigrator(
+    plugins_dir=Path("plugins"),
+    backup_dir=Path("backups/plugins")
+)
+
+# Preview migration
+report = migrator.dry_run()
+print(f"Will migrate {len(report['to_migrate'])} plugins")
+
+# Apply migration with backup
+results = migrator.migrate_all(
+    backup=True,
+    skip_on_error=False
+)
+
+# Rollback if something went wrong
+migrator.rollback_all()
+```
+
+### Migration Example
+
+**Before (v1):**
+```yaml
+name: Git
+version: 2.47.1
+description: Distributed version control system
+homepage: https://git-scm.com
+mandatory: false
+enabled: true
+
+source:
+  type: github
+  uri: git-for-windows/git
+  asset_pattern: "PortableGit-.*-64-bit\\.7z\\.exe$"
+  checksum_sha256: "f9a9d5c1..."
+
+command:
+  path: cmd
+  executable: git.exe
+  register_to_path: true
+
+dependencies: []
+```
+
+**After (v2):**
+```yaml
+schema_version: 2
+
+name: Git
+version: 2.47.1
+description: Distributed version control system
+homepage: https://git-scm.com
+mandatory: false
+enabled: true
+
+platforms:
+  windows:
+    source:
+      type: github
+      uri: git-for-windows/git
+      asset_pattern: "PortableGit-.*-64-bit\\.7z\\.exe$"
+      checksum_sha256: "f9a9d5c1..."
+
+    command:
+      path: cmd
+      executable: git.exe
+      register_to_path: true
+
+    system_detection:
+      executable_name: git
+      version_command: ["git", "--version"]
+      version_pattern: "git version (\\d+\\.\\d+\\.\\d+)"
+      minimum_version: "2.40.0"
+
+dependencies: []
+```
+
+### Backward Compatibility
+
+v2 plugins are **backward compatible** with v1 behavior:
+
+- If `schema_version: 2` is omitted, manifest is treated as v1
+- v1 manifests continue to work without migration
+- Migration is optional but recommended
+
+### Testing v2 Plugins
+
+```python
+import pytest
+from app.plugins.plugin_manager import PluginManager
+from app.plugins.plugin_schema import PluginManifestV2
+
+def test_v2_schema_validation():
+    """Test v2 schema validation."""
+    manifest_data = {
+        "schema_version": 2,
+        "name": "TestPlugin",
+        "version": "1.0.0",
+        "platforms": {
+            "windows": {
+                "system_detection": {
+                    "executable_name": "test",
+                    "version_command": ["test", "--version"],
+                    "version_pattern": r"(\d+\.\d+\.\d+)",
+                    "minimum_version": "1.0.0"
+                }
+            }
+        }
+    }
+
+    manifest = PluginManifestV2.model_validate(manifest_data)
+    assert manifest.schema_version == 2
+    assert "windows" in manifest.platforms
+
+def test_system_tool_detection():
+    """Test system tool detection."""
+    from app.plugins.system_tool_detector import SystemToolDetector
+
+    detector = SystemToolDetector()
+    result = detector.detect_tool(
+        executable_name="python",
+        version_command=["python", "--version"],
+        version_pattern=r"Python (\d+\.\d+\.\d+)",
+        minimum_version="3.12.0"
+    )
+
+    assert result is not None
+    assert result.path.exists()
+    assert result.version
+```
+
+---
+
+## �📚 API Reference
 
 ### PluginManifest Dataclass
 

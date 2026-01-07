@@ -73,11 +73,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: ["3.12", "3.13"]
-        include:
-          # Test Python 3.14 (Preview) only on Windows for now
-          - os: windows-latest
-            python-version: "3.14"
+        python-version: ["3.12", "3.13", "3.14"]
 
     steps:
       - name: Checkout code
@@ -112,7 +108,16 @@ jobs:
             libxcb-render-util0 \
             libxcb-xinerama0 \
             libxcb-xfixes0 \
-            libegl1
+            libegl1 \
+            libudev-dev
+
+      - name: Install platform-specific Python dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: pip install pyudev>=0.24.1
+
+      - name: Install platform-specific Python dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: pip install pywin32>=306 wmi>=1.5.1
 
       - name: Set Qt platform to offscreen (Linux)
         if: runner.os == 'Linux'

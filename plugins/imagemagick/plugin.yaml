@@ -1,22 +1,39 @@
-# ImageMagick Plugin Manifest
+# ImageMagick Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: ImageMagick
-version: "7.1.2-12"
+version: 7.1.2-12
 mandatory: false
 enabled: false
-
-source:
-  type: url
-  base_uri: https://imagemagick.org/archive/binaries/ImageMagick-7.1.2-12-portable-Q16-HDRI-x64.7z
-  checksum_sha256: "0607E50B998EFE17AE47DBD54DAE5CC29A28F96CA7F16A5C2F7F10248A7B4812"
-  file_size: 21482026
-
-command:
-  path: ""
-  executable: magick.exe
-
-register_to_path: true
-
-dependencies: []
-
 description: Create, edit, compose, or convert digital images
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://imagemagick.org/archive/binaries/ImageMagick-7.1.2-12-portable-Q16-HDRI-x64.7z
+    checksum_sha256: 0607E50B998EFE17AE47DBD54DAE5CC29A28F96CA7F16A5C2F7F10248A7B4812
+    file_size: 21482026
+    command_path: ''
+    command_executable: magick.exe
+    system_package: imagemagick
+    version_constraint: '>=7.0'
+  linux:
+    source: url
+    download_url: ''
+    checksum_sha256: 0607E50B998EFE17AE47DBD54DAE5CC29A28F96CA7F16A5C2F7F10248A7B4812
+    file_size: 21482026
+    command_path: ''
+    command_executable: magick.exe
+    system_package: imagemagick
+    version_constraint: '>=7.0'
+  macos:
+    source: url
+    download_url: ''
+    checksum_sha256: 0607E50B998EFE17AE47DBD54DAE5CC29A28F96CA7F16A5C2F7F10248A7B4812
+    file_size: 21482026
+    command_path: ''
+    command_executable: magick.exe
+    system_package: imagemagick
+    version_constraint: '>=7.0'

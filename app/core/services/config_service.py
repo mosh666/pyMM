@@ -4,13 +4,105 @@ Handles layered configuration (defaults → environment → user) with Pydantic 
 """
 
 from enum import Enum
+import os
 from pathlib import Path
+import sys
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
 from app import __commit_id__, __version__
+
+
+def get_platform_config_dir(app_name: str = "pyMediaManager") -> Path:
+    """Get platform-specific configuration directory.
+
+    Follows platform conventions:
+    - Windows: %APPDATA%/pyMediaManager
+    - Linux: $XDG_CONFIG_HOME/pymediamanager or ~/.config/pymediamanager
+    - macOS: ~/Library/Application Support/pyMediaManager
+
+    Args:
+        app_name: Application name for directory
+
+    Returns:
+        Path to configuration directory
+    """
+    if sys.platform == "win32":
+        # Windows: %APPDATA%\pyMediaManager
+        base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
+        return base_dir / app_name
+    if sys.platform == "darwin":
+        # macOS: ~/Library/Application Support/pyMediaManager
+        return Path.home() / "Library" / "Application Support" / app_name
+    # Linux: XDG Base Directory
+    xdg_config = os.getenv("XDG_CONFIG_HOME")
+    if xdg_config:
+        base_dir = Path(xdg_config)
+    else:
+        base_dir = Path.home() / ".config"
+    return base_dir / app_name.lower()
+
+
+def get_platform_data_dir(app_name: str = "pyMediaManager") -> Path:
+    """Get platform-specific data directory.
+
+    Follows platform conventions:
+    - Windows: %APPDATA%/pyMediaManager
+    - Linux: $XDG_DATA_HOME/pymediamanager or ~/.local/share/pymediamanager
+    - macOS: ~/Library/Application Support/pyMediaManager
+
+    Args:
+        app_name: Application name for directory
+
+    Returns:
+        Path to data directory
+    """
+    if sys.platform == "win32":
+        # Windows: %APPDATA%\pyMediaManager
+        base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
+        return base_dir / app_name
+    if sys.platform == "darwin":
+        # macOS: ~/Library/Application Support/pyMediaManager
+        return Path.home() / "Library" / "Application Support" / app_name
+    # Linux: XDG Base Directory
+    xdg_data = os.getenv("XDG_DATA_HOME")
+    if xdg_data:
+        base_dir = Path(xdg_data)
+    else:
+        base_dir = Path.home() / ".local" / "share"
+    return base_dir / app_name.lower()
+
+
+def get_platform_cache_dir(app_name: str = "pyMediaManager") -> Path:
+    """Get platform-specific cache directory.
+
+    Follows platform conventions:
+    - Windows: %LOCALAPPDATA%/pyMediaManager/Cache
+    - Linux: $XDG_CACHE_HOME/pymediamanager or ~/.cache/pymediamanager
+    - macOS: ~/Library/Caches/pyMediaManager
+
+    Args:
+        app_name: Application name for directory
+
+    Returns:
+        Path to cache directory
+    """
+    if sys.platform == "win32":
+        # Windows: %LOCALAPPDATA%\pyMediaManager\Cache
+        base_dir = Path(os.getenv("LOCALAPPDATA", "~")).expanduser()
+        return base_dir / app_name / "Cache"
+    if sys.platform == "darwin":
+        # macOS: ~/Library/Caches/pyMediaManager
+        return Path.home() / "Library" / "Caches" / app_name
+    # Linux: XDG Base Directory
+    xdg_cache = os.getenv("XDG_CACHE_HOME")
+    if xdg_cache:
+        base_dir = Path(xdg_cache)
+    else:
+        base_dir = Path.home() / ".cache"
+    return base_dir / app_name.lower()
 
 
 class LogLevel(str, Enum):
@@ -23,13 +115,32 @@ class LogLevel(str, Enum):
     CRITICAL = "CRITICAL"
 
 
-class PathConfig(BaseModel):
-    """Configuration for application paths."""
+class ExecutionPreference(str, Enum):
+    """Plugin execution preference."""
 
-    projects_dir: str = Field(default="pyMM.Projects", description="Projects directory name")
-    logs_dir: str = Field(default="pyMM.Logs", description="Logs directory name")
-    plugins_dir: str = Field(default="pyMM.Plugins", description="Plugins directory name")
-    config_dir: str = Field(default="config", description="Config directory name")
+    AUTO = "auto"  # Use plugin's prefer_system setting
+    SYSTEM = "system"  # Always prefer system packages
+    PORTABLE = "portable"  # Always use portable binaries
+
+
+class PathConfig(BaseModel):
+    """Configuration for application paths.
+
+    Paths can be absolute or relative. Relative paths are resolved against:
+    - config_dir: platform-specific config directory (when None, uses platform default)
+    - Other paths: user's home directory
+    """
+
+    projects_dir: str = Field(
+        default="pyMM.Projects", description="Projects directory name (relative to home)"
+    )
+    logs_dir: str = Field(default="pyMM.Logs", description="Logs directory name (relative to home)")
+    plugins_dir: str = Field(
+        default="pyMM.Plugins", description="Plugins directory name (relative to home)"
+    )
+    config_dir: str | None = Field(
+        default=None, description="Config directory (None = use platform default)"
+    )
 
 
 class LoggingConfig(BaseModel):
@@ -63,6 +174,19 @@ class PluginConfig(BaseModel):
     parallel_downloads: int = Field(default=3, description="Max parallel downloads")
 
 
+class PluginPreferences(BaseModel):
+    """Per-plugin execution preferences.
+
+    Allows users to override prefer_system setting for individual plugins.
+    """
+
+    execution_preference: ExecutionPreference = Field(
+        default=ExecutionPreference.AUTO, description="Execution preference (auto/system/portable)"
+    )
+    enabled: bool = Field(default=True, description="Whether plugin is enabled")
+    notes: str = Field(default="", description="User notes about this plugin")
+
+
 class AppConfig(BaseModel):
     """Main application configuration."""
 
@@ -75,6 +199,10 @@ class AppConfig(BaseModel):
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     ui: UIConfig = Field(default_factory=UIConfig)
     plugins: PluginConfig = Field(default_factory=PluginConfig)
+    plugin_preferences: dict[str, PluginPreferences] = Field(
+        default_factory=dict,
+        description="Per-plugin execution preferences (plugin_id -> PluginPreferences)",
+    )
 
     # Sensitive fields that should be redacted in logs
     _sensitive_fields: set[str] = {"password", "token", "secret", "key", "api_key"}
@@ -115,20 +243,62 @@ class AppConfig(BaseModel):
 class ConfigService:
     """Service for managing layered application configuration."""
 
-    def __init__(self, app_root: Path, config_dir: Path | None = None):
+    def __init__(self, app_root: Path | str | None = None, config_dir: Path | str | None = None):
         """
         Initialize configuration service.
 
         Args:
-            app_root: Application root directory
-            config_dir: Configuration directory (defaults to app_root/config)
+            app_root: Application root directory (for legacy fallback, deprecated)
+            config_dir: Configuration directory (defaults to platform-specific location)
         """
-        self.app_root = Path(app_root)
-        self.config_dir = Path(config_dir) if config_dir else self.app_root / "config"
+        # Use platform-specific directory if not explicitly provided
+        if config_dir:
+            self.config_dir = Path(config_dir)
+        else:
+            self.config_dir = get_platform_config_dir()
+
+        # Create config directory if it doesn't exist
+        self.config_dir.mkdir(parents=True, exist_ok=True)
+
+        # Legacy support: app_root for backward compatibility
+        self.app_root = Path(app_root) if app_root else self.config_dir.parent
 
         self._config: AppConfig | None = None
         self._user_config_path = self.config_dir / "user.yaml"
         self._default_config_path = self.config_dir / "app.yaml"
+        self._plugin_preferences_path = self.config_dir / "plugins.yaml"
+
+        # Try to migrate old config if exists and new location is empty
+        self._migrate_legacy_config()
+
+    def _migrate_legacy_config(self) -> None:
+        """Migrate configuration from legacy location if needed.
+
+        Checks for config files in app_root/config and copies them to
+        the platform-specific location if it's empty.
+        """
+        # Skip if user config already exists in new location
+        if self._user_config_path.exists():
+            return
+
+        # Check for legacy config location (app_root/config)
+        if self.app_root != self.config_dir.parent:
+            legacy_config_dir = self.app_root / "config"
+            if legacy_config_dir.exists():
+                legacy_user_config = legacy_config_dir / "user.yaml"
+                legacy_default_config = legacy_config_dir / "app.yaml"
+
+                # Copy user config if exists
+                if legacy_user_config.exists():
+                    import shutil
+
+                    shutil.copy2(legacy_user_config, self._user_config_path)
+
+                # Copy default config if exists
+                if legacy_default_config.exists():
+                    import shutil
+
+                    shutil.copy2(legacy_default_config, self._default_config_path)
 
     def load(self) -> AppConfig:
         """
@@ -154,6 +324,10 @@ class ConfigService:
 
         # Create Pydantic model from merged data
         self._config = AppConfig(**config_data)
+
+        # Layer 3: Load plugin preferences from separate file
+        self._config.plugin_preferences = self.load_plugin_preferences()
+
         return self._config
 
     def save_user_config(self, config: AppConfig) -> None:
@@ -236,6 +410,91 @@ class ConfigService:
                 result[key] = value
 
         return result
+
+    def load_plugin_preferences(self) -> dict[str, PluginPreferences]:
+        """
+        Load plugin preferences from plugins.yaml.
+
+        Returns:
+            Dictionary mapping plugin IDs to PluginPreferences
+        """
+        if not self._plugin_preferences_path.exists():
+            return {}
+
+        with open(self._plugin_preferences_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+
+        preferences = {}
+        for plugin_id, pref_data in data.items():
+            try:
+                preferences[plugin_id] = PluginPreferences(**pref_data)
+            except Exception as e:
+                # Log error but continue loading other preferences
+                print(f"Warning: Failed to load preferences for plugin {plugin_id}: {e}")
+                continue
+
+        return preferences
+
+    def save_plugin_preferences(self, preferences: dict[str, PluginPreferences]) -> None:
+        """
+        Save plugin preferences to plugins.yaml.
+
+        Args:
+            preferences: Dictionary mapping plugin IDs to PluginPreferences
+        """
+        # Convert preferences to dict format
+        data = {plugin_id: pref.model_dump(mode="json") for plugin_id, pref in preferences.items()}
+
+        # Ensure config directory exists
+        self._plugin_preferences_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Write to file
+        with open(self._plugin_preferences_path, "w", encoding="utf-8") as f:
+            yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+
+    def get_plugin_preference(self, plugin_id: str) -> PluginPreferences:
+        """
+        Get preference for a specific plugin.
+
+        Args:
+            plugin_id: Plugin identifier
+
+        Returns:
+            PluginPreferences for the plugin (default if not set)
+        """
+        config = self.get_config()
+        return config.plugin_preferences.get(plugin_id, PluginPreferences())
+
+    def set_plugin_preference(
+        self, plugin_id: str, preference: PluginPreferences | None = None, **kwargs: Any
+    ) -> None:
+        """
+        Set preference for a specific plugin.
+
+        Args:
+            plugin_id: Plugin identifier
+            preference: PluginPreferences object (or None to use kwargs)
+            **kwargs: Preference fields to update (execution_preference, enabled, notes)
+        """
+        config = self.get_config()
+
+        # Get existing preference or create new one
+        if preference is None:
+            current = config.plugin_preferences.get(plugin_id, PluginPreferences())
+            # Update with kwargs
+            preference = PluginPreferences(
+                execution_preference=kwargs.get(
+                    "execution_preference", current.execution_preference
+                ),
+                enabled=kwargs.get("enabled", current.enabled),
+                notes=kwargs.get("notes", current.notes),
+            )
+
+        # Update in-memory config
+        config.plugin_preferences[plugin_id] = preference
+
+        # Save to disk
+        self.save_plugin_preferences(config.plugin_preferences)
 
     def export_config(self, output_path: Path, redact_sensitive: bool = True) -> None:
         """

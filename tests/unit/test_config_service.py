@@ -72,7 +72,10 @@ class TestConfigService:
     @pytest.fixture
     def service(self, app_root):
         """Create ConfigService instance."""
-        return ConfigService(app_root)
+        # Use explicit config_dir for tests to avoid platform-specific locations
+        config_dir = app_root / "config"
+        config_dir.mkdir(parents=True, exist_ok=True)
+        return ConfigService(app_root=app_root, config_dir=config_dir)
 
     def test_init(self, service, app_root):
         """Test service initialization."""

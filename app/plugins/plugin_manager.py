@@ -99,23 +99,41 @@ class PluginManager:
                 self.logger.exception(f"Schema validation failed for {manifest_file}")
                 raise
 
-            # Extract source configuration
-            source = validated_data.source
+            # Import platform manifest
+            from app.plugins.plugin_base import PlatformManifest
+
+            # Extract platform-specific configurations
+            platforms = validated_data.platforms
+
+            def _extract_platform_config(platform_key: str) -> PlatformManifest | None:
+                """Extract platform configuration from validated data."""
+                if platform_key not in platforms:
+                    return None
+
+                pc = platforms[platform_key]
+                return PlatformManifest(
+                    source_type=pc.source.type if pc.source else None,
+                    source_uri=pc.source.base_uri if pc.source else None,
+                    asset_pattern=pc.source.asset_pattern if pc.source else None,
+                    checksum_sha256=pc.source.checksum_sha256 if pc.source else None,
+                    file_size=pc.source.file_size if pc.source else None,
+                    command_path=pc.command.path,
+                    command_executable=pc.command.executable,
+                    system_package=pc.system_package,
+                    version_constraint=pc.version_constraint,
+                )
 
             return PluginManifest(
                 name=validated_data.name,
                 version=validated_data.version,
                 mandatory=validated_data.mandatory,
                 enabled=validated_data.enabled,
-                source_type=source.type,
-                source_uri=source.base_uri,
-                asset_pattern=source.asset_pattern,
-                checksum_sha256=source.checksum_sha256,
-                file_size=source.file_size,
-                command_path=validated_data.command.path,
-                command_executable=validated_data.command.executable,
+                prefer_system=validated_data.prefer_system,
                 register_to_path=validated_data.register_to_path,
                 dependencies=validated_data.dependencies or [],
+                windows_config=_extract_platform_config("windows"),
+                linux_config=_extract_platform_config("linux"),
+                macos_config=_extract_platform_config("macos"),
             )
 
         except ValidationError:
@@ -138,8 +156,15 @@ class PluginManager:
         # For now, use SimplePluginImplementation
         # In future, could load custom plugin classes via entry points
 
+        # Check if manifest has v2 config
+        platform_config = manifest.get_current_platform_config()
+        if platform_config and platform_config.source_type == "url" and platform_config.source_uri:
+            return SimplePluginImplementation(
+                manifest, self.plugins_dir, platform_config.source_uri
+            )
+
+        # Fallback to v1 schema
         if manifest.source_type == "url" and manifest.source_uri:
-            # Construct download URL (simplified for now)
             download_url = manifest.source_uri
             return SimplePluginImplementation(manifest, self.plugins_dir, download_url)
 

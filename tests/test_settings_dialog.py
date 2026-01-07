@@ -37,9 +37,11 @@ def qapp():
 
 def test_settings_dialog(qapp):
     """Test settings dialog creation and functionality."""
-    # Create config service
+    # Create config service with explicit config_dir for testing
     app_root = Path(__file__).parent
-    config_service = ConfigService(app_root)
+    config_dir = app_root / "config"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config_service = ConfigService(app_root=app_root, config_dir=config_dir)
     config = config_service.load()
 
     # Verify config loaded
@@ -50,12 +52,13 @@ def test_settings_dialog(qapp):
     dialog = SettingsDialog(config_service)
 
     # Verify dialog was created with all tabs
-    assert dialog.tabs.count() == 5
+    assert dialog.tabs.count() == 6
     assert dialog.tabs.tabText(0) == "General"
     assert dialog.tabs.tabText(1) == "Plugins"
-    assert dialog.tabs.tabText(2) == "Storage"
-    assert dialog.tabs.tabText(3) == "Git"
-    assert dialog.tabs.tabText(4) == "About"
+    assert dialog.tabs.tabText(2) == "Plugin Preferences"
+    assert dialog.tabs.tabText(3) == "Storage"
+    assert dialog.tabs.tabText(4) == "Git"
+    assert dialog.tabs.tabText(5) == "About"
 
     # Check that settings are loaded into UI
     assert dialog.theme_combo.currentIndex() >= 0

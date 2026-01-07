@@ -51,7 +51,7 @@
 
 | Component | Requirement |
 | --------- | ----------- |
-| **Operating System** | Windows 10 (Version 1809+) or Windows 11 |
+| **Operating System** | Windows 10 (Version 1809+), Windows 11, Ubuntu 20.04+, Debian 11+, macOS 11+ |
 | **Python Version** | 3.12+ (**3.13 recommended** for best performance) |
 | **RAM** | 4 GB (8 GB recommended for large projects) |
 | **Storage** | 200 MB for application + space for projects/plugins |
@@ -311,6 +311,127 @@ Configure basic settings:
 - Summary of configuration
 - Launch application button
 - Quick start tutorial link
+
+### Linux-Specific Setup: USB Device Detection
+
+**Linux users only:** pyMM can automatically detect USB storage devices using udev rules.
+
+#### What are udev rules?
+
+udev rules enable automatic detection of USB devices without requiring the application to run as root. This provides better security and integration with your Linux desktop.
+
+#### Installing udev Rules
+
+**Option 1: Using the GUI (Recommended)**
+
+1. Go to **⚙️ Settings** → **Linux udev Rules**
+2. Click **"Install udev Rules"**
+3. Enter your password when prompted (pkexec authentication)
+4. Wait for confirmation: "udev rules installed successfully"
+5. Rules take effect immediately (no reboot required)
+
+**Option 2: Using Command Line**
+
+```bash
+# Install udev rules
+pymm install-udev-rules
+
+# Check installation status
+pymm check-udev-rules
+
+# Uninstall if needed
+pymm uninstall-udev-rules
+```
+
+#### What Gets Installed
+
+The installer creates `/etc/udev/rules.d/99-pymm-usb.rules` with:
+
+```udev
+# pyMediaManager USB Storage Detection Rules
+# Detects USB storage devices and notifies pyMM
+
+# USB Mass Storage devices
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \
+  ENV{ID_TYPE}=="disk", \
+  RUN+="/usr/bin/notify-send 'pyMediaManager' 'USB Storage Detected: %E{ID_MODEL}'"
+
+# Trigger udev to reload
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \
+  RUN+="/usr/bin/udevadm control --reload-rules"
+```
+
+**Security Notes:**
+
+- Rules run as root but only execute predefined safe commands
+- pyMM itself does NOT run as root
+- Uses `pkexec` for privilege escalation (same as system settings)
+- Rules are read-only after installation
+
+#### Checking Installation Status
+
+From the GUI, go to **⚙️ Settings** → **Linux udev Rules**:
+
+```text
+┌─────────────────────────────────────────┐
+│ Linux udev Rules Status                 │
+├─────────────────────────────────────────┤
+│ Status: ✓ Installed                     │
+│ Location: /etc/udev/rules.d/            │
+│          99-pymm-usb.rules              │
+│                                         │
+│ Rule Version: 1.0.0                     │
+│ Last Modified: 2026-01-15 10:30:25      │
+│                                         │
+│ Capabilities:                           │
+│ ✓ USB mass storage detection            │
+│ ✓ Desktop notifications                 │
+│ ✓ Automatic device discovery            │
+│                                         │
+│ [ Reinstall ] [ Uninstall ] [ Close ]  │
+└─────────────────────────────────────────┘
+```
+
+#### Uninstalling
+
+If you no longer need USB device detection:
+
+1. Go to **⚙️ Settings** → **Linux udev Rules**
+2. Click **"Uninstall"**
+3. Enter your password when prompted
+4. Rules are removed immediately
+
+**Note:** pyMM continues to work without udev rules, but you'll need to manually refresh storage devices.
+
+#### Troubleshooting
+
+**Rules not working after installation:**
+
+```bash
+# Reload udev rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+# Check if rules file exists
+ls -l /etc/udev/rules.d/99-pymm-usb.rules
+
+# Test rule syntax
+sudo udevadm test /sys/block/sda
+```
+
+**Permission denied during installation:**
+
+- Ensure you're in the `wheel` or `sudo` group
+- Check pkexec is installed: `which pkexec`
+- Try manual installation:
+
+  ```bash
+  sudo cp config/99-pymm-usb.rules /etc/udev/rules.d/
+  sudo chmod 644 /etc/udev/rules.d/99-pymm-usb.rules
+  sudo udevadm control --reload-rules
+  ```
+
+For more details, see [Linux udev Rules Documentation](linux-udev-installer.md).
 
 ---
 
@@ -637,6 +758,85 @@ pymm install-plugin digikam --version 8.2.0
    └─────────────────────────────────────────┘
    ```
 
+#### Plugin Execution Preferences
+
+**New in v2:** Choose between system-installed tools and portable versions.
+
+1. Click **"⚙️ Settings"** → **"Plugin Preferences"**
+2. Select plugin from list
+3. Configure execution preference:
+
+   ```text
+   Plugin Preferences: Git
+   ┌─────────────────────────────────────────┐
+   │ Execution Source                        │
+   │ ○ Auto (Recommended)                    │
+   │   Try system first, fallback to portable│
+   │                                         │
+   │ ○ System Only                           │
+   │   Use system-installed Git only         │
+   │   System version: 2.43.1                │
+   │   Required: ≥2.40.0  ✓ Compatible      │
+   │                                         │
+   │ ● Portable Only                         │
+   │   Use pyMM's portable Git               │
+   │   Portable version: 2.47.1              │
+   │                                         │
+   │ Notes:                                  │
+   │ [Using portable for better integration] │
+   │                                         │
+   │ [Apply] [Reset to Default] [Cancel]    │
+   └─────────────────────────────────────────┘
+   ```
+
+**Execution Modes:**
+
+- **Auto (Default)**: Tries system-installed tool first, falls back to portable if:
+  - System tool not found
+  - System version doesn't meet minimum requirements
+  - System tool fails to execute
+- **System Only**: Only uses system-installed tool. Shows error if unavailable.
+- **Portable Only**: Only uses pyMM's portable version. Always downloads if missing.
+
+**Version Validation:**
+
+When using **Auto** or **System Only**, pyMM validates the system tool version:
+
+```text
+┌─────────────────────────────────────────┐
+│ Version Check: Git                      │
+├─────────────────────────────────────────┤
+│ System version: 2.35.1                  │
+│ Required version: ≥2.40.0               │
+│ Status: ⚠ Version too old               │
+│                                         │
+│ The system-installed version does not   │
+│ meet the minimum requirement.           │
+│                                         │
+│ Choose an action:                       │
+│ ○ Use system version anyway (not        │
+│   recommended)                          │
+│ ● Download portable version (4.2 MB)    │
+│ ○ Disable this plugin                   │
+│                                         │
+│           [ Cancel ]    [ OK ]          │
+└─────────────────────────────────────────┘
+```
+
+**Platform Support:**
+
+Different plugins have different platform configurations:
+
+| Plugin | Windows | Linux | macOS |
+| ------ | ------- | ----- | ----- |
+| **Git** | Portable + System | System only | System only |
+| **ExifTool** | Portable + System | System only | System only |
+| **FFmpeg** | Portable + System | System only | System only |
+| **DigiKam** | Portable | System (APT/Flatpak) | System (Homebrew) |
+| **MariaDB** | Portable | System (APT) | System (Homebrew) |
+
+See [Plugin Development Guide](plugin-development.md) for technical details.
+
 #### Remove Plugins
 
 1. Right-click plugin → **"Uninstall"**
@@ -777,9 +977,46 @@ Privacy
 
 ### Configuration Files
 
-pyMM stores configuration in YAML files:
+pyMM stores configuration in platform-specific standard directories:
 
-#### Application Config (`D:\pyMM.Config\app.yaml`)
+#### Platform-Specific Locations
+
+**Windows:**
+
+```text
+Config:  %APPDATA%\pyMM\config\
+Data:    %APPDATA%\pyMM\data\
+Cache:   %LOCALAPPDATA%\pyMM\cache\
+Logs:    %APPDATA%\pyMM\logs\
+
+Example: C:\Users\YourName\AppData\Roaming\pyMM\
+```
+
+**Linux (XDG Base Directory):**
+
+```text
+Config:  $XDG_CONFIG_HOME/pyMM/  (default: ~/.config/pyMM/)
+Data:    $XDG_DATA_HOME/pyMM/    (default: ~/.local/share/pyMM/)
+Cache:   $XDG_CACHE_HOME/pyMM/   (default: ~/.cache/pyMM/)
+Logs:    $XDG_STATE_HOME/pyMM/   (default: ~/.local/state/pyMM/)
+
+Example: /home/username/.config/pyMM/
+```
+
+**macOS:**
+
+```text
+Config:  ~/Library/Application Support/pyMM/config/
+Data:    ~/Library/Application Support/pyMM/data/
+Cache:   ~/Library/Caches/pyMM/
+Logs:    ~/Library/Logs/pyMM/
+
+Example: /Users/YourName/Library/Application Support/pyMM/
+```
+
+#### Application Config (`app.yaml`)
+
+**Location:** `{config_dir}/app.yaml`
 
 ```yaml
 # Application-wide configuration
@@ -1112,7 +1349,7 @@ A: Yes! pyMM is open-source software licensed under MIT. Free to use, modify, an
 A: Only for initial plugin downloads and updates. Once installed, pyMM works completely offline.
 
 **Q: Can I run pyMM on macOS or Linux?**
-A: Currently Windows-only (Windows 10 1809+, Windows 11). Linux/macOS support planned for future releases.
+A: Yes! pyMM runs on Windows 10+, Windows 11, Ubuntu 20.04+, Debian 11+, and macOS 11+. Configuration directories follow platform standards (XDG Base Directory on Linux, ~/Library on macOS, %APPDATA% on Windows).
 
 **Q: How much storage does pyMM need?**
 A: ~200 MB for application. Plugins vary (12 MB - 450 MB each). Projects depend on your media.

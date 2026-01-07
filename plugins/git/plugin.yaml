@@ -1,22 +1,39 @@
-# Git Plugin Manifest
+# Git Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: Git
-version: "2.48.1"
+version: 2.48.1
 mandatory: true
 enabled: true
-
-source:
-  type: url
-  base_uri: https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/PortableGit-2.48.1-64-bit.7z.exe
-  checksum_sha256: "A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257"
-  file_size: 63431824
-
-command:
-  path: cmd
-  executable: git.exe
-
-register_to_path: true
-
-dependencies: []
-
 description: Distributed version control system for tracking project changes
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/PortableGit-2.48.1-64-bit.7z.exe
+    checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
+    file_size: 63431824
+    command_path: cmd
+    command_executable: git.exe
+    system_package: git
+    version_constraint: '>=2.0'
+  linux:
+    source: url
+    download_url: ''
+    checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
+    file_size: 63431824
+    command_path: cmd
+    command_executable: git.exe
+    system_package: git
+    version_constraint: '>=2.0'
+  macos:
+    source: url
+    download_url: ''
+    checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
+    file_size: 63431824
+    command_path: cmd
+    command_executable: git.exe
+    system_package: git
+    version_constraint: '>=2.0'

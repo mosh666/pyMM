@@ -1,20 +1,39 @@
-# MKVToolNix Plugin Manifest
+# MKVToolNix Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: MKVToolNix
-version: "89.0"
+version: '89.0'
 mandatory: false
 enabled: false
-
-source:
-  type: url
-  base_uri: https://mkvtoolnix.download/windows/releases/89.0/mkvtoolnix-64-bit-89.0.7z
-
-command:
-  path: ""
-  executable: mkvmerge.exe
-
-register_to_path: true
-
-dependencies: []
-
 description: Set of tools to create, alter and inspect Matroska (MKV) files
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://mkvtoolnix.download/windows/releases/89.0/mkvtoolnix-64-bit-89.0.7z
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: mkvmerge.exe
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'
+  linux:
+    source: url
+    download_url: ''
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: mkvmerge.exe
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'
+  macos:
+    source: url
+    download_url: ''
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: mkvmerge.exe
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'

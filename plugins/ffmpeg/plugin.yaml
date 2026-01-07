@@ -1,22 +1,39 @@
-# FFmpeg Plugin Manifest
+# FFmpeg Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: FFmpeg
-version: "7.1.0"
+version: 7.1.0
 mandatory: false
 enabled: false
-
-source:
-  type: url
-  base_uri: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
-  checksum_sha256: "77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62"
-  file_size: 211496872
-
-command:
-  path: bin
-  executable: ffmpeg.exe
-
-register_to_path: true
-
-dependencies: []
-
 description: Complete solution to record, convert and stream audio and video
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
+    checksum_sha256: 77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62
+    file_size: 211496872
+    command_path: bin
+    command_executable: ffmpeg.exe
+    system_package: ffmpeg
+    version_constraint: '>=7.0'
+  linux:
+    source: url
+    download_url: ''
+    checksum_sha256: 77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62
+    file_size: 211496872
+    command_path: bin
+    command_executable: ffmpeg.exe
+    system_package: ffmpeg
+    version_constraint: '>=7.0'
+  macos:
+    source: url
+    download_url: ''
+    checksum_sha256: 77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62
+    file_size: 211496872
+    command_path: bin
+    command_executable: ffmpeg.exe
+    system_package: ffmpeg
+    version_constraint: '>=7.0'

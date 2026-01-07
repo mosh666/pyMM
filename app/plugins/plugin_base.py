@@ -6,34 +6,82 @@ from abc import ABC, abstractmethod
 import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from enum import Enum
 import logging
 from pathlib import Path
 import shutil
 import subprocess
+import sys
+from typing import TYPE_CHECKING
 
 import aiohttp
+
+if TYPE_CHECKING:
+    from app.ui.dialogs.tool_version_dialog import VersionChoice
+
+
+class ExecutableSource(str, Enum):
+    """Source of plugin executable."""
+
+    SYSTEM = "system"  # System-installed tool via PATH
+    PORTABLE = "portable"  # Portable binary managed by pyMM
+    NONE = "none"  # Not found/available
+
+
+@dataclass
+class PlatformManifest:
+    """Platform-specific plugin configuration."""
+
+    source_type: str | None = None
+    source_uri: str | None = None
+    asset_pattern: str | None = None
+    checksum_sha256: str | None = None
+    file_size: int | None = None
+    command_path: str = ""
+    command_executable: str = ""
+    system_package: str | None = None
+    version_constraint: str | None = None
 
 
 @dataclass
 class PluginManifest:
-    """Plugin manifest configuration."""
+    """Plugin manifest configuration (v2 schema)."""
 
     name: str
     version: str
     mandatory: bool
     enabled: bool
-    source_type: str  # 'url' or 'github'
-    source_uri: str
+    prefer_system: bool = True
+    register_to_path: bool = False
+    dependencies: list[str] = field(default_factory=list)
+
+    # Platform-specific configurations
+    windows_config: PlatformManifest | None = None
+    linux_config: PlatformManifest | None = None
+    macos_config: PlatformManifest | None = None
+
+    # Backwards compatibility (v1 schema - deprecated)
+    source_type: str | None = None
+    source_uri: str | None = None
     asset_pattern: str | None = None
     command_path: str = ""
     command_executable: str = ""
-    register_to_path: bool = False
-    dependencies: list[str] = field(default_factory=list)
     checksum_sha256: str | None = None
     file_size: int | None = None
 
-    def __post_init__(self) -> None:
-        pass  # dependencies now handled by field(default_factory=list)
+    def get_current_platform_config(self) -> PlatformManifest | None:
+        """Get configuration for current platform."""
+        if sys.platform == "win32":
+            return self.windows_config
+        if sys.platform == "linux":
+            return self.linux_config
+        if sys.platform == "darwin":
+            return self.macos_config
+        return None
+
+    def has_v2_config(self) -> bool:
+        """Check if manifest has v2 platform-specific configuration."""
+        return any([self.windows_config, self.linux_config, self.macos_config])
 
 
 class PluginBase(ABC):
@@ -93,15 +141,142 @@ class PluginBase(ABC):
 
     def get_executable_path(self) -> Path | None:
         """
-        Get path to plugin executable.
+        Get path to plugin executable (backwards compatible wrapper).
 
         Returns:
             Path to executable or None if not found
         """
+        exe_info = self.get_executable_info()
+        return exe_info[0] if exe_info else None
+
+    def get_executable_info(self) -> tuple[Path | None, ExecutableSource, str | None]:
+        """
+        Get plugin executable with hybrid system/portable resolution.
+
+        Returns:
+            Tuple of (path, source, version) or (None, ExecutableSource.NONE, None)
+        """
+
+        platform_config = self.manifest.get_current_platform_config()
+
+        # Fallback to v1 schema
+        if not platform_config:
+            return self._get_executable_v1_fallback()
+
+        prefer_system = self.manifest.prefer_system
+
+        # Try system tool first if preferred
+        if prefer_system and platform_config.system_package:
+            system_info = self._try_system_tool(platform_config)
+            if system_info:
+                return system_info
+
+        # Try portable executable
+        portable_path = self._get_portable_executable_path(platform_config)
+        if portable_path and portable_path.exists():
+            # TODO: Get version from portable binary
+            return (portable_path, ExecutableSource.PORTABLE, None)
+
+        # Fallback to system tool even if not preferred
+        if not prefer_system and platform_config.system_package:
+            system_info = self._try_system_tool(platform_config)
+            if system_info:
+                return system_info
+
+        return (None, ExecutableSource.NONE, None)
+
+    def _get_executable_v1_fallback(self) -> tuple[Path | None, ExecutableSource, str | None]:
+        """Get executable using v1 schema (backwards compatibility)."""
+        if not self.plugin_dir.exists():
+            return (None, ExecutableSource.NONE, None)
+
+        exe_path = self.plugin_dir / self.manifest.command_path / self.manifest.command_executable
+        if exe_path.exists():
+            return (exe_path, ExecutableSource.PORTABLE, None)
+
+        return (None, ExecutableSource.NONE, None)
+
+    def _try_system_tool(
+        self, platform_config: PlatformManifest
+    ) -> tuple[Path, ExecutableSource, str] | None:
+        """
+        Try to find and validate system-installed tool.
+
+        Args:
+            platform_config: Platform-specific configuration
+
+        Returns:
+            Tuple of (path, source, version) or None if not found/invalid
+        """
+        from .system_tool_detector import SystemToolDetector, ToolDetectionStatus
+
+        detector = SystemToolDetector()
+        tool_info = detector.find_system_tool(
+            platform_config.system_package or self.manifest.name, platform_config.version_constraint
+        )
+
+        if not tool_info:
+            return None
+
+        if tool_info.status == ToolDetectionStatus.FOUND_VALID:
+            return (Path(tool_info.path), ExecutableSource.SYSTEM, tool_info.version or "")
+
+        if tool_info.status == ToolDetectionStatus.FOUND_INVALID:
+            # Handle version mismatch - ask user
+            choice = self._handle_version_mismatch(
+                str(tool_info.path),
+                tool_info.version or "unknown",
+                platform_config.version_constraint or "any",
+            )
+
+            from app.ui.dialogs.tool_version_dialog import VersionChoice
+
+            if choice == VersionChoice.USE_ANYWAY:
+                return (Path(tool_info.path), ExecutableSource.SYSTEM, tool_info.version or "")
+            # INSTALL_PORTABLE or CANCEL - return None to try portable
+
+        return None
+
+    def _handle_version_mismatch(
+        self, tool_path: str, found_version: str, required_version: str
+    ) -> "VersionChoice":
+        """
+        Handle system tool version mismatch by showing dialog.
+
+        Args:
+            tool_path: Path to found tool
+            found_version: Version that was found
+            required_version: Version constraint required
+
+        Returns:
+            User's choice
+        """
+        from app.ui.dialogs.tool_version_dialog import ToolVersionDialog
+
+        return ToolVersionDialog.ask(
+            self.manifest.name,
+            found_version,
+            required_version,
+            None,  # parent widget
+        )
+
+    def _get_portable_executable_path(self, platform_config: PlatformManifest) -> Path | None:
+        """
+        Get path to portable executable.
+
+        Args:
+            platform_config: Platform-specific configuration
+
+        Returns:
+            Path to portable executable or None
+        """
         if not self.plugin_dir.exists():
             return None
 
-        exe_path = self.plugin_dir / self.manifest.command_path / self.manifest.command_executable
+        command_path = platform_config.command_path or self.manifest.command_path
+        command_executable = platform_config.command_executable or self.manifest.command_executable
+
+        exe_path = self.plugin_dir / command_path / command_executable
         return exe_path if exe_path.exists() else None
 
     def is_installed(self) -> bool:
@@ -283,7 +458,19 @@ class SimplePluginImplementation(PluginBase):
 
     async def download(self, progress_callback: Callable[[int, int], None] | None = None) -> bool:
         """Download plugin archive."""
-        return await self._download_file(self.download_url, self.archive_path, progress_callback)
+        # Get platform-specific config for checksum and size
+        platform_config = self.manifest.get_current_platform_config()
+        expected_sha256 = platform_config.checksum_sha256 if platform_config else None
+
+        success = await self._download_file(self.download_url, self.archive_path, progress_callback)
+
+        # Verify checksum if available
+        if success and expected_sha256:
+            if not await self._verify_checksum(self.archive_path, expected_sha256):
+                self.logger.error("Checksum verification failed")
+                return False
+
+        return success
 
     async def extract(self) -> bool:
         """Extract plugin archive with support for ZIP, 7z, and self-extracting exe."""

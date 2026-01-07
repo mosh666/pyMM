@@ -1,22 +1,39 @@
-# ExifTool Plugin Manifest
+# ExifTool Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: ExifTool
-version: "13.45"
+version: '13.45'
 mandatory: true
 enabled: true
-
-source:
-  type: url
-  base_uri: https://exiftool.org/exiftool-13.45_64.zip
-  checksum_sha256: "CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2"
-  file_size: 10984399
-
-command:
-  path: ""
-  executable: exiftool.exe
-
-register_to_path: true
-
-dependencies: []
-
 description: Read, write and edit meta information in a wide variety of files
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://exiftool.org/exiftool-13.45_64.zip
+    checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
+    file_size: 10984399
+    command_path: ''
+    command_executable: exiftool.exe
+    system_package: exiftool
+    version_constraint: '>=13.0'
+  linux:
+    source: url
+    download_url: ''
+    checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
+    file_size: 10984399
+    command_path: ''
+    command_executable: exiftool.exe
+    system_package: exiftool
+    version_constraint: '>=13.0'
+  macos:
+    source: url
+    download_url: ''
+    checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
+    file_size: 10984399
+    command_path: ''
+    command_executable: exiftool.exe
+    system_package: exiftool
+    version_constraint: '>=13.0'

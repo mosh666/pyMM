@@ -1256,6 +1256,294 @@ async def download_plugin(name: str) -> bool:
 
 ---
 
+## 🌍 Cross-Platform Architecture
+
+### Platform Abstraction Strategy
+
+pyMediaManager implements comprehensive platform abstraction to ensure consistent behavior across Windows, Linux, and macOS while leveraging platform-specific features when available.
+
+#### Storage Service Platform Abstraction
+
+The `StorageService` uses the **Strategy Pattern** with platform-specific implementations:
+
+```python
+# Abstract base class
+class StoragePlatform(ABC):
+    @abstractmethod
+    def get_drives(self) -> list[Drive]:
+        """Get all available storage drives."""
+
+    @abstractmethod
+    def get_drive_info(self, path: Path) -> Drive | None:
+        """Get information about a specific drive."""
+
+# Platform implementations
+class WindowsStorage(StoragePlatform):
+    """Windows implementation using WMI and ctypes."""
+    def get_drives(self) -> list[Drive]:
+        import wmi
+        c = wmi.WMI()
+        logical_disks = c.Win32_LogicalDisk()
+        # ... implementation
+
+class LinuxStorage(StoragePlatform):
+    """Linux implementation using pyudev."""
+    def get_drives(self) -> list[Drive]:
+        import pyudev
+        context = pyudev.Context()
+        # ... implementation
+
+class MacOSStorage(StoragePlatform):
+    """macOS implementation using diskutil."""
+    def get_drives(self) -> list[Drive]:
+        result = subprocess.run(
+            ["diskutil", "list", "-plist"],
+            # ... implementation
+        )
+
+# Platform detection and selection
+def create_storage_platform() -> StoragePlatform:
+    if sys.platform == "win32":
+        return WindowsStorage()
+    elif sys.platform == "darwin":
+        return MacOSStorage()
+    elif sys.platform.startswith("linux"):
+        return LinuxStorage()
+    else:
+        raise NotImplementedError(f"Unsupported platform: {sys.platform}")
+```
+
+**Benefits:**
+- Single interface for all storage operations
+- Platform-specific optimizations
+- Easy to test with mock implementations
+- Extensible to new platforms
+
+#### Privilege Escalation Dialogs
+
+Different platforms require different approaches for elevated privileges:
+
+```python
+# Linux: pkexec (PolicyKit)
+class LinuxPrivilegeDialog:
+    @staticmethod
+    def run_with_privileges(
+        command: list[str],
+        timeout: int = 30
+    ) -> tuple[int, str, str]:
+        result = subprocess.run(
+            ["pkexec", *command],
+            capture_output=True,
+            text=True,
+            timeout=timeout
+        )
+        return (result.returncode, result.stdout, result.stderr)
+
+# macOS: Full Disk Access prompts
+class MacOSPermissionDialog(MessageBoxBase):
+    """Guide users through System Settings for Full Disk Access."""
+    def __init__(self, reason: str, parent: QWidget | None = None):
+        # Show dialog explaining how to grant permissions
+        # ... implementation
+
+# Windows: UAC (User Account Control)
+# Handled by os.startfile() with 'runas' verb
+```
+
+#### Platform-Specific Directory Structures
+
+Following platform conventions for configuration and data storage:
+
+```python
+def get_platform_config_dir() -> Path:
+    """Get platform-specific configuration directory."""
+    if sys.platform == "win32":
+        # Windows: %APPDATA%\pyMM
+        return Path(os.environ["APPDATA"]) / "pyMM"
+    elif sys.platform == "darwin":
+        # macOS: ~/Library/Application Support/pyMM
+        return Path.home() / "Library" / "Application Support" / "pyMM"
+    else:
+        # Linux: $XDG_CONFIG_HOME/pyMM or ~/.config/pyMM
+        config_home = os.environ.get("XDG_CONFIG_HOME")
+        if config_home:
+            return Path(config_home) / "pyMM"
+        return Path.home() / ".config" / "pyMM"
+
+def get_platform_data_dir() -> Path:
+    """Get platform-specific data directory."""
+    if sys.platform == "win32":
+        return Path(os.environ["APPDATA"]) / "pyMM"
+    elif sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "pyMM"
+    else:
+        data_home = os.environ.get("XDG_DATA_HOME")
+        if data_home:
+            return Path(data_home) / "pyMM"
+        return Path.home() / ".local" / "share" / "pyMM"
+
+def get_platform_cache_dir() -> Path:
+    """Get platform-specific cache directory."""
+    if sys.platform == "win32":
+        return Path(os.environ["LOCALAPPDATA"]) / "pyMM" / "Cache"
+    elif sys.platform == "darwin":
+        return Path.home() / "Library" / "Caches" / "pyMM"
+    else:
+        cache_home = os.environ.get("XDG_CACHE_HOME")
+        if cache_home:
+            return Path(cache_home) / "pyMM"
+        return Path.home() / ".cache" / "pyMM"
+```
+
+**Platform Directory Standards:**
+- **Windows**: AppData (roaming and local)
+- **macOS**: ~/Library/Application Support and ~/Library/Caches
+- **Linux**: XDG Base Directory Specification
+
+#### Linux udev Rules Installer
+
+For automatic USB device detection on Linux:
+
+```python
+class LinuxUdevInstaller:
+    """Installer for pyMediaManager udev rules on Linux systems."""
+
+    RULES_FILENAME = "99-pymm-usb.rules"
+    RULES_DIR = Path("/etc/udev/rules.d")
+
+    def install(self, use_privilege_dialog: bool = True) -> UdevInstallResult:
+        """Install udev rules with optional GUI elevation."""
+        if not self.is_linux():
+            return UdevInstallResult(status=UdevInstallStatus.NOT_LINUX, ...)
+
+        if use_privilege_dialog:
+            # Use pkexec with GUI prompt
+            returncode, stdout, stderr = LinuxPrivilegeDialog.run_with_privileges(
+                command=["cp", temp_file, str(self.rules_path)],
+                timeout=30
+            )
+        else:
+            # Direct installation (requires root)
+            if os.geteuid() != 0:
+                return UdevInstallResult(status=UdevInstallStatus.PERMISSION_DENIED, ...)
+
+        # Reload udev rules
+        self._reload_udev_rules()
+        return UdevInstallResult(status=UdevInstallStatus.SUCCESS, ...)
+```
+
+**udev Rules Content:**
+```udev
+# pyMediaManager USB Storage Detection Rules
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{DEVTYPE}=="disk", \
+    TAG+="systemd", ENV{SYSTEMD_WANTS}+="pymm-usb-notify@%k.service"
+
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{DEVTYPE}=="partition", \
+    TAG+="systemd", ENV{SYSTEMD_WANTS}+="pymm-usb-notify@%k.service"
+
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \
+    GROUP="plugdev", MODE="0660"
+```
+
+### Platform-Specific Dependencies
+
+Managed through optional dependency groups in `pyproject.toml`:
+
+```toml
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.11.0",
+    # ... other dev dependencies
+]
+
+# Platform-specific dependencies installed conditionally
+# Linux: pip install pyudev>=0.24.1
+# Windows: pip install pywin32>=306 wmi>=1.5.1
+# macOS: No additional dependencies
+```
+
+**CI/CD Integration:**
+```yaml
+- name: Install platform-specific Python dependencies (Linux)
+  if: runner.os == 'Linux'
+  run: pip install pyudev>=0.24.1
+
+- name: Install platform-specific Python dependencies (Windows)
+  if: runner.os == 'Windows'
+  run: pip install pywin32>=306 wmi>=1.5.1
+```
+
+### Testing Cross-Platform Code
+
+```python
+import sys
+import pytest
+from unittest.mock import patch
+
+class TestStorageService:
+    @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
+    def test_linux_storage(self):
+        """Test Linux-specific storage implementation."""
+        storage = LinuxStorage()
+        drives = storage.get_drives()
+        assert all(isinstance(d, Drive) for d in drives)
+
+    @patch("sys.platform", "win32")
+    def test_windows_platform_detection(self):
+        """Test platform detection returns Windows storage."""
+        platform = create_storage_platform()
+        assert isinstance(platform, WindowsStorage)
+
+    @patch("sys.platform", "darwin")
+    def test_macos_platform_detection(self):
+        """Test platform detection returns macOS storage."""
+        platform = create_storage_platform()
+        assert isinstance(platform, MacOSStorage)
+```
+
+### Plugin System: Hybrid Executable Resolution
+
+The plugin system supports both system-installed tools and portable versions:
+
+```python
+class ExecutableSource(str, Enum):
+    """Source of plugin executable."""
+    SYSTEM = "system"
+    PORTABLE = "portable"
+    AUTO = "auto"
+
+class PluginPreferences(BaseModel):
+    """User preferences for a specific plugin."""
+    execution_preference: ExecutionPreference = ExecutionPreference.AUTO
+    enabled: bool = True
+    notes: str = ""
+
+# Resolution order:
+# 1. Check user preference (SYSTEM/PORTABLE/AUTO)
+# 2. If AUTO, try system first, then portable
+# 3. Validate version constraints
+# 4. Cache successful resolution
+```
+
+**Configuration Example:**
+```yaml
+# config/plugins.yaml
+plugin_preferences:
+  git:
+    execution_preference: system  # Prefer system Git
+    enabled: true
+    notes: "Using system Git for better integration"
+
+  ffmpeg:
+    execution_preference: portable  # Always use portable FFmpeg
+    enabled: true
+    notes: "Portable version includes custom codecs"
+```
+
+---
+
 ## 🚀 Future Architecture Enhancements
 
 ### Planned Improvements

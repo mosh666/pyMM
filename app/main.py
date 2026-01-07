@@ -123,12 +123,14 @@ def run_application() -> int:
     app.setOrganizationName("mosh666")
     app.setApplicationVersion(__version__)
 
-    # Get app root and load config
+    # Get app root (for resources) and load config from platform-specific location
     app_root = get_app_root()
 
     from app.core.services.config_service import ConfigService
 
-    config_service = ConfigService(app_root)
+    # ConfigService now uses platform-specific directories by default
+    # Pass app_root for legacy config migration fallback
+    config_service = ConfigService(app_root=app_root)
     config = config_service.load()
 
     # Check if template watching should be disabled

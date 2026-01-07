@@ -1,21 +1,34 @@
-# GitVersion Plugin Manifest
+# GitVersion Plugin Manifest (Schema v2)
 
+schema_version: 2
 name: GitVersion
-version: "6.0.5"
+version: 6.0.5
 mandatory: true
 enabled: true
-
-source:
-  type: url
-  base_uri: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
-
-command:
-  path: ""
-  executable: gitversion.exe
-
-register_to_path: true
-
-dependencies:
-  - git
-
 description: Semantic versioning tool that uses Git history
+prefer_system: true
+register_to_path: true
+dependencies:
+- git
+platforms:
+  windows:
+    source: url
+    download_url: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: gitversion.exe
+  linux:
+    source: url
+    download_url: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: gitversion.exe
+  macos:
+    source: url
+    download_url: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: gitversion.exe
