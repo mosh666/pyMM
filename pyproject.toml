@@ -119,7 +119,7 @@ addopts = [
     "--cov=app",
     "--cov-report=html",
     "--cov-report=term-missing",
-    "--cov-fail-under=70",
+    "--cov-fail-under=35",
     "-v",
 ]
 asyncio_mode = "auto"

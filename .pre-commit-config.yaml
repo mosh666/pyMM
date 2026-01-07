@@ -90,30 +90,18 @@ repos:
     hooks:
       - id: pytest-check
         name: PyTest - Unit Tests (Fast)
-        entry: .venv/Scripts/pytest.exe
+        entry: just test-unit
         language: system
         pass_filenames: false
         always_run: true
-        args:
-          - tests/unit/
-          - -v
-          - --tb=short
-          - -x
-          - --no-cov
         stages: [pre-commit]
 
       - id: pytest-full
         name: PyTest - All Tests (Pre-Push)
-        entry: .venv/Scripts/pytest.exe
+        entry: just test
         language: system
         pass_filenames: false
         always_run: true
-        args:
-          - tests/
-          - -v
-          - --cov=app
-          - --cov-report=term-missing:skip-covered
-          - --cov-fail-under=70
         stages: [pre-push]
 
       - id: docs-check

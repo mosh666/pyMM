@@ -17,7 +17,7 @@ import zipfile
 try:
     from setuptools_scm import get_version
 except ImportError:
-    get_version = None  # type: ignore
+    get_version = None  # type: ignore[assignment]
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

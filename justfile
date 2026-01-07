@@ -7,26 +7,26 @@ version := "3.12"
 
 # Install dependencies in editable mode
 install:
-    pip install pip-tools
-    pip-compile -o requirements.lock pyproject.toml
-    pip install -e .[dev]
+    python -m pip install pip-tools
+    python -m piptools compile -o requirements.lock pyproject.toml
+    python -m pip install -e .[dev]
 
 # Update lockfile
 lock:
-    pip-compile -o requirements.lock pyproject.toml
+    python -m piptools compile -o requirements.lock pyproject.toml
 
 # Run unit tests
 test:
-    pytest
+    python -m pytest
 
 # Run linter and type checker
 lint:
-    ruff check .
-    mypy .
+    python -m ruff check .
+    python -m mypy .
 
 # Format code
 format:
-    ruff format .
+    python -m ruff format .
 
 # Setup git hooks
 setup-hooks:
@@ -45,3 +45,11 @@ build v=version:
 # Run the application locally
 run:
     python launcher.py
+
+# Run type checking only
+type-check:
+    python -m mypy .
+
+# Run unit tests only
+test-unit:
+    python -m pytest tests/unit/

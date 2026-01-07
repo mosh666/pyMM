@@ -4,22 +4,18 @@
 Write-Host "🔧 Setting up Git hooks and pre-commit..." -ForegroundColor Cyan
 
 # Check if pre-commit is installed
-$preCommitInstalled = Get-Command pre-commit -ErrorAction SilentlyContinue
+Write-Host "📦 Ensuring pre-commit is installed..." -ForegroundColor Yellow
+pip install pre-commit
 
-if (-not $preCommitInstalled) {
-    Write-Host "📦 Installing pre-commit..." -ForegroundColor Yellow
-    pip install pre-commit
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ Failed to install pre-commit" -ForegroundColor Red
-        exit 1
-    }
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "❌ Failed to install pre-commit" -ForegroundColor Red
+    exit 1
 }
 
 # Install pre-commit hooks
 Write-Host "🎣 Installing pre-commit hooks..." -ForegroundColor Yellow
-pre-commit install --install-hooks
-pre-commit install --hook-type pre-push
+python -m pre_commit install --install-hooks
+python -m pre_commit install --hook-type pre-push
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "❌ Failed to install pre-commit hooks" -ForegroundColor Red
@@ -31,7 +27,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Test pre-commit installation
 Write-Host "`n🧪 Testing pre-commit installation..." -ForegroundColor Yellow
-pre-commit run --all-files
+python -m pre_commit run --all-files
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n✅ Git hooks setup complete!" -ForegroundColor Green
