@@ -49,6 +49,8 @@ jobs:
         run: |
           cd docs
           sphinx-multiversion . _build/html
+          New-Item -ItemType Directory -Force -Path _build/html | Out-Null
+          New-Item -ItemType File -Force -Path _build/html/index.html | Out-Null
           Set-Content -Path _build/html/index.html -Value '<meta http-equiv="refresh" content="0; url=main/index.html">'
 
       - name: Upload artifact
