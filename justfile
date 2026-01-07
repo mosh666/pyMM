@@ -1,5 +1,8 @@
 # Justfile for pyMediaManager
 
+# Set shell to PowerShell on Windows
+set shell := ["pwsh.exe", "-NoProfile", "-Command"]
+
 # Release build version
 version := "3.12"
 
@@ -28,7 +31,7 @@ format:
 
 # Setup git hooks
 setup-hooks:
-    powershell -ExecutionPolicy Bypass -File scripts/setup-git-hooks.ps1
+    scripts/setup-git-hooks.ps1
 
 # Build documentation locally
 docs:

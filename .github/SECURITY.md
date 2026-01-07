@@ -2,8 +2,8 @@
 
 # 🔒 Security Policy
 
-> **Last Updated:** January 7, 2026  
-> **Contact:** 24556349+mosh666@users.noreply.github.com  
+> **Last Updated:** January 7, 2026
+> **Contact:** 24556349+mosh666@users.noreply.github.com
 > **Security Scorecard:** [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mosh666/pyMM/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mosh666/pyMM)
 
 ## 📋 Table of Contents
@@ -72,7 +72,7 @@ Please provide as much detail as possible:
 
 **Affected Versions**: e.g., 1.0.0 - 1.0.5
 
-**Description**: 
+**Description**:
 Clear description of the vulnerability and its impact.
 
 **Steps to Reproduce**:
@@ -147,10 +147,10 @@ malicious_code: |
 async def download(self, url: str) -> bool:
     if not url.startswith("https://"):
         raise SecurityError("Insecure download URL")
-    
+
     # Download and calculate SHA-256
     actual_hash = hashlib.sha256(data).hexdigest()
-    
+
     if actual_hash != self.manifest.checksum_sha256:
         raise SecurityError(f"Checksum mismatch: {actual_hash}")
 ```
@@ -446,6 +446,6 @@ This security policy is reviewed and updated quarterly. Changes are tracked via:
 
 ---
 
-**Policy Version:** 1.0.0  
-**Effective Date:** January 7, 2026  
+**Policy Version:** 1.0.0
+**Effective Date:** January 7, 2026
 **Maintainer:** @mosh666

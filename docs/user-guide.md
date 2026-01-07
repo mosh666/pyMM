@@ -1105,55 +1105,55 @@ Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 100 | Out-File "diagnostic.txt"
 
 ### General
 
-**Q: Is pyMM free?**  
+**Q: Is pyMM free?**
 A: Yes! pyMM is open-source software licensed under MIT. Free to use, modify, and distribute.
 
-**Q: Does pyMM require internet connection?**  
+**Q: Does pyMM require internet connection?**
 A: Only for initial plugin downloads and updates. Once installed, pyMM works completely offline.
 
-**Q: Can I run pyMM on macOS or Linux?**  
+**Q: Can I run pyMM on macOS or Linux?**
 A: Currently Windows-only (Windows 10 1809+, Windows 11). Linux/macOS support planned for future releases.
 
-**Q: How much storage does pyMM need?**  
+**Q: How much storage does pyMM need?**
 A: ~200 MB for application. Plugins vary (12 MB - 450 MB each). Projects depend on your media.
 
 ### Projects
 
-**Q: Can I share projects with others?**  
+**Q: Can I share projects with others?**
 A: Yes! Archive projects and share the archive file. Recipients extract and open in their pyMM.
 
-**Q: What happens if I move pyMM to another drive?**  
+**Q: What happens if I move pyMM to another drive?**
 A: pyMM is fully portable. Move the entire `D:\pyMM` folder to any drive and run.
 
-**Q: Can I have projects on multiple drives?**  
+**Q: Can I have projects on multiple drives?**
 A: Yes! Configure project location per-project. Mix local, external, and network drives.
 
-**Q: How do I backup projects?**  
+**Q: How do I backup projects?**
 A: Use built-in archive feature or copy project folders manually. Git integration provides version history.
 
 ### Plugins
 
-**Q: Are plugins safe?**  
+**Q: Are plugins safe?**
 A: All official plugins are verified and downloaded from trusted sources (GitHub, official websites).
 
-**Q: Can I use my existing DigiKam database?**  
+**Q: Can I use my existing DigiKam database?**
 A: Yes! Configure DigiKam plugin to point to your existing database location.
 
-**Q: Why are some plugins so large?**  
+**Q: Why are some plugins so large?**
 A: Plugins include full applications (DigiKam, FFmpeg) for portability. No system installation needed.
 
-**Q: Can I create custom plugins?**  
+**Q: Can I create custom plugins?**
 A: Yes! See [Plugin Development Guide](plugin-development.md) for instructions.
 
 ### Performance
 
-**Q: Why is pyMM slow on my USB drive?**  
+**Q: Why is pyMM slow on my USB drive?**
 A: USB 2.0 drives are slow. Use USB 3.0+ or move application to faster storage.
 
-**Q: Can I use SSD for application and HDD for media?**  
+**Q: Can I use SSD for application and HDD for media?**
 A: Yes! Install pyMM on SSD (`C:\pyMM`), configure project location on HDD (`D:\pyMM.Projects`).
 
-**Q: How much RAM does pyMM use?**  
+**Q: How much RAM does pyMM use?**
 A: Typically 200-500 MB idle, up to 2-4 GB when processing large projects.
 
 ---
@@ -1200,7 +1200,7 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
 
 Found a security vulnerability?
 
-**Do not create a public issue.** Report privately to:  
+**Do not create a public issue.** Report privately to:
 <24556349+mosh666@users.noreply.github.com>
 
 See [SECURITY.md](../.github/SECURITY.md) for our security policy.

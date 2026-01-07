@@ -74,7 +74,7 @@ organizing media projects and managing external applications through an extensib
    ```bash
    # Stable release
    https://github.com/mosh666/pyMM/releases/latest
-   
+
    # Beta release (latest features)
    https://github.com/mosh666/pyMM/releases/tag/latest-beta
    ```

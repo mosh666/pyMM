@@ -22,6 +22,7 @@ version = "latest"
 # Try to get the actual version if available (when building from installed package)
 try:
     from importlib.metadata import version as get_version
+
     release = get_version("pyMediaManager")
     version = release
 except Exception:  # noqa: BLE001

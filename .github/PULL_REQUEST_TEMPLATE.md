@@ -48,9 +48,9 @@ Related to #
 
 ### Core Changes
 
-- 
-- 
-- 
+-
+-
+-
 
 ### Files Modified
 
@@ -87,9 +87,9 @@ pytest tests/ -v --cov=app --cov-report=term
 
 <!-- Steps to manually verify the changes -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ### Test Environment
 
@@ -321,7 +321,7 @@ If you have questions about this PR or need help, feel free to:
 
 **Thank you for contributing to pyMediaManager! 🎉**
 
-<!-- 
+<!--
 Reviewer Notes:
 - Check all items in the checklist
 - Verify tests pass in CI

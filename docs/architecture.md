@@ -2,9 +2,9 @@
 
 # 🏗️ Architecture Documentation
 
-> **Project:** pyMediaManager (pyMM) v1.0.0  
-> **Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended)  
-> **Last Updated:** January 7, 2026  
+> **Project:** pyMediaManager (pyMM) v1.0.0
+> **Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended)
+> **Last Updated:** January 7, 2026
 > **Status:** ✅ Production Ready (193 tests, 73% coverage)
 
 ## 📚 Table of Contents
@@ -131,28 +131,28 @@ class ConfigService:
     2. Environment config (config/app.yaml)
     3. User config (storage device config/user.yaml)
     """
-    
+
     def __init__(self, app_dir: Path, storage_dir: Path | None = None):
         self.app_dir = app_dir
         self.storage_dir = storage_dir
         self.config: AppConfig = self._load_config()
-    
+
     def _load_config(self) -> AppConfig:
         """Load and merge configuration layers."""
         # 1. Start with defaults from Pydantic models
         config = AppConfig()
-        
+
         # 2. Override with environment config
         env_config = self.app_dir / "config" / "app.yaml"
         if env_config.exists():
             config = self._merge_config(config, env_config)
-        
+
         # 3. Override with user config (highest priority)
         if self.storage_dir:
             user_config = self.storage_dir / "config" / "user.yaml"
             if user_config.exists():
                 config = self._merge_config(config, user_config)
-        
+
         return config
 ```
 
@@ -177,17 +177,17 @@ class PluginManager:
     - Installation: Download, verify checksum, extract
     - Execution: PATH registration, version detection
     """
-    
+
     def __init__(self, plugins_dir: Path, manifests_dir: Path):
         self.plugins_dir = plugins_dir  # e.g., D:\pyMM.Plugins
         self.manifests_dir = manifests_dir  # e.g., ./plugins
         self.plugins: dict[str, PluginBase] = {}
         self.manifests: dict[str, PluginManifest] = {}
-    
+
     def discover_plugins(self) -> int:
         """
         Discover plugins from YAML manifests.
-        
+
         Returns:
             Number of plugins discovered
         """
@@ -197,7 +197,7 @@ class PluginManager:
             plugin = SimplePluginImplementation(manifest, self.plugins_dir)
             self.plugins[manifest.name] = plugin
         return len(self.plugins)
-    
+
     async def install_plugin(
         self,
         plugin_name: str,
@@ -205,26 +205,26 @@ class PluginManager:
     ) -> bool:
         """
         Install plugin with progress tracking.
-        
+
         Args:
             plugin_name: Name of plugin to install
             progress_callback: Optional (current_bytes, total_bytes) -> None
-        
+
         Returns:
             True if installation succeeded
         """
         plugin = self.plugins.get(plugin_name)
         if not plugin:
             return False
-        
+
         # Download with SHA-256 verification
         if not await plugin.download(progress_callback):
             return False
-        
+
         # Extract to plugin directory
         if not await plugin.extract():
             return False
-        
+
         # Validate installation
         return plugin.validate_installation()
 ```
@@ -275,17 +275,17 @@ class StorageService:
     - Drive type enumeration (USB, removable)
     - Performance heuristics (read/write speed)
     """
-    
+
     def get_external_drives(self) -> list[DriveInfo]:
         """
         Get all external drives using WMI.
-        
+
         Returns:
             List of DriveInfo objects with metadata
         """
         import wmi
         c = wmi.WMI()
-        
+
         drives = []
         for disk in c.Win32_LogicalDisk(DriveType=2):  # Removable
             drives.append(DriveInfo(
@@ -296,14 +296,14 @@ class StorageService:
                 free_space=int(disk.FreeSpace or 0),
                 drive_type="Removable"
             ))
-        
+
         for disk in c.Win32_LogicalDisk(DriveType=3):  # Fixed
             # Check if actually external via bus type
             if self._is_external_fixed_drive(disk):
                 drives.append(...)
-        
+
         return drives
-    
+
     def _is_external_fixed_drive(self, disk) -> bool:
         """Detect external fixed drives (USB HDDs) vs internal."""
         # Query Win32_DiskDriveToDiskPartition association
@@ -333,7 +333,7 @@ class ProjectService:
     - Delete: Remove project directory
     - Git Integration: Optional repository initialization
     """
-    
+
     def __init__(
         self,
         projects_dir: Path,
@@ -343,7 +343,7 @@ class ProjectService:
         self.projects_dir = projects_dir
         self.git_service = git_service
         self.fs_service = file_system_service
-    
+
     def create_project(
         self,
         name: str,
@@ -353,38 +353,38 @@ class ProjectService:
     ) -> Project:
         """
         Create new project with optional Git repository.
-        
+
         Args:
             name: Project name (validated, no special chars)
             description: Project description
             template: Template name (e.g., 'video', 'photo')
             enable_git: Initialize Git repository
-        
+
         Returns:
             Project object with metadata
-        
+
         Raises:
             ValueError: If project name invalid or already exists
         """
         # Validate name
         if not self._validate_project_name(name):
             raise ValueError(f"Invalid project name: {name}")
-        
+
         # Create directory structure
         project_path = self.projects_dir / name
         if project_path.exists():
             raise ValueError(f"Project already exists: {name}")
-        
+
         project_path.mkdir(parents=True)
-        
+
         # Apply template if specified
         if template:
             self._apply_template(project_path, template)
-        
+
         # Initialize Git if requested
         if enable_git:
             self.git_service.init_repository(project_path)
-        
+
         # Create metadata
         project = Project(
             name=name,
@@ -393,10 +393,10 @@ class ProjectService:
             created_at=datetime.now(UTC),
             git_enabled=enable_git
         )
-        
+
         # Save project.yaml
         self._save_metadata(project)
-        
+
         return project
 ```
 
@@ -423,22 +423,22 @@ class GitService:
     - Commit creation
     - Status queries
     """
-    
+
     def init_repository(self, path: Path) -> bool:
         """
         Initialize Git repository with default configuration.
-        
+
         Args:
             path: Project directory path
-        
+
         Returns:
             True if successful
         """
         from git import Repo
-        
+
         try:
             repo = Repo.init(path)
-            
+
             # Create default .gitignore
             gitignore = path / ".gitignore"
             gitignore.write_text(
@@ -447,11 +447,11 @@ class GitService:
                 ".DS_Store\n"
                 "Thumbs.db\n"
             )
-            
+
             # Initial commit
             repo.index.add([".gitignore"])
             repo.index.commit("Initial commit")
-            
+
             return True
         except Exception as e:
             self.logger.error(f"Failed to init repository: {e}")
@@ -472,18 +472,18 @@ class LoggingService:
     - File: Rotating logs (10MB max, 5 backups)
     - Structured: JSON output option
     """
-    
+
     def setup_logging(self, config: LoggingConfig, logs_dir: Path) -> None:
         """
         Configure root logger with handlers.
-        
+
         Args:
             config: Logging configuration from ConfigService
             logs_dir: Directory for log files
         """
         root_logger = logging.getLogger()
         root_logger.setLevel(getattr(logging, config.level.value))
-        
+
         # Console handler with Rich
         if config.console_enabled:
             from rich.logging import RichHandler
@@ -494,7 +494,7 @@ class LoggingService:
                 show_path=False
             )
             root_logger.addHandler(console_handler)
-        
+
         # File handler with rotation
         if config.file_enabled:
             from logging.handlers import RotatingFileHandler
@@ -529,22 +529,22 @@ sequenceDiagram
     User->>UI: Click "Install Git"
     UI->>PM: install_plugin("Git", progress_cb)
     PM->>Plugin: download(progress_cb)
-    
+
     Plugin->>Net: GET source_uri
     Net-->>Plugin: Stream bytes
     Plugin->>Plugin: Verify SHA-256
     Plugin->>FS: Save to temp file
     Plugin-->>PM: True (download OK)
-    
+
     PM->>Plugin: extract()
     Plugin->>FS: Extract to plugins_dir/git/
     Plugin-->>PM: True (extract OK)
-    
+
     PM->>Plugin: validate_installation()
     Plugin->>FS: Check git.exe exists
     Plugin->>Plugin: Test --version
     Plugin-->>PM: True (valid)
-    
+
     PM-->>UI: Installation complete
     UI-->>User: Show success message
 ```
@@ -561,18 +561,18 @@ sequenceDiagram
 
     User->>Wizard: Fill form (name, template, Git)
     Wizard->>PS: create_project(...)
-    
+
     PS->>PS: Validate name
     PS->>FS: Create project directory
     PS->>FS: Apply template structure
-    
+
     alt Git Enabled
         PS->>GS: init_repository(path)
         GS->>FS: Create .git/
         GS->>FS: Create .gitignore
         GS->>GS: Initial commit
     end
-    
+
     PS->>FS: Save project.yaml
     PS-->>Wizard: Project object
     Wizard-->>User: Show success + open project
@@ -631,10 +631,10 @@ Configuration changes notify observers:
 class ConfigService:
     def __init__(self):
         self._observers: list[Callable[[AppConfig], None]] = []
-    
+
     def subscribe(self, callback: Callable[[AppConfig], None]) -> None:
         self._observers.append(callback)
-    
+
     def update_config(self, new_config: AppConfig) -> None:
         self.config = new_config
         for observer in self._observers:
@@ -648,15 +648,15 @@ Storage service abstracts drive access:
 ```python
 class StorageService:
     """Repository for external drives."""
-    
+
     def get_all(self) -> list[DriveInfo]:
         """Get all drives."""
         ...
-    
+
     def get_by_letter(self, letter: str) -> DriveInfo | None:
         """Get specific drive."""
         ...
-    
+
     def is_external(self, path: Path) -> bool:
         """Check if path is on external drive."""
         ...
@@ -819,18 +819,18 @@ graph TD
     Core[app.core.services]
     Plugins[app.plugins]
     Models[app.models]
-    
+
     UI --> Services
     UI --> Core
     UI --> Plugins
-    
+
     Services --> Core
     Services --> Plugins
     Services --> Models
-    
+
     Plugins --> Core
     Plugins --> Models
-    
+
     Models -.-> Pydantic
     Core -.-> Rich
     Core -.-> WMI
@@ -854,7 +854,7 @@ def main():
     config_service = ConfigService(app_dir, storage_dir)
     logging_service = LoggingService()
     fs_service = FileSystemService()
-    
+
     # 2. Initialize application services (depend on core)
     git_service = GitService()
     plugin_manager = PluginManager(plugins_dir, manifests_dir)
@@ -863,14 +863,14 @@ def main():
         git_service,
         fs_service
     )
-    
+
     # 3. Initialize UI (depends on everything)
     main_window = MainWindow(
         config_service,
         plugin_manager,
         project_service
     )
-    
+
     main_window.show()
 ```
 
@@ -902,10 +902,10 @@ def main():
        # 1. HTTPS only
        if not self.manifest.source_uri.startswith("https://"):
            raise ValueError("Insecure URL")
-       
+
        # 2. Download to temp file
        temp_file = tempfile.mktemp(suffix=".download")
-       
+
        # 3. Calculate SHA-256 during download
        hasher = hashlib.sha256()
        async with aiohttp.ClientSession() as session:
@@ -913,7 +913,7 @@ def main():
                async for chunk in response.content.iter_chunked(8192):
                    hasher.update(chunk)
                    f.write(chunk)
-       
+
        # 4. Verify checksum before extraction
        if hasher.hexdigest() != self.manifest.checksum_sha256:
            raise SecurityError("Checksum mismatch")
@@ -925,19 +925,19 @@ def main():
        """Validate project name for path traversal."""
        if not name:
            return False
-       
+
        # No path separators
        if "/" in name or "\\" in name:
            return False
-       
+
        # No special chars
        if not re.match(r"^[a-zA-Z0-9_\-. ]+$", name):
            return False
-       
+
        # No parent directory references
        if ".." in name:
            return False
-       
+
        return True
    ```
 
@@ -1034,7 +1034,7 @@ command:
   executable: git.exe
 dependencies: []
     """)
-    
+
     count = plugin_manager.discover_plugins()
     assert count == 1
     assert "Git" in plugin_manager.plugins
@@ -1058,7 +1058,7 @@ async def test_install_plugin_success(plugin_manager: PluginManager, mocker):
         "validate_installation",
         return_value=True
     )
-    
+
     # Add plugin
     manifest = PluginManifest(
         name="TestPlugin",
@@ -1072,10 +1072,10 @@ async def test_install_plugin_success(plugin_manager: PluginManager, mocker):
         manifest,
         plugin_manager.plugins_dir
     )
-    
+
     # Install
     result = await plugin_manager.install_plugin("TestPlugin")
-    
+
     assert result is True
     mock_download.assert_called_once()
     mock_extract.assert_called_once()
@@ -1147,7 +1147,7 @@ jobs:
    class PluginManager:
        def __init__(self):
            self._http_session: aiohttp.ClientSession | None = None
-       
+
        async def get_session(self) -> aiohttp.ClientSession:
            if self._http_session is None:
                self._http_session = aiohttp.ClientSession()
@@ -1174,7 +1174,7 @@ jobs:
 # app/plugins/plugin_base.py
 class CustomSourcePlugin(PluginBase):
     """Support for custom package managers."""
-    
+
     async def download(self, progress_callback) -> bool:
         # Implement custom download logic
         # e.g., Chocolatey, winget, pip
@@ -1199,14 +1199,14 @@ TEMPLATES = {
 # app/core/services/config_service.py
 def _load_config(self) -> AppConfig:
     config = AppConfig()
-    
+
     # 1. Defaults
     # 2. Environment config
     # 3. User config
     # 4. Remote config (new)
     if self._remote_config_enabled:
         config = self._merge_remote_config(config)
-    
+
     return config
 ```
 
@@ -1294,7 +1294,7 @@ async def download_plugin(name: str) -> bool:
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Review:** January 7, 2026  
-**Maintainer:** @mosh666  
+**Document Version:** 1.0.0
+**Last Review:** January 7, 2026
+**Maintainer:** @mosh666
 **Status:** ✅ Current

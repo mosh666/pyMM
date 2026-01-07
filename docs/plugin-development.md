@@ -2,9 +2,9 @@
 
 # 🔌 Plugin Development Guide
 
-> **Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended)  
-> **Plugin System:** Manifest-driven (YAML-based) with automatic validation  
-> **Security:** SHA-256 checksum verification, retry logic, progress tracking  
+> **Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended)
+> **Plugin System:** Manifest-driven (YAML-based) with automatic validation
+> **Security:** SHA-256 checksum verification, retry logic, progress tracking
 > **Last Updated:** January 7, 2026
 
 ## 📚 Table of Contents
@@ -36,10 +36,10 @@ pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows exter
 
 ### Key Benefits
 
-✅ **No Code Required**: Pure data-driven configuration  
-✅ **Security**: No arbitrary code execution, sandboxed downloads  
-✅ **Portability**: Plugins install to external drives  
-✅ **Automatic Updates**: Version tracking and update checks  
+✅ **No Code Required**: Pure data-driven configuration
+✅ **Security**: No arbitrary code execution, sandboxed downloads
+✅ **Portability**: Plugins install to external drives
+✅ **Automatic Updates**: Version tracking and update checks
 ✅ **Validation**: Strict Pydantic schema validation
 
 ---
@@ -62,18 +62,18 @@ pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows exter
    homepage: https://example.com/mytool
    mandatory: false
    enabled: true
-   
+
    source:
      type: url
      uri: https://example.com/mytool-1.0.0-win64.zip
      checksum_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
      file_size: 5242880
-   
+
    command:
      path: bin
      executable: mytool.exe
      register_to_path: false
-   
+
    dependencies: []
    ```
 
@@ -320,10 +320,10 @@ Let's create a complete plugin for FFmpeg, a multimedia framework.
    ```powershell
    # Download
    Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "ffmpeg.zip"
-   
+
    # Calculate SHA-256
    Get-FileHash ffmpeg.zip -Algorithm SHA256
-   
+
    # Get file size
    (Get-Item ffmpeg.zip).Length
    ```
@@ -391,13 +391,13 @@ from app.plugins.plugin_schema import PluginManifestSchema
 def test_ffmpeg_manifest_valid():
     """Test FFmpeg plugin manifest is valid."""
     manifest_file = Path("plugins/ffmpeg/plugin.yaml")
-    
+
     with open(manifest_file) as f:
         data = yaml.safe_load(f)
-    
+
     # Pydantic validation
     manifest = PluginManifestSchema(**data)
-    
+
     assert manifest.name == "FFmpeg"
     assert manifest.version == "7.1.0"
     assert manifest.source.type == "github"
@@ -420,15 +420,15 @@ from app.plugins.plugin_manager import PluginManager
 async def test_ffmpeg_install():
     plugins_dir = Path("D:/pyMM.Plugins")
     manifests_dir = Path("plugins")
-    
+
     manager = PluginManager(plugins_dir, manifests_dir)
     manager.discover_plugins()
-    
+
     print(f"Discovered plugins: {list(manager.plugins.keys())}")
-    
+
     # Install FFmpeg
     success = await manager.install_plugin("FFmpeg", progress_callback=print_progress)
-    
+
     if success:
         print("✅ FFmpeg installed successfully")
         plugin = manager.plugins["FFmpeg"]
@@ -556,7 +556,7 @@ def plugin_manifest(tmp_path: Path) -> Path:
     """Create temporary plugin manifest."""
     manifest_dir = tmp_path / "mytool"
     manifest_dir.mkdir()
-    
+
     manifest_file = manifest_dir / "plugin.yaml"
     manifest_file.write_text("""
 name: MyTool
@@ -575,14 +575,14 @@ command:
   register_to_path: false
 dependencies: []
     """)
-    
+
     return manifest_file
 
 def test_manifest_schema_valid(plugin_manifest: Path):
     """Test manifest passes Pydantic validation."""
     with open(plugin_manifest) as f:
         data = yaml.safe_load(f)
-    
+
     manifest = PluginManifestSchema(**data)
     assert manifest.name == "MyTool"
 
@@ -590,10 +590,10 @@ def test_plugin_discovery(tmp_path: Path, plugin_manifest: Path):
     """Test plugin is discovered by PluginManager."""
     plugins_dir = tmp_path / "plugins"
     manifests_dir = plugin_manifest.parent.parent
-    
+
     manager = PluginManager(plugins_dir, manifests_dir)
     count = manager.discover_plugins()
-    
+
     assert count == 1
     assert "MyTool" in manager.plugins
 
@@ -607,15 +607,15 @@ async def test_plugin_download_mock(tmp_path: Path, mocker):
     mock_response.content.iter_chunked = mocker.AsyncMock(
         return_value=[b"test" * 256]  # 1024 bytes
     )
-    
+
     mock_session = mocker.AsyncMock()
     mock_session.get.return_value.__aenter__.return_value = mock_response
-    
+
     mocker.patch("aiohttp.ClientSession", return_value=mock_session)
-    
+
     # Create plugin
     from app.plugins.plugin_base import SimplePluginImplementation, PluginManifest
-    
+
     manifest = PluginManifest(
         name="TestPlugin",
         version="1.0.0",
@@ -625,15 +625,15 @@ async def test_plugin_download_mock(tmp_path: Path, mocker):
         source_uri="https://example.com/test.zip",
         checksum_sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     )
-    
+
     plugin = SimplePluginImplementation(manifest, tmp_path)
-    
+
     # Download (will fail checksum but tests HTTP logic)
     try:
         result = await plugin.download()
     except Exception:
         pass  # Expected: checksum mismatch
-    
+
     mock_session.get.assert_called_once()
 ```
 
@@ -651,31 +651,31 @@ async def test_full_plugin_lifecycle(tmp_path: Path):
     """Test complete plugin workflow: discover → install → validate."""
     # This test requires actual plugin manifest and download URL
     # Use small test file (<1MB) for fast execution
-    
+
     manifests_dir = Path("plugins")
     plugins_dir = tmp_path / "plugins"
     plugins_dir.mkdir()
-    
+
     manager = PluginManager(plugins_dir, manifests_dir)
-    
+
     # Discover
     count = manager.discover_plugins()
     assert count > 0
-    
+
     # Choose smallest plugin for testing
     test_plugin = min(
         manager.manifests.values(),
         key=lambda m: m.file_size or float('inf')
     )
-    
+
     # Install
     success = await manager.install_plugin(test_plugin.name)
     assert success
-    
+
     # Validate
     plugin = manager.plugins[test_plugin.name]
     assert plugin.validate_installation()
-    
+
     # Get version
     version = plugin.get_version()
     assert version is not None
@@ -723,10 +723,10 @@ plugins/
    ```bash
    # Lint
    ruff check plugins/xyz/plugin.yaml
-   
+
    # Type check
    mypy app/plugins/
-   
+
    # Security scan
    bandit -r app/plugins/
    ```
@@ -759,7 +759,7 @@ For unofficial/experimental plugins:
 2. **Document Usage**:
    ```markdown
    # My pyMM Plugins
-   
+
    ## Installation
    1. Download plugin manifest: `mytool/plugin.yaml`
    2. Copy to: `D:\pyMM\plugins\mytool\plugin.yaml`
@@ -1047,7 +1047,7 @@ asset_pattern: "tool-.*-windows-x64\\.zip$"
 @dataclass
 class PluginManifest:
     """Plugin manifest configuration."""
-    
+
     name: str
     version: str
     mandatory: bool
@@ -1070,16 +1070,16 @@ class PluginManifest:
 ```python
 class PluginBase(ABC):
     """Abstract base class for plugins."""
-    
+
     def __init__(self, manifest: PluginManifest, install_dir: Path):
         """
         Initialize plugin.
-        
+
         Args:
             manifest: Plugin manifest configuration
             install_dir: Directory where plugin will be installed
         """
-    
+
     @abstractmethod
     async def download(
         self,
@@ -1087,46 +1087,46 @@ class PluginBase(ABC):
     ) -> bool:
         """
         Download plugin binaries.
-        
+
         Args:
             progress_callback: Optional callback for progress updates
                               (current_bytes, total_bytes) -> None
-        
+
         Returns:
             True if download successful
         """
-    
+
     @abstractmethod
     async def extract(self) -> bool:
         """
         Extract downloaded plugin archive.
-        
+
         Returns:
             True if extraction successful
         """
-    
+
     @abstractmethod
     def validate_installation(self) -> bool:
         """
         Validate that plugin is properly installed.
-        
+
         Returns:
             True if plugin is installed and functional
         """
-    
+
     @abstractmethod
     def get_version(self) -> str | None:
         """
         Get installed plugin version.
-        
+
         Returns:
             Version string or None if not installed
         """
-    
+
     def get_executable_path(self) -> Path | None:
         """
         Get path to plugin executable.
-        
+
         Returns:
             Path to executable or None if not found
         """
@@ -1139,24 +1139,24 @@ class PluginBase(ABC):
 ```python
 class PluginManager:
     """Manager for application plugins."""
-    
+
     def __init__(self, plugins_dir: Path, manifests_dir: Path):
         """
         Initialize plugin manager.
-        
+
         Args:
             plugins_dir: Directory where plugins are installed
             manifests_dir: Directory containing plugin manifest YAML files
         """
-    
+
     def discover_plugins(self) -> int:
         """
         Discover plugins from manifest files.
-        
+
         Returns:
             Number of plugins discovered
         """
-    
+
     async def install_plugin(
         self,
         plugin_name: str,
@@ -1164,30 +1164,30 @@ class PluginManager:
     ) -> bool:
         """
         Install plugin with progress tracking.
-        
+
         Args:
             plugin_name: Name of plugin to install
             progress_callback: Optional progress callback
-        
+
         Returns:
             True if installation succeeded
         """
-    
+
     def get_installed_plugins(self) -> list[str]:
         """
         Get list of installed plugin names.
-        
+
         Returns:
             List of plugin names
         """
-    
+
     def get_plugin_status(self, plugin_name: str) -> dict[str, Any]:
         """
         Get detailed status for a plugin.
-        
+
         Args:
             plugin_name: Name of plugin
-        
+
         Returns:
             Dictionary with keys:
               - installed: bool
@@ -1242,7 +1242,7 @@ We welcome plugin contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** January 7, 2026  
-**Maintainer:** @mosh666  
+**Document Version:** 1.0.0
+**Last Updated:** January 7, 2026
+**Maintainer:** @mosh666
 **Status:** ✅ Current

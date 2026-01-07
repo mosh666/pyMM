@@ -178,7 +178,7 @@ def mock_drive_root(monkeypatch, tmp_path):
     """
     Automatically redirects FileSystemService.get_drive_root() to temporary
     directories, preventing tests from creating folders on system drives.
-    
+
     - Runs automatically for ALL tests (autouse=True)
     - Zero configuration required
     - Transparent to test code
@@ -198,7 +198,7 @@ def mock_drive_root(monkeypatch, tmp_path):
         "get_drive_root",
         mock_get_drive_root_method
     )
-    
+
     yield mock_drive
     # Automatic cleanup by pytest tmp_path
 ```
@@ -219,7 +219,7 @@ def mock_drive_root(monkeypatch, tmp_path):
 def test_project_creation(project_service):
     """Test runs in isolated temp directory automatically."""
     project = project_service.create_project("TestProject")
-    
+
     # This path is in tmp_path, NOT on system drive
     assert project.path.exists()
     assert "TestProject" in project.name
@@ -379,10 +379,10 @@ class TestWorkflowName:
         """Test complete workflow from start to finish."""
         # Arrange
         initial_data = service_a.prepare()
-        
+
         # Act
         result = service_b.process(initial_data)
-        
+
         # Assert
         assert result.success
         assert result.data is not None
@@ -415,7 +415,7 @@ class TestComponentName:
     def widget(self, qtbot):
         """Create widget instance for testing."""
         from app.ui.components import ComponentName
-        
+
         widget = ComponentName()
         qtbot.addWidget(widget)
         return widget
@@ -428,7 +428,7 @@ class TestComponentName:
     def test_button_click(self, widget, qtbot):
         """Test button click triggers action."""
         button = widget.findChild(QPushButton, "submitButton")
-        
+
         with qtbot.waitSignal(widget.actionTriggered, timeout=1000):
             qtbot.mouseClick(button, Qt.LeftButton)
 
@@ -436,7 +436,7 @@ class TestComponentName:
         """Test text input updates state."""
         line_edit = widget.findChild(QLineEdit, "nameInput")
         qtbot.keyClicks(line_edit, "Test Name")
-        
+
         assert line_edit.text() == "Test Name"
         assert widget.get_name() == "Test Name"
 ```
@@ -466,10 +466,10 @@ def test_calculate_total():
         {"price": 10.0, "quantity": 2},
         {"price": 5.0, "quantity": 3},
     ]
-    
+
     # Act - Execute the code being tested
     total = calculate_total(items)
-    
+
     # Assert - Verify expected results
     assert total == 35.0
     assert isinstance(total, float)
@@ -516,7 +516,7 @@ def test_api_call(mocker):
     mock_response = mocker.Mock()
     mock_response.json.return_value = {"data": "test"}
     mocker.patch("requests.get", return_value=mock_response)
-    
+
     # Test code that uses requests.get
     result = fetch_data()
     assert result["data"] == "test"
@@ -614,7 +614,7 @@ def test_with_multiple_fixtures(
     # mock_drive_root: Automatic system protection
     # temp_project_dir: Isolated directory for this test
     # sample_project: Pre-configured Project object
-    
+
     assert temp_project_dir.exists()
     assert sample_project.name == "SampleProject"
 ```
@@ -729,22 +729,22 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
-    
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install dependencies
         run: |
           pip install -e ".[dev]"
-      
+
       - name: Run tests with coverage
         run: |
           pytest --cov=app --cov-report=xml
-      
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -798,7 +798,7 @@ jobs:
 
 <div align="center">
 
-**Questions? Found a bug in tests?**  
+**Questions? Found a bug in tests?**
 [Open an Issue](https://github.com/mosh666/pyMM/issues) · [Start a Discussion](https://github.com/mosh666/pyMM/discussions)
 
 **Testing Framework:** pytest 7.4+ | **Python:** 3.12+ (3.13 recommended) | **License:** MIT
