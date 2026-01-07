@@ -120,16 +120,14 @@ If you cannot use `just`, follow these manual steps:
    pre-commit install --hook-type pre-push
    ```
 
-
-
-5. **Run Tests:**
+4. **Run Tests:**
 
    ```bash
    # Run full test suite
    just test
    ```
 
-6. **Configure Git:**
+5. **Configure Git:**
 
    ```bash
    # Set your identity
@@ -140,7 +138,7 @@ If you cannot use `just`, follow these manual steps:
    git config init.defaultBranch main
    ```
 
-7. **Environment Configuration (Optional):**
+6. **Environment Configuration (Optional):**
 
    By default, the application runs in "Portable Mode" locally (saving data to the app directory).
    To prevent cluttering your drive root or source folder during development, you can use:
@@ -323,6 +321,7 @@ python scripts/build_distribution.py --version 3.13
 ```
 
 This will:
+
 1. Download the embedded Python distribution.
 2. Install all dependencies from `pyproject.toml`.
 3. Configure the runtime environment.

@@ -77,24 +77,30 @@ Built with Python 3.12+ support, the application includes an embedded Python run
 ### For Developers
 
 **Prerequisites:**
+
 - Python 3.12, 3.13, or 3.14
 - [just](https://github.com/casey/just) (command runner)
 
 **Quick Start:**
 
 `ash
+
 # Clone the repository
-git clone https://github.com/mosh666/pyMM.git
+
+git clone <https://github.com/mosh666/pyMM.git>
 cd pyMM
 
 # Initialize project (creates venv and installs dependencies)
+
 just install
 
 # Run the application
+
 python launcher.py
 `
 
 **Common Development Commands:**
+
 - just install - Set up environment and dependencies
 - just test - Run test suite
 - just lint - Run formatters and type checkers (ruff, mypy)

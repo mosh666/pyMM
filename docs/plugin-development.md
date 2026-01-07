@@ -79,6 +79,7 @@ command:
 
 register_to_path: true
 ```
+
 def install(self, progress_callback: Callable[[str], None] | None = None) -> bool:
     """Install the plugin."""
     pass
@@ -92,9 +93,10 @@ def uninstall(self) -> bool:
 def get_version(self) -> str | None:
     """Get the installed version of the plugin."""
     pass
-```
 
+```python
 ### Simple Plugin Implementation
+
 
 Most plugins use `SimplePluginImplementation`, which provides default behavior:
 
