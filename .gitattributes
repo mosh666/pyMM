@@ -74,7 +74,9 @@ README text eol=lf
 .editorconfig export-ignore
 .pre-commit-config.yaml export-ignore
 tests/ export-ignore
-*.md export-ignore
+# Documentation files needed by Sphinx
+# *.md export-ignore - commented out to allow CHANGELOG.md and CONTRIBUTING.md
+README.md export-ignore
 htmlcov/ export-ignore
 .coverage export-ignore
 .pytest_cache/ export-ignore
