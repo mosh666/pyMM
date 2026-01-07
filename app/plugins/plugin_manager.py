@@ -57,13 +57,11 @@ class PluginManager:
                     if plugin:
                         self.plugins[manifest.name] = plugin
             except ValidationError:
-                # Log detailed validation errors and fail fast
-                self.logger.exception(f"Plugin manifest validation failed: {manifest_file}")
-                raise
+                # Log validation errors but continue with other plugins
+                self.logger.exception("Plugin manifest validation failed: %s", manifest_file)
             except Exception:
-                # Log error and fail fast on any other errors
-                self.logger.exception(f"Error loading manifest {manifest_file}")
-                raise
+                # Log errors but continue with other plugins
+                self.logger.exception("Error loading manifest %s", manifest_file)
 
         return len(self.plugins)
 
