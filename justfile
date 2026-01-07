@@ -126,3 +126,25 @@ build v=version:
 # Run the application locally
 run:
     {{python}} launcher.py
+
+# Docker CI Testing - Build image and run complete CI pipeline
+ci-docker: ci-docker-build ci-docker-test
+
+# Build Docker image for CI testing
+ci-docker-build:
+    docker build -t pymm-ci:latest .
+
+# Run complete CI pipeline in Docker (lint, type-check, test)
+ci-docker-test:
+    @echo "Running linting in Docker..."
+    docker run --rm pymm-ci:latest python -m ruff check .
+    @echo ""
+    @echo "Running type checking in Docker..."
+    docker run --rm pymm-ci:latest python -m mypy .
+    @echo ""
+    @echo "Running tests in Docker..."
+    docker run --rm pymm-ci:latest bash -c "export QT_QPA_PLATFORM=offscreen; export DISPLAY=:99; Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & sleep 2; pytest tests/ --cov=app --cov-report=term"
+
+# Run interactive shell in Docker container for debugging
+ci-docker-shell:
+    docker run --rm -it pymm-ci:latest /bin/bash

@@ -8,11 +8,18 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Copy git metadata and app structure first for setuptools-scm version detection
+COPY .git .git
+COPY app app
+COPY pyproject.toml .
+
 # Install system dependencies required for PySide6 and Git
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     libgl1-mesa-glx \
+    libegl1 \
     libglib2.0-0 \
+    libfontconfig1 \
     libxkbcommon-x11-0 \
     libdbus-1-3 \
     libxcb-icccm4 \
@@ -23,11 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxcb-xinerama0 \
     libxcb-xinput0 \
     libxcb-xfixes0 \
+    libx11-xcb1 \
     xvfb \
+    xauth \
     && rm -rf /var/lib/apt/lists/*
-
-# Copy configuration first for caching
-COPY pyproject.toml .
 
 # Install dependencies including dev dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
