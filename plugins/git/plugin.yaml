@@ -22,18 +22,18 @@ platforms:
   linux:
     source: url
     download_url: ''
-    checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
-    file_size: 63431824
-    command_path: cmd
-    command_executable: git.exe
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: git
     system_package: git
     version_constraint: '>=2.0'
   macos:
     source: url
     download_url: ''
-    checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
-    file_size: 63431824
-    command_path: cmd
-    command_executable: git.exe
+    checksum_sha256: ''
+    file_size: null
+    command_path: ''
+    command_executable: git
     system_package: git
     version_constraint: '>=2.0'

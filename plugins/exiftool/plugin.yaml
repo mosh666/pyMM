@@ -22,18 +22,18 @@ platforms:
   linux:
     source: url
     download_url: ''
-    checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
-    file_size: 10984399
+    checksum_sha256: ''
+    file_size: null
     command_path: ''
-    command_executable: exiftool.exe
+    command_executable: exiftool
     system_package: exiftool
     version_constraint: '>=13.0'
   macos:
     source: url
     download_url: ''
-    checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
-    file_size: 10984399
+    checksum_sha256: ''
+    file_size: null
     command_path: ''
-    command_executable: exiftool.exe
+    command_executable: exiftool
     system_package: exiftool
     version_constraint: '>=13.0'
