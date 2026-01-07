@@ -1,13 +1,9 @@
 # pyMediaManager Architecture Documentation
 
-> **Version:** Auto-detected from Git using setuptools_scm (semantic versioning with prerelease support)
-> **Last Updated:** January 5, 2026
-> **Python Support:** 3.12 | 3.13 | 3.14 (embedded Python 3.13 runtime included for portability)
-> **Test Suite:** 193 tests with 73% code coverage (all passing, automatic test isolation)
-> **Quality Gates:** 15+ pre-commit hooks (Ruff linting/formatting, MyPy type checking, Bandit security)
-> **CI/CD:** GitHub Actions with matrix testing (Python 3.12, 3.13, 3.14), CodeQL, OpenSSF Scorecard (daily)
-> **Build Pipeline:** Branch-based releases (dev → beta, main → stable) with automated asset management
-> **Security:** Daily OpenSSF Scorecard, CodeQL analysis, Dependabot updates, Bandit scanning
+> **Version:** Auto-detected from Git using setuptools_scm
+> **Python Support:** 3.12+ (embedded runtime for portable builds)
+> **Quality Gates:** Ruff linting, MyPy type checking, Bandit security
+> **CI/CD:** GitHub Actions, CodeQL, OpenSSF Scorecard
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history
 
 ## Overview

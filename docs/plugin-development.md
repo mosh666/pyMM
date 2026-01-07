@@ -26,28 +26,59 @@ Plugins are defined by:
 
 ## Plugin Architecture
 
-### Plugin Base Class
+### No-Code Plugin System
 
-All plugins inherit from `app.plugins.plugin_base.PluginBase`, which provides:
+pyMediaManager uses a strictly manifest-driven approach for plugins. External code execution is
+managed directly by the core application based on the declarations in `plugin.yaml`.
 
-- **`download_and_extract_binary()`**: Built-in download and extraction with retry
-  logic, checksum verification, and progress callbacks
-- **Archive extraction**: Automatic handling of ZIP, 7z, and self-extracting .exe
-  archives
-- **Directory flattening**: Removes unnecessary nested directories after extraction
-- **Special case handling**: Custom logic for specific tools (e.g., ExifTool renaming)
+Currently, custom Python code (classes inheriting `PluginBase`) is **not supported** effectively.
+While the code structure exists, the `PluginManager` is configured to load plugins using
+`SimplePluginImplementation` based solely on the YAML manifest.
 
-### Abstract Methods
+### Plugin Manifest (YAML)
 
-Plugins must implement these methods:
+All plugins are defined by a `plugin.yaml` file. This declarative approach ensures:
 
-```python
-@abstractmethod
-def check_installed(self) -> bool:
-    """Check if the plugin is properly installed."""
-    pass
+1. **Security**: No arbitrary code execution during plugin loading.
+2. **Stability**: Plugins cannot crash the main application logic.
+3. **Portability**: Dependencies are managed via standard archives.
 
-@abstractmethod
+See [Plugin YAML Schema](#plugin-yaml-schema) for details.
+
+## Creating a New Plugin
+
+To create a new plugin, you simply need to create a directory with a `plugin.yaml` file.
+
+### Step-by-Step
+
+1. **Create Directory**: Create a folder in `plugins/` (e.g., `plugins/mytool/`).
+2. **Create Manifest**: Add a `plugin.yaml` file.
+3. **Define Source**: Specify where to download the tool (URL) and how to extract it.
+4. **Define Command**: Specify the executable name relative to the installation.
+
+### Example Manifest
+
+`plugins/mytool/plugin.yaml`:
+
+```yaml
+name: "MyTool"
+version: "1.0.0"
+mandatory: false
+enabled: true
+
+source:
+  type: "url"
+  base_uri: "https://example.com/downloads/mytool-v1.0.zip"
+  # Optional: verify file integrity
+  checksum_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  asset_pattern: "mytool-windows-x64.zip"
+
+command:
+  path: "bin"
+  executable: "mytool.exe"
+
+register_to_path: true
+```
 def install(self, progress_callback: Callable[[str], None] | None = None) -> bool:
     """Install the plugin."""
     pass

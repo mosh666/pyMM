@@ -1,10 +1,8 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git using setuptools_scm (latest-beta for dev)
-**Last Updated:** January 5, 2026
-**Test Suite:** 193 tests with 73% coverage (all passing with automatic isolation)
-**Python Support:** 3.12, 3.13, 3.14 (embedded Python 3.13 runtime included for portability)
-**Quality:** 15+ pre-commit hooks, Ruff linting, MyPy type checking, Bandit security scanning
+**Version:** Auto-detected from Git using setuptools_scm
+**Python Support:** 3.12+ (embedded runtime for portable builds)
+**Quality Gates:** Ruff linting, MyPy type checking, Bandit security
 **Security:** Daily OpenSSF Scorecard metrics, CodeQL analysis, Dependabot updates
 
 > **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features

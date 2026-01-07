@@ -8,6 +8,8 @@ pyMediaManager Documentation
    user-guide
    architecture
    plugin-development
+   contributing
+   changelog
    api/index
 
 Welcome to pyMediaManager

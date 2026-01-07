@@ -2,7 +2,12 @@
 """
 pyMediaManager Launcher
 Entry point for the portable Python application.
-Configures paths for embeddable Python and launches the main application.
+
+This script configures the environment to ensure valid import paths:
+1. Portable Mode: Adds embedded `lib-pyX.Y` folders to sys.path.
+2. Source Mode: Adds the project root to sys.path.
+
+It then hands off execution to `app.main.run_application()`.
 """
 
 import logging

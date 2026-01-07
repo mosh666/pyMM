@@ -1,5 +1,7 @@
 # Justfile for pyMediaManager
 
+set shell := ["powershell", "-c"]
+
 # Release build version
 version := "3.12"
 
@@ -25,6 +27,11 @@ lint:
 # Format code
 format:
     ruff format .
+
+# Setup git hooks
+setup-hooks:
+    powershell -ExecutionPolicy Bypass -File scripts/setup-git-hooks.ps1
+
 
 # Clean build artifacts and cache
 clean:

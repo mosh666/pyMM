@@ -62,77 +62,71 @@ just build
    git remote add upstream https://github.com/mosh666/pyMM.git
    ```
 
-2. **Create Virtual Environment:**
+2. **Initialize Environment (Using Just):**
+
+   The project uses `just` to automate setup. This command creates the virtual environment,
+   installs dependencies (including dev tools), and compiles requirements.
 
    ```bash
-   # Create environment
-   python -m venv venv
-
-   # Activate (Windows)
-   venv\Scripts\activate
-
-   # Activate (Linux/macOS)
-   source venv/bin/activate
+   just install
    ```
 
-3. **Install Dependencies:**
+3. **Install Git Hooks:**
+
+   Set up pre-commit hooks to ensure code quality (linting, formatting, type checking) before simple commits.
 
    ```bash
-   # Install in editable mode with dev dependencies
-   pip install -e ".[dev]"
-
-   # Verify installation
-   python -c "import app; print(app.__version__)"
-   ```
-
-4. **Install Pre-commit Hooks:**
-
-   ```bash
-   # Automatic setup (recommended)
-   # Windows PowerShell:
-   .\scripts\setup-git-hooks.ps1
-
-   # Linux/macOS/Git Bash:
-   bash scripts/setup-git-hooks.sh
-
-   # Manual setup:
-   pip install pre-commit
-   pre-commit install --install-hooks
-   pre-commit install --hook-type pre-push
-
-   # Test hooks
-   pre-commit run --all-files
+   just setup-hooks
    ```
 
    **What pre-commit hooks do:**
+   - 🔍 **Ruff linting** - Auto-fix code style issues
+   - 🎨 **Ruff formatting** - Ensure consistent code formatting
+   - 🔎 **MyPy** - Static type checking
+   - 🔐 **Bandit** - Security vulnerability scanning
+   - 🧪 **Unit tests** - Run fast unit tests on commit
 
-   - 🔍 **Ruff linting** - Auto-fix code style issues (replaces flake8, isort)
-   - 🎨 **Ruff formatting** - Ensure consistent code formatting (replaces Black)
-   - 🔎 **MyPy** - Static type checking for type safety
-   - 🔐 **Bandit** - Security vulnerability scanning (hardcoded passwords, SQL injection, etc.)
-   - ✅ **File checks** - Trailing whitespace, YAML/TOML/JSON syntax, merge conflicts
-   - 🔒 **Security** - Detect private keys and credentials
-   - 📝 **Markdown linting** - Documentation quality and consistency
-   - 🧪 **Unit tests** - Run fast unit tests on commit (~140 tests)
-   - 🚀 **Full test suite** - Run all 193 tests before push (73% coverage)
-   - 📊 **Coverage check** - Ensure minimum coverage thresholds met
+4. **Verify Setup:**
+
+   ```bash
+   just test
+   ```
+
+### Manual Setup (Fallback)
+
+If you cannot use `just`, follow these manual steps:
+
+1. **Create Virtual Environment:**
+
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate  # Windows
+   # source .venv/bin/activate  # Linux/macOS
+   ```
+
+2. **Install Dependencies:**
+
+   ```bash
+   pip install pip-tools
+   pip-compile -o requirements.lock pyproject.toml
+   pip install -e ".[dev]"
+   ```
+
+3. **Install Pre-commit:**
+
+   ```bash
+   pip install pre-commit
+   pre-commit install --install-hooks
+   pre-commit install --hook-type pre-push
+   ```
+
+
 
 5. **Run Tests:**
 
    ```bash
-   # Run full test suite (193 tests, all passing)
-   pytest
-
-   # Run with coverage (73% overall)
-   pytest --cov=app --cov-report=html
-
-   # View coverage report
-   # Open htmlcov/index.html in browser
-
-   # Run specific test categories
-   pytest tests/unit/          # Unit tests (~140 tests)
-   pytest tests/integration/   # Integration tests
-   pytest tests/gui/           # GUI tests with pytest-qt
+   # Run full test suite
+   just test
    ```
 
 6. **Configure Git:**
@@ -239,11 +233,11 @@ We follow PEP 8 with these tools and standards:
 
 ```bash
 # Format and fix code
-ruff check --fix app/ tests/
-ruff format app/ tests/
+just format
+just lint
 
 # Type check
-mypy app/
+just lint
 ```
 
 ### Pre-commit Hooks

@@ -67,7 +67,7 @@ class TestProjectBrowserDialog:
         _ = project_service.create_project("Test Project", tmp_path / "test_project")
 
         dialog = ProjectBrowserDialog(project_service)
-        dialog._load_projects()  # type: ignore[attr-defined]
+        dialog._load_projects()
 
         # Should have at least one project
         assert dialog.project_list.count() >= 1
@@ -80,7 +80,7 @@ class TestProjectBrowserDialog:
         _ = project_service.create_project("Test Project", tmp_path / "test_project")
 
         dialog = ProjectBrowserDialog(project_service)
-        dialog._load_projects()  # type: ignore[attr-defined]
+        dialog._load_projects()
 
         # Select first item
         if dialog.project_list.count() > 0:

@@ -82,7 +82,7 @@ dev = [
 ]
 
 [project.scripts]
-pymediamanager = "launcher:main"
+pymm = "launcher:main"
 
 [project.urls]
 Homepage = "https://github.com/mosh666/pyMM"
@@ -271,3 +271,14 @@ disable_error_code = ["attr-defined"]
 [[tool.mypy.overrides]]
 module = "app.main"
 disable_error_code = ["attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+disable_error_code = ["no-untyped-def", "no-untyped-call", "union-attr", "index", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "scripts.*"
+disallow_untyped_defs = false
+disable_error_code = ["assignment"]

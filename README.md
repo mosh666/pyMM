@@ -32,22 +32,21 @@
 
 pyMediaManager (pyMM) is a fully portable, Python-based media management application designed to run entirely from removable drives without requiring system installation. It provides a modern Fluent Design interface for managing media projects and orchestrating external tools through an extensible plugin system.
 
-Built with Python 3.12-3.14 support, the application includes an embedded Python runtime for true portability across Windows systems. Version management is automated using Git tags and setuptools_scm, supporting semantic versioning with prerelease tags (alpha, beta, rc).
+Built with Python 3.12+ support, the application includes an embedded Python runtime for true portability across Windows systems.
 
 ### Key Features
 
 - 🎨 **Modern Fluent UI** - Clean, responsive interface using PySide6 and QFluentWidgets
-- 💾 **100% Portable** - Zero system installation, runs from USB/external drives with embedded Python 3.13
+- 💾 **100% Portable** - Zero system installation, runs from USB/external drives
 - 🔍 **Smart Drive Detection** - Enhanced external drive detection using WMI and Windows APIs
 - 🔌 **Flexible Plugin System** - Manage external tools (Git, FFmpeg, ExifTool, digiKam, etc.)
 - 📁 **Project Management** - Organize media projects with metadata and optional Git integration
 - 🔒 **Secure Configuration** - Layered YAML-based settings with sensitive data redaction
 - 📊 **Rich Logging** - Structured logging with console and rotating file output
 - ✅ **Reliable Downloads** - Plugin downloads with retry logic, SHA256 checksums, and progress tracking
-- ⚡ **Automatic Versioning** - Git-based semantic versioning with setuptools_scm
-- 🧪 **Comprehensive Testing** - 193 tests with 73% code coverage and automatic test isolation
-- 🎯 **Quality Gates** - 15+ pre-commit hooks including Ruff, MyPy, and Bandit security scanning
-- 🔐 **Security Focused** - CodeQL analysis, OpenSSF Scorecard (daily), Dependabot, and comprehensive security scanning
+- ⚡ **Automatic Versioning** - Git-based semantic versioning
+- 🧪 **Comprehensive Testing** - Extensive unit and integration tests with automatic isolation
+- 🎯 **Quality Gates** - Pre-commit hooks including Ruff, MyPy, and Bandit security scanning
 
 ---
 
@@ -58,6 +57,8 @@ Built with Python 3.12-3.14 support, the application includes an embedded Python
 - [User Guide](docs/user-guide.md) - Installation, usage, and configuration
 - [Architecture Guide](docs/architecture.md) - Technical architecture and design decisions
 - [Contributing Guide](CONTRIBUTING.md) - Development setup and contribution guidelines
+- [Plugin Development](docs/plugin-development.md) - Creating and managing plugins
+- [API Reference](docs/api/index.rst) - Complete API documentation
 - [Changelog](CHANGELOG.md) - Version history and release notes
 - [Security Policy](.github/SECURITY.md) - Security reporting and practices
 - [Code of Conduct](.github/CODE_OF_CONDUCT.md) - Community guidelines
@@ -66,176 +67,47 @@ Built with Python 3.12-3.14 support, the application includes an embedded Python
 
 ## Installation
 
-### Requirements
+### For End Users (Portable)
 
-- **Python**: 3.12, 3.13, or 3.14
-- **OS**: Windows 10/11 64-bit (Linux/macOS support planned)
-- **Drive**: USB 3.0+ or external SSD recommended
+1. Download the latest release from the [Releases](https://github.com/mosh666/pyMM/releases) page.
+2. Extract the ZIP file to your USB drive or preferred location.
+3. Run pyMediaManager.exe (or launcher.py if using source build).
+4. No installation is required. The app runs completely self-contained.
 
-### Quick Start
+### For Developers
 
-```bash
+**Prerequisites:**
+- Python 3.12, 3.13, or 3.14
+- [just](https://github.com/casey/just) (command runner)
+
+**Quick Start:**
+
+`ash
 # Clone the repository
 git clone https://github.com/mosh666/pyMM.git
 cd pyMM
 
-# Create virtual environment
-python -m venv .venv
-.venv\Scripts\activate
-
-# Install with development dependencies
-pip install -e ".[dev]"
+# Initialize project (creates venv and installs dependencies)
+just install
 
 # Run the application
 python launcher.py
-```
+`
 
-### Building Portable Distribution
+**Common Development Commands:**
+- just install - Set up environment and dependencies
+- just test - Run test suite
+- just lint - Run formatters and type checkers (ruff, mypy)
+- just lock - Update dependency lockfile
 
-To build the portable version locally (requires Windows):
-
-```bash
-# Using Python script
-python scripts/build_distribution.py
-
-# Or using just
-just build
-```
-
-For portable deployment instructions, see the [User Guide](docs/user-guide.md).
-
----
-
-## Development
-
-### Setup Development Environment
-
-```bash
-# Install pre-commit hooks for automated quality checks
-pip install pre-commit
-pre-commit install --install-hooks
-pre-commit install --hook-type pre-push
-
-# Run full test suite with coverage
-pytest
-
-# Run linting and formatting
-ruff check app/ tests/ launcher.py
-ruff format app/ tests/ launcher.py
-
-# Run type checking
-mypy app/
-```
-
-### Project Structure
-
-```text
-pyMM/
-├── .github/              # GitHub workflows, templates, and configurations
-├── app/                  # Application source code
-│   ├── core/            # Core services (config, logging, file system, storage)
-│   ├── ui/              # User interface components and views
-│   ├── plugins/         # Plugin system base and manager
-│   ├── services/        # Business logic services (git, project)
-│   └── models/          # Data models (project, etc.)
-├── config/              # Configuration files (YAML)
-├── docs/                # Comprehensive documentation
-├── plugins/             # Plugin manifests for external tools
-├── scripts/             # Utility scripts (git hooks setup)
-├── tests/               # Comprehensive test suite (unit, integration, GUI)
-│   ├── unit/           # Unit tests for individual components
-│   ├── integration/    # Integration tests for workflows
-│   └── gui/            # GUI component tests
-├── pyproject.toml       # Project metadata, dependencies, and tool configs
-└── launcher.py          # Application entry point with path setup
-```
-
-### Architecture Highlights
-
-- **Service-Oriented Design**: Dependency injection with clear separation of concerns
-- **Type Safety**: Comprehensive type hints validated by MyPy
-- **Modern Python**: Native generic types (list, dict, tuple) instead of typing imports
-- **Structured Logging**: Logger instances throughout, no print statements in production code
-- **Testing**: Unit tests, integration tests, and GUI tests with pytest-qt
-- **Quality Gates**: Ruff linting/formatting, MyPy type checking, Bandit security scanning
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
 
 ---
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
-
-- Setting up your development environment
-- Code style and quality standards
-- Testing requirements
-- Pull request process
-- Community guidelines
-
-Please read our [Code of Conduct](.github/CODE_OF_CONDUCT.md) before contributing.
-
----
-
-## Security
-
-Security is a top priority. Please see our [Security Policy](.github/SECURITY.md) for:
-
-- Supported versions
-- How to report vulnerabilities
-- Security update process
-- Safe harbor for researchers
-
-**Do not report security vulnerabilities through public GitHub issues.**
-
-### Security Features
-
-- Daily OpenSSF Scorecard metrics
-- CodeQL static analysis
-- Bandit security scanning in pre-commit hooks
-- Dependabot for automated dependency updates
-- SHA256 checksum verification for plugin downloads
-- Sensitive data redaction in configuration exports
-
----
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started, our code of conduct, and the pull request process.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Citation
-
-If you use pyMediaManager in academic or research work, please cite it:
-
-```bibtex
-@software{pymediamanager,
-  author = {mosh666},
-  title = {pyMediaManager: Portable Python Media Management Application},
-  year = {2026},
-  url = {https://github.com/mosh666/pyMM}
-}
-```
-
-See [CITATION.cff](CITATION.cff) for more citation formats.
-
----
-
-## Acknowledgments
-
-Built with:
-
-- [PySide6](https://doc.qt.io/qtforpython/) - Qt for Python framework
-- [QFluentWidgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets) - Modern Fluent Design UI components
-- [Pydantic](https://docs.pydantic.dev/) - Data validation and settings management
-- [pytest](https://pytest.org/) - Testing framework with extensive plugin ecosystem
-- [Ruff](https://docs.astral.sh/ruff/) - Fast Python linter and formatter
-
----
-
-<div align="center">
-
-Made with ❤️ by the pyMediaManager community
-
-[Report Bug](https://github.com/mosh666/pyMM/issues) • [Request Feature](https://github.com/mosh666/pyMM/discussions) • [Discussions](https://github.com/mosh666/pyMM/discussions)
-
-</div>
