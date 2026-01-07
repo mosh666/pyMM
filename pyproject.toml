@@ -62,6 +62,9 @@ dependencies = [
     "rich>=13.7.0",
     "GitPython>=3.1.0",
     "WMI>=1.5.1; platform_system=='Windows'",
+    "py7zr>=0.20.0",
+    "watchdog>=3.0.0",
+    "packaging>=23.0",
 ]
 
 [project.optional-dependencies]
@@ -128,6 +131,7 @@ markers = [
     "integration: Integration tests (may be slower, access filesystem/network)",
     "slow: Tests that may take significant time to complete",
     "ui: Tests that require GUI components",
+    "gui: GUI tests that use Qt widgets and dialogs",
 ]
 
 [tool.coverage.run]

@@ -4,7 +4,7 @@ __all__ = [
     "FirstRunWizard",
     "MainWindow",
     "PluginView",
-    "ProjectBrowser",
+    "ProjectBrowserDialog",
     "ProjectView",
     "ProjectWizard",
     "SettingsDialog",

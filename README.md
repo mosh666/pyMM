@@ -62,6 +62,46 @@ organizing media projects and managing external applications through an extensib
   tracking
 - **Git Integration** - Optional version control using GitPython library
 
+### Template & Migration System
+
+Projects can be created from templates with automatic folder structure setup:
+
+- **Template Discovery** - Automatic scanning of `templates/` directory with hot-reload support
+- **Template Inheritance** - Multi-level inheritance (up to 5 levels) for composable project structures
+- **Variable Substitution** - Dynamic placeholders in template files:
+  - `{PROJECT_NAME}` - Project display name
+  - `{PROJECT_PATH}` - Absolute project path
+  - `{DATE}` / `{DATETIME}` - Creation timestamps
+  - `{AUTHOR}` - Git user or system username
+  - `{DESCRIPTION}` - Project description
+  - `{GIT_ENABLED}` - Whether Git is initialized
+
+**Migration Workflow:**
+
+1. **Check** - Detect projects using outdated template versions
+2. **Preview** - View changes before applying (folders to add/remove, conflicts)
+3. **Apply** - Migrate projects with automatic backups and Git commits
+4. **Rollback** - Restore from backup if migration fails
+
+**Conflict Detection:**
+
+- Identifies folders containing user files that would be removed
+- Allows skipping conflicts or manual resolution
+- Tracks migration history with timestamps and version changes
+
+**Deferred Scheduling:**
+
+- Schedule migrations for later execution
+- Batch apply pending migrations across multiple projects
+- Cancel or modify scheduled migrations before execution
+
+**Built-in Templates:**
+
+- `base` - Minimal structure (media/, exports/, cache/)
+- `default` - Extends base with standard README and Git setup
+- `video-editing` - Adds source/, proxies/, renders/, project-files/ with FFmpeg/MKVToolNix
+- `photo-management` - Adds raw/, processed/, selections/, metadata/ with ExifTool/ImageMagick/digiKam
+
 ---
 
 ## 🚀 Quick Start
@@ -119,6 +159,31 @@ pip install -e ".[dev]"
 pre-commit install --install-hooks
 pytest
 ```
+
+#### Docker Development
+
+For isolated testing environments and CI validation:
+
+```bash
+# Build Docker image
+docker build -t pymm:test .
+
+# Run tests in container
+docker run --rm pymm:test
+
+# Interactive shell for debugging
+docker run -it --rm --entrypoint bash pymm:test
+
+# Disable filesystem watching (for CI environments)
+docker run --rm -e PYMM_DISABLE_TEMPLATE_WATCH=1 pymm:test
+```
+
+**Notes:**
+
+- Uses `xvfb-run` for headless GUI testing (virtual X11 display)
+- Set `PYMM_DISABLE_TEMPLATE_WATCH=1` to disable template file monitoring (reduces resource usage in containers)
+- Qt applications require X11 server in container; xvfb provides this automatically
+- For troubleshooting Qt errors, check display configuration: `echo $DISPLAY` inside container
 
 ---
 

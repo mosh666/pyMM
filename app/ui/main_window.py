@@ -28,6 +28,9 @@ from app.core.services.config_service import ConfigService
 from app.core.services.storage_service import StorageService
 from app.plugins.plugin_manager import PluginManager
 from app.services.project_service import ProjectService
+from app.ui.components.migration_banner import MigrationBanner
+from app.ui.dialogs.migration_dialog import MigrationDialog
+from app.ui.dialogs.rollback_dialog import MigrationHistoryDialog, RollbackDialog
 
 
 class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
@@ -49,10 +52,12 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         self.plugin_manager = plugin_manager
         self.project_service = project_service
         self.current_project = None
+        self._pending_migration_count = 0
 
         self._init_window()
         self._init_navigation()
         self._apply_theme()
+        self._check_pending_migrations()
 
     def _init_window(self) -> None:
         """Initialize window properties."""
@@ -96,6 +101,15 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         self.project_view.project_opened.connect(self._on_project_opened)
         self.addSubInterface(
             self.project_view, FluentIcon.FOLDER_ADD, "Projects", NavigationItemPosition.TOP
+        )
+
+        # Migrations (with badge if pending)
+        self.migrations_interface = self._create_migrations_interface()
+        self.addSubInterface(
+            self.migrations_interface,
+            FluentIcon.UPDATE,
+            "Migrations",
+            NavigationItemPosition.TOP,
         )
 
         # Settings
@@ -220,3 +234,252 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             "Project Opened",
             f"Successfully opened project: {project.name}\n\nPath: {project.path}",
         )
+
+    def _create_migrations_interface(self) -> QWidget:
+        """Create migrations management interface."""
+        widget = QWidget()
+        widget.setObjectName("migrationsInterface")
+        layout = QVBoxLayout(widget)
+        layout.setContentsMargins(40, 40, 40, 40)
+        layout.setSpacing(20)
+
+        # Title
+        title = QLabel("Template Migrations")
+        title_font = title.font()
+        title_font.setPointSize(20)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        layout.addWidget(title)
+
+        # Description
+        description = QLabel(
+            "Manage template updates for your projects.\n\n"
+            "Check for available updates, preview changes, apply migrations, or rollback."
+        )
+        description.setWordWrap(True)
+        layout.addWidget(description)
+
+        # Check for updates button
+        check_btn = QPushButton("🔍 Check for Updates")
+        check_btn.clicked.connect(self._check_migrations)
+        check_btn.setMaximumWidth(250)
+        layout.addWidget(check_btn)
+
+        # Apply pending migrations button
+        apply_pending_btn = QPushButton("⚡ Apply Pending Migrations")
+        apply_pending_btn.clicked.connect(self._apply_pending_migrations)
+        apply_pending_btn.setMaximumWidth(250)
+        layout.addWidget(apply_pending_btn)
+
+        # Rollback button
+        rollback_btn = QPushButton("↩️  Rollback Migrations")
+        rollback_btn.clicked.connect(self._show_rollback_dialog)
+        rollback_btn.setMaximumWidth(250)
+        layout.addWidget(rollback_btn)
+
+        # View migration history button
+        if self.current_project:
+            history_btn = QPushButton("📜 View Migration History")
+            history_btn.clicked.connect(self._show_migration_history)
+            history_btn.setMaximumWidth(250)
+            layout.addWidget(history_btn)
+
+        layout.addStretch()
+
+        return widget
+
+    def _check_pending_migrations(self) -> None:
+        """Check for projects with pending migrations and update badge."""
+        try:
+            pending_projects = self.project_service.list_projects_with_pending_migrations()
+            self._pending_migration_count = len(pending_projects)
+
+            # Update badge on Migrations menu item
+            if FLUENT_AVAILABLE and self._pending_migration_count > 0:
+                # Note: Badge update would require QFluentWidgets API support
+                # This is a placeholder for the badge update logic
+                self.logger.info(
+                    f"{self._pending_migration_count} project(s) have pending migrations"
+                )
+
+                # Show toast notification on startup if there are pending migrations
+                MigrationBanner.show_info_bar(
+                    f"📢 {self._pending_migration_count} project(s) have pending migrations",
+                    parent=self,
+                )
+        except Exception as e:
+            self.logger.error(f"Failed to check pending migrations: {e}")
+
+    def _check_migrations(self) -> None:
+        """Check all projects for available template updates."""
+        try:
+            migratable_projects = self.project_service.list_migratable_projects()
+
+            if not migratable_projects:
+                MigrationBanner.show_info_bar(
+                    "✅ All projects are up to date",
+                    parent=self,
+                )
+                return
+
+            # Show summary
+            project_names = [p.name for p in migratable_projects]
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.information(
+                self,
+                "Updates Available",
+                f"Found {len(migratable_projects)} project(s) with available updates:\n\n"
+                + "\n".join(f"• {name}" for name in project_names[:10])
+                + (f"\n... and {len(project_names) - 10} more" if len(project_names) > 10 else ""),
+            )
+
+            # Switch to projects view
+            self.switchTo(self.project_view)
+
+        except Exception as e:
+            self.logger.error(f"Failed to check migrations: {e}")
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Failed to check for migrations:\n{str(e)}",
+            )
+
+    def _apply_pending_migrations(self) -> None:
+        """Apply all pending (deferred) migrations."""
+        try:
+            pending_projects = self.project_service.list_projects_with_pending_migrations()
+
+            if not pending_projects:
+                MigrationBanner.show_info_bar(
+                    "ℹ️  No pending migrations to apply",
+                    parent=self,
+                )
+                return
+
+            # Confirm action
+            from PySide6.QtWidgets import QMessageBox
+
+            reply = QMessageBox.question(
+                self,
+                "Apply Pending Migrations",
+                f"Apply {len(pending_projects)} pending migration(s)?\n\n"
+                "This will migrate all projects that were previously deferred.",
+                QMessageBox.Yes | QMessageBox.No,
+            )
+
+            if reply != QMessageBox.Yes:
+                return
+
+            # Apply migrations
+            results = self.project_service.apply_pending_migrations()
+
+            # Count successes and failures
+            successes = sum(1 for _, success, _ in results if success)
+            failures = len(results) - successes
+
+            # Show results
+            if failures == 0:
+                MigrationBanner.show_info_bar(
+                    f"✅ Successfully applied {successes} migration(s)",
+                    parent=self,
+                )
+            else:
+                error_msgs = [msg for _, success, msg in results if not success]
+                QMessageBox.warning(
+                    self,
+                    "Migration Results",
+                    f"Applied {successes} migration(s) successfully.\n"
+                    f"Failed: {failures}\n\n"
+                    + "\n".join(error_msgs[:5]),
+                )
+
+            # Refresh pending count
+            self._check_pending_migrations()
+
+            # Refresh project view
+            if hasattr(self.project_view, "refresh_projects"):
+                self.project_view.refresh_projects()
+
+        except Exception as e:
+            self.logger.error(f"Failed to apply pending migrations: {e}")
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Failed to apply pending migrations:\n{str(e)}",
+            )
+
+    def _show_rollback_dialog(self) -> None:
+        """Show rollback dialog for reverting migrations."""
+        try:
+            # Get all projects
+            all_projects = self.project_service.list_projects()
+
+            # Filter projects with migration backups
+            projects_with_backups = [
+                p for p in all_projects
+                if p.migration_history and any(
+                    m.get("backup_path") for m in p.migration_history
+                )
+            ]
+
+            if not projects_with_backups:
+                from PySide6.QtWidgets import QMessageBox
+
+                QMessageBox.information(
+                    self,
+                    "No Rollbacks Available",
+                    "No projects have migration backups available for rollback.",
+                )
+                return
+
+            # Show rollback dialog
+            dialog = RollbackDialog(projects_with_backups, self.project_service, self)
+            if dialog.exec():
+                # Refresh project view after rollback
+                if hasattr(self.project_view, "refresh_projects"):
+                    self.project_view.refresh_projects()
+
+                MigrationBanner.show_info_bar(
+                    "✅ Rollback completed successfully",
+                    parent=self,
+                )
+
+        except Exception as e:
+            self.logger.error(f"Failed to show rollback dialog: {e}")
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Failed to open rollback dialog:\n{str(e)}",
+            )
+
+    def _show_migration_history(self) -> None:
+        """Show migration history for current project."""
+        if not self.current_project:
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.information(
+                self,
+                "No Project Selected",
+                "Please open a project first to view its migration history.",
+            )
+            return
+
+        try:
+            dialog = MigrationHistoryDialog(self.current_project, self)
+            dialog.exec()
+        except Exception as e:
+            self.logger.error(f"Failed to show migration history: {e}")
+            from PySide6.QtWidgets import QMessageBox
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Failed to open migration history:\n{str(e)}",
+            )

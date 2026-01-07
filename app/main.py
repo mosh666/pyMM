@@ -17,35 +17,30 @@ def get_app_root() -> Path:
     return Path(__file__).parent.parent.resolve()
 
 
-def run_application() -> int:
+def initialize_services(
+    app_root: Path,
+    config: Any,
+    templates_dir: Path | None = None,
+    disable_template_watch: bool = False,
+) -> dict[str, Any]:
     """
-    Initialize and run the pyMediaManager application.
+    Initialize all application services.
+
+    Args:
+        app_root: Root directory of the application
+        config: Configuration object
+        templates_dir: Optional custom templates directory
+        disable_template_watch: Whether to disable template filesystem watching
 
     Returns:
-        Exit code (0 for success, non-zero for errors)
+        Dictionary with initialized services and components
     """
-    # Enable High DPI scaling
-    QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-    )
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
-
-    from app import __version__
-
-    app = QApplication(sys.argv)
-    app.setApplicationName("pyMediaManager")
-    app.setOrganizationName("mosh666")
-    app.setApplicationVersion(__version__)
-
-    # Initialize services
-    app_root = get_app_root()
-
     from app.core.logging_service import LoggingService
     from app.core.services.config_service import ConfigService
     from app.core.services.file_system_service import FileSystemService
     from app.core.services.storage_service import StorageService
     from app.plugins.plugin_manager import PluginManager
+    from app.services.git_service import GitService
     from app.services.project_service import ProjectService
 
     # File system service
@@ -53,10 +48,6 @@ def run_application() -> int:
 
     # Ensure portable folders exist at drive root
     portable_folders = file_system_service.ensure_portable_folders()
-
-    # Config service
-    config_service = ConfigService(app_root)
-    config = config_service.load()
 
     # Logging service - uses portable logs folder automatically
     logging_service = LoggingService(
@@ -85,12 +76,81 @@ def run_application() -> int:
 
     logger.info(f"Discovered {len(plugin_manager.get_all_plugins())} plugins")
 
-    # Project service
-    projects_metadata_dir = portable_folders["projects"] / ".metadata"
-    project_service = ProjectService(projects_metadata_dir)
-    logger.info(f"Project service initialized: {projects_metadata_dir}")
+    # Git service
+    git_service = GitService()
 
-    # Define show_main_window function first
+    # Project service with template support
+    projects_metadata_dir = portable_folders["projects"] / ".metadata"
+    project_service = ProjectService(
+        projects_metadata_dir,
+        git_service=git_service,
+        templates_dir=templates_dir,
+        disable_watch=disable_template_watch,
+    )
+    logger.info(f"Project service initialized: {projects_metadata_dir}")
+    logger.info(f"Discovered {len(project_service.list_templates())} templates")
+
+    return {
+        "file_system_service": file_system_service,
+        "config_service": None,  # Would need to pass this in or refactor
+        "logging_service": logging_service,
+        "logger": logger,
+        "storage_service": storage_service,
+        "plugin_manager": plugin_manager,
+        "git_service": git_service,
+        "project_service": project_service,
+        "portable_folders": portable_folders,
+    }
+
+
+def run_application() -> int:
+    """
+    Initialize and run the pyMediaManager application.
+
+    Returns:
+        Exit code (0 for success, non-zero for errors)
+    """
+    # Enable High DPI scaling
+    QApplication.setHighDpiScaleFactorRoundingPolicy(
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+    )
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+
+    from app import __version__
+
+    app = QApplication(sys.argv)
+    app.setApplicationName("pyMediaManager")
+    app.setOrganizationName("mosh666")
+    app.setApplicationVersion(__version__)
+
+    # Get app root and load config
+    app_root = get_app_root()
+
+    from app.core.services.config_service import ConfigService
+
+    config_service = ConfigService(app_root)
+    config = config_service.load()
+
+    # Check if template watching should be disabled
+    import os
+
+    disable_watch = os.getenv("PYMM_DISABLE_TEMPLATE_WATCH", "0") == "1"
+
+    # Initialize services
+    services = initialize_services(
+        app_root, config, templates_dir=None, disable_template_watch=disable_watch
+    )
+
+    # Extract services
+    file_system_service = services["file_system_service"]
+    logger = services["logger"]
+    storage_service = services["storage_service"]
+    plugin_manager = services["plugin_manager"]
+    project_service = services["project_service"]
+    portable_folders = services["portable_folders"]
+
+    # Define show_main_window function
     def show_main_window() -> None:
         """Create and show the main window."""
         from app.ui.main_window import MainWindow
