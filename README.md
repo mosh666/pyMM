@@ -90,6 +90,18 @@ pip install -e ".[dev]"
 python launcher.py
 ```
 
+### Building Portable Distribution
+
+To build the portable version locally (requires Windows):
+
+```bash
+# Using Python script
+python scripts/build_distribution.py
+
+# Or using just
+just build
+```
+
 For portable deployment instructions, see the [User Guide](docs/user-guide.md).
 
 ---

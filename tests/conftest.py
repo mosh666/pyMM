@@ -2,7 +2,6 @@
 
 from pathlib import Path
 import shutil
-import tempfile
 
 from PySide6.QtWidgets import QApplication
 import pytest
@@ -18,17 +17,18 @@ def qapp():
 
 
 @pytest.fixture
-def temp_dir():
-    """Create a temporary directory for tests."""
-    temp_path = Path(tempfile.mkdtemp())
-    yield temp_path
-    shutil.rmtree(temp_path, ignore_errors=True)
+def temp_dir(tmp_path):
+    """
+    Fixture for backward compatibility.
+    Returns the standard tmp_path fixture.
+    """
+    return tmp_path
 
 
 @pytest.fixture
-def app_root(temp_dir):
+def app_root(tmp_path):
     """Create a mock application root directory structure."""
-    root = temp_dir / "pyMM"
+    root = tmp_path / "pyMM"
     root.mkdir()
 
     # Create basic structure

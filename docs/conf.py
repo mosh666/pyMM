@@ -1,6 +1,7 @@
 """Sphinx configuration file for pyMediaManager documentation."""
 
 from datetime import UTC, datetime
+from importlib.metadata import version as get_version
 from pathlib import Path
 import sys
 
@@ -13,8 +14,13 @@ project_copyright = f"2024-{datetime.now(tz=UTC).year}, mosh666"
 author = "mosh666"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.0"  # Should match pyproject.toml version
-version = "0.1.0"
+try:
+    release = get_version("pyMediaManager")
+    version = release
+except Exception:  # noqa: BLE001
+    # Fallback if package is not installed
+    release = "0.0.0-dev"
+    version = release
 
 # -- General configuration ---------------------------------------------------
 

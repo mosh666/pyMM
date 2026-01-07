@@ -4,6 +4,7 @@ Provides abstraction layer for file operations with portable path handling.
 """
 
 import logging
+import os
 from pathlib import Path
 import shutil
 
@@ -26,6 +27,10 @@ class FileSystemService:
             self.app_root = Path(app_root).resolve()
 
         self._drive_root: Path | None = None
+        # Check environment variable for development/portable mode
+        # If PYMM_PORTABLE is set to "0", "false", "off", we use APP_ROOT as drive root equivalent
+        portable_env = os.environ.get("PYMM_PORTABLE", "true").lower()
+        self._force_portable = portable_env not in ("0", "false", "off", "no")
 
     def get_app_root(self) -> Path:
         """Get the application root directory."""
@@ -42,9 +47,14 @@ class FileSystemService:
             Path to drive root directory
         """
         if self._drive_root is None:
-            # Get the drive root by taking the anchor of the absolute path
-            # For D:\pyMM\app, this returns D:\
-            self._drive_root = Path(self.app_root.anchor)
+            if self._force_portable:
+                # Get the drive root by taking the anchor of the absolute path
+                # For D:\pyMM\app, this returns D:\
+                self._drive_root = Path(self.app_root.anchor)
+            else:
+                # In development/non-portable mode, use app_root (project root) as the "drive" root
+                # This keeps Projects/Logs inside the project folder
+                self._drive_root = self.app_root
 
         return self._drive_root
 

@@ -24,6 +24,24 @@ contributions.
 
 ## Development Setup
 
+### fast track with just (Recommended)
+
+If you have [just](https://github.com/casey/just) installed, you can use the following commands to get started quickly:
+
+```bash
+# Install dependencies
+just install
+
+# Run tests
+just test
+
+# Run linting
+just lint
+
+# Build portable distribution
+just build
+```
+
 ### Prerequisites
 
 - **Python:** 3.12, 3.13, or 3.14 (3.13 recommended)
@@ -126,6 +144,21 @@ contributions.
 
    # Set default branch
    git config init.defaultBranch main
+   ```
+
+7. **Environment Configuration (Optional):**
+
+   By default, the application runs in "Portable Mode" locally (saving data to the app directory).
+   To prevent cluttering your drive root or source folder during development, you can use:
+
+   - **Windows (PowerShell):** `$env:PYMM_PORTABLE="false"`
+   - **Action:** Keeps Logs and Projects in your local Drive Root (e.g., `D:/Projects`, `D:/Logs`)
+     instead of the application folder, simulating a deployed environment or keeping source clean.
+
+   ```bash
+   # Enable Dev Mode paths
+   $env:PYMM_PORTABLE="false"
+   python launcher.py
    ```
 
 ---
@@ -282,6 +315,26 @@ ruff format app/ tests/
 ```
 
 ## Release Process
+
+### Building the Portable Distribution
+
+You can build the portable Windows distribution locally without relying on CI:
+
+```bash
+# Using just (recommended)
+just build
+
+# Or using the python script directly
+python scripts/build_distribution.py --version 3.13
+```
+
+This will:
+1. Download the embedded Python distribution.
+2. Install all dependencies from `pyproject.toml`.
+3. Configure the runtime environment.
+4. Create a zip archive in the build directory.
+
+### Branch Strategy
 
 We follow a branch-based release flow:
 

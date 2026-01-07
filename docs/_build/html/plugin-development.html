@@ -6,31 +6,31 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plugin Development Guide &mdash; pyMediaManager 0.1.0 documentation</title>
+  <title>Plugin Development Guide &mdash; pyMediaManager 0.0.post156 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
-
+  
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=de3140f6"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="api/index.html" />
-    <link rel="prev" title="pyMediaManager Architecture Documentation" href="architecture.html" />
+    <link rel="prev" title="pyMediaManager Architecture Documentation" href="architecture.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="index.html" class="icon icon-home">
             pyMediaManager
           </a>
@@ -430,7 +430,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="plugin-development-guide">
 <h1>Plugin Development Guide<a class="headerlink" href="#plugin-development-guide" title="Link to this heading"></a></h1>
 <p>This guide explains how to create and configure plugins for pyMediaManager (pyMM).</p>
@@ -448,10 +448,13 @@
 </section>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>pyMM uses a plugin system to manage external tools and dependencies. Each plugin represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can download, install, and manage automatically.</p>
+<p>pyMM uses a plugin system to manage external tools and dependencies. Each plugin
+represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can
+download, install, and manage automatically.</p>
 <p>Plugins are defined by:</p>
 <ol class="arabic simple">
-<li><p>A YAML manifest file (<code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code>) defining metadata and download information</p></li>
+<li><p>A YAML manifest file (<code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code>) defining metadata and download
+information</p></li>
 <li><p>An optional Python implementation extending <code class="docutils literal notranslate"><span class="pre">PluginBase</span></code> for custom behavior</p></li>
 </ol>
 </section>
@@ -461,8 +464,10 @@
 <h3>Plugin Base Class<a class="headerlink" href="#plugin-base-class" title="Link to this heading"></a></h3>
 <p>All plugins inherit from <code class="docutils literal notranslate"><span class="pre">app.plugins.plugin_base.PluginBase</span></code>, which provides:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">download_and_extract_binary()</span></code></strong>: Built-in download and extraction with retry logic, checksum verification, and progress callbacks</p></li>
-<li><p><strong>Archive extraction</strong>: Automatic handling of ZIP, 7z, and self-extracting .exe archives</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">download_and_extract_binary()</span></code></strong>: Built-in download and extraction with retry
+logic, checksum verification, and progress callbacks</p></li>
+<li><p><strong>Archive extraction</strong>: Automatic handling of ZIP, 7z, and self-extracting .exe
+archives</p></li>
 <li><p><strong>Directory flattening</strong>: Removes unnecessary nested directories after extraction</p></li>
 <li><p><strong>Special case handling</strong>: Custom logic for specific tools (e.g., ExifTool renaming)</p></li>
 </ul>
@@ -522,9 +527,9 @@
 <section id="step-1-create-plugin-directory">
 <h3>Step 1: Create Plugin Directory<a class="headerlink" href="#step-1-create-plugin-directory" title="Link to this heading"></a></h3>
 <p>Create a directory in <code class="docutils literal notranslate"><span class="pre">plugins/</span></code> with your tool name:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plugins</span><span class="o">/</span>
-  <span class="n">mytool</span><span class="o">/</span>
-    <span class="n">plugin</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>plugins/
+  mytool/
+    plugin.yaml
 </pre></div>
 </div>
 </section>
@@ -587,7 +592,7 @@
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Download method (currently only &quot;url&quot; supported)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;url&quot;</span>
-<span class="w">  </span>
+
 <span class="w">  </span><span class="nt">base_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Download URL for the plugin archive</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe&quot;</span>
@@ -597,7 +602,7 @@
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Relative path to executable directory from plugin root</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Use empty string (&quot;&quot;) if executable is in root</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;bin&quot;</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or &quot;&quot;</span>
-<span class="w">  </span>
+
 <span class="w">  </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Filename of the executable</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;git.exe&quot;</span>
@@ -623,11 +628,11 @@
 <span class="w">  </span><span class="nt">checksum_sha256</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># SHA-256 hash (uppercase hex) for integrity verification</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855&quot;</span>
-<span class="w">  </span>
+
 <span class="w">  </span><span class="nt">file_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Expected file size in bytes (for progress tracking)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52428800</span>
-<span class="w">  </span>
+
 <span class="w">  </span><span class="nt">asset_pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Pattern for GitHub release assets (not yet implemented)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;PortableGit-.*-64-bit\\.7z\\.exe&quot;</span>
@@ -773,9 +778,9 @@
 <h3>Manual Testing<a class="headerlink" href="#manual-testing" title="Link to this heading"></a></h3>
 <ol class="arabic">
 <li><p><strong>Place your plugin in the plugins directory</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plugins</span><span class="o">/</span>
-  <span class="n">mytool</span><span class="o">/</span>
-    <span class="n">plugin</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>plugins/
+  mytool/
+    plugin.yaml
 </pre></div>
 </div>
 </li>
@@ -1176,7 +1181,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -1187,7 +1192,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

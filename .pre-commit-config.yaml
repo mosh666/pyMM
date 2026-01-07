@@ -72,18 +72,16 @@ repos:
         name: Markdown Linter
         args: [--fix, --disable, MD013, MD024, MD033, MD041]
 
-  # Python type checking with mypy
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+  # Python type checking with mypy (local environment)
+  - repo: local
     hooks:
       - id: mypy
         name: MyPy Type Checker
-        additional_dependencies:
-          - types-PyYAML
-          - types-aiofiles
-          - pydantic>=2.5.0
-        args: [--ignore-missing-imports, --no-strict-optional]
-        files: ^app/
+        entry: just type-check
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
 
   # Note: Safety check removed as it only supports Poetry projects
 

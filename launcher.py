@@ -25,7 +25,8 @@ if not lib_dir.exists():
 if lib_dir.exists():
     sys.path.insert(0, str(lib_dir))
 
-sys.path.insert(0, str(APP_ROOT / "app"))
+# Ensure APP_ROOT is in path so 'app' package can be imported
+sys.path.insert(0, str(APP_ROOT))
 
 # Initialize basic logging for launcher errors
 logging.basicConfig(
