@@ -21,7 +21,7 @@ def test_project_model():
     """Test Project model."""
 
     # Create test project
-    test_path = Path("D:/pyMM/test_projects/my_project")
+    test_path = Path("D:/pyMM/test_projects/my_project").resolve()
     project = Project(
         name="My Test Project",
         path=test_path,
@@ -43,11 +43,11 @@ def test_project_service():
     """Test ProjectService."""
 
     # Create service
-    projects_dir = Path("D:/pyMM/test_projects/.metadata")
+    projects_dir = Path("D:/pyMM/test_projects/.metadata").resolve()
     service = ProjectService(projects_dir)
 
     # Create a test project
-    project_path = Path("D:/pyMM/test_projects/service_test_project")
+    project_path = Path("D:/pyMM/test_projects/service_test_project").resolve()
 
     # Clean up if exists
     if project_path.exists():

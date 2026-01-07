@@ -96,9 +96,13 @@ class TestStorageService:
         for drive in removable:
             assert drive.is_removable is True
 
-    def test_get_drive_info_current_drive(self, service, app_root):
+    def test_get_drive_info_current_drive(self, service):
         """Test getting drive info for current path."""
-        drive_info = service.get_drive_info(app_root)
+        # Use current working directory instead of app_root to ensure we have a real drive
+        from pathlib import Path
+
+        cwd = Path.cwd()
+        drive_info = service.get_drive_info(cwd)
 
         assert drive_info is not None
         assert isinstance(drive_info, DriveInfo)
