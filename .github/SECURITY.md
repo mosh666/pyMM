@@ -210,7 +210,7 @@ Scorecard checks:
 - ✅ Dependency updates (Dependabot)
 - ✅ Code review (required for all PRs)
 - ✅ CI tests (193 tests, 73% coverage)
-- ✅ SAST tools (Ruff, MyPy, Bandit)
+- ✅ SAST tools (Ruff with security rules, MyPy)
 - ⚠️ Fuzzing (planned)
 - ⚠️ SBOM generation (planned)
 

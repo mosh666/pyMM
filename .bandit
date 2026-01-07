@@ -1,7 +1,0 @@
-[tool.bandit]
-exclude_dirs = ["tests", "test_projects", ".venv", "venv", "build", "dist"]
-tests = ["B201", "B301"]
-skips = ["B101", "B601"]
-
-[tool.bandit.assert_used]
-skips = ["*_test.py", "test_*.py"]

@@ -87,7 +87,7 @@ just build
    - 🔍 **Ruff linting** - Auto-fix code style issues
    - 🎨 **Ruff formatting** - Ensure consistent code formatting
    - 🔎 **MyPy** - Static type checking
-   - 🔐 **Bandit** - Security vulnerability scanning
+   - 🔐 **Ruff Security** - Security vulnerability scanning (S-prefix rules)
    - 🧪 **Unit tests** - Run fast unit tests on commit
 
 4. **Verify Setup:**
@@ -177,9 +177,8 @@ If you cannot use `just`, follow these manual steps:
 
 We follow PEP 8 with these tools and standards:
 
-- **Ruff**: Fast linting with auto-fix and formatting (replaces Black, flake8, isort)
+- **Ruff**: Fast linting with auto-fix, formatting, and security checks (S-prefix rules)
 - **MyPy**: Static type checking for type safety
-- **Bandit**: Security vulnerability scanning
 - **Modern Type Hints**: Use Python 3.12+ native types (`list`, `dict`, `tuple`) instead of
   `typing.List`, `typing.Dict`, etc.
 
@@ -678,8 +677,8 @@ ruff format --check app/ tests/
 # Run type checking
 mypy app/
 
-# Run security scanning
-bandit -r app/ -c .bandit
+# Run linting (includes security checks)
+python -m ruff check .
 ```
 
 ---

@@ -147,10 +147,9 @@ pytest tests/ -v --cov=app --cov-report=term
 
 <!-- Confirm all checks pass -->
 
-- [ ] `ruff check app/ tests/` passes (0 violations)
+- [ ] `ruff check app/ tests/` passes (0 violations, includes security)
 - [ ] `ruff format app/ tests/ --check` passes
 - [ ] `mypy app/ --strict` passes (0 errors)
-- [ ] `bandit -r app/` passes (0 high/medium issues)
 
 ```bash
 # Paste linting output here
@@ -280,7 +279,7 @@ mypy app/ --strict
 - [ ] I have rebased my branch on the latest `dev` branch
 - [ ] I have run the full test suite (`pytest tests/`)
 - [ ] I have checked code coverage (`pytest --cov=app`)
-- [ ] I have run security scans (`bandit -r app/`)
+- [ ] I have run security checks (included in `ruff check`)
 - [ ] I have verified the application starts and runs correctly
 
 ---

@@ -61,31 +61,6 @@ jobs:
           fail-on-severity: moderate
           deny-licenses: GPL-2.0, GPL-3.0
 
-  bandit:
-    name: Bandit Security Scan
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Install Bandit
-        run: pip install bandit[toml]
-
-      - name: Run Bandit
-        run: bandit -r app/ -f json -o bandit-report.json || true
-
-      - name: Upload Bandit results
-        uses: actions/upload-artifact@v6
-        with:
-          name: bandit-results
-          path: bandit-report.json
-
   safety:
     name: Safety Check (Dependencies)
     runs-on: ubuntu-latest

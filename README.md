@@ -250,7 +250,7 @@ pyMM/
 | **Python Versions** | 3.12, 3.13, 3.14 | ✅ Matrix testing |
 | **Pre-commit Hooks** | 15+ checks | ✅ Enforced |
 | **OpenSSF Score** | Daily scan | ✅ Monitored |
-| **Security Scans** | CodeQL + Bandit | ✅ Clean |
+| **Security Scans** | CodeQL + Ruff | ✅ Clean |
 
 </div>
 

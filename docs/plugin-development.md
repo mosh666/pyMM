@@ -727,8 +727,8 @@ plugins/
    # Type check
    mypy app/plugins/
 
-   # Security scan
-   bandit -r app/plugins/
+   # Security checks (included in Ruff)
+   ruff check app/plugins/ --select=S
    ```
 
 5. **Submit Pull Request**:

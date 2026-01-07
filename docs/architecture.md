@@ -885,7 +885,7 @@ def main():
 | **Malicious Plugins** | No code execution, manifest-only | ✅ Implemented |
 | **MITM Attacks** | HTTPS only, SHA-256 verification | ✅ Implemented |
 | **Path Traversal** | Input validation, Path.resolve() | ✅ Implemented |
-| **Dependency Vulnerabilities** | Dependabot, daily Bandit scans | ✅ Automated |
+| **Dependency Vulnerabilities** | Dependabot, Ruff security checks | ✅ Automated |
 | **Sensitive Data Leaks** | Config redaction, no hardcoded secrets | ✅ Implemented |
 
 ### Security Features
