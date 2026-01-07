@@ -136,6 +136,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Proper bash code fences throughout
   - No print statements (structured logging only)
 
+#### Developer Experience (2026-01-07)
+
+- `justfile` completely refactored for cross-platform compatibility
+  - Replaced shell-specific commands (rm, Remove-Item) with Python scripts
+  - Standardized python interpreter variable usage
+  - Added `check` recipe for single-command quality verification
+  - Modularized documentation build steps
+
 #### CI/CD Improvements (2026-01-05)
 
 - Updated Codecov action from v4 to v5 with explicit token authentication
