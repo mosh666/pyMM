@@ -1,7 +1,5 @@
 # Justfile for pyMediaManager
 
-set shell := ["powershell", "-c"]
-
 # Release build version
 version := "3.12"
 
