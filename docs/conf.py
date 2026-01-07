@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 # Add project root to Python path for autodoc
-sys.path.insert(0, str(Path(__file__).parent.parent.absolute()))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # -- Project information -----------------------------------------------------
 project = "pyMediaManager"
