@@ -54,7 +54,32 @@ jobs:
           sphinx-multiversion docs docs/_build/html -v
           New-Item -ItemType Directory -Force -Path docs/_build/html | Out-Null
           New-Item -ItemType File -Force -Path docs/_build/html/index.html | Out-Null
-          Set-Content -Path docs/_build/html/index.html -Value '<meta http-equiv="refresh" content="0; url=main/index.html">'
+          @"
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <meta charset="utf-8">
+              <title>pyMediaManager Documentation</title>
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 600px; margin: 100px auto; padding: 20px; text-align: center; }
+                  h1 { color: #333; }
+                  .version-links { margin-top: 40px; }
+                  .version-link { display: inline-block; margin: 10px 20px; padding: 15px 40px; background: #0366d6; color: white; text-decoration: none; border-radius: 6px; font-size: 18px; }
+                  .version-link:hover { background: #0256c4; }
+                  .version-link.stable { background: #28a745; }
+                  .version-link.stable:hover { background: #218838; }
+              </style>
+          </head>
+          <body>
+              <h1>pyMediaManager Documentation</h1>
+              <p>Choose a version to view:</p>
+              <div class="version-links">
+                  <a href="main/index.html" class="version-link stable">📘 Main (Stable)</a>
+                  <a href="dev/index.html" class="version-link">🚧 Dev (Latest)</a>
+              </div>
+          </body>
+          </html>
+          "@ | Set-Content -Path docs/_build/html/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
