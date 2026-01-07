@@ -45,7 +45,7 @@ class PluginManager:
             return 0
 
         # Find all plugin.yaml files in subdirectories
-        manifest_files = self.manifests_dir.rglob("plugin.yaml")
+        manifest_files = list(self.manifests_dir.rglob("plugin.yaml"))
 
         for manifest_file in manifest_files:
             try:
