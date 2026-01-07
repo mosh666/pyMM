@@ -56,7 +56,7 @@ htmlcov/
 .nox/
 .hypothesis/
 .pytype/
-/test_p*
+/test_*
 coverage.xml
 *.cover
 .cache
@@ -64,6 +64,7 @@ nosetests.xml
 test-results/
 junit/
 *.log
+/debug_*
 
 # Type checking
 .mypy_cache/
