@@ -47,11 +47,10 @@ jobs:
 
       - name: Build Sphinx documentation
         run: |
-          cd docs
-          sphinx-multiversion . _build/html
-          New-Item -ItemType Directory -Force -Path _build/html | Out-Null
-          New-Item -ItemType File -Force -Path _build/html/index.html | Out-Null
-          Set-Content -Path _build/html/index.html -Value '<meta http-equiv="refresh" content="0; url=main/index.html">'
+          sphinx-multiversion docs docs/_build/html
+          New-Item -ItemType Directory -Force -Path docs/_build/html | Out-Null
+          New-Item -ItemType File -Force -Path docs/_build/html/index.html | Out-Null
+          Set-Content -Path docs/_build/html/index.html -Value '<meta http-equiv="refresh" content="0; url=main/index.html">'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
