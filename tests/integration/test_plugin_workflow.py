@@ -43,9 +43,9 @@ class TestPluginDownload:
         plugins = plugin_manager.get_all_plugins()
         assert len(plugins) > 0
 
-        # Check for known plugins
+        # Check for known plugins (use cross-platform compatible ones)
         plugin_names = [p.manifest.name for p in plugins]
-        assert "ExifTool" in plugin_names or "Git" in plugin_names
+        assert "Git-LFS" in plugin_names or "GitVersion" in plugin_names
 
     def test_plugin_status_before_install(self, plugin_manager):
         """Test plugin status before installation."""
@@ -61,7 +61,7 @@ class TestPluginDownload:
     @pytest.mark.asyncio
     @pytest.mark.slow
     async def test_install_small_plugin(self, plugin_manager):
-        """Test installing a small plugin (ExifTool).
+        """Test installing a small plugin (Git-LFS).
 
         This test downloads from the internet and may be slow.
         """
@@ -75,24 +75,22 @@ class TestPluginDownload:
                 percent = (current / total) * 100
                 progress_updates.append(percent)
 
-        # Install ExifTool (relatively small download)
-        success = await plugin_manager.install_plugin("ExifTool", progress_callback)
+        # Install Git-LFS (relatively small download, works cross-platform)
+        success = await plugin_manager.install_plugin("Git-LFS", progress_callback)
 
         assert success is True
         assert len(progress_updates) > 0
 
         # Verify installation
-        exiftool = next(
-            p for p in plugin_manager.get_all_plugins() if p.manifest.name == "ExifTool"
-        )
+        gitlfs = next(p for p in plugin_manager.get_all_plugins() if p.manifest.name == "Git-LFS")
 
-        assert exiftool.is_installed()
+        assert gitlfs.is_installed()
 
-        exe_path = exiftool.get_executable_path()
+        exe_path = gitlfs.get_executable_path()
         assert exe_path is not None
         assert exe_path.exists()
 
-        version = exiftool.get_version()
+        version = gitlfs.get_version()
         assert version is not None
         assert len(version) > 0
 
