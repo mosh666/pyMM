@@ -97,6 +97,27 @@ jobs:
       - name: Install dependencies
         run: just install
 
+      - name: Install Qt dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1-mesa-dev \
+            libglib2.0-0 \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libegl1
+
+      - name: Set Qt platform to offscreen (Linux)
+        if: runner.os == 'Linux'
+        run: echo "QT_QPA_PLATFORM=offscreen" >> $GITHUB_ENV
+
       - name: Run pytest with coverage (strict)
         run: |
           echo "🧪 Running all tests with coverage..."
