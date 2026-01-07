@@ -34,10 +34,15 @@ extensions = [
     "sphinx.ext.coverage",  # Coverage checker for documentation
     "sphinx.ext.githubpages",  # Generate .nojekyll file for GitHub Pages
     "myst_parser",  # Support for Markdown files
+    "sphinx_multiversion",  # Support for multiple versions
 ]
 
 # Add any paths that contain templates here
 templates_path = ["_templates"]
+
+# Whitelist pattern for branches (set to None to ignore all branches)
+smv_branch_whitelist = r"^(main|dev)$"
+smv_remote_whitelist = r"^origin$"
 
 # List of patterns, relative to source directory, to ignore when looking for source files
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -84,6 +89,7 @@ html_sidebars = {
         "relations.html",
         "sourcelink.html",
         "searchbox.html",
+        "versioning.html",
     ]
 }
 

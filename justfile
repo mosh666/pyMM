@@ -30,6 +30,11 @@ format:
 setup-hooks:
     powershell -ExecutionPolicy Bypass -File scripts/setup-git-hooks.ps1
 
+# Build documentation locally
+docs:
+    python -m pip install sphinx-multiversion
+    python -m sphinx_multiversion docs docs/_build/html
+    powershell -Command "Set-Content -Path docs/_build/html/index.html -Value '<meta http-equiv=\"refresh\" content=\"0; url=main/index.html\">'"
 
 # Clean build artifacts and cache
 clean:

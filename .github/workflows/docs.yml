@@ -2,13 +2,13 @@ name: Documentation
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
     paths:
       - 'docs/**'
       - 'app/**/*.py'
       - '.github/workflows/docs.yml'
   pull_request:
-    branches: [main]
+    branches: ["**"]
     paths:
       - 'docs/**'
       - 'app/**/*.py'
@@ -43,11 +43,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          pip install sphinx-multiversion
 
       - name: Build Sphinx documentation
         run: |
           cd docs
-          sphinx-build -b html -W --keep-going . _build/html
+          sphinx-multiversion . _build/html
+          Set-Content -Path _build/html/index.html -Value '<meta http-equiv="refresh" content="0; url=main/index.html">'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -55,7 +57,7 @@ jobs:
           path: docs/_build/html
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push'
     needs: build
     runs-on: ubuntu-latest
     environment:
