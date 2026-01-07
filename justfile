@@ -1,7 +1,7 @@
 # Justfile for pyMediaManager
 
-# Set shell to PowerShell on Windows
-set shell := ["pwsh.exe", "-NoProfile", "-Command"]
+# Configure shells for different platforms
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 
 # Release build version
 version := "3.12"
@@ -31,13 +31,13 @@ format:
 
 # Setup git hooks
 setup-hooks:
-    scripts/setup-git-hooks.ps1
+    python -c "import subprocess, sys, pathlib; script = pathlib.Path('scripts/setup-git-hooks.sh' if sys.platform != 'win32' else 'scripts/setup-git-hooks.ps1'); subprocess.run(['bash', str(script)] if sys.platform != 'win32' else ['pwsh.exe', '-ExecutionPolicy', 'Bypass', '-File', str(script)], check=True)"
 
 # Build documentation locally
 docs:
     python -m pip install sphinx-multiversion
     python -m sphinx_multiversion docs docs/_build/html
-    powershell -Command "Set-Content -Path docs/_build/html/index.html -Value '<meta http-equiv=\"refresh\" content=\"0; url=main/index.html\">'"
+    python -c "import pathlib; pathlib.Path('docs/_build/html/index.html').write_text('<meta http-equiv=\"refresh\" content=\"0; url=main/index.html\">', encoding='utf-8')"
 
 # Clean build artifacts and cache
 clean:
