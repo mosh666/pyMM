@@ -1,161 +1,331 @@
-## Description
+<!-- markdownlint-disable MD009 MD013 MD022 MD024 MD031 MD032 MD033 MD034 MD036 MD041 MD051 -->
 
-<!-- Provide a clear and concise description of your changes -->
+# 🔄 Pull Request
 
-## Type of Change
+## 📝 Description
 
-<!-- Mark the relevant option with an 'x' -->
+<!-- Provide a clear and concise description of the changes -->
 
-- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
-- [ ] ✨ New feature (non-breaking change that adds functionality)
+### Type of Change
+
+<!-- Check all that apply -->
+
+- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
 - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📝 Documentation update
-- [ ] 🔧 Configuration change
-- [ ] ♻️ Code refactoring (no functional changes)
+- [ ] 📚 Documentation update
+- [ ] 🎨 Code style/formatting (no functional changes)
+- [ ] ♻️ Refactoring (no functional changes)
 - [ ] ⚡ Performance improvement
-- [ ] ✅ Test addition or update
-- [ ] 🔨 Build or CI/CD change
+- [ ] 🧪 Test coverage improvement
+- [ ] 🔧 Configuration/build changes
+- [ ] 🔒 Security fix
 
-## Related Issues
+### Related Issues
 
 <!-- Link to related issues using #issue_number -->
 
-Fixes #
+Closes #
 Related to #
 
-## Changes Made
+---
+
+## 🎯 Motivation and Context
+
+<!-- Why is this change required? What problem does it solve? -->
+
+**Problem:**
+
+**Solution:**
+
+**Alternatives Considered:**
+
+---
+
+## 🔍 Changes Made
 
 <!-- Provide a detailed list of changes -->
 
--
--
--
+### Core Changes
 
-## Testing
+- 
+- 
+- 
 
-<!-- Describe the tests you ran and how to reproduce them -->
+### Files Modified
 
-### Test Configuration
+<!-- List key files changed and their purpose -->
 
-- **Python Version**:
-- **OS**:
-- **Testing Method**:
+- `app/path/to/file.py`: Description of changes
+- `tests/path/to/test.py`: Test coverage for changes
+- `docs/path/to/doc.md`: Documentation updates
+
+---
+
+## ✅ Testing
 
 ### Test Coverage
 
-- [ ] Unit tests pass (`pytest tests/unit/`)
-- [ ] Integration tests pass (`pytest tests/integration/`)
-- [ ] GUI tests pass (`pytest tests/gui/`)
-- [ ] All tests pass (`pytest`)
-- [ ] Code coverage maintained or improved
+<!-- Describe the tests you added or modified -->
+
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] GUI tests added/updated (if applicable)
 - [ ] Manual testing performed
 
-### How to Test
+### Test Results
 
-<!-- Provide step-by-step instructions to test your changes -->
+```bash
+# Paste test output here
+pytest tests/ -v --cov=app --cov-report=term
 
-1.
-2.
-3.
+# Example:
+# ===== 193 passed, 73% coverage =====
+```
 
-## Code Quality
+### Manual Testing Steps
 
-<!-- Confirm the following checks have passed -->
+<!-- Steps to manually verify the changes -->
 
-- [ ] Code follows the project's style guidelines (Ruff)
-- [ ] Code is formatted correctly (Ruff format)
-- [ ] Type hints are added/updated (MyPy passes)
-- [ ] Docstrings are added/updated for new functions/classes
-- [ ] Pre-commit hooks pass (`pre-commit run --all-files`)
-- [ ] No new warnings or errors introduced
-- [ ] Code is DRY (Don't Repeat Yourself)
-- [ ] Variables and functions have descriptive names
+1. 
+2. 
+3. 
 
-## Documentation
+### Test Environment
 
-<!-- Confirm documentation is updated -->
+- **OS:** Windows 10 / Windows 11 / Linux / macOS
+- **Python Version:** 3.12 / 3.13 / 3.14
+- **PySide6 Version:** 6.6.x / 6.7.x
+- **QFluentWidgets Version:** 1.5.x
 
-- [ ] Updated README.md (if applicable)
-- [ ] Updated CHANGELOG.md
-- [ ] Updated docstrings and type hints
-- [ ] Updated user documentation (docs/user-guide.md)
-- [ ] Updated architecture documentation (docs/architecture.md)
-- [ ] Added inline comments for complex logic
+---
 
-## Security
+## 📸 Screenshots/Videos
 
-<!-- For security-related changes -->
-
-- [ ] No sensitive data exposed in code or logs
-- [ ] Security best practices followed
-- [ ] Dependencies updated to secure versions
-- [ ] Input validation added where needed
-- [ ] No SQL injection, XSS, or other common vulnerabilities
-
-## Portability
-
-<!-- Confirm portability requirements are maintained -->
-
-- [ ] No absolute paths used (all paths relative to app root)
-- [ ] No system modifications (registry, PATH, etc.)
-- [ ] No hardcoded drive letters
-- [ ] Works from any drive location
-- [ ] Tested on external/removable drive
-
-## Breaking Changes
-
-<!-- If this is a breaking change, describe the impact -->
-
-### Impact
-
--
-
-### Migration Guide
-
-<!-- Provide instructions for users to migrate from the previous version -->
-
-1.
-2.
-
-## Screenshots
-
-<!-- Add screenshots for UI changes -->
+<!-- If applicable, add screenshots or videos to demonstrate the changes -->
 
 ### Before
 
+<!-- Screenshot or description of behavior before changes -->
+
 ### After
 
-## Performance Impact
+<!-- Screenshot or description of behavior after changes -->
+
+---
+
+## 🔒 Security Considerations
+
+<!-- Address any security implications of this change -->
+
+- [ ] No security implications
+- [ ] Security review required
+- [ ] Includes security fix (link to private advisory if applicable)
+
+**Security Impact:**
+
+---
+
+## 📚 Documentation
+
+<!-- Check all that apply -->
+
+- [ ] Code comments added/updated
+- [ ] Docstrings added/updated (Google style)
+- [ ] Type hints added/updated
+- [ ] README.md updated (if needed)
+- [ ] User guide updated (`docs/user-guide.md`)
+- [ ] Architecture docs updated (`docs/architecture.md`)
+- [ ] Plugin development guide updated (`docs/plugin-development.md`)
+- [ ] CHANGELOG.md updated (follow Keep a Changelog format)
+
+---
+
+## ✨ Code Quality
+
+### Linting and Type Checking
+
+<!-- Confirm all checks pass -->
+
+- [ ] `ruff check app/ tests/` passes (0 violations)
+- [ ] `ruff format app/ tests/ --check` passes
+- [ ] `mypy app/ --strict` passes (0 errors)
+- [ ] `bandit -r app/` passes (0 high/medium issues)
+
+```bash
+# Paste linting output here
+ruff check app/ tests/
+# All checks passed!
+
+mypy app/ --strict
+# Success: no issues found
+```
+
+### Pre-commit Hooks
+
+- [ ] Pre-commit hooks installed (`python scripts/setup-git-hooks.ps1`)
+- [ ] All pre-commit checks pass
+
+---
+
+## 🚀 Performance Impact
 
 <!-- Describe any performance implications -->
 
-- [ ] No significant performance impact
-- [ ] Performance improved
-- [ ] Performance degraded (explain why it's acceptable)
+- [ ] No performance impact
+- [ ] Performance improved (provide benchmarks)
+- [ ] Performance degraded (justify why acceptable)
 
-**Benchmark Results** (if applicable):
+**Benchmarks:**
 
-## Additional Notes
+| Operation | Before | After | Change |
+|-----------|--------|-------|--------|
+| Example   | 1.2s   | 0.8s  | -33%   |
 
-<!-- Any additional information that reviewers should know -->
+---
 
-## Checklist
+## 🔧 Breaking Changes
 
-<!-- Final checks before submitting -->
+<!-- If breaking changes, describe migration path -->
 
-- [ ] My code follows the project's contributing guidelines
-- [ ] I have performed a self-review of my code
+- [ ] No breaking changes
+- [ ] Breaking changes (describe below)
+
+**Migration Guide:**
+
+<!-- If breaking changes, provide step-by-step migration instructions -->
+
+---
+
+## 🎨 Code Style Compliance
+
+<!-- Confirm adherence to project standards -->
+
+- [ ] Modern Python syntax (`list[T]`, `dict[K, V]`, `str | None`)
+- [ ] Type hints on all functions and methods
+- [ ] Docstrings follow Google style guide
+- [ ] Functions are single-purpose (SOLID principles)
+- [ ] No global state or mutable defaults
+- [ ] Error handling uses exceptions (not return codes)
+
+---
+
+## 📦 Dependencies
+
+<!-- List any new dependencies or version changes -->
+
+### Added Dependencies
+
+<!-- If adding new dependencies, justify why -->
+
+- `package-name==1.2.3`: Reason for addition
+
+### Updated Dependencies
+
+- `package-name`: 1.2.3 → 1.2.4 (reason)
+
+### Removed Dependencies
+
+- `package-name`: No longer needed because...
+
+**Dependency Check:**
+
+- [ ] `pip check` passes (no dependency conflicts)
+- [ ] All dependencies pinned with version constraints
+- [ ] No CVEs in new dependencies (check with `safety check`)
+
+---
+
+## 🌍 Internationalization
+
+<!-- If applicable, address i18n concerns -->
+
+- [ ] No user-facing strings added
+- [ ] User-facing strings added to translation files
+- [ ] UI text follows Microsoft Fluent Design guidelines
+
+---
+
+## ♿ Accessibility
+
+<!-- If UI changes, address accessibility -->
+
+- [ ] No UI changes
+- [ ] UI changes are keyboard accessible
+- [ ] UI changes support high-contrast themes
+- [ ] Screen reader compatibility verified
+
+---
+
+## 📋 Checklist
+
+<!-- Confirm all requirements are met -->
+
+### Required
+
+- [ ] I have read the [CONTRIBUTING.md](../CONTRIBUTING.md) guidelines
+- [ ] I have read and agree to the [Code of Conduct](CODE_OF_CONDUCT.md)
+- [ ] My code follows the project's code style (Ruff + MyPy)
+- [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
+- [ ] My changes generate no new warnings or errors
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] Any dependent changes have been merged and published
 
-## Reviewer Notes
+### Optional (Recommended)
 
-<!-- Anything specific you want reviewers to focus on -->
+- [ ] I have squashed my commits into logical units
+- [ ] I have rebased my branch on the latest `dev` branch
+- [ ] I have run the full test suite (`pytest tests/`)
+- [ ] I have checked code coverage (`pytest --cov=app`)
+- [ ] I have run security scans (`bandit -r app/`)
+- [ ] I have verified the application starts and runs correctly
 
 ---
 
-**By submitting this pull request, I confirm that my contribution is made under the terms of the MIT license.**
+## 💬 Additional Context
+
+<!-- Add any other context about the pull request here -->
+
+---
+
+## 🏷️ PR Metadata
+
+<!-- This section is auto-populated by GitHub, but you can add labels manually -->
+
+**Target Branch:** `dev` / `main`
+
+**Reviewers:** @mosh666
+
+**Labels:**
+<!-- Add relevant labels -->
+- `enhancement` / `bug` / `documentation` / `security`
+- `priority: high` / `priority: medium` / `priority: low`
+- `area: core` / `area: plugins` / `area: ui` / `area: testing`
+
+**Milestone:** v1.0.1 / v1.1.0
+
+---
+
+## 📞 Questions?
+
+If you have questions about this PR or need help, feel free to:
+
+- 💬 Comment on this PR
+- 📧 Email: 24556349+mosh666@users.noreply.github.com
+- 💡 Start a [Discussion](https://github.com/mosh666/pyMM/discussions)
+
+---
+
+**Thank you for contributing to pyMediaManager! 🎉**
+
+<!-- 
+Reviewer Notes:
+- Check all items in the checklist
+- Verify tests pass in CI
+- Review code for security issues
+- Ensure documentation is complete
+- Test functionality manually if GUI changes
+-->

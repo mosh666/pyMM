@@ -1,733 +1,1248 @@
-# Plugin Development Guide
+<!-- markdownlint-disable MD013 MD022 MD031 MD032 MD033 MD034 MD036 MD040 MD051 MD060 -->
 
-This guide explains how to create and configure plugins for pyMediaManager (pyMM).
+# 🔌 Plugin Development Guide
 
-## Table of Contents
+> **Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended)  
+> **Plugin System:** Manifest-driven (YAML-based) with automatic validation  
+> **Security:** SHA-256 checksum verification, retry logic, progress tracking  
+> **Last Updated:** January 7, 2026
+
+## 📚 Table of Contents
 
 - [Overview](#overview)
+- [Quick Start](#quick-start)
 - [Plugin Architecture](#plugin-architecture)
-- [Creating a Plugin](#creating-a-plugin)
-- [Plugin YAML Schema](#plugin-yaml-schema)
-- [Implementing Plugin Logic](#implementing-plugin-logic)
-- [Testing Your Plugin](#testing-your-plugin)
+- [YAML Manifest Schema](#yaml-manifest-schema)
+- [Plugin Types](#plugin-types)
+- [Creating Your First Plugin](#creating-your-first-plugin)
+- [Advanced Configuration](#advanced-configuration)
+- [Testing Plugins](#testing-plugins)
+- [Publishing Plugins](#publishing-plugins)
 - [Best Practices](#best-practices)
+- [Troubleshooting](#troubleshooting)
+- [API Reference](#api-reference)
 
-## Overview
+---
 
-pyMM uses a plugin system to manage external tools and dependencies. Each plugin
-represents a third-party tool (like Git, FFmpeg, or ExifTool) that pyMM can
-download, install, and manage automatically.
+## 🎯 Overview
 
-Plugins are defined by:
+pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows external tools to be managed without writing Python code. Plugins are defined entirely through YAML manifests that describe:
 
-1. A YAML manifest file (`plugin.yaml`) defining metadata and download
-   information
-2. An optional Python implementation extending `PluginBase` for custom behavior
+- 📦 **Download Sources**: Direct URLs or GitHub releases
+- 🔐 **Security**: SHA-256 checksums for integrity verification
+- 📂 **Installation**: Extraction paths and directory structure
+- ⚙️ **Configuration**: Command paths, executables, PATH registration
+- 🔗 **Dependencies**: Optional plugin dependencies
 
-## Plugin Architecture
+### Key Benefits
 
-### No-Code Plugin System
+✅ **No Code Required**: Pure data-driven configuration  
+✅ **Security**: No arbitrary code execution, sandboxed downloads  
+✅ **Portability**: Plugins install to external drives  
+✅ **Automatic Updates**: Version tracking and update checks  
+✅ **Validation**: Strict Pydantic schema validation
 
-pyMediaManager uses a strictly manifest-driven approach for plugins. External code execution is
-managed directly by the core application based on the declarations in `plugin.yaml`.
+---
 
-Currently, custom Python code (classes inheriting `PluginBase`) is **not supported** effectively.
-While the code structure exists, the `PluginManager` is configured to load plugins using
-`SimplePluginImplementation` based solely on the YAML manifest.
+## 🚀 Quick Start
 
-### Plugin Manifest (YAML)
+### 5-Minute Plugin Creation
 
-All plugins are defined by a `plugin.yaml` file. This declarative approach ensures:
+1. **Create plugin directory**:
 
-1. **Security**: No arbitrary code execution during plugin loading.
-2. **Stability**: Plugins cannot crash the main application logic.
-3. **Portability**: Dependencies are managed via standard archives.
+   ```bash
+   mkdir -p plugins/mytool
+   ```
 
-See [Plugin YAML Schema](#plugin-yaml-schema) for details.
+2. **Create `plugin.yaml`**:
+   ```yaml
+   name: MyTool
+   version: 1.0.0
+   description: My awesome tool
+   homepage: https://example.com/mytool
+   mandatory: false
+   enabled: true
+   
+   source:
+     type: url
+     uri: https://example.com/mytool-1.0.0-win64.zip
+     checksum_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+     file_size: 5242880
+   
+   command:
+     path: bin
+     executable: mytool.exe
+     register_to_path: false
+   
+   dependencies: []
+   ```
 
-## Creating a New Plugin
+3. **Test plugin**:
+   ```bash
+   python -m pytest tests/test_plugin_manager.py -k "test_discover_plugins"
+   ```
 
-To create a new plugin, you simply need to create a directory with a `plugin.yaml` file.
+4. **Install in pyMM**:
+   - Launch pyMM
+   - Navigate to Plugin View
+   - Click "Refresh Plugins"
+   - Select "MyTool" and click "Install"
 
-### Step-by-Step
+---
 
-1. **Create Directory**: Create a folder in `plugins/` (e.g., `plugins/mytool/`).
-2. **Create Manifest**: Add a `plugin.yaml` file.
-3. **Define Source**: Specify where to download the tool (URL) and how to extract it.
-4. **Define Command**: Specify the executable name relative to the installation.
+## 🏗️ Plugin Architecture
 
-### Example Manifest
+### Manifest-Driven Approach
 
-`plugins/mytool/plugin.yaml`:
+pyMM uses a **strictly manifest-driven** plugin system. External tools are managed entirely by the core application based on YAML declarations—**no custom Python code is executed during plugin loading or installation**.
+
+```mermaid
+graph LR
+    YAML[plugin.yaml] -->|Pydantic| Validation[Schema Validation]
+    Validation -->|Pass| Manager[Plugin Manager]
+    Validation -->|Fail| Error[Validation Error]
+    Manager --> Download[Download & Verify]
+    Download --> Extract[Extract to plugins_dir]
+    Extract --> Validate[Validate Installation]
+    Validate --> Ready[Plugin Ready]
+```
+
+### Component Overview
+
+| Component | Purpose | Technology |
+|-----------|---------|------------|
+| **Plugin Manifest** | Declarative configuration | YAML |
+| **PluginManifestSchema** | Validation and type safety | Pydantic 2.5+ |
+| **PluginManager** | Discovery, installation, lifecycle | Python 3.13 |
+| **SimplePluginImplementation** | Download, extract, validate | aiohttp, shutil |
+
+### Security Model
+
+1. **No Code Execution**: Plugins cannot run arbitrary Python code
+2. **Sandboxed Downloads**: Isolated temp directory, HTTPS only
+3. **Integrity Verification**: SHA-256 checksum validation
+4. **Fail-Fast Validation**: Strict schema enforcement
+
+---
+
+## 📋 YAML Manifest Schema
+
+### Complete Schema Reference
 
 ```yaml
-name: "MyTool"
-version: "1.0.0"
+# Required Fields
+name: string                    # Plugin name (alphanumeric, spaces allowed)
+version: string                 # Semantic version (e.g., 2.47.1)
+description: string             # Brief description
+homepage: string                # Official website URL
+mandatory: boolean              # Is plugin required for core functionality?
+enabled: boolean                # Is plugin enabled by default?
+
+# Source Configuration
+source:
+  type: string                  # "url" or "github"
+  uri: string                   # Download URL or GitHub repo (owner/repo)
+  asset_pattern: string         # (GitHub only) Regex for release asset
+  checksum_sha256: string       # SHA-256 hash of download file
+  file_size: integer            # File size in bytes (optional)
+
+# Command Configuration
+command:
+  path: string                  # Relative path from plugin root to binary dir
+  executable: string            # Executable filename
+  register_to_path: boolean     # Add to system PATH?
+
+# Dependencies (optional)
+dependencies:
+  - string                      # List of plugin names this depends on
+```
+
+### Field Validation Rules
+
+| Field | Type | Required | Validation |
+|-------|------|----------|------------|
+| `name` | `str` | ✅ | 1-100 chars, alphanumeric + spaces/hyphens |
+| `version` | `str` | ✅ | Semantic versioning (1.0.0, 2.1.3-beta) |
+| `description` | `str` | ✅ | 1-500 chars |
+| `homepage` | `str` | ✅ | Valid HTTP/HTTPS URL |
+| `mandatory` | `bool` | ✅ | `true` or `false` |
+| `enabled` | `bool` | ✅ | `true` or `false` |
+| `source.type` | `str` | ✅ | `"url"` or `"github"` |
+| `source.uri` | `str` | ✅ | URL or `owner/repo` format |
+| `source.checksum_sha256` | `str` | ✅ | 64-char hex string |
+| `source.file_size` | `int` | ❌ | Positive integer (bytes) |
+| `command.path` | `str` | ✅ | Relative path (no `..`) |
+| `command.executable` | `str` | ✅ | Filename with extension |
+| `command.register_to_path` | `bool` | ✅ | `true` or `false` |
+| `dependencies` | `list[str]` | ❌ | List of plugin names |
+
+---
+
+## 🎨 Plugin Types
+
+### 1. URL-Based Plugins
+
+Direct download from a static URL.
+
+**Use Case**: Self-hosted binaries, stable tool versions
+
+```yaml
+name: MyTool
+version: 3.2.1
+description: Custom tool with direct download
+homepage: https://example.com
 mandatory: false
 enabled: true
 
 source:
-  type: "url"
-  base_uri: "https://example.com/downloads/mytool-v1.0.zip"
-  # Optional: verify file integrity
-  checksum_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  asset_pattern: "mytool-windows-x64.zip"
+  type: url
+  uri: https://cdn.example.com/releases/mytool-3.2.1-windows-x64.zip
+  checksum_sha256: "a1b2c3d4e5f6..."
+  file_size: 15728640  # 15 MB
 
 command:
-  path: "bin"
-  executable: "mytool.exe"
+  path: bin
+  executable: mytool.exe
+  register_to_path: true
 
-register_to_path: true
+dependencies: []
 ```
 
-def install(self, progress_callback: Callable[[str], None] | None = None) -> bool:
-    """Install the plugin."""
-    pass
+**Checksum Generation**:
+```powershell
+# PowerShell
+Get-FileHash mytool-3.2.1-windows-x64.zip -Algorithm SHA256
 
-@abstractmethod
-def uninstall(self) -> bool:
-    """Uninstall the plugin."""
-    pass
-
-@abstractmethod
-def get_version(self) -> str | None:
-    """Get the installed version of the plugin."""
-    pass
-
-```python
-### Simple Plugin Implementation
-
-
-Most plugins use `SimplePluginImplementation`, which provides default behavior:
-
-```python
-from app.plugins.plugin_base import SimplePluginImplementation
-
-class MyToolPlugin(SimplePluginImplementation):
-    """Plugin for MyTool."""
-    pass  # Uses default implementation
+# Output:
+# Algorithm       Hash                                   Path
+# ---------       ----                                   ----
+# SHA256          A1B2C3D4E5F6...                       mytool-3.2.1-windows-x64.zip
 ```
 
-For custom behavior, override specific methods:
+---
 
-```python
-class CustomPlugin(SimplePluginImplementation):
-    def check_installed(self) -> bool:
-        """Custom installation check."""
-        # Your custom logic here
-        return super().check_installed()
+### 2. GitHub Release Plugins
 
-    def get_version(self) -> str | None:
-        """Custom version detection."""
-        # Parse version from tool output
-        return "1.0.0"
-```
+Download from GitHub Releases with asset pattern matching.
 
-## Creating a Plugin
-
-### Step 1: Create Plugin Directory
-
-Create a directory in `plugins/` with your tool name:
-
-```text
-plugins/
-  mytool/
-    plugin.yaml
-```
-
-### Step 2: Define Plugin Manifest
-
-Create `plugin.yaml` with your plugin configuration (see [Plugin YAML Schema](#plugin-yaml-schema) below).
-
-### Step 3: (Optional) Create Custom Implementation
-
-If you need custom behavior beyond `SimplePluginImplementation`, create a Python module:
-
-```python
-# plugins/mytool/mytool_plugin.py
-from app.plugins.plugin_base import PluginBase, PluginManifest
-
-class MyToolPlugin(PluginBase):
-    def __init__(self, manifest: PluginManifest, install_dir: Path):
-        super().__init__(manifest, install_dir)
-
-    def check_installed(self) -> bool:
-        # Custom check logic
-        pass
-
-    def install(self, progress_callback=None) -> bool:
-        # Custom install logic
-        return self.download_and_extract_binary(progress_callback)
-
-    def uninstall(self) -> bool:
-        # Custom uninstall logic
-        pass
-
-    def get_version(self) -> str | None:
-        # Custom version detection
-        pass
-```
-
-## Plugin YAML Schema
-
-### Required Fields
+**Use Case**: Open-source tools with regular releases
 
 ```yaml
-name: string
-  # Display name of the plugin
-  # Example: "Git"
-
-version: string
-  # Version of the plugin/tool
-  # Example: "2.43.0"
-
-mandatory: boolean
-  # true = Required for pyMM to function
-  # false = Optional plugin
-  # Example: true
-
-enabled: boolean
-  # true = Plugin is active
-  # false = Plugin is disabled
-  # Example: true
-
-source:
-  type: string
-    # Download method (currently only "url" supported)
-    # Example: "url"
-
-  base_uri: string
-    # Download URL for the plugin archive
-    # Example: "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe"
-
-command:
-  path: string
-    # Relative path to executable directory from plugin root
-    # Use empty string ("") if executable is in root
-    # Example: "bin" or ""
-
-  executable: string
-    # Filename of the executable
-    # Example: "git.exe"
-
-register_to_path: boolean
-  # true = Add executable directory to PATH
-  # false = Don't modify PATH
-  # Example: true
-```
-
-### Optional Fields
-
-```yaml
-description: string
-  # Human-readable description of the plugin
-  # Example: "Distributed version control system"
-
-dependencies: list[string]
-  # List of plugin names this plugin depends on
-  # Example: ["git", "mariadb"]
-
-source:
-  checksum_sha256: string
-    # SHA-256 hash (uppercase hex) for integrity verification
-    # Example: "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-
-  file_size: integer
-    # Expected file size in bytes (for progress tracking)
-    # Example: 52428800
-
-  asset_pattern: string
-    # Pattern for GitHub release assets (not yet implemented)
-    # Example: "PortableGit-.*-64-bit\\.7z\\.exe"
-```
-
-## Complete Example
-
-### Basic Plugin: FFmpeg
-
-```yaml
-name: "FFmpeg"
-version: "7.0.1"
-description: "Complete multimedia framework for video/audio processing"
+name: Git
+version: 2.47.1
+description: Distributed version control system
+homepage: https://git-scm.com
 mandatory: false
 enabled: true
 
 source:
-  type: "url"
-  base_uri: "https://github.com/GyanD/codexffmpeg/releases/download/7.0.1/ffmpeg-7.0.1-full_build.7z"
-  checksum_sha256: "1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF"
-  file_size: 123456789
+  type: github
+  uri: git-for-windows/git
+  asset_pattern: "PortableGit-.*-64-bit\\.7z\\.exe$"
+  checksum_sha256: "f9a9d5c1..."
 
 command:
-  path: "bin"
-  executable: "ffmpeg.exe"
+  path: cmd
+  executable: git.exe
+  register_to_path: true
 
-register_to_path: true
+dependencies: []
 ```
 
-### Advanced Plugin: digiKam (with dependencies)
+**Asset Pattern Matching**:
+- Uses Python regex syntax
+- Matches against release asset filenames
+- Must escape special characters (`\.`, `\$`, etc.)
+- Pattern is case-sensitive
+
+**Example Patterns**:
+```yaml
+# Match specific version
+asset_pattern: "tool-1\\.2\\.3-win64\\.zip$"
+
+# Match any version with architecture
+asset_pattern: "tool-.*-x64\\.zip$"
+
+# Match portable or installer
+asset_pattern: "(Portable|Setup)-.*\\.exe$"
+```
+
+---
+
+### 3. Plugins with Dependencies
+
+Plugins that require other plugins to function.
+
+**Use Case**: Tools that depend on runtime libraries
 
 ```yaml
-name: "digiKam"
-version: "8.5.0"
-description: "Professional photo management application"
+name: GitLFS
+version: 3.5.1
+description: Git extension for large file support
+homepage: https://git-lfs.com
 mandatory: false
 enabled: false
 
-dependencies:
-  - "mariadb"
-  - "exiftool"
-
 source:
-  type: "url"
-  base_uri: "https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe"
-  file_size: 387654321
+  type: github
+  uri: git-lfs/git-lfs
+  asset_pattern: "git-lfs-windows-v.*\\.exe$"
+  checksum_sha256: "b5c6d7e8..."
 
 command:
   path: ""
-  executable: "digikam.exe"
+  executable: git-lfs.exe
+  register_to_path: true
 
-register_to_path: true
+dependencies:
+  - Git  # Requires Git plugin to be installed first
 ```
 
-## Implementing Plugin Logic
+**Dependency Resolution**:
+- Plugin Manager installs dependencies recursively
+- Circular dependencies are detected and rejected
+- Installation order: dependencies → dependent plugin
 
-### Using Default Implementation
+---
 
-Most plugins can use `SimplePluginImplementation` which provides:
+## 🛠️ Creating Your First Plugin
 
-1. **Installation**: Downloads and extracts to `<storage_dir>/plugins/<plugin_name>/`
-2. **Version Check**: Runs `<executable> --version` and parses output
-3. **Installation Check**: Verifies executable exists and can run
-4. **Uninstallation**: Removes plugin directory
+### Example: FFmpeg Plugin
 
-### Custom Installation Logic
+Let's create a complete plugin for FFmpeg, a multimedia framework.
 
-Override the `install()` method for custom behavior:
+#### Step 1: Research the Tool
 
-```python
-def install(self, progress_callback=None) -> bool:
-    """Custom installation with post-processing."""
-    # Download and extract
-    if not self.download_and_extract_binary(progress_callback):
-        return False
-
-    # Post-install configuration
-    config_file = self.install_dir / "config.ini"
-    config_file.write_text("[Settings]\nkey=value")
-
-    # Create symlinks or shortcuts
-    self._create_shortcuts()
-
-    return True
-```
-
-### Custom Version Detection
-
-Override `get_version()` for non-standard version output:
-
-```python
-def get_version(self) -> str | None:
-    """Parse version from tool-specific output."""
-    try:
-        result = subprocess.run(
-            [self.executable_path, "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5
-        )
-        # Parse version with regex
-        import re
-        match = re.search(r"v(\d+\.\d+\.\d+)", result.stdout)
-        return match.group(1) if match else None
-    except Exception:
-        return None
-```
-
-### Custom Installation Check
-
-Override `check_installed()` for complex verification:
-
-```python
-def check_installed(self) -> bool:
-    """Verify installation with multiple checks."""
-    # Check executable exists
-    if not self.executable_path.exists():
-        return False
-
-    # Check required files
-    required_files = ["lib/library.dll", "config/default.cfg"]
-    if not all((self.install_dir / f).exists() for f in required_files):
-        return False
-
-    # Verify executable runs
-    try:
-        subprocess.run(
-            [self.executable_path, "--help"],
-            capture_output=True,
-            timeout=5,
-            check=True
-        )
-        return True
-    except Exception:
-        return False
-```
-
-## Testing Your Plugin
-
-### Manual Testing
-
-1. **Place your plugin in the plugins directory**:
-
-   ```text
-   plugins/
-     mytool/
-       plugin.yaml
+1. **Find official source**: https://ffmpeg.org/download.html
+2. **Locate Windows builds**: https://github.com/BtbN/FFmpeg-Builds/releases
+3. **Choose version**: 7.1 (latest stable)
+4. **Download and verify**:
+   ```powershell
+   # Download
+   Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "ffmpeg.zip"
+   
+   # Calculate SHA-256
+   Get-FileHash ffmpeg.zip -Algorithm SHA256
+   
+   # Get file size
+   (Get-Item ffmpeg.zip).Length
    ```
 
-2. **Launch pyMM** and check the Plugin Manager view
+#### Step 2: Test Extraction
 
-3. **Verify plugin is discovered**:
-   - Should appear in the plugin list
-   - Check mandatory/enabled status
-   - Verify dependencies are shown
+```powershell
+# Extract to test directory
+Expand-Archive -Path ffmpeg.zip -DestinationPath test-extract
 
-4. **Test installation**:
-   - Click Install button
-   - Monitor progress callback
-   - Verify files are extracted to `<storage>/plugins/mytool/`
-   - Check executable is registered to PATH
+# Verify structure
+tree /F test-extract
 
-5. **Test version detection**:
-   - Should display version after installation
-   - Verify version string is parsed correctly
+# Test executable
+.\test-extract\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe -version
+```
 
-6. **Test uninstallation**:
-   - Click Uninstall button
-   - Verify all files are removed
-   - Check PATH is cleaned up
+Expected output:
+```
+test-extract/
+└── ffmpeg-master-latest-win64-gpl/
+    ├── bin/
+    │   ├── ffmpeg.exe
+    │   ├── ffplay.exe
+    │   └── ffprobe.exe
+    ├── LICENSE.txt
+    └── README.txt
+```
 
-### Automated Testing
+#### Step 3: Create Manifest
 
-Create a test file in `tests/unit/test_mytool_plugin.py`:
+```yaml
+# plugins/ffmpeg/plugin.yaml
+name: FFmpeg
+version: 7.1.0
+description: Complete multimedia framework for audio/video processing
+homepage: https://ffmpeg.org
+mandatory: false
+enabled: false
+
+source:
+  type: github
+  uri: BtbN/FFmpeg-Builds
+  asset_pattern: "ffmpeg-master-latest-win64-gpl\\.zip$"
+  checksum_sha256: "1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890"
+  file_size: 89478485  # ~85 MB
+
+command:
+  # Note: GitHub releases extract to subdirectory
+  path: ffmpeg-master-latest-win64-gpl/bin
+  executable: ffmpeg.exe
+  register_to_path: true
+
+dependencies: []
+```
+
+#### Step 4: Validate Schema
 
 ```python
-"""Tests for MyTool plugin."""
+# tests/test_ffmpeg_plugin.py
+import yaml
+from pathlib import Path
+from app.plugins.plugin_schema import PluginManifestSchema
+
+def test_ffmpeg_manifest_valid():
+    """Test FFmpeg plugin manifest is valid."""
+    manifest_file = Path("plugins/ffmpeg/plugin.yaml")
+    
+    with open(manifest_file) as f:
+        data = yaml.safe_load(f)
+    
+    # Pydantic validation
+    manifest = PluginManifestSchema(**data)
+    
+    assert manifest.name == "FFmpeg"
+    assert manifest.version == "7.1.0"
+    assert manifest.source.type == "github"
+    assert len(manifest.source.checksum_sha256) == 64
+```
+
+Run validation:
+```bash
+pytest tests/test_ffmpeg_plugin.py -v
+```
+
+#### Step 5: Test Installation
+
+```python
+# Manual test script
+import asyncio
+from pathlib import Path
+from app.plugins.plugin_manager import PluginManager
+
+async def test_ffmpeg_install():
+    plugins_dir = Path("D:/pyMM.Plugins")
+    manifests_dir = Path("plugins")
+    
+    manager = PluginManager(plugins_dir, manifests_dir)
+    manager.discover_plugins()
+    
+    print(f"Discovered plugins: {list(manager.plugins.keys())}")
+    
+    # Install FFmpeg
+    success = await manager.install_plugin("FFmpeg", progress_callback=print_progress)
+    
+    if success:
+        print("✅ FFmpeg installed successfully")
+        plugin = manager.plugins["FFmpeg"]
+        version = plugin.get_version()
+        print(f"Version: {version}")
+    else:
+        print("❌ Installation failed")
+
+def print_progress(current: int, total: int):
+    percent = (current / total) * 100
+    print(f"Progress: {percent:.1f}% ({current}/{total} bytes)")
+
+if __name__ == "__main__":
+    asyncio.run(test_ffmpeg_install())
+```
+
+---
+
+## ⚙️ Advanced Configuration
+
+### Multi-Executable Plugins
+
+Some tools provide multiple executables (e.g., FFmpeg has `ffmpeg`, `ffplay`, `ffprobe`).
+
+**Solution**: Use the primary executable in `command.executable`, access others programmatically.
+
+```yaml
+command:
+  path: bin
+  executable: ffmpeg.exe  # Primary tool
+  register_to_path: true
+```
+
+**Accessing secondary executables**:
+```python
+plugin = plugin_manager.plugins["FFmpeg"]
+ffmpeg_exe = plugin.get_executable_path()  # Returns .../bin/ffmpeg.exe
+ffprobe_exe = ffmpeg_exe.parent / "ffprobe.exe"  # Same directory
+```
+
+---
+
+### Versioned Command Paths
+
+Tools that include version in directory name:
+
+```yaml
+# Example: Node.js portable
+command:
+  path: node-v20.11.0-win-x64  # Versioned directory
+  executable: node.exe
+  register_to_path: true
+```
+
+**Challenge**: Version changes require manifest update.
+
+**Solution**: Use regex replacement (planned feature):
+
+```yaml
+# Future syntax
+command:
+  path: "node-v{version}-win-x64"
+  executable: node.exe
+  register_to_path: true
+```
+
+---
+
+### Self-Extracting Archives
+
+Some Windows tools use `.exe` self-extractors:
+
+```yaml
+source:
+  type: url
+  uri: https://example.com/tool-portable.exe
+  checksum_sha256: "abc123..."
+```
+
+**Current Behavior**: PluginManager treats `.exe` files as executables, not archives.
+
+**Workaround**: Use 7-Zip command-line extraction:
+
+```yaml
+# If tool provides .7z.exe self-extractor
+source:
+  uri: https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.1/PortableGit-2.47.1-64-bit.7z.exe
+```
+
+Plugin Manager automatically detects `.7z.exe` and extracts with 7-Zip.
+
+---
+
+### Large File Downloads
+
+For files >100MB, consider:
+
+1. **Progress Callbacks**: Show download progress in UI
+2. **Resume Support**: Plugin Manager supports HTTP range requests
+3. **Timeout Configuration**: Adjust `config.plugins.download_timeout`
+
+```yaml
+# pyMM config/user.yaml
+plugins:
+  download_timeout: 600  # 10 minutes for large files
+  parallel_downloads: 1  # Sequential for slow connections
+```
+
+---
+
+## 🧪 Testing Plugins
+
+### Unit Testing
+
+```python
+# tests/unit/test_custom_plugin.py
+import pytest
+from pathlib import Path
+from app.plugins.plugin_manager import PluginManager
+from app.plugins.plugin_schema import PluginManifestSchema
+import yaml
+
+@pytest.fixture
+def plugin_manifest(tmp_path: Path) -> Path:
+    """Create temporary plugin manifest."""
+    manifest_dir = tmp_path / "mytool"
+    manifest_dir.mkdir()
+    
+    manifest_file = manifest_dir / "plugin.yaml"
+    manifest_file.write_text("""
+name: MyTool
+version: 1.0.0
+description: Test tool
+homepage: https://example.com
+mandatory: false
+enabled: true
+source:
+  type: url
+  uri: https://example.com/mytool.zip
+  checksum_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+command:
+  path: bin
+  executable: mytool.exe
+  register_to_path: false
+dependencies: []
+    """)
+    
+    return manifest_file
+
+def test_manifest_schema_valid(plugin_manifest: Path):
+    """Test manifest passes Pydantic validation."""
+    with open(plugin_manifest) as f:
+        data = yaml.safe_load(f)
+    
+    manifest = PluginManifestSchema(**data)
+    assert manifest.name == "MyTool"
+
+def test_plugin_discovery(tmp_path: Path, plugin_manifest: Path):
+    """Test plugin is discovered by PluginManager."""
+    plugins_dir = tmp_path / "plugins"
+    manifests_dir = plugin_manifest.parent.parent
+    
+    manager = PluginManager(plugins_dir, manifests_dir)
+    count = manager.discover_plugins()
+    
+    assert count == 1
+    assert "MyTool" in manager.plugins
+
+@pytest.mark.asyncio
+async def test_plugin_download_mock(tmp_path: Path, mocker):
+    """Test plugin download with mocked HTTP."""
+    # Mock aiohttp response
+    mock_response = mocker.AsyncMock()
+    mock_response.status = 200
+    mock_response.headers = {"Content-Length": "1024"}
+    mock_response.content.iter_chunked = mocker.AsyncMock(
+        return_value=[b"test" * 256]  # 1024 bytes
+    )
+    
+    mock_session = mocker.AsyncMock()
+    mock_session.get.return_value.__aenter__.return_value = mock_response
+    
+    mocker.patch("aiohttp.ClientSession", return_value=mock_session)
+    
+    # Create plugin
+    from app.plugins.plugin_base import SimplePluginImplementation, PluginManifest
+    
+    manifest = PluginManifest(
+        name="TestPlugin",
+        version="1.0.0",
+        mandatory=False,
+        enabled=True,
+        source_type="url",
+        source_uri="https://example.com/test.zip",
+        checksum_sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    )
+    
+    plugin = SimplePluginImplementation(manifest, tmp_path)
+    
+    # Download (will fail checksum but tests HTTP logic)
+    try:
+        result = await plugin.download()
+    except Exception:
+        pass  # Expected: checksum mismatch
+    
+    mock_session.get.assert_called_once()
+```
+
+### Integration Testing
+
+```python
+# tests/integration/test_plugin_workflow.py
 import pytest
 from pathlib import Path
 from app.plugins.plugin_manager import PluginManager
 
-def test_mytool_discovery(temp_dir):
-    """Test MyTool plugin is discovered."""
-    plugin_dir = temp_dir / "plugins"
-    plugin_dir.mkdir()
-
-    # Create test plugin.yaml
-    mytool_dir = plugin_dir / "mytool"
-    mytool_dir.mkdir()
-    (mytool_dir / "plugin.yaml").write_text("""
-name: "MyTool"
-version: "1.0.0"
-mandatory: false
-enabled: true
-source:
-  type: "url"
-  base_uri: "https://example.com/mytool.zip"
-command:
-  path: ""
-  executable: "mytool.exe"
-register_to_path: true
-""")
-
-    # Test discovery
-    manager = PluginManager(temp_dir)
-    plugins = manager.get_all_plugins()
-
-    assert "mytool" in plugins
-    assert plugins["mytool"].manifest.name == "MyTool"
-    assert plugins["mytool"].manifest.version == "1.0.0"
-
-def test_mytool_installation(temp_dir, mock_download):
-    """Test MyTool installation."""
-    # Set up plugin
-    manager = PluginManager(temp_dir)
-    plugin = manager.get_plugin("mytool")
-
-    # Mock download and install
-    assert plugin.install() is True
-    assert plugin.check_installed() is True
-    assert plugin.get_version() == "1.0.0"
+@pytest.mark.integration
+@pytest.mark.asyncio
+async def test_full_plugin_lifecycle(tmp_path: Path):
+    """Test complete plugin workflow: discover → install → validate."""
+    # This test requires actual plugin manifest and download URL
+    # Use small test file (<1MB) for fast execution
+    
+    manifests_dir = Path("plugins")
+    plugins_dir = tmp_path / "plugins"
+    plugins_dir.mkdir()
+    
+    manager = PluginManager(plugins_dir, manifests_dir)
+    
+    # Discover
+    count = manager.discover_plugins()
+    assert count > 0
+    
+    # Choose smallest plugin for testing
+    test_plugin = min(
+        manager.manifests.values(),
+        key=lambda m: m.file_size or float('inf')
+    )
+    
+    # Install
+    success = await manager.install_plugin(test_plugin.name)
+    assert success
+    
+    # Validate
+    plugin = manager.plugins[test_plugin.name]
+    assert plugin.validate_installation()
+    
+    # Get version
+    version = plugin.get_version()
+    assert version is not None
 ```
-
-## Best Practices
-
-### 1. Always Provide Checksums
-
-Include SHA-256 checksums for security and integrity verification:
-
-```yaml
-source:
-  checksum_sha256: "ABC123..."  # Generate with: certutil -hashfile file.exe SHA256
-```
-
-### 2. Use Semantic Versioning
-
-Follow [semver.org](https://semver.org) for version numbers:
-
-```yaml
-version: "2.1.3"  # MAJOR.MINOR.PATCH
-```
-
-### 3. Specify File Sizes
-
-Include file sizes for accurate progress tracking:
-
-```yaml
-source:
-  file_size: 52428800  # 50 MB in bytes
-```
-
-### 4. Document Dependencies
-
-Explicitly list dependencies to ensure correct installation order:
-
-```yaml
-dependencies:
-  - "git"
-  - "git-lfs"
-```
-
-### 5. Test on Clean Installs
-
-Always test plugin installation on a machine without the tool pre-installed to verify:
-
-- Download URLs are accessible
-- Archive extraction works correctly
-- Executable paths are correct
-- Version detection works
-- PATH registration is functional
-
-### 6. Handle Installation Failures Gracefully
-
-Implement proper error handling in custom implementations:
-
-```python
-def install(self, progress_callback=None) -> bool:
-    """Install with error handling."""
-    try:
-        if not self.download_and_extract_binary(progress_callback):
-            logger.error(f"Failed to download {self.manifest.name}")
-            return False
-
-        # Post-install steps
-        self._configure()
-
-        if not self.check_installed():
-            logger.error(f"{self.manifest.name} installation verification failed")
-            return False
-
-        return True
-    except Exception as e:
-        logger.exception(f"Installation failed for {self.manifest.name}: {e}")
-        return False
-```
-
-### 7. Use Portable Versions
-
-Prefer portable/standalone versions of tools that don't require system installation:
-
-- PortableGit instead of Git installer
-- Portable FFmpeg builds
-- Standalone executables
-
-### 8. Document Platform Requirements
-
-If your plugin is platform-specific, document it:
-
-```yaml
-description: "Windows-only photo management tool"
-# Or implement platform checks in code
-```
-
-### 9. Keep Plugins Updated
-
-Regularly update plugin versions and checksums:
-
-- Monitor upstream releases
-- Test new versions before updating
-- Update CHANGELOG.md when bumping versions
-
-### 10. Follow Security Best Practices
-
-- Only download from official sources (GitHub releases, official websites)
-- Always verify checksums
-- Use HTTPS URLs
-- Scan downloaded files for malware before extraction (if implementing custom logic)
-
-## Plugin Lifecycle
-
-### Discovery Phase
-
-1. `PluginManager` scans `plugins/` directory
-2. Reads all `plugin.yaml` files
-3. Validates schema (strict validation - fails fast on errors)
-4. Creates `PluginManifest` objects
-5. Instantiates plugin implementations
-
-### Installation Phase
-
-1. User clicks Install in UI
-2. `PluginManager.install_plugin()` called
-3. Plugin's `install()` method executes:
-   - Downloads archive from `base_uri`
-   - Verifies checksum (if provided)
-   - Extracts to `<storage>/plugins/<name>/`
-   - Flattens directory structure
-   - Handles special cases (ExifTool renaming, etc.)
-4. Executable registered to PATH
-5. Version verification
-6. UI updates installation status
-
-### Runtime Phase
-
-1. Application checks plugin status via `check_installed()`
-2. Gets version via `get_version()`
-3. Executes plugin commands with executable path
-4. Monitors plugin health
-
-### Uninstallation Phase
-
-1. User clicks Uninstall in UI
-2. `plugin.uninstall()` removes installation directory
-3. PATH registration cleaned up
-4. UI updates status
-
-## Troubleshooting
-
-### Plugin Not Discovered
-
-- **Check YAML syntax**: Ensure valid YAML formatting
-- **Verify required fields**: All required fields must be present
-- **Check directory structure**: `plugins/<name>/plugin.yaml`
-- **Review logs**: Check `logs/` for validation errors
-
-### Download Fails
-
-- **Verify URL**: Ensure `base_uri` is accessible
-- **Check network**: Firewall or proxy issues
-- **Validate SSL**: Some corporate networks block certain certificates
-- **Try manual download**: Test URL in browser
-
-### Extraction Fails
-
-- **Check archive format**: ZIP, 7z, or self-extracting .exe supported
-- **Verify file integrity**: Checksum mismatch indicates corruption
-- **Check disk space**: Ensure sufficient space for extraction
-- **Review permissions**: Write permissions in storage directory
-
-### Executable Not Found
-
-- **Verify path**: Check `command.path` is correct relative to archive root
-- **Check extraction**: Ensure archive extracted properly
-- **Verify executable name**: Ensure `command.executable` matches actual filename
-- **Test manually**: Navigate to plugin directory and try running executable
-
-### Version Detection Fails
-
-- **Check executable output**: Run `<executable> --version` manually
-- **Implement custom parser**: Override `get_version()` for non-standard output
-- **Verify executable works**: Ensure tool runs correctly
-
-## Advanced Topics
-
-### GitHub Release Asset Pattern (Future Feature)
-
-The `asset_pattern` field is defined but not yet implemented. Future versions will support:
-
-```yaml
-source:
-  type: "github-release"
-  repository: "owner/repo"
-  asset_pattern: "mytool-.*-windows-x64\\.zip"
-```
-
-This will automatically fetch the latest matching asset from GitHub releases.
-
-### Multi-Platform Support
-
-To support multiple platforms, you can implement platform detection:
-
-```python
-import platform
-
-class CrossPlatformPlugin(PluginBase):
-    def __init__(self, manifest: PluginManifest, install_dir: Path):
-        super().__init__(manifest, install_dir)
-
-        # Platform-specific configuration
-        self.system = platform.system()
-        if self.system == "Windows":
-            self.executable_name = "tool.exe"
-        elif self.system == "Linux":
-            self.executable_name = "tool"
-        elif self.system == "Darwin":
-            self.executable_name = "tool"
-```
-
-### Custom Progress Callbacks
-
-Implement detailed progress reporting:
-
-```python
-def install(self, progress_callback=None) -> bool:
-    """Install with detailed progress."""
-    if progress_callback:
-        progress_callback("Starting download...")
-
-    # Download with progress
-    result = self.download_and_extract_binary(progress_callback)
-
-    if progress_callback:
-        progress_callback("Configuring plugin...")
-
-    self._configure()
-
-    if progress_callback:
-        progress_callback("Installation complete!")
-
-    return result
-```
-
-## Contributing
-
-When contributing new plugins to pyMM:
-
-1. Follow this guide for plugin structure
-2. Include checksums for all downloads
-3. Test thoroughly on clean installations
-4. Update `docs/architecture.md` if adding new patterns
-5. Add tests in `tests/unit/test_<plugin>_plugin.py`
-6. Update `CHANGELOG.md` with plugin addition
-7. Submit PR with plugin manifest and implementation
-
-## Resources
-
-- **Plugin Base Implementation**: `app/plugins/plugin_base.py`
-- **Plugin Manager**: `app/plugins/plugin_manager.py`
-- **Existing Plugins**: `plugins/` directory
-- **Architecture Documentation**: `docs/architecture.md`
-- **Contributing Guide**: `CONTRIBUTING.md`
-
-## Support
-
-For questions or issues with plugin development:
-
-1. Check existing plugin implementations in `plugins/`
-2. Review architecture documentation in `docs/architecture.md`
-3. Open an issue on GitHub with the `plugin` label
-4. Join discussions in the pyMM community
 
 ---
 
-**Last Updated**: January 2026
-**Version**: 1.0.0
+## 📤 Publishing Plugins
+
+### Official Plugin Repository
+
+pyMM maintains official plugins in `plugins/` directory:
+
+```
+plugins/
+├── git/plugin.yaml
+├── ffmpeg/plugin.yaml
+├── exiftool/plugin.yaml
+├── imagemagick/plugin.yaml
+└── ...
+```
+
+**Contribution Process**:
+
+1. **Fork Repository**:
+   ```bash
+   git clone https://github.com/mosh666/pyMM.git
+   cd pyMM
+   git checkout -b add-plugin-xyz
+   ```
+
+2. **Create Plugin**:
+   ```bash
+   mkdir plugins/xyz
+   # Create plugins/xyz/plugin.yaml
+   ```
+
+3. **Test Plugin**:
+   ```bash
+   pytest tests/unit/test_plugin_manager.py -k xyz
+   pytest tests/integration/ -k plugin
+   ```
+
+4. **Validate Quality**:
+   ```bash
+   # Lint
+   ruff check plugins/xyz/plugin.yaml
+   
+   # Type check
+   mypy app/plugins/
+   
+   # Security scan
+   bandit -r app/plugins/
+   ```
+
+5. **Submit Pull Request**:
+   ```bash
+   git add plugins/xyz/
+   git commit -m "feat(plugins): add XYZ plugin v1.2.3"
+   git push origin add-plugin-xyz
+   ```
+
+   Open PR at: https://github.com/mosh666/pyMM/compare
+
+---
+
+### Community Plugin Distribution
+
+For unofficial/experimental plugins:
+
+1. **Create Repository**:
+   ```
+   my-pymm-plugins/
+   ├── README.md
+   ├── mytool/
+   │   └── plugin.yaml
+   └── anothertool/
+       └── plugin.yaml
+   ```
+
+2. **Document Usage**:
+   ```markdown
+   # My pyMM Plugins
+   
+   ## Installation
+   1. Download plugin manifest: `mytool/plugin.yaml`
+   2. Copy to: `D:\pyMM\plugins\mytool\plugin.yaml`
+   3. Restart pyMM
+   4. Navigate to Plugin View → Refresh Plugins
+   5. Install "MyTool"
+   ```
+
+3. **Version Management**:
+   - Use semantic versioning in `version` field
+   - Update `checksum_sha256` for each release
+   - Maintain CHANGELOG.md
+
+---
+
+## ✅ Best Practices
+
+### 1. Naming Conventions
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Plugin Name | TitleCase, official spelling | `Git`, `FFmpeg`, `DigiKam` |
+| Directory | Lowercase, no spaces | `git/`, `ffmpeg/`, `digikam/` |
+| Executable | Exact case, with extension | `git.exe`, `ffmpeg.exe` |
+
+### 2. Version Pinning
+
+**✅ DO**: Pin exact versions
+```yaml
+version: 2.47.1
+source:
+  uri: https://example.com/tool-2.47.1.zip
+```
+
+**❌ DON'T**: Use "latest" or floating versions
+```yaml
+version: latest  # Bad!
+source:
+  uri: https://example.com/tool-latest.zip
+```
+
+**Reason**: Ensures reproducible installations, prevents breaking changes.
+
+---
+
+### 3. Checksum Verification
+
+**Always include SHA-256 checksums**:
+
+```powershell
+# Windows PowerShell
+Get-FileHash tool.zip -Algorithm SHA256 | Select-Object Hash
+
+# Linux/macOS
+shasum -a 256 tool.zip
+```
+
+**Handling Checksum Changes**:
+- If upstream updates file without version change, verify legitimacy
+- Contact tool maintainer if suspicious
+- Update checksum only after manual verification
+
+---
+
+### 4. File Size Hints
+
+**Include `file_size` for large downloads**:
+
+```yaml
+source:
+  uri: https://example.com/huge-tool.zip
+  checksum_sha256: "abc123..."
+  file_size: 524288000  # 500 MB
+```
+
+**Benefits**:
+- Progress bar accuracy
+- Early disk space validation
+- Download completion verification
+
+---
+
+### 5. Path Registration
+
+**Use `register_to_path: true` for command-line tools**:
+
+```yaml
+command:
+  executable: git.exe
+  register_to_path: true  # Makes 'git' available in CMD
+```
+
+**Use `register_to_path: false` for GUI applications**:
+
+```yaml
+command:
+  executable: digikam.exe
+  register_to_path: false  # Not a CLI tool
+```
+
+---
+
+### 6. Dependency Management
+
+**Minimize dependencies**:
+
+```yaml
+# ✅ Good: Only essential dependencies
+dependencies:
+  - Git
+
+# ❌ Bad: Transitive dependencies
+dependencies:
+  - Git
+  - Python  # Git doesn't need Python, user's project might
+```
+
+**Circular dependency detection**:
+
+```yaml
+# plugin-a.yaml
+dependencies:
+  - PluginB
+
+# plugin-b.yaml
+dependencies:
+  - PluginA  # Error: circular dependency!
+```
+
+Plugin Manager will detect and reject circular dependencies.
+
+---
+
+### 7. Documentation
+
+**Include comprehensive metadata**:
+
+```yaml
+name: MyTool
+version: 3.2.1
+description: |
+  Comprehensive tool description with features:
+  - Feature 1: Image processing
+  - Feature 2: Video encoding
+  - Feature 3: Batch operations
+homepage: https://example.com/mytool
+```
+
+**Link to documentation**:
+
+```yaml
+# Add custom field (allowed by Pydantic extra="allow")
+documentation: https://example.com/mytool/docs
+license: MIT
+repository: https://github.com/example/mytool
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### 1. "Schema Validation Failed"
+
+**Symptom**:
+```
+ERROR Plugin manifest validation failed: plugins/mytool/plugin.yaml
+ValidationError: 1 validation error for PluginManifestSchema
+source.checksum_sha256
+  String should match pattern '^[a-f0-9]{64}$'
+```
+
+**Solution**: Verify checksum is 64-character hex string (no spaces, lowercase).
+
+```powershell
+# Correct format:
+checksum_sha256: "a1b2c3d4e5f6..."
+
+# Wrong format:
+checksum_sha256: "A1B2C3D4E5F6..."  # Uppercase
+checksum_sha256: "a1b2 c3d4 e5f6"    # Spaces
+```
+
+---
+
+#### 2. "Checksum Mismatch"
+
+**Symptom**:
+```
+ERROR Checksum verification failed for MyTool
+Expected: abc123...
+Actual:   def456...
+```
+
+**Causes**:
+1. Downloaded file corrupted
+2. Wrong checksum in manifest
+3. Upstream file changed without version bump
+
+**Solution**:
+```powershell
+# Re-download and calculate checksum
+Invoke-WebRequest -Uri "https://example.com/tool.zip" -OutFile "tool-verify.zip"
+Get-FileHash tool-verify.zip -Algorithm SHA256
+
+# Compare with manifest
+# If different, update manifest or report upstream issue
+```
+
+---
+
+#### 3. "Extraction Failed"
+
+**Symptom**:
+```
+ERROR Failed to extract MyTool: [WinError 32] The process cannot access the file
+```
+
+**Causes**:
+1. Archive corrupted
+2. Insufficient disk space
+3. File in use by another process
+
+**Solution**:
+```python
+# Enable debug logging
+logging:
+  level: DEBUG
+
+# Retry installation with verbose output
+```
+
+---
+
+#### 4. "Executable Not Found"
+
+**Symptom**:
+```
+ERROR Validation failed: git.exe not found in D:\pyMM.Plugins\git\cmd\
+```
+
+**Causes**:
+1. Wrong `command.path` in manifest
+2. Archive structure differs from expected
+
+**Solution**:
+```powershell
+# Manually extract and inspect structure
+Expand-Archive tool.zip test-dir
+tree /F test-dir
+
+# Update manifest command.path to match actual structure
+```
+
+---
+
+#### 5. "GitHub Asset Not Found"
+
+**Symptom**:
+```
+ERROR No matching asset found for pattern: "tool-.*-win64\.zip$"
+Available assets:
+  - tool-1.2.3-windows-x64.zip
+  - tool-1.2.3-linux-x64.tar.gz
+```
+
+**Solution**: Adjust `asset_pattern` to match available assets.
+
+```yaml
+# Before (wrong):
+asset_pattern: "tool-.*-win64\\.zip$"
+
+# After (correct):
+asset_pattern: "tool-.*-windows-x64\\.zip$"
+```
+
+---
+
+## 📚 API Reference
+
+### PluginManifest Dataclass
+
+```python
+@dataclass
+class PluginManifest:
+    """Plugin manifest configuration."""
+    
+    name: str
+    version: str
+    mandatory: bool
+    enabled: bool
+    source_type: str  # 'url' or 'github'
+    source_uri: str
+    asset_pattern: str | None = None
+    command_path: str = ""
+    command_executable: str = ""
+    register_to_path: bool = False
+    dependencies: list[str] = field(default_factory=list)
+    checksum_sha256: str | None = None
+    file_size: int | None = None
+```
+
+---
+
+### PluginBase Abstract Class
+
+```python
+class PluginBase(ABC):
+    """Abstract base class for plugins."""
+    
+    def __init__(self, manifest: PluginManifest, install_dir: Path):
+        """
+        Initialize plugin.
+        
+        Args:
+            manifest: Plugin manifest configuration
+            install_dir: Directory where plugin will be installed
+        """
+    
+    @abstractmethod
+    async def download(
+        self,
+        progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
+        """
+        Download plugin binaries.
+        
+        Args:
+            progress_callback: Optional callback for progress updates
+                              (current_bytes, total_bytes) -> None
+        
+        Returns:
+            True if download successful
+        """
+    
+    @abstractmethod
+    async def extract(self) -> bool:
+        """
+        Extract downloaded plugin archive.
+        
+        Returns:
+            True if extraction successful
+        """
+    
+    @abstractmethod
+    def validate_installation(self) -> bool:
+        """
+        Validate that plugin is properly installed.
+        
+        Returns:
+            True if plugin is installed and functional
+        """
+    
+    @abstractmethod
+    def get_version(self) -> str | None:
+        """
+        Get installed plugin version.
+        
+        Returns:
+            Version string or None if not installed
+        """
+    
+    def get_executable_path(self) -> Path | None:
+        """
+        Get path to plugin executable.
+        
+        Returns:
+            Path to executable or None if not found
+        """
+```
+
+---
+
+### PluginManager Class
+
+```python
+class PluginManager:
+    """Manager for application plugins."""
+    
+    def __init__(self, plugins_dir: Path, manifests_dir: Path):
+        """
+        Initialize plugin manager.
+        
+        Args:
+            plugins_dir: Directory where plugins are installed
+            manifests_dir: Directory containing plugin manifest YAML files
+        """
+    
+    def discover_plugins(self) -> int:
+        """
+        Discover plugins from manifest files.
+        
+        Returns:
+            Number of plugins discovered
+        """
+    
+    async def install_plugin(
+        self,
+        plugin_name: str,
+        progress_callback: Callable[[int, int], None] | None = None
+    ) -> bool:
+        """
+        Install plugin with progress tracking.
+        
+        Args:
+            plugin_name: Name of plugin to install
+            progress_callback: Optional progress callback
+        
+        Returns:
+            True if installation succeeded
+        """
+    
+    def get_installed_plugins(self) -> list[str]:
+        """
+        Get list of installed plugin names.
+        
+        Returns:
+            List of plugin names
+        """
+    
+    def get_plugin_status(self, plugin_name: str) -> dict[str, Any]:
+        """
+        Get detailed status for a plugin.
+        
+        Args:
+            plugin_name: Name of plugin
+        
+        Returns:
+            Dictionary with keys:
+              - installed: bool
+              - version: str | None
+              - enabled: bool
+              - path: str | None
+        """
+```
+
+---
+
+## 📖 Additional Resources
+
+### Official Documentation
+
+- [Architecture Documentation](architecture.md)
+- [User Guide](user-guide.md)
+- [Contributing Guidelines](../CONTRIBUTING.md)
+
+### External References
+
+- [Pydantic Documentation](https://docs.pydantic.dev/)
+- [Semantic Versioning](https://semver.org/)
+- [YAML Specification](https://yaml.org/spec/1.2.2/)
+
+### Example Plugins
+
+Study official plugin manifests:
+
+- [Git Plugin](../plugins/git/plugin.yaml)
+- [FFmpeg Plugin](../plugins/ffmpeg/plugin.yaml)
+- [ExifTool Plugin](../plugins/exiftool/plugin.yaml)
+
+---
+
+## 🤝 Community
+
+### Getting Help
+
+- **GitHub Issues**: https://github.com/mosh666/pyMM/issues
+- **Discussions**: https://github.com/mosh666/pyMM/discussions
+- **Email**: 24556349+mosh666@users.noreply.github.com
+
+### Contributing
+
+We welcome plugin contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
+
+- Code of Conduct
+- Development setup
+- Testing requirements
+- PR submission process
+
+---
+
+**Document Version:** 1.0.0  
+**Last Updated:** January 7, 2026  
+**Maintainer:** @mosh666  
+**Status:** ✅ Current

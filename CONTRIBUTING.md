@@ -24,7 +24,7 @@ contributions.
 
 ## Development Setup
 
-### fast track with just (Recommended)
+### Fast Track with just (Recommended)
 
 If you have [just](https://github.com/casey/just) installed, you can use the following commands to get started quickly:
 
@@ -44,10 +44,13 @@ just build
 
 ### Prerequisites
 
-- **Python:** 3.12, 3.13, or 3.14 (3.13 recommended)
-- **Git:** Latest version
+- **Python:** 3.12, 3.13, or 3.14 (Python 3.13 recommended for latest features and performance)
+- **Git:** 2.30+ (latest version recommended)
 - **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
-- **IDE:** VS Code recommended (with Python extension)
+- **IDE:** VS Code recommended with Python, Ruff, and MyPy extensions
+- **Optional Tools:**
+  - [uv](https://github.com/astral-sh/uv) - Fast Python package installer (alternative to pip)
+  - [just](https://github.com/casey/just) - Command runner for simplified workflows
 
 ### Setup Steps
 
@@ -62,7 +65,7 @@ just build
    git remote add upstream https://github.com/mosh666/pyMM.git
    ```
 
-2. **Initialize Environment (Using Just):**
+2. **Initialize Environment (Using just):**
 
    The project uses `just` to automate setup. This command creates the virtual environment,
    installs dependencies (including dev tools), and compiles requirements.
@@ -73,13 +76,14 @@ just build
 
 3. **Install Git Hooks:**
 
-   Set up pre-commit hooks to ensure code quality (linting, formatting, type checking) before simple commits.
+   Set up pre-commit hooks to ensure code quality (linting, formatting, type checking) before commits.
 
    ```bash
    just setup-hooks
    ```
 
    **What pre-commit hooks do:**
+
    - 🔍 **Ruff linting** - Auto-fix code style issues
    - 🎨 **Ruff formatting** - Ensure consistent code formatting
    - 🔎 **MyPy** - Static type checking
@@ -100,16 +104,23 @@ If you cannot use `just`, follow these manual steps:
 
    ```bash
    python -m venv .venv
-   .venv\Scripts\activate  # Windows
+   .venv\Scripts\activate  # Windows PowerShell
    # source .venv/bin/activate  # Linux/macOS
    ```
 
 2. **Install Dependencies:**
 
+   Option 1: Using pip (traditional):
+
    ```bash
-   pip install pip-tools
-   pip-compile -o requirements.lock pyproject.toml
    pip install -e ".[dev]"
+   ```
+
+   Option 2: Using uv (faster, modern alternative):
+
+   ```bash
+   pip install uv
+   uv pip install -e ".[dev]"
    ```
 
 3. **Install Pre-commit:**
@@ -123,8 +134,13 @@ If you cannot use `just`, follow these manual steps:
 4. **Run Tests:**
 
    ```bash
-   # Run full test suite
-   just test
+   # Run full test suite with coverage
+   pytest
+
+   # Run specific test categories
+   pytest tests/unit/          # Unit tests only
+   pytest tests/integration/   # Integration tests only
+   pytest tests/gui/           # GUI tests only
    ```
 
 5. **Configure Git:**
@@ -147,7 +163,7 @@ If you cannot use `just`, follow these manual steps:
    - **Action:** Keeps Logs and Projects in your local Drive Root (e.g., `D:/Projects`, `D:/Logs`)
      instead of the application folder, simulating a deployed environment or keeping source clean.
 
-   ```bash
+   ```powershell
    # Enable Dev Mode paths
    $env:PYMM_PORTABLE="false"
    python launcher.py
@@ -400,7 +416,9 @@ Fixes #456
 
 ### Test Categories
 
-#### Unit Tests (~140 tests)
+**Total Tests:** 193 (all passing with 73% code coverage)
+
+#### Unit Tests (~95 tests)
 
 Located in `tests/unit/`, these test individual components in isolation:
 
@@ -593,7 +611,7 @@ are located in `.github/workflows/` and automatically run on pull requests and p
 
 **Runs on:**
 
-- Scheduled weekly scan (Mondays at 08:00 UTC)
+- Scheduled daily scan (07:15 UTC) for frequent security metrics
 - Push to `main` branch
 - Manual dispatch available
 

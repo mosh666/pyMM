@@ -1,898 +1,1218 @@
 # pyMediaManager User Guide
 
-**Version:** Auto-detected from Git using setuptools_scm
-**Python Support:** 3.12+ (embedded runtime for portable builds)
-**Quality Gates:** Ruff linting, MyPy type checking, Bandit security
-**Security:** Daily OpenSSF Scorecard metrics, CodeQL analysis, Dependabot updates
-
-> **See also:** [CHANGELOG.md](../CHANGELOG.md) for detailed version history and new features
-> **See also:** [Architecture Guide](architecture.md) for technical details
-> **See also:** [CONTRIBUTING.md](../CONTRIBUTING.md) for development guidelines
-
-## Table of Contents
-
-1. [Getting Started](#getting-started)
-2. [First-Time Setup](#first-time-setup)
-3. [Project Management](#project-management)
-4. [Plugin Management](#plugin-management)
-5. [Storage & Portability](#storage--portability)
-6. [Settings & Configuration](#settings--configuration)
-7. [Troubleshooting](#troubleshooting)
-8. [Keyboard Shortcuts](#keyboard-shortcuts)
-9. [Support & Resources](#support--resources)
-10. [Tips & Tricks](#tips--tricks)
+<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
 ---
 
-## Getting Started
+## 📖 Table of Contents
 
-### System Requirements
-
-- **Operating System:** Windows 10/11 (64-bit)
-- **Python:** 3.12, 3.13, or 3.14 (3.13 recommended) - Embedded runtime included
-- **Storage:** Minimum 500MB free space (more for plugins and projects)
-- **Recommended:** USB 3.0+ or SSD for portable installation
-- **Reliability:** 193 tests ensuring stability and quality
-
-### Installation
-
-pyMediaManager is designed to be fully portable with no system installation required:
-
-1. **Download** the latest release:
-   - **Stable releases:** Download from releases page
-   - **Latest beta:** Download the `latest-beta` tag for newest features
-   - Version is automatically managed using Git tags and setuptools_scm
-2. **Extract** to your desired location:
-   - USB drive: `E:\pyMM\`
-   - External SSD: `D:\pyMM\`
-   - Local drive: `C:\Apps\pyMM\`
-3. **Run** `launcher.py` to start the application
-
-The application includes an embedded Python 3.13 runtime and all dependencies.
-Version information is automatically managed from Git tags and displayed in
-the Settings → About tab.
-
-The application will automatically detect the drive root and configure portable folders.
+- [Introduction](#-introduction)
+- [System Requirements](#-system-requirements)
+- [Installation](#-installation)
+- [First Run Setup](#-first-run-setup)
+- [Core Features](#-core-features)
+- [Project Management](#-project-management)
+- [Plugin System](#-plugin-system)
+- [Storage Management](#-storage-management)
+- [Configuration](#-configuration)
+- [Command Line Interface](#-command-line-interface)
+- [Troubleshooting](#-troubleshooting)
+- [FAQ](#-faq)
+- [Getting Help](#-getting-help)
 
 ---
 
-## First-Time Setup
+## 🎯 Introduction
+
+**pyMediaManager (pyMM)** is a portable, Python-based media management application designed for photographers, videographers, and digital content creators who need a flexible, portable solution for managing media projects across multiple storage devices.
+
+### Key Benefits
+
+- **✨ Truly Portable**: Run from any drive (USB, external HDD, network) without installation
+- **🎨 Modern UI**: Beautiful Fluent Design interface powered by PySide6 and QFluentWidgets
+- **🔌 Plugin System**: Extensible architecture supporting DigiKam, ExifTool, FFmpeg, and more
+- **📦 Project-Based**: Organize media into self-contained portable projects
+- **🔒 Secure**: No system modifications, registry changes, or administrative privileges required
+- **🚀 Fast**: Native Python 3.13 performance with async operations
+
+### Use Cases
+
+- **Photographers**: Manage photo collections with DigiKam integration
+- **Videographers**: Organize video projects with FFmpeg processing
+- **Backup Solutions**: Maintain portable media archives across devices
+- **Multi-Site Workflows**: Sync projects between office, home, and field locations
+- **Education**: Portable labs for teaching media management workflows
+
+---
+
+## 💻 System Requirements
+
+### Minimum Requirements
+
+| Component | Requirement |
+| --------- | ----------- |
+| **Operating System** | Windows 10 (Version 1809+) or Windows 11 |
+| **Python Version** | 3.12+ (**3.13 recommended** for best performance) |
+| **RAM** | 4 GB (8 GB recommended for large projects) |
+| **Storage** | 200 MB for application + space for projects/plugins |
+| **Display** | 1280×720 minimum (1920×1080 recommended) |
+| **Graphics** | OpenGL 2.0+ capable GPU |
+
+### Recommended Configuration
+
+- **OS**: Windows 11 with latest updates
+- **Python**: 3.13.x (latest stable release)
+- **RAM**: 16 GB or more
+- **Storage**: SSD for application, HDD for media storage
+- **Display**: 1920×1080 or higher resolution
+- **GPU**: Dedicated GPU for video processing
+
+### Python Version Notes
+
+```text
+✅ Python 3.13 - Recommended (best performance, latest features)
+✅ Python 3.12 - Fully supported (stable, production-ready)
+✅ Python 3.14 - Supported (early adopter, may have minor issues)
+❌ Python 3.11 or earlier - Not supported
+```
+
+**Why Python 3.13?**
+
+- 15-20% performance improvements over 3.12
+- Native support for modern type hints (`list[T]`, `dict[K, V]`)
+- Better async/await performance for plugin operations
+- Improved Windows-specific optimizations
+
+---
+
+## 📦 Installation
+
+### Method 1: Standard Installation (Recommended)
+
+#### Step 1: Install Python
+
+1. Download Python 3.13 from [python.org](https://www.python.org/downloads/)
+2. Run installer with these options:
+   - ✅ "Add Python to PATH"
+   - ✅ "Install for all users" (optional)
+   - ✅ "Install py launcher"
+
+3. Verify installation:
+
+   ```powershell
+   python --version
+   # Output: Python 3.13.x
+   ```
+
+#### Step 2: Clone or Download Repository
+
+**Option A: Git Clone (Recommended)**
+
+```powershell
+# Navigate to desired location
+cd D:\
+
+# Clone repository
+git clone https://github.com/mosh666/pyMM.git
+cd pyMM
+```
+
+**Option B: Download ZIP**
+
+1. Visit <https://github.com/mosh666/pyMM>
+2. Click "Code" → "Download ZIP"
+3. Extract to desired location (e.g., `D:\pyMM`)
+
+#### Step 3: Install Dependencies
+
+```powershell
+# Navigate to pyMM directory
+cd D:\pyMM
+
+# Install application
+pip install -e .
+
+# Or install with development tools (optional)
+pip install -e ".[dev]"
+```
+
+#### Step 4: Run Application
+
+```powershell
+# Launch with Python module
+python -m app
+
+# Or use the launcher script
+python launcher.py
+
+# Or use installed command (if PATH configured)
+pymm
+```
+
+### Method 2: Portable Installation
+
+For use on USB drives or external storage:
+
+#### Step 1: Portable Python
+
+1. Download [Python Embeddable Package](https://www.python.org/downloads/windows/)
+   - Choose "Windows embeddable package (64-bit)"
+2. Extract to your portable drive (e.g., `E:\PortablePython`)
+
+#### Step 2: Setup pip for Embeddable Python
+
+```powershell
+# Navigate to portable Python directory
+cd E:\PortablePython
+
+# Download get-pip.py
+Invoke-WebRequest -Uri https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
+
+# Install pip
+python get-pip.py
+```
+
+#### Step 3: Install pyMM
+
+```powershell
+# Navigate to portable drive
+cd E:\
+
+# Clone or copy pyMM
+git clone https://github.com/mosh666/pyMM.git
+
+# Install dependencies
+E:\PortablePython\python.exe -m pip install -e E:\pyMM
+```
+
+#### Step 4: Create Launch Script
+
+Create `E:\LaunchPyMM.bat`:
+
+```batch
+@echo off
+set PYTHONPATH=E:\PortablePython
+E:\PortablePython\python.exe E:\pyMM\launcher.py
+pause
+```
+
+Double-click `LaunchPyMM.bat` to run.
+
+### Method 3: Development Installation
+
+For contributors and developers:
+
+```powershell
+# Clone repository
+git clone https://github.com/mosh666/pyMM.git
+cd pyMM
+
+# Install in development mode with all tools
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run tests to verify setup
+pytest
+
+# Start development server
+python launcher.py
+```
+
+---
+
+## 🚀 First Run Setup
 
 ### Initial Launch
 
-When you first launch pyMediaManager, the First Run Wizard will guide you through setup:
+When you first run pyMM, the **First Run Wizard** guides you through essential configuration:
 
-1. **Welcome Screen** - Introduction to pyMediaManager and key features
-2. **Storage Page** - Select your portable drive and confirm installation location
-   - **Enhanced Drive Detection**: The wizard now detects all external drives including:
-     - USB flash drives and SD cards
-     - External USB HDDs and SSDs
-     - Thunderbolt/USB-C external drives
-     - Portable drives even when Windows shows them as "fixed" drives
-   - The application uses Windows Management Instrumentation (WMI) for accurate detection
-   - Simply select your preferred external drive from the list
-3. **Plugin Page** - Choose optional plugins to install (mandatory plugins installed automatically)
-4. **Complete Page** - Setup summary with option to skip wizard on future launches
+#### Step 1: Welcome Screen
 
-### Storage Drive Selection
+- Introduction to pyMM features
+- Links to documentation and tutorials
+- Privacy and data handling information
 
-The application's intelligent drive detection identifies:
+#### Step 2: Drive Selection
 
-- **True Removable Drives**: USB flash drives, SD cards, memory sticks
-- **External Storage**: USB HDDs, external SSDs, portable drives
-- **Interface Detection**: USB, USB-C, Thunderbolt connections
-- **Media Type Recognition**: Devices marked as "External hard disk media" by Windows
+```text
+Select Application Drive:
+┌─────────────────────────────────────┐
+│ ○ C:\ - Local Disk (NTFS)          │
+│   Free: 250 GB / Total: 500 GB      │
+│                                     │
+│ ● D:\ - Data Drive (NTFS)          │
+│   Free: 1.5 TB / Total: 2 TB        │
+│   ✅ Recommended for large projects │
+│                                     │
+│ ○ E:\ - External USB (exFAT)       │
+│   Free: 100 GB / Total: 500 GB      │
+│   ⚠️  Slower performance expected    │
+└─────────────────────────────────────┘
+```
 
-All external drives are suitable for portable pyMediaManager installation.
+**Drive Selection Tips:**
 
-### Recommended First Steps
+- ✅ Choose drives with sufficient free space (≥10 GB recommended)
+- ✅ NTFS preferred for Windows (supports large files, permissions)
+- ⚠️ exFAT works but may have performance limitations
+- ⚠️ Network drives supported but may be slower
 
-1. **Install Core Plugins** (Essential tools):
-   - ExifTool - Media metadata extraction
-   - FFmpeg - Video processing
-   - Git - Version control system (available as plugin)
+#### Step 3: Folder Structure Creation
 
-2. **Create Your First Project**:
-   - Click "New Project" in the toolbar
-   - Choose a name and location
-   - Select optional project template
+pyMM creates portable folder structure:
 
-3. **Configure Settings**:
-   - Open Settings (gear icon)
-   - Set your preferred theme
-   - Configure storage preferences
+```text
+D:\pyMM.Projects\       # Project storage
+D:\pyMM.Logs\           # Application logs
+D:\pyMM.Plugins\        # Downloaded plugins
+D:\pyMM.Config\         # Configuration files
+```
+
+**Portability Note**: If you move pyMM to another drive, these folders automatically relocate.
+
+#### Step 4: Plugin Configuration
+
+Select plugins to download and configure:
+
+```text
+Available Plugins:
+┌──────────────────────────────────────────┐
+│ ☑ DigiKam             [Photo Management] │
+│   Latest: 8.2.0       Size: 450 MB       │
+│                                          │
+│ ☑ ExifTool            [Metadata Tool]    │
+│   Latest: 12.70       Size: 12 MB        │
+│                                          │
+│ ☐ FFmpeg              [Video Processing] │
+│   Latest: 6.1         Size: 120 MB       │
+│                                          │
+│ ☐ Git                 [Version Control]  │
+│   Latest: 2.43.0      Size: 85 MB        │
+└──────────────────────────────────────────┘
+
+Total Download Size: 462 MB
+Estimated Time: ~5 minutes (10 Mbps)
+```
+
+#### Step 5: Initial Configuration
+
+Configure basic settings:
+
+- **Language**: English (more languages planned)
+- **Theme**: Light, Dark, Auto (follows system)
+- **Default Project Location**: `D:\pyMM.Projects`
+- **Auto-Update Plugins**: Enabled (recommended)
+- **Telemetry**: Disabled by default (respects privacy)
+
+#### Step 6: Complete Setup
+
+- Summary of configuration
+- Launch application button
+- Quick start tutorial link
 
 ---
 
-## Project Management
+## ✨ Core Features
 
-### Creating a Project
+### Modern Fluent UI
 
-Projects are the primary way to organize your media work in pyMediaManager.
+pyMM features a beautiful, modern interface inspired by Windows 11 Fluent Design:
 
-**To create a new project:**
+- **Acrylic Effects**: Translucent backgrounds with blur
+- **Smooth Animations**: Fluid transitions and interactions
+- **Dark/Light Themes**: Automatic or manual theme switching
+- **Responsive Design**: Adapts to different screen sizes
+- **Keyboard Shortcuts**: Efficient navigation and actions
 
-1. Click the **"New Project"** button (or `Ctrl+N`)
-2. Enter project details:
-   - **Name:** Project identifier (e.g., "vacation-2026")
-   - **Location:** Where to store project files
-   - **Template:** Optional starter structure
-3. Click **"Create"**
-
-**Project Structure:**
+### Dashboard Overview
 
 ```text
-D:\pyMM.Projects\vacation-2026\
-├── photos\            # Organized media
-├── videos\
-└── exports\
+┌────────────────────────────────────────────────────────┐
+│  pyMediaManager                    🔍 Search  ⚙️ Settings │
+├────────────────────────────────────────────────────────┤
+│  📊 Dashboard                                          │
+│                                                        │
+│  Quick Stats:                                          │
+│  ┌───────────┬───────────┬───────────┬───────────┐    │
+│  │ Projects  │  Storage  │  Plugins  │   Health  │    │
+│  │    12     │  1.2 TB   │     8     │    98%    │    │
+│  └───────────┴───────────┴───────────┴───────────┘    │
+│                                                        │
+│  Recent Projects:                                      │
+│  📁 Wedding_2026         Last accessed: 2 hours ago   │
+│  📁 Client_Portfolio     Last accessed: Yesterday     │
+│  📁 Backup_Archive       Last accessed: 3 days ago    │
+│                                                        │
+│  Quick Actions:                                        │
+│  [+ New Project]  [📥 Import]  [🔌 Manage Plugins]    │
+└────────────────────────────────────────────────────────┘
 ```
 
-**Note:** Git integration has been decoupled from project management. If you want to use
-version control, you can initialize a Git repository manually using the Git plugin.
+### Navigation
 
-### Managing Projects
-
-**Open Recent Project:**
-
-- Projects appear in the "Recent Projects" list
-- Double-click to open
-- Recently used projects stay at the top
-
-**Project Browser:**
-
-- Click "Browse Projects" to see all projects
-- Search and filter projects
-- View project metadata (created date, size, Git status)
-
-**Delete Project:**
-
-- Right-click project in browser
-- Select "Delete Project"
-- Choose whether to delete files or just metadata
-
-### Project Workflows
-
-pyMediaManager supports flexible project workflows tailored to different use cases.
-
-#### Basic Workflow (No Version Control)
-
-Perfect for simple projects or when you don't need history tracking:
-
-1. **Create Project**:
-   - Click "New Project" or press `Ctrl+N`
-   - Enter project name: `beach-photos-2026`
-   - Choose location (default: `D:\pyMM.Projects`)
-   - **Do not** check "Initialize Git repository"
-   - Click "Create"
-
-2. **Add Media Files**:
-   - Copy photos/videos into project folders
-   - Organize into subdirectories (`raw/`, `edited/`, `exports/`)
-   - Use file explorer or drag-and-drop (future feature)
-
-3. **Process Media**:
-   - Use installed plugins (ExifTool, FFmpeg, ImageMagick)
-   - Run batch operations on files
-   - Export final results to `exports/` folder
-
-4. **Backup**:
-   - Copy entire project folder to external backup drive
-   - Or use cloud sync (OneDrive, Dropbox)
-
-**Pros**: Simple, fast, no learning curve
-**Cons**: No history, no undo, manual backups
-
-#### Git-Enabled Workflow (Version Control)
-
-Best for important projects where you need history and collaboration:
-
-1. **Create Project with Git**:
-   - Click "New Project" or press `Ctrl+N`
-   - Enter project name: `wedding-video-2026`
-   - Choose location
-   - **Check** "Initialize Git repository"
-   - Click "Create"
-
-2. **Add Files and Commit**:
-   - Add raw media files to project
-   - Open Git Status view: `View > Git Status`
-   - Review changed files (all new files shown in green)
-   - Click "Commit" button
-   - Enter commit message: `feat: add raw wedding footage`
-   - Confirm commit
-
-3. **Work and Commit Regularly**:
-   - Edit files, process media
-   - Check status frequently: `View > Git Status`
-   - Commit after each logical change:
-     - `feat(audio): add background music track`
-     - `fix(color): correct white balance on ceremony clips`
-     - `docs: add project notes and timeline`
-
-4. **View History**:
-   - Open Git Log: `View > Git Log`
-   - See all commits with dates, authors, messages
-   - Track progress over time
-   - Identify when changes were made
-
-5. **Backup**:
-   - Git provides local version history
-   - Optionally push to remote (GitHub, GitLab)
-   - Copy entire project folder for offline backup
-
-**Pros**: Complete history, undo capability, professional workflow
-**Cons**: Slightly more complex, requires Git plugin
-
-#### Collaborative Workflow (Remote Repository)
-
-For team projects requiring coordination:
-
-1. **Create Project with Git**
-2. **Add Remote Repository**:
-   - Create repository on GitHub/GitLab
-   - In project folder, open terminal
-   - Add remote: `git remote add origin https://github.com/user/project.git`
-   - Push commits: `git push -u origin main`
-
-3. **Team Workflow**:
-   - Team members clone repository
-   - Each person commits their work
-   - Push changes to remote
-   - Pull others' changes regularly
-   - Resolve conflicts if needed
-
-4. **Benefits**:
-   - Centralized backup
-   - Team collaboration
-   - Issue tracking integration
-   - CI/CD possibilities
-
-**Note**: Git plugin provides local Git operations. Remote operations require Git command-line or external tools.
-
-#### Template-Based Workflow (Consistent Structure)
-
-For standardized project structures (future feature):
-
-1. **Create Template**:
-   - Set up ideal project structure once
-   - Save as template in `config/templates/`
-   - Include folders, .gitignore, README, etc.
-
-2. **Use Template**:
-   - Select template when creating new project
-   - Project automatically includes all template files
-   - Customize as needed
-
-3. **Benefits**:
-   - Consistent structure across projects
-   - Faster project setup
-   - Standardized organization
-
-**Status**: Template support is planned for v1.1.0
+- **Sidebar**: Primary navigation (Projects, Plugins, Storage, Settings)
+- **Top Bar**: Search, notifications, user profile, quick actions
+- **Breadcrumbs**: Current location and navigation history
+- **Tab System**: Multiple projects/views open simultaneously
 
 ---
 
-## Plugin Management
+## 📁 Project Management
 
-### Understanding Plugins
+### Creating Projects
 
-Plugins are external tools integrated into pyMediaManager:
+#### Method 1: Project Wizard (Recommended)
 
-- **Mandatory Plugins:** Required for core functionality (Git, 7-Zip)
-- **Optional Plugins:** Add features (FFmpeg, ExifTool, digiKam)
-- **Status Indicators:**
-  - ✅ Green: Installed and ready
-  - ⚠️ Yellow: Available but not installed
-  - ❌ Red: Error or missing
+1. Click **"+ New Project"** or press `Ctrl+N`
+2. **Project Wizard** opens:
 
-### Installing Plugins
+   ```text
+   Step 1: Project Type
+   ┌─────────────────────────────────────┐
+   │ ○ Photography Project              │
+   │   Optimized for photos, RAW files   │
+   │                                     │
+   │ ● Video Project                    │
+   │   Optimized for video editing       │
+   │                                     │
+   │ ○ Mixed Media Project              │
+   │   Photos, videos, and documents     │
+   │                                     │
+   │ ○ Backup Archive                   │
+   │   Long-term storage and archival    │
+   └─────────────────────────────────────┘
+   ```
 
-**Auto-Install (Recommended):**
+3. **Step 2: Project Details**
 
-1. Navigate to **Plugin View** (tab or `Ctrl+P`)
-2. Find the plugin you need
-3. Click **"Install"** button
-4. Wait for download and extraction
-5. Status changes to "Installed" when ready
+   - **Name**: `Client_Wedding_2026`
+   - **Location**: `D:\pyMM.Projects\Client_Wedding_2026`
+   - **Description**: "Wedding photography for Smith family"
+   - **Tags**: `wedding`, `2026`, `client`, `photography`
 
-**Download Details:**
+4. **Step 3: Plugin Selection**
 
-- Plugins download from official sources
-- SHA256 checksum verification for security
-- Automatic retry on network errors (up to 3 attempts)
-- Progress bar shows download status
+   - Select plugins for this project (DigiKam, ExifTool, etc.)
+   - Configure plugin-specific settings
 
-**Manual Install:**
+5. **Step 4: Git Integration** (Optional)
 
-For plugins not in the catalog:
+   - Initialize Git repository
+   - Configure remote repository
+   - Set up `.gitignore` for media files
 
-1. Download plugin binary
-2. Extract to `D:\pyMM.Plugins\plugin-name\`
-3. Ensure executable is at correct path
-4. Restart pyMediaManager
+6. **Step 5: Review & Create**
 
-### Plugin Status
+   - Summary of configuration
+   - Click **"Create Project"**
 
-**Check Plugin Status:**
+#### Method 2: Quick Create
 
-```text
-Plugin View → Select Plugin → View Status
+```powershell
+# Command line project creation
+pymm create-project "NewProject" --type photo --location "D:\pyMM.Projects"
 ```
 
-Shows:
+### Project Structure
 
-- Installation status (Installed/Not Installed)
-- Version detected
-- Executable path
-- Installation date
+Each project maintains this structure:
 
-**Common Plugin Actions:**
+```text
+Client_Wedding_2026/
+├── .pymm/                      # Project metadata (hidden)
+│   ├── config.yaml            # Project configuration
+│   ├── plugins.yaml           # Active plugins
+│   └── history.json           # Project history
+│
+├── Media/                     # Media files
+│   ├── RAW/                  # Original RAW files
+│   ├── Edited/               # Processed images
+│   └── Exports/              # Final exports
+│
+├── Plugins/                   # Plugin-specific data
+│   ├── DigiKam/              # DigiKam database
+│   └── ExifTool/             # Metadata logs
+│
+├── Backups/                  # Automatic backups
+├── Logs/                     # Project-specific logs
+└── README.md                 # Project documentation
+```
 
-- **Install:** Download and set up plugin
-- **Uninstall:** Remove plugin files
-- **Refresh:** Re-check installation status
-- **View Info:** See plugin details and homepage
+### Opening Projects
+
+#### Method 1: Recent Projects
+
+- Dashboard shows 10 most recent projects
+- Click project name to open
+
+#### Method 2: Project Browser
+
+1. Click **"📁 Projects"** in sidebar
+2. Browse project list:
+
+   ```text
+   Projects (12)                          Sort by: Last Modified ▾
+   ┌────────────────────────────────────────────────────────────┐
+   │ Client_Wedding_2026               Modified: 2 hours ago    │
+   │ D:\pyMM.Projects\Client_Wedding_2026                       │
+   │ Type: Photography  |  Size: 45 GB  |  Files: 1,234         │
+   │ Tags: wedding, 2026, client                                │
+   │ [Open] [Properties] [Export] [Archive]                     │
+   ├────────────────────────────────────────────────────────────┤
+   │ Video_Project_Nov2025             Modified: Yesterday      │
+   │ E:\pyMM.Projects\Video_Project_Nov2025                     │
+   │ Type: Video  |  Size: 120 GB  |  Files: 345                │
+   │ Tags: video, 2025, editing                                 │
+   │ [Open] [Properties] [Export] [Archive]                     │
+   └────────────────────────────────────────────────────────────┘
+   ```
+
+#### Method 3: Command Line
+
+```powershell
+# Open specific project
+pymm open-project "D:\pyMM.Projects\Client_Wedding_2026"
+
+# Open last used project
+pymm open-project --last
+```
+
+### Project Operations
+
+#### Rename Project
+
+1. Right-click project → **"Rename"**
+2. Enter new name
+3. pyMM updates all references automatically
+
+#### Move Project
+
+1. Right-click project → **"Move"**
+2. Select new location
+3. pyMM moves files and updates configuration
+
+**Warning**: Moving large projects may take time. Ensure sufficient space at destination.
+
+#### Archive Project
+
+1. Right-click project → **"Archive"**
+2. Choose compression level:
+   - **Fast** (ZIP, faster)
+   - **Best** (7z, smaller)
+3. Select archive location
+4. pyMM creates archive and optionally removes original
+
+#### Delete Project
+
+1. Right-click project → **"Delete"**
+2. Confirm deletion (irreversible)
+3. Options:
+   - Delete project folder only (keeps media)
+   - Delete everything (complete removal)
+   - Move to recycle bin (recoverable)
+
+### Project Properties
+
+View and edit project details:
+
+```text
+Project Properties: Client_Wedding_2026
+┌─────────────────────────────────────────────┐
+│ General                                     │
+│ Name: Client_Wedding_2026                  │
+│ Type: Photography Project                  │
+│ Location: D:\pyMM.Projects\Client_Wedding   │
+│ Created: 2026-01-01 10:30 AM               │
+│ Modified: 2026-01-07 03:15 PM              │
+│                                             │
+│ Storage                                     │
+│ Total Size: 45.2 GB                        │
+│ File Count: 1,234 files                    │
+│ Media Files: 1,180 (42.8 GB)              │
+│ Other Files: 54 (2.4 GB)                   │
+│                                             │
+│ Plugins                                     │
+│ Active: DigiKam 8.2.0, ExifTool 12.70      │
+│ Available: 6 more plugins                  │
+│                                             │
+│ Git Status                                  │
+│ Repository: Initialized                    │
+│ Branch: main                               │
+│ Commits: 45                                │
+│ Uncommitted: 12 files                      │
+│                                             │
+│ Tags                                        │
+│ wedding, 2026, client, photography         │
+│                                             │
+│ [Save] [Cancel] [Advanced]                │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## 🔌 Plugin System
 
 ### Available Plugins
 
-|Plugin|Type|Description|Size|Status|
-|---|---|---|---|---|
-|Git|Mandatory|Version control system|~61MB|Core functionality|
-|Git-LFS|Mandatory|Git extension for large files|~5MB|Large file support|
-|GitVersion|Optional|Semantic versioning from Git|~3MB|Version management|
-|ExifTool|Optional|Metadata extraction and editing|~11MB|Media metadata|
-|FFmpeg|Optional|Video/audio processing|~202MB|Media conversion|
-|ImageMagick|Optional|Image manipulation|~21MB|Image processing|
-|MKVToolNix|Optional|MKV video tools|~20MB+|Video container tools|
-|digiKam|Planned|Photo management application|~300MB+|Future release|
-|MariaDB|Planned|Database backend for digiKam|~200MB+|Future release|
+pyMM supports various media management tools through its plugin system:
+
+| Plugin | Description | Size | Latest Version |
+| ------ | ----------- | ---- | -------------- |
+| **DigiKam** | Professional photo management | 450 MB | 8.2.0 |
+| **ExifTool** | Read/write metadata | 12 MB | 12.70 |
+| **FFmpeg** | Video/audio processing | 120 MB | 6.1 |
+| **Git** | Version control system | 85 MB | 2.43.0 |
+| **Git LFS** | Large file storage for Git | 15 MB | 3.4.1 |
+| **GitVersion** | Semantic versioning | 8 MB | 5.12.0 |
+| **ImageMagick** | Image manipulation | 65 MB | 7.1.1 |
+| **MariaDB** | Database server | 180 MB | 11.2.2 |
+| **MKVToolNix** | MKV file tools | 45 MB | 81.0 |
+
+### Installing Plugins
+
+#### Method 1: Plugin Manager UI
+
+1. Click **"🔌 Plugins"** in sidebar
+2. Click **"+ Install Plugin"**
+3. Select plugin from list
+4. Click **"Download & Install"**
+5. Monitor progress:
+
+   ```text
+   Installing DigiKam 8.2.0
+   ┌─────────────────────────────────────────┐
+   │ Downloading... █████████░░░ 75%         │
+   │ 337 MB / 450 MB                         │
+   │ Speed: 8.5 MB/s  |  ETA: 15 seconds     │
+   │                                         │
+   │ [Cancel Download]                       │
+   └─────────────────────────────────────────┘
+   ```
+
+#### Method 2: Command Line
+
+```powershell
+# Install single plugin
+pymm install-plugin digikam
+
+# Install multiple plugins
+pymm install-plugin digikam exiftool ffmpeg
+
+# Install specific version
+pymm install-plugin digikam --version 8.2.0
+```
+
+### Managing Plugins
+
+#### Update Plugins
+
+1. Click **"🔌 Plugins"** → **"Check for Updates"**
+2. Select plugins to update
+3. Click **"Update Selected"**
+
+#### Configure Plugins
+
+1. Right-click plugin → **"Configure"**
+2. Modify settings:
+
+   ```text
+   DigiKam Configuration
+   ┌─────────────────────────────────────────┐
+   │ Paths                                   │
+   │ Executable: D:\pyMM.Plugins\DigiKam\... │
+   │ Database: [Current Project]/Plugins/... │
+   │                                         │
+   │ Performance                             │
+   │ ☑ Use hardware acceleration             │
+   │ ☑ Enable multi-threading                │
+   │ Memory Limit: 4096 MB                   │
+   │                                         │
+   │ Integration                             │
+   │ ☑ Auto-launch with project              │
+   │ ☐ Sync metadata on save                 │
+   │                                         │
+   │ [Save] [Restore Defaults] [Cancel]     │
+   └─────────────────────────────────────────┘
+   ```
+
+#### Remove Plugins
+
+1. Right-click plugin → **"Uninstall"**
+2. Choose removal option:
+   - **Remove Plugin Only**: Keep configuration and data
+   - **Complete Removal**: Delete everything
+3. Confirm uninstallation
+
+### Plugin Development
+
+Want to create custom plugins? See [Plugin Development Guide](plugin-development.md).
 
 ---
 
-## Storage & Portability
+## 💾 Storage Management
 
-### Portable Folders
+### Storage Overview
 
-pyMediaManager uses drive-root folders for maximum portability:
-
-```text
-K:\                              # Your removable/external drive root
-├── pyMM\                        # Application (contains embedded Python 3.13)
-│   ├── python313\               # Embedded Python 3.13 runtime
-│   ├── lib-py313\               # Python dependencies
-│   ├── app\                     # Application code
-│   └── launcher.py              # Entry point
-├── pyMM.Projects\               # Your media projects
-├── pyMM.Logs\                   # Application logs
-└── pyMM.Plugins\                # Installed plugin binaries
-```
-
-### Supported Drive Types
-
-The application automatically detects and works with:
-
-**True Removable Media:**
-
-- USB flash drives (any capacity)
-- SD cards and memory sticks
-- Other media marked as "DRIVE_REMOVABLE" by Windows
-
-**External Storage Devices:**
-
-- External USB HDDs (any size, any filesystem)
-- External USB SSDs (NTFS, FAT32, exFAT)
-- Portable drives connected via USB-C or Thunderbolt
-- Drives with "External hard disk media" designation
-
-**Detection Technology:**
-
-- **Primary**: Windows `GetDriveTypeW` API for removable drives
-- **Enhanced**: WMI queries for USB interface and external media type
-- **Automatic**: Detects drives regardless of Windows classification
-- **Reliable**: Works with both consumer and professional storage devices
-
-### Moving Between Computers
-
-pyMediaManager is designed to move seamlessly:
+Monitor storage across all drives:
 
 ```text
-├── pyMM.Plugins\                # Installed plugin binaries
-├── pyMM.Logs\                   # Application logs
-└── pyMM.Config\                 # User settings (optional)
+Storage Management
+┌────────────────────────────────────────────────────────────┐
+│ D:\ - Data Drive (NTFS)                                    │
+│ ████████████████░░░░░░░░░░░░ 60% Used                      │
+│ Used: 1.2 TB  |  Free: 800 GB  |  Total: 2 TB              │
+│                                                            │
+│ pyMM Usage:                                                │
+│ - Projects: 950 GB (12 projects)                           │
+│ - Plugins: 1.2 GB (8 plugins)                             │
+│ - Logs: 150 MB                                            │
+│ - Config: 15 MB                                           │
+│                                                            │
+│ [Optimize Storage] [Clean Up] [Move Projects]             │
+├────────────────────────────────────────────────────────────┤
+│ E:\ - Backup Drive (NTFS)                                 │
+│ ██████░░░░░░░░░░░░░░░░░░░░ 25% Used                        │
+│ Used: 250 GB  |  Free: 750 GB  |  Total: 1 TB             │
+│                                                            │
+│ pyMM Usage:                                                │
+│ - Archived Projects: 245 GB (8 archives)                   │
+│ - Backups: 5 GB                                           │
+│                                                            │
+│ [View Archives] [Create Backup]                           │
+└────────────────────────────────────────────────────────────┘
 ```
 
-### Drive Management
+### Storage Optimization
 
-**Storage View** shows:
+#### Clean Up Temporary Files
 
-- Available drives and their status
-- Free space on each drive
-- Whether drive is removable
-- Current application location
+1. Click **"Optimize Storage"**
+2. Select cleanup targets:
+   - ☑ Temporary project files
+   - ☑ Old plugin versions
+   - ☑ Log files older than 30 days
+   - ☑ Thumbnail cache
+3. Review space to recover: **~2.5 GB**
+4. Click **"Clean Up"**
 
-**Best Practices:**
+#### Move Projects Between Drives
 
-- Install on fast drive (USB 3.0+, SSD)
-- Keep 500MB+ free space for plugins
-- Regular backups of `pyMM.Projects\`
-- Consider using Git plugin for project version control if needed
-
-### Moving Between Drives
-
-pyMediaManager is fully portable:
-
-1. **Copy** entire `pyMM` folder to new drive (includes Python 3.13 runtime)
-2. **Copy** `pyMM.Projects`, `pyMM.Plugins`, and `pyMM.Config` folders if desired
-3. **Run** `launcher.py` - automatic drive detection on launch
-4. Projects and plugins remain accessible
-
-**Note:** The embedded Python runtime moves with the application, ensuring consistency.
-If moving projects separately, they will be auto-detected in the new drive root.
+1. Select project(s)
+2. Click **"Move"**
+3. Select destination drive
+4. pyMM handles the move with progress tracking
 
 ---
 
-## Git Integration
+## ⚙️ Configuration
 
-### Git Repository Basics
+### Application Settings
 
-Projects can **optionally** use Git for version control:
+Access via **⚙️ Settings** button or `Ctrl+,`:
 
-- Track all changes to project files
-- Commit snapshots with descriptive messages
-- View complete history of modifications
-- Collaborate with team members
-- Git LFS support for large media files (optional plugin)
-
-**Note**: Git integration is now **optional** and decoupled from project management. Projects work perfectly without Git.
-
-### Using Git
-
-**Initialize Repository (Optional)**:
-
-- Choose "Initialize Git repository" when creating project (checkbox in ProjectWizard)
-- Or manually: `Project > Initialize Git` on existing project
-- Automatically creates `.gitignore` with media-friendly defaults
-- Git plugin must be installed first
-
-**Check Status**:
+#### General Settings
 
 ```text
-View > Git Status
+General
+┌─────────────────────────────────────────┐
+│ Language: English                       │
+│ Theme: Auto (follows system)            │
+│ ○ Light  ○ Dark  ● Auto                 │
+│                                         │
+│ Startup:                                │
+│ ☑ Launch on Windows startup             │
+│ ☑ Restore last session                  │
+│ ☐ Check for updates on startup          │
+│                                         │
+│ Default Locations:                      │
+│ Projects: D:\pyMM.Projects              │
+│ [Browse]                                │
+│                                         │
+│ Plugins: D:\pyMM.Plugins                │
+│ [Browse]                                │
+└─────────────────────────────────────────┘
 ```
 
-Shows:
-
-- Modified files (yellow indicator)
-- New files (green indicator)
-- Deleted files (red indicator)
-- Untracked files
-- Current branch name and commit count
-
-**Commit Changes:**
-
-1. Make changes to project files
-2. Open Git Status view
-3. Review changed files
-4. Click **"Commit"**
-5. Enter descriptive commit message
-6. Confirm commit
-
-**View History:**
+#### Performance Settings
 
 ```text
-View > Git Log
+Performance
+┌─────────────────────────────────────────┐
+│ Processing:                             │
+│ Thread Pool Size: Auto (8 threads)      │
+│ Max Memory Usage: 4096 MB               │
+│                                         │
+│ Cache:                                  │
+│ Thumbnail Cache: 512 MB                 │
+│ ☑ Preload thumbnails                    │
+│ ☑ Cache metadata                        │
+│                                         │
+│ Network:                                │
+│ Download Threads: 4                     │
+│ Connection Timeout: 30 seconds          │
+└─────────────────────────────────────────┘
 ```
 
-Shows:
-
-- Commit messages with full descriptions
-- Author name and email
-- Commit date and time
-- Files changed per commit
-- Commit hash for reference
-
-**Git Configuration:**
-
-Git is available as a standalone plugin and can be configured independently
-for your project workflows. Use external Git tools or command line for
-repository management.
-
-### Version Control Best Practices
-
-**Good Commit Messages** (follow Conventional Commits):
+#### Privacy Settings
 
 ```text
-✅ Good: "feat(photos): add raw photos from beach shoot"
-✅ Good: "fix(export): correct 4K video export settings"
-✅ Good: "docs: update project README with workflow notes"
-❌ Bad: "changes" - too vague
-❌ Bad: "update" - no context
-❌ Bad: "stuff" - unprofessional
+Privacy
+┌─────────────────────────────────────────┐
+│ Data Collection:                        │
+│ ☐ Send anonymous usage statistics       │
+│ ☐ Send crash reports                    │
+│                                         │
+│ Logging:                                │
+│ Log Level: INFO                         │
+│ ☑ Log to file                           │
+│ ☐ Enable debug logging                  │
+│                                         │
+│ Auto-Save:                              │
+│ ☑ Auto-save project changes             │
+│ Save interval: 5 minutes                │
+└─────────────────────────────────────────┘
 ```
 
-**Message Format**:
+### Configuration Files
 
-```text
-<type>(<scope>): <subject>
+pyMM stores configuration in YAML files:
 
-<optional body>
+#### Application Config (`D:\pyMM.Config\app.yaml`)
 
-<optional footer>
+```yaml
+# Application-wide configuration
+version: "1.0.0"
+
+general:
+  language: "en"
+  theme: "auto"
+  startup:
+    launch_on_boot: true
+    restore_session: true
+    check_updates: false
+
+paths:
+  projects: "D:\\pyMM.Projects"
+  plugins: "D:\\pyMM.Plugins"
+  logs: "D:\\pyMM.Logs"
+  config: "D:\\pyMM.Config"
+
+performance:
+  max_threads: 8
+  max_memory_mb: 4096
+  cache_size_mb: 512
+  preload_thumbnails: true
+
+network:
+  download_threads: 4
+  timeout_seconds: 30
+  retry_attempts: 3
 ```
 
-**Types**: feat, fix, docs, style, refactor, test, chore
+#### User Config (`D:\pyMM.Config\user.yaml`)
 
-**What to Commit**:
+```yaml
+# User-specific preferences
+user:
+  name: "User"
+  email: "user@example.com"
 
-- ✅ Raw source files (photos, videos)
-- ✅ Project configurations
-- ✅ Export settings and presets
-- ✅ Documentation (README, notes)
-- ❌ Large temporary files (use .gitignore)
-- ❌ Cache directories (.cache, `__pycache__`)
-- ❌ Final exports (optional - use Git LFS if needed)
-- ❌ System files (.DS_Store, Thumbs.db)
+ui:
+  window:
+    width: 1280
+    height: 720
+    maximized: false
+  recent_projects:
+    - "D:\\pyMM.Projects\\Client_Wedding_2026"
+    - "D:\\pyMM.Projects\\Video_Project_Nov2025"
+  sidebar_width: 250
 
-**Using .gitignore**:
-
-Recommended `.gitignore` entries for media projects:
-
-```gitignore
-# Temporary files
-*.tmp
-*.cache
-*.log
-
-# System files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Exports (optional - comment out if you want to track)
-exports/
-*.mp4
-*.mov
-
-# Large working files (use Git LFS if needed)
-*.psd
-*.ai
+privacy:
+  telemetry_enabled: false
+  crash_reports_enabled: false
+  log_level: "INFO"
 ```
 
 ---
 
-## Settings & Configuration
+## 💻 Command Line Interface
 
-### Opening Settings
+pyMM provides a powerful CLI for automation and scripting:
 
-Access settings via:
+### Basic Commands
 
-- Menu: `Edit > Settings`
-- Keyboard: `Ctrl+,`
-- Toolbar: Settings icon (gear)
+```powershell
+# Show version
+pymm --version
 
-### Settings Sections
+# Show help
+pymm --help
 
-The Settings dialog includes **5 comprehensive tabs** for complete application configuration:
+# Launch GUI
+pymm
 
-#### General Tab
+# Run in console mode (no GUI)
+pymm --console
+```
 
-**Application Settings**:
+### Project Commands
 
-- **Application Name**: Display name for window title (default: "pyMediaManager")
-- **Theme**: Visual appearance
-  - Light: Bright, high-contrast interface
-  - Dark: Low-light optimized interface
-  - Auto: Follows system theme (Windows 10/11)
-- **Language**: Interface language selection (currently English, i18n planned)
-- **Logging Level**: Console and file log verbosity
-  - DEBUG: Detailed diagnostic information (development)
-  - INFO: General informational messages (recommended)
-  - WARNING: Warning messages for potential issues
-  - ERROR: Error messages for failures
-  - CRITICAL: Critical errors causing shutdown
-- **Check Updates**: Automatic update checking (future feature)
+```powershell
+# Create new project
+pymm create-project "MyProject" --type photo --location "D:\pyMM.Projects"
 
-#### Plugins Tab
+# Open project
+pymm open-project "D:\pyMM.Projects\MyProject"
 
-**Plugin Management**:
+# List all projects
+pymm list-projects
 
-- **Auto-Install Mandatory**: Install required plugins automatically on first run
-- **Download Timeout**: Network timeout in seconds (default: 300)
-- **Retry Attempts**: Number of download retry attempts on failure (default: 3)
-- **Verify Checksums**: Enable SHA256 checksum verification for security
-- **Plugin Directory**: Custom installation location (default: drive_root/pyMM.Plugins)
-- **Individual Plugin Paths**: Override paths for specific plugins
+# Archive project
+pymm archive-project "MyProject" --output "D:\Archives" --format 7z
 
-**Security Note**: Checksum verification helps ensure downloaded plugins haven't been tampered with.
+# Delete project
+pymm delete-project "MyProject" --confirm
+```
 
-#### Storage Tab
+### Plugin Commands
 
-**Storage Configuration**:
+```powershell
+# List available plugins
+pymm list-plugins
 
-- **Default Drive**: Preferred storage location for portable operation
-  - Automatically detected on first run
-  - Can be changed to any available drive
-  - Drive detection includes USB, external HDDs/SSDs, and Thunderbolt drives
-- **Project Root**: Base directory for new projects (default: pyMM.Projects)
-- **Log Location**: Application log directory (default: pyMM.Logs)
-- **Max Log Size**: File size before rotation in bytes (default: 10MB)
-- **Log Retention**: Number of backup log files to keep (default: 5)
+# Install plugin
+pymm install-plugin digikam
 
-**Path Management**: All paths support both absolute and relative paths. Relative paths resolved from drive root.
+# Update plugin
+pymm update-plugin digikam
 
-#### Git Tab
+# Remove plugin
+pymm remove-plugin digikam --purge
 
-**Git Configuration** (optional, for version control features):
+# Show plugin info
+pymm plugin-info digikam
+```
 
-- **User Name**: Your full name for Git commits
-  - Used in commit author field
-  - Example: "John Doe"
-- **User Email**: Your email address for Git commits
-  - Used in commit author field
-  - Example: `john.doe@example.com`
-- **Auto-Initialize**: Create Git repositories by default for new projects
-  - Disabled: Projects created without Git (recommended)
-  - Enabled: All new projects get Git repository automatically
-- **Default Branch**: Branch name for new repositories
-  - "main" (modern standard)
-  - "master" (legacy)
-- **Git Executable Path**: Custom path to git.exe
-  - Auto-detected from plugin installation
-  - Override if using system Git or custom location
+### Storage Commands
 
-**Note**: Git plugin must be installed for these features to work.
+```powershell
+# Show storage usage
+pymm storage-info
 
-#### About Tab
+# Clean up temporary files
+pymm cleanup --temp --logs --cache
 
-**Version and System Information**:
+# Move project to different drive
+pymm move-project "MyProject" --destination "E:\pyMM.Projects"
+```
 
-- **Version**: Current application version
-  - Automatically managed using setuptools_scm from Git tags
-  - Format: vX.Y.Z (stable) or vX.Y.Z-beta.1 (prerelease)
-  - Development builds show: vX.Y.Z.devN+gHASH (commit hash and distance)
-  - Stable releases from `main` branch
-  - Beta releases from `dev` branch with `latest-beta` tag
+### Advanced Commands
 
-- **Commit Hash**: Git commit SHA for development builds
-  - Full 40-character hash for precise version tracking
-  - Useful for bug reports and debugging
+```powershell
+# Export project metadata
+pymm export-metadata "MyProject" --output "metadata.json"
 
-- **Python Version**: Embedded Python runtime version
-  - Python 3.13 (recommended, included by default)
-  - Python 3.12 and 3.14 also supported
-  - Shows exact version (e.g., 3.13.1)
+# Import project from archive
+pymm import-project "archive.7z" --destination "D:\pyMM.Projects"
 
-- **Test Coverage**: Quality metrics
-  - 193 tests with 73% code coverage
-  - All tests passing status
-  - Ensures application reliability and stability
+# Run maintenance tasks
+pymm maintenance --verify-integrity --optimize-db --rebuild-cache
 
-- **Application Info**: License, author, and project details
-  - MIT License
-  - GitHub repository link
-  - Homepage and documentation links
-
-- **Dependencies**: Installed package versions
-  - PySide6 (Qt framework)
-  - GitPython (Git integration)
-  - Pydantic (configuration validation)
-  - Rich (console logging)
-  - And more...
-
-### Saving Settings
-
-- Click **"Apply"** to save changes without closing the dialog
-- Click **"OK"** to save changes and close the dialog
-- Click **"Cancel"** to discard changes and close
-
-Settings are stored in:
-
-- System: `config/app.yaml` (default configuration, read-only)
-- User: `D:\pyMM.Config\user.yaml` (your custom settings)
+# Generate project report
+pymm generate-report "MyProject" --format pdf --output "report.pdf"
+```
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
 #### Application Won't Start
 
-**Symptoms:** Double-clicking `launcher.py` does nothing
+**Symptoms**: Double-clicking launcher does nothing or shows error.
 
-**Solutions:**
+**Solutions**:
 
-1. Verify Python 3.13 runtime: Check `pyMM\python313\` directory exists
-2. Run from terminal: `python launcher.py` or `.\python313\python.exe launcher.py`
-3. Check logs: `D:\pyMM.Logs\pymediamanager.log`
-4. Verify drive permissions (not read-only)
-5. Ensure all dependencies in `lib-py313\` are present
+1. **Verify Python installation**:
 
-#### Plugin Installation Fails
+   ```powershell
+   python --version
+   # Should show Python 3.12+ or 3.13+
+   ```
 
-**Symptoms:** Download stuck or error message
+2. **Check dependencies**:
 
-**Solutions:**
+   ```powershell
+   pip list | Select-String PySide6
+   # Should show PySide6 6.6.0 or higher
+   ```
 
-1. Check internet connection
-2. Verify firewall allows Python
-3. Try manual download from plugin homepage
-4. Check disk space (500MB+ free)
-5. Review plugin status for error details
+3. **Reinstall dependencies**:
 
-#### Project Creation Fails
+   ```powershell
+   pip install --force-reinstall -e .
+   ```
 
-**Symptoms:** Error when creating new project
+4. **Check logs**:
 
-**Solutions:**
+   ```powershell
+   # View latest log file
+   Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 50
+   ```
 
-1. Verify project path is writable
-2. Check disk space
-3. Avoid special characters in project name
-4. Ensure parent directory exists
+#### Projects Not Loading
 
-#### Git Operations Don't Work
+**Symptoms**: Projects appear in list but won't open.
 
-**Symptoms:** Git commands fail or Git not detected
+**Solutions**:
 
-**Solutions:**
+1. **Verify project integrity**:
 
-1. Install Git plugin: `Plugin View > Git > Install`
-2. Verify Git is in path: `Settings > Plugins > Git Path`
-3. Configure Git user: `Settings > Git > User Name/Email`
-4. Check project has `.git` folder
+   ```powershell
+   pymm verify-project "D:\pyMM.Projects\MyProject"
+   ```
 
-### Getting Logs
+2. **Check permissions**:
 
-Application logs are your best friend for troubleshooting. Logs are stored at:
+   ```powershell
+   # Ensure you have read/write access
+   Test-Path -Path "D:\pyMM.Projects\MyProject" -PathType Container
+   ```
 
-**Location**: `D:\pyMM.Logs\pymediamanager.log` (or your drive letter)
+3. **Repair project**:
 
-**Log Rotation**:
+   ```powershell
+   pymm repair-project "MyProject"
+   ```
 
-- Maximum file size: 10MB (configurable)
-- Backup files: 5 generations kept
-- Format: `pymediamanager.log`, `pymediamanager.log.1`, etc.
+#### Plugin Download Fails
 
-**Log Levels and Usage**:
+**Symptoms**: Plugin download stalls or shows error.
 
-| Level | When to Use | What It Shows |
-| ----- | ----------- | ------------- |
-| **DEBUG** | Development, detailed troubleshooting | Every operation, variable values, function calls |
-| **INFO** | Normal operation (recommended) | Application events, user actions, plugin installs |
-| **WARNING** | Production, stability focus | Potential issues, deprecated features, recoverable errors |
-| **ERROR** | When something's wrong | Failed operations, exceptions, error details |
-| **CRITICAL** | Application failures | Fatal errors causing shutdown |
+**Solutions**:
 
-**Change Log Level**:
+1. **Check internet connection**:
 
-1. Open Settings (`Ctrl+,`)
-2. Go to General tab
-3. Select desired Logging Level
-4. Click Apply or OK
-5. Restart application for full effect
+   ```powershell
+   Test-Connection -ComputerName github.com -Count 4
+   ```
 
-**Or edit config file**:
+2. **Try manual download**:
 
-```yaml
-# In config/user.yaml
-logging:
-  level: DEBUG  # or INFO, WARNING, ERROR, CRITICAL
-  console: true
-  file: true
+   - Visit plugin's GitHub releases page
+   - Download manually
+   - Extract to `D:\pyMM.Plugins\<plugin_name>`
+
+3. **Clear download cache**:
+
+   ```powershell
+   pymm cleanup --download-cache
+   ```
+
+#### Performance Issues
+
+**Symptoms**: Application is slow or unresponsive.
+
+**Solutions**:
+
+1. **Increase memory limit**:
+   - Settings → Performance → Max Memory: 8192 MB
+
+2. **Disable thumbnail preloading**:
+   - Settings → Performance → ☐ Preload thumbnails
+
+3. **Reduce thread count**:
+   - Settings → Performance → Thread Pool: 4 threads
+
+4. **Move to faster storage**:
+   - Use SSD instead of HDD for application and projects
+
+#### Git Integration Issues
+
+**Symptoms**: Git operations fail or show errors.
+
+**Solutions**:
+
+1. **Verify Git installation**:
+
+   ```powershell
+   git --version
+   ```
+
+2. **Initialize repository manually**:
+
+   ```powershell
+   cd "D:\pyMM.Projects\MyProject"
+   git init
+   git config user.name "Your Name"
+   git config user.email "your@email.com"
+   ```
+
+3. **Check Git status**:
+
+   ```powershell
+   cd "D:\pyMM.Projects\MyProject"
+   git status
+   ```
+
+### Error Messages
+
+| Error | Cause | Solution |
+| ----- | ----- | -------- |
+| `PermissionError: [Errno 13]` | Insufficient permissions | Run as administrator or check folder permissions |
+| `ModuleNotFoundError: 'PySide6'` | Dependencies not installed | Run `pip install -e .` |
+| `FileNotFoundError: config.yaml` | Missing configuration | Run first-time setup wizard |
+| `OSError: [WinError 145]` | File in use | Close all applications using the file |
+| `ConnectionError: github.com` | No internet connection | Check network connection and firewall |
+
+### Debug Mode
+
+Enable detailed logging for troubleshooting:
+
+```powershell
+# Launch with debug logging
+pymm --debug
+
+# Or set in config
+# D:\pyMM.Config\app.yaml
+# privacy:
+#   log_level: "DEBUG"
 ```
 
-**Reading Logs**:
+### Collecting Diagnostic Information
 
-```plaintext
-2026-01-05 14:30:22 | INFO     | app.main:42 - Application starting
-2026-01-05 14:30:22 | DEBUG    | app.core.services.config_service:78 - Loading config from D:\pyMM\config\app.yaml
-2026-01-05 14:30:23 | INFO     | app.plugins.plugin_manager:145 - Discovered 9 plugins
-2026-01-05 14:30:23 | WARNING  | app.plugins.plugin_base:234 - Plugin FFmpeg not installed
-2026-01-05 14:30:24 | ERROR    | app.services.git_service:89 - Git repository not initialized: D:\pyMM.Projects\test
+When reporting issues, collect this information:
+
+```powershell
+# System information
+python --version
+pip list | Select-String "PySide6|pydantic|GitPython"
+
+# Application information
+pymm --version
+pymm storage-info
+
+# Recent logs
+Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 100 | Out-File "diagnostic.txt"
 ```
 
-**Log Fields**:
+---
 
-- **Timestamp**: When the event occurred
-- **Level**: Severity (DEBUG/INFO/WARNING/ERROR/CRITICAL)
-- **Module**: Which part of code logged it (e.g., `app.plugins.plugin_manager`)
-- **Line**: Line number in source file
-- **Message**: What happened
+## ❓ FAQ
 
-**Attaching Logs to Bug Reports**:
+### General
 
-1. Reproduce the issue
-2. Immediately copy latest log file
-3. Zip the log file (may contain system info)
-4. Attach to GitHub issue
-5. Remove any sensitive information if needed
+**Q: Is pyMM free?**  
+A: Yes! pyMM is open-source software licensed under MIT. Free to use, modify, and distribute.
 
-### Performance Issues
+**Q: Does pyMM require internet connection?**  
+A: Only for initial plugin downloads and updates. Once installed, pyMM works completely offline.
 
-**Slow Application Start:**
+**Q: Can I run pyMM on macOS or Linux?**  
+A: Currently Windows-only (Windows 10 1809+, Windows 11). Linux/macOS support planned for future releases.
 
-- Check antivirus (may scan Python files)
-- Move to faster drive (USB 3.0+, SSD)
-- Reduce plugin count
+**Q: How much storage does pyMM need?**  
+A: ~200 MB for application. Plugins vary (12 MB - 450 MB each). Projects depend on your media.
 
-**Plugin Download Slow:**
+### Projects
 
-- Check internet speed
-- Try different network
-- Download manually and extract
+**Q: Can I share projects with others?**  
+A: Yes! Archive projects and share the archive file. Recipients extract and open in their pyMM.
 
-**Project Operations Slow:**
+**Q: What happens if I move pyMM to another drive?**  
+A: pyMM is fully portable. Move the entire `D:\pyMM` folder to any drive and run.
 
-- Move project to faster drive
-- Check disk space
-- Reduce project size (archive old files)
+**Q: Can I have projects on multiple drives?**  
+A: Yes! Configure project location per-project. Mix local, external, and network drives.
 
-### Reporting Bugs
+**Q: How do I backup projects?**  
+A: Use built-in archive feature or copy project folders manually. Git integration provides version history.
 
-If you encounter a bug:
+### Plugins
 
-1. **Check logs** for error messages
-2. **Reproduce** the issue if possible
-3. **Document** steps to reproduce
-4. **Collect**:
-   - Log file (`pyMM.Logs\pymediamanager.log`)
-   - Settings file (if relevant)
-   - Screenshot of error
-5. **Report** on GitHub Issues
+**Q: Are plugins safe?**  
+A: All official plugins are verified and downloaded from trusted sources (GitHub, official websites).
+
+**Q: Can I use my existing DigiKam database?**  
+A: Yes! Configure DigiKam plugin to point to your existing database location.
+
+**Q: Why are some plugins so large?**  
+A: Plugins include full applications (DigiKam, FFmpeg) for portability. No system installation needed.
+
+**Q: Can I create custom plugins?**  
+A: Yes! See [Plugin Development Guide](plugin-development.md) for instructions.
+
+### Performance
+
+**Q: Why is pyMM slow on my USB drive?**  
+A: USB 2.0 drives are slow. Use USB 3.0+ or move application to faster storage.
+
+**Q: Can I use SSD for application and HDD for media?**  
+A: Yes! Install pyMM on SSD (`C:\pyMM`), configure project location on HDD (`D:\pyMM.Projects`).
+
+**Q: How much RAM does pyMM use?**  
+A: Typically 200-500 MB idle, up to 2-4 GB when processing large projects.
 
 ---
 
-## Keyboard Shortcuts
+## 🆘 Getting Help
 
-|Action|Shortcut|
-|---|---|
-|New Project|`Ctrl+N`|
-|Open Settings|`Ctrl+,`|
-|Plugin View|`Ctrl+P`|
-|Project View|`Ctrl+1`|
-|Storage View|`Ctrl+2`|
-|Refresh View|`F5`|
-|Quit Application|`Ctrl+Q`|
+### Documentation
+
+- **README**: [README.md](../README.md) - Quick start and overview
+- **Contributing**: [CONTRIBUTING.md](../CONTRIBUTING.md) - Development guide
+- **Architecture**: [docs/architecture.md](architecture.md) - Technical details
+- **Plugin Development**: [docs/plugin-development.md](plugin-development.md) - Create plugins
+- **Changelog**: [CHANGELOG.md](../CHANGELOG.md) - Version history
+
+### Community & Support
+
+- **GitHub Issues**: <https://github.com/mosh666/pyMM/issues>
+  - Report bugs
+  - Request features
+  - Ask technical questions
+
+- **GitHub Discussions**: <https://github.com/mosh666/pyMM/discussions>
+  - General questions
+  - Share tips and workflows
+  - Community support
+
+- **Email Support**: <24556349+mosh666@users.noreply.github.com>
+  - Security issues (private)
+  - Commercial inquiries
+  - Partnership opportunities
+
+### Contributing
+
+Want to help improve pyMM? We welcome contributions!
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
+
+### Security
+
+Found a security vulnerability?
+
+**Do not create a public issue.** Report privately to:  
+<24556349+mosh666@users.noreply.github.com>
+
+See [SECURITY.md](../.github/SECURITY.md) for our security policy.
 
 ---
 
-## Support & Resources
+<div align="center">
 
-- **Documentation:** [GitHub Docs](https://github.com/mosh666/pyMM/tree/main/docs)
-- **Issues:** [Report Bugs](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
-- **Feature Requests:** [Request Features](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)
-- **Discussions:** [Community Forum](https://github.com/mosh666/pyMM/discussions)
-- **Test Suite:** 193 tests with 73% coverage ensuring reliability and stability
-- **Changelog:** [Version History](../CHANGELOG.md)
-- **Security:** [Security Policy](../.github/SECURITY.md)
+**pyMediaManager** | **Version**: 0.0.0-dev | **Python**: 3.12+ (3.13 recommended) | **License**: MIT
 
----
+[GitHub](https://github.com/mosh666/pyMM) · [Issues](https://github.com/mosh666/pyMM/issues) · [Discussions](https://github.com/mosh666/pyMM/discussions)
 
-## Tips & Tricks
+**Made with ❤️ for media professionals**
 
-**Power User Tips:**
-
-1. **Batch Plugin Install:** Select multiple plugins, click "Install All"
-2. **Custom Templates:** Create project templates in `config/templates/`
-3. **Portable Backups:** Copy entire `pyMM` folder for instant backup
-4. **Git Remotes:** Add remote repos for cloud backup (GitHub, GitLab)
-5. **Keyboard Navigation:** Most actions have keyboard shortcuts
-
-**Workflow Optimization:**
-
-- Use Git for all projects (easy rollback)
-- Organize projects by date or client
-- Keep plugins updated
-- Regular log cleanup (auto-rotates at 10MB)
-- Export settings for team sharing
-
----
-
-Happy media managing! 🎬📸🎵
+</div>
