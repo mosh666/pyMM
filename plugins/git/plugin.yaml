@@ -17,8 +17,6 @@ platforms:
     file_size: 63431824
     command_path: cmd
     command_executable: git.exe
-    system_package: git
-    version_constraint: '>=2.0'
   linux:
     source: url
     download_url: ''

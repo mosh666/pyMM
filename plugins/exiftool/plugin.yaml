@@ -17,8 +17,6 @@ platforms:
     file_size: 10984399
     command_path: ''
     command_executable: exiftool.exe
-    system_package: exiftool
-    version_constraint: '>=13.0'
   linux:
     source: url
     download_url: ''
