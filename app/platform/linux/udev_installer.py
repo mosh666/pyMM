@@ -291,16 +291,16 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
         """
         try:
             # Reload udev rules database
-            subprocess.run(  # noqa: S603
-                ["udevadm", "control", "--reload-rules"],  # noqa: S607
+            subprocess.run(
+                ["udevadm", "control", "--reload-rules"],
                 check=True,
                 capture_output=True,
                 timeout=10,
             )
 
             # Trigger udev to process existing devices
-            subprocess.run(  # noqa: S603
-                ["udevadm", "trigger"],  # noqa: S607
+            subprocess.run(
+                ["udevadm", "trigger"],
                 check=True,
                 capture_output=True,
                 timeout=10,
@@ -439,8 +439,8 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
 
         # Check if udevadm is available
         try:
-            subprocess.run(  # noqa: S603
-                ["udevadm", "--version"],  # noqa: S607
+            subprocess.run(
+                ["udevadm", "--version"],
                 check=True,
                 capture_output=True,
                 timeout=5,

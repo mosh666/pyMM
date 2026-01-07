@@ -684,9 +684,9 @@ class StorageService:
 
 | Category | Tool | Purpose | Configuration |
 |----------|------|---------|---------------|
-| **Linting** | Ruff | 40+ rules | `pyproject.toml` |
+| **Linting** | Ruff | 40+ rules + security | `pyproject.toml` |
 | **Type Checking** | MyPy | Strict mode | `pyproject.toml` |
-| **Security** | Bandit | Vulnerability scanning | `pyproject.toml` |
+| **Security** | Ruff (S rules) | Security checks | `pyproject.toml` |
 | **Testing** | pytest | 193 tests, 73% coverage | `pyproject.toml` |
 | **Pre-commit** | pre-commit | Git hooks | `.pre-commit-config.yaml` |
 | **CI/CD** | GitHub Actions | Build, test, release | `.github/workflows/` |
@@ -1222,7 +1222,7 @@ def _load_config(self) -> AppConfig:
 | Type Coverage | 100% | 100% | ✅ |
 | Ruff Violations | 0 | 0 | ✅ |
 | MyPy Errors | 0 | 0 | ✅ |
-| Bandit Issues | 0 | 0 | ✅ |
+| Ruff Security | 0 | 0 | ✅ |
 | OpenSSF Score | ≥7.0 | 8.2 | ✅ |
 
 ### Runtime Metrics (Future)

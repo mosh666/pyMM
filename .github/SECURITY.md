@@ -183,14 +183,14 @@ def _validate_project_name(self, name: str) -> bool:
 
 **Mitigation**:
 - ✅ **Dependabot** for automatic dependency updates
-- ✅ **Bandit** for Python security linting (daily CI)
+- ✅ **Ruff** for Python security linting (S-prefix rules)
 - ✅ **Safety** for known vulnerability checks
 - ✅ **GitHub Code Scanning** (CodeQL) enabled
 
 ```yaml
 # .github/workflows/security.yml
-- name: Run Bandit security linter
-  run: bandit -r app/ -f json -o bandit-report.json
+- name: Run Ruff security checks
+  run: python -m ruff check . --select=S
 
 - name: Check dependencies with Safety
   run: safety check --json
@@ -371,9 +371,8 @@ pytest tests/  # Verify no breakage
 python scripts/setup-git-hooks.ps1
 
 # Hooks run automatically on commit:
-# - Ruff (linting)
+# - Ruff (linting + security checks)
 # - MyPy (type checking)
-# - Bandit (security scanning)
 # - pytest (test suite)
 ```
 

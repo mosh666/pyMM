@@ -48,8 +48,8 @@ organizing media projects and managing external applications through an extensib
 - **🔍 Type-Safe** - Full type hints using Python 3.12+ native generics (`list[T]`, `dict[K, V]`)
 - **🧪 Well-Tested** - 193 tests with 73% code coverage, automatic test isolation
 - **📊 Rich Logging** - Structured logging with rich console output and rotating file logs
-- **🔒 Security First** - Daily OpenSSF Scorecard, CodeQL analysis, Bandit security
-  scanning
+- **🔒 Security First** - Daily OpenSSF Scorecard, CodeQL analysis, Ruff security
+  checks (S-prefix rules)
 - **🎯 Quality Gates** - 15+ pre-commit hooks: Ruff, MyPy, pytest, YAML validation
 
 ### Technical Highlights
@@ -270,10 +270,9 @@ just test                    # pytest with coverage
 pre-commit run --all-files   # All hooks
 
 # Individual tools
-ruff check app/ tests/       # Linting
+ruff check app/ tests/       # Linting (includes security)
 ruff format app/ tests/      # Formatting
 mypy app/                    # Type checking
-bandit -r app/               # Security scanning
 pytest --cov=app             # Tests + coverage
 ```
 
@@ -358,7 +357,7 @@ Security is a top priority for pyMediaManager.
 - ✅ Daily OpenSSF Scorecard monitoring
 - ✅ CodeQL static analysis on every PR
 - ✅ Dependabot automatic security updates
-- ✅ Bandit security linting (pre-commit hook)
+- ✅ Ruff security checks (S-prefix rules in pre-commit)
 - ✅ SHA-256 checksum verification for downloads
 - ✅ Sensitive data redaction in logs and exports
 

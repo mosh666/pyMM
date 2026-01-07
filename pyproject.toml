@@ -177,7 +177,7 @@ select = [
     "N",    # pep8-naming
     "YTT",  # flake8-2020
     "ASYNC", # flake8-async
-    "S",    # flake8-bandit (security)
+    "S",    # Security checks (Bandit rules ported to Ruff)
     "BLE",  # flake8-blind-except
     "A",    # flake8-builtins
     "COM",  # flake8-commas
@@ -234,6 +234,7 @@ ignore = [
 "app/main.py" = ["PLC0415", "PLR0915"]  # Lazy imports for GUI and too many statements
 "app/ui/*.py" = ["PLC0415", "ARG", "BLE001", "PLR0915", "RUF001"]  # Qt signal arguments and GUI patterns, unicode for UI
 "app/plugins/*.py" = ["BLE001", "PLC0415", "S603", "S607", "ASYNC230", "ASYNC221", "PTH123", "C901", "PLR0912", "TRY301"]  # Plugin system needs broad exception handling and subprocess calls
+"app/platform/linux/udev_installer.py" = ["S603", "S607"]  # Safe subprocess calls to system utilities
 "app/core/services/storage_service.py" = ["N806", "PLC0415", "BLE001", "C901", "PLR0911", "SIM102"]  # Windows API requires specific naming
 "app/core/services/config_service.py" = ["PTH123"]  # Config uses standard open()
 "app/services/*.py" = ["PTH123", "BLE001", "DTZ005", "PERF401", "ARG002", "PLC0415"]  # Service layer patterns
