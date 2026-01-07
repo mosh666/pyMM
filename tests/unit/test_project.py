@@ -4,6 +4,7 @@ Tests for Project model and ProjectService.
 
 from datetime import datetime
 from pathlib import Path
+import time
 
 import pytest
 
@@ -171,13 +172,15 @@ class TestProjectService:
 
     def test_list_projects(self, project_service, tmp_path):
         """Test listing projects."""
-        # Create multiple projects
+        # Create multiple projects with small delays to ensure different timestamps
         for i in range(3):
             path = tmp_path / f"project_{i}"
             project_service.create_project(
                 name=f"Project {i}",
                 path=path,
             )
+            # Small delay to ensure different modified timestamps
+            time.sleep(0.01)
 
         projects = project_service.list_projects()
 
