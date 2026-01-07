@@ -106,8 +106,8 @@ class LinuxPrivilegeDialog(MessageBoxBase):
             Tuple of (returncode, stdout, stderr)
         """
         try:
-            result = subprocess.run(
-                ["pkexec", *command],
+            result = subprocess.run(  # noqa: S603
+                ["pkexec", *command],  # noqa: S607
                 capture_output=True,
                 text=True,
                 timeout=timeout,

@@ -3,6 +3,7 @@ Storage service for detecting and managing portable drives.
 """
 
 from abc import ABC, abstractmethod
+import contextlib
 from dataclasses import dataclass
 from pathlib import Path
 import sys
@@ -80,10 +81,8 @@ class WindowsStorage(StoragePlatform):
         if not WMI_AVAILABLE:
             return
 
-        try:
+        with contextlib.suppress(Exception):
             self._external_drive_cache = self._detect_external_drives_via_wmi()
-        except Exception:
-            pass
 
     def _detect_external_drives_via_wmi(self) -> dict[str, bool]:
         """Detect USB and external drives using WMI."""
@@ -427,10 +426,7 @@ class MacOSStorage(StoragePlatform):
                     return True
 
             # Fallback to filesystem type
-            if partition.fstype in ["msdos", "exfat", "ntfs"]:
-                return True
-
-            return False
+            return partition.fstype in ["msdos", "exfat", "ntfs"]
 
         except Exception:
             opts = partition.opts.lower()
@@ -453,8 +449,8 @@ class MacOSStorage(StoragePlatform):
             import subprocess
 
             # Use diskutil to get disk information
-            result = subprocess.run(
-                ["diskutil", "info", device],
+            result = subprocess.run(  # noqa: S603
+                ["diskutil", "info", device],  # noqa: S607
                 capture_output=True,
                 text=True,
                 timeout=5,

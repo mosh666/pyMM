@@ -322,11 +322,11 @@ def main() -> None:
     plugins_dir = args.plugins_dir.resolve()
 
     if args.command == "rollback":
-        print("Rolling back migrations...\n")
+        print("Rolling back migrations...\n")  # noqa: T201
         if args.plugin:
             yaml_path = plugins_dir / args.plugin / "plugin.yaml"
             success, message = rollback_migration(yaml_path)
-            print(message)
+            print(message)  # noqa: T201
             sys.exit(0 if success else 1)
         else:
             results = rollback_all_migrations(plugins_dir)
@@ -335,13 +335,13 @@ def main() -> None:
         backup = not args.no_backup
 
         if dry_run:
-            print("DRY RUN: Showing what would change (no files modified)\n")
-            print("=" * 80 + "\n")
+            print("DRY RUN: Showing what would change (no files modified)\n")  # noqa: T201
+            print("=" * 80 + "\n")  # noqa: T201
 
         if args.plugin:
             yaml_path = plugins_dir / args.plugin / "plugin.yaml"
             success, message = migrate_manifest(yaml_path, dry_run=dry_run, backup=backup)
-            print(message)
+            print(message)  # noqa: T201
             sys.exit(0 if success else 1)
         else:
             results = migrate_all_plugins(plugins_dir, dry_run=dry_run, backup=backup)
@@ -349,9 +349,9 @@ def main() -> None:
     # Print results
     for plugin_name, (success, message) in results.items():
         status = "✓" if success else "✗"
-        print(f"{status} {plugin_name}")
+        print(f"{status} {plugin_name}")  # noqa: T201
         if message:
-            print(f"  {message}\n")
+            print(f"  {message}\n")  # noqa: T201
 
     # Exit with error if any migration failed
     all_success = all(success for success, _ in results.values())

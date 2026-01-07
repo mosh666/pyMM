@@ -363,7 +363,7 @@ class SettingsDialog(QDialog):
 
         return group
 
-    def _check_system_availability(self, plugin_name: str, manifest: PluginManifest) -> str:
+    def _check_system_availability(self, plugin_name: str, manifest: PluginManifest) -> str:  # noqa: PLR0911
         """Check if system package is available for this plugin."""
         import sys
 
@@ -393,9 +393,9 @@ class SettingsDialog(QDialog):
                 platform_config.system_package, platform_config.version_constraint
             )
 
-            if tool_info.status.value == "found_valid":
+            if tool_info and tool_info.status.value == "found_valid":
                 return f"Available: {platform_config.system_package} v{tool_info.version}"
-            if tool_info.status.value == "found_invalid":
+            if tool_info and tool_info.status.value == "found_invalid":
                 return f"Found but wrong version: v{tool_info.version}"
             return f"Not found: {platform_config.system_package}"
         except Exception:

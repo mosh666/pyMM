@@ -209,9 +209,9 @@ class TestPluginPreferences:
 
     def test_execution_preference_enum_values(self):
         """Test ExecutionPreference enum values."""
-        assert ExecutionPreference.AUTO == "auto"
-        assert ExecutionPreference.SYSTEM == "system"
-        assert ExecutionPreference.PORTABLE == "portable"
+        assert ExecutionPreference.AUTO.value == "auto"
+        assert ExecutionPreference.SYSTEM.value == "system"
+        assert ExecutionPreference.PORTABLE.value == "portable"
 
         # Test all values are valid
         for pref in ExecutionPreference:

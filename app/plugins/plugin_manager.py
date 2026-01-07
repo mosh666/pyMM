@@ -107,7 +107,7 @@ class PluginManager:
 
             def _extract_platform_config(platform_key: str) -> PlatformManifest | None:
                 """Extract platform configuration from validated data."""
-                if platform_key not in platforms:
+                if platforms is None or platform_key not in platforms:
                     return None
 
                 pc = platforms[platform_key]

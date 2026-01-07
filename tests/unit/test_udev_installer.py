@@ -115,7 +115,7 @@ class TestLinuxUdevInstaller:
     @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test (requires os.geteuid)")
     @patch("sys.platform", "linux")
     @patch("os.geteuid", return_value=1000)
-    def test_install_direct_without_root(self, _mock_geteuid):
+    def test_install_direct_without_root(self, _mock_geteuid):  # noqa: PT019
         """Test direct installation without root privileges."""
         installer = LinuxUdevInstaller()
 
@@ -137,7 +137,7 @@ class TestLinuxUdevInstaller:
         assert mock_subprocess.call_count == 2
 
     @patch("subprocess.run", side_effect=FileNotFoundError)
-    def test_reload_udev_rules_udevadm_not_found(self, _mock_subprocess):
+    def test_reload_udev_rules_udevadm_not_found(self, _mock_subprocess):  # noqa: PT019
         """Test reload when udevadm is not found."""
         installer = LinuxUdevInstaller()
         result = installer._reload_udev_rules()
@@ -145,7 +145,7 @@ class TestLinuxUdevInstaller:
         assert result is False
 
     @patch("subprocess.run", side_effect=Exception("Test error"))
-    def test_reload_udev_rules_failure(self, _mock_subprocess):
+    def test_reload_udev_rules_failure(self, _mock_subprocess):  # noqa: PT019
         """Test reload failure."""
         installer = LinuxUdevInstaller()
         result = installer._reload_udev_rules()
@@ -225,7 +225,7 @@ class TestLinuxUdevInstaller:
 
     @patch("sys.platform", "linux")
     @patch("subprocess.run", side_effect=FileNotFoundError)
-    def test_verify_installation_partial(self, _mock_subprocess):
+    def test_verify_installation_partial(self, _mock_subprocess):  # noqa: PT019
         """Test verify_installation with partial functionality."""
         installer = LinuxUdevInstaller()
 

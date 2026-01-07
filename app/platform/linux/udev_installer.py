@@ -5,6 +5,7 @@ for pyMediaManager on Linux systems. The rules enable automatic detection
 and handling of USB storage devices.
 """
 
+import contextlib
 from dataclasses import dataclass
 from enum import Enum
 import logging
@@ -19,7 +20,7 @@ from typing import ClassVar
 try:
     from app.ui.dialogs.privilege_dialog import LinuxPrivilegeDialog
 except ImportError:
-    LinuxPrivilegeDialog = None  # type: ignore
+    LinuxPrivilegeDialog = None  # type: ignore[assignment,misc]
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
     GROUP="plugdev", MODE="0660"
 """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the udev installer."""
         self.logger = logging.getLogger(__name__)
         self.rules_path = self.RULES_DIR / self.RULES_FILENAME
@@ -144,7 +145,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
                 message=f"Installation failed: {e}",
             )
 
-    def _install_with_privilege_dialog(self, rules_content: str) -> UdevInstallResult:
+    def _install_with_privilege_dialog(self, rules_content: str) -> UdevInstallResult:  # noqa: PLR0911
         """Install udev rules using privilege dialog for elevation.
 
         Args:
@@ -168,16 +169,14 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
                 tmp_path = tmp.name
 
             # Use pkexec to copy temp file to rules location
-            returncode, stdout, stderr = LinuxPrivilegeDialog.run_with_privileges(
+            returncode, _, stderr = LinuxPrivilegeDialog.run_with_privileges(
                 command=["cp", tmp_path, str(self.rules_path)],
                 timeout=30,
             )
 
             # Clean up temp file
-            try:
+            with contextlib.suppress(Exception):
                 Path(tmp_path).unlink()
-            except Exception:  # noqa: BLE001
-                pass
 
             # Check return code
             # pkexec returns 126 when user cancels, 127 when command not found
@@ -234,7 +233,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
             UdevInstallResult with status
         """
         # Check if running as root (Linux only)
-        if hasattr(os, "geteuid") and os.geteuid() != 0:  # type: ignore
+        if hasattr(os, "geteuid") and os.geteuid() != 0:
             return UdevInstallResult(
                 status=UdevInstallStatus.PERMISSION_DENIED,
                 message="Direct installation requires root privileges. Run with sudo or use privilege dialog.",
@@ -292,16 +291,16 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
         """
         try:
             # Reload udev rules database
-            subprocess.run(
-                ["udevadm", "control", "--reload-rules"],
+            subprocess.run(  # noqa: S603
+                ["udevadm", "control", "--reload-rules"],  # noqa: S607
                 check=True,
                 capture_output=True,
                 timeout=10,
             )
 
             # Trigger udev to process existing devices
-            subprocess.run(
-                ["udevadm", "trigger"],
+            subprocess.run(  # noqa: S603
+                ["udevadm", "trigger"],  # noqa: S607
                 check=True,
                 capture_output=True,
                 timeout=10,
@@ -323,7 +322,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
             self.logger.warning("Error reloading udev rules: %s", e)
             return False
 
-    def uninstall(self, use_privilege_dialog: bool = True) -> UdevInstallResult:
+    def uninstall(self, use_privilege_dialog: bool = True) -> UdevInstallResult:  # noqa: PLR0911
         """Uninstall udev rules.
 
         Args:
@@ -356,7 +355,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
                     )
 
                 # Use pkexec to remove file
-                returncode, stdout, stderr = LinuxPrivilegeDialog.run_with_privileges(
+                returncode, _, stderr = LinuxPrivilegeDialog.run_with_privileges(
                     command=["rm", "-f", str(self.rules_path)],
                     timeout=30,
                 )
@@ -375,7 +374,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
 
             else:
                 # Direct removal (requires root)
-                if hasattr(os, "geteuid") and os.geteuid() != 0:  # type: ignore
+                if hasattr(os, "geteuid") and os.geteuid() != 0:
                     return UdevInstallResult(
                         status=UdevInstallStatus.PERMISSION_DENIED,
                         message="Direct removal requires root privileges. Run with sudo or use privilege dialog.",
@@ -440,8 +439,8 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \\
 
         # Check if udevadm is available
         try:
-            subprocess.run(
-                ["udevadm", "--version"],
+            subprocess.run(  # noqa: S603
+                ["udevadm", "--version"],  # noqa: S607
                 check=True,
                 capture_output=True,
                 timeout=5,

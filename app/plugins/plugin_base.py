@@ -218,8 +218,8 @@ class PluginBase(ABC):
         if not tool_info:
             return None
 
-        if tool_info.status == ToolDetectionStatus.FOUND_VALID:
-            return (Path(tool_info.path), ExecutableSource.SYSTEM, tool_info.version or "")
+        if tool_info.status == ToolDetectionStatus.FOUND_VALID and tool_info.path:
+            return (tool_info.path, ExecutableSource.SYSTEM, tool_info.version or "")
 
         if tool_info.status == ToolDetectionStatus.FOUND_INVALID:
             # Handle version mismatch - ask user
@@ -231,14 +231,14 @@ class PluginBase(ABC):
 
             from app.ui.dialogs.tool_version_dialog import VersionChoice
 
-            if choice == VersionChoice.USE_ANYWAY:
-                return (Path(tool_info.path), ExecutableSource.SYSTEM, tool_info.version or "")
+            if choice == VersionChoice.USE_ANYWAY and tool_info.path:
+                return (tool_info.path, ExecutableSource.SYSTEM, tool_info.version or "")
             # INSTALL_PORTABLE or CANCEL - return None to try portable
 
         return None
 
     def _handle_version_mismatch(
-        self, tool_path: str, found_version: str, required_version: str
+        self, _tool_path: str, found_version: str, required_version: str
     ) -> "VersionChoice":
         """
         Handle system tool version mismatch by showing dialog.
@@ -465,10 +465,13 @@ class SimplePluginImplementation(PluginBase):
         success = await self._download_file(self.download_url, self.archive_path, progress_callback)
 
         # Verify checksum if available
-        if success and expected_sha256:
-            if not await self._verify_checksum(self.archive_path, expected_sha256):
-                self.logger.error("Checksum verification failed")
-                return False
+        if (
+            success
+            and expected_sha256
+            and not await self._verify_checksum(self.archive_path, expected_sha256)
+        ):
+            self.logger.error("Checksum verification failed")
+            return False
 
         return success
 

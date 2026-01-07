@@ -163,14 +163,13 @@ class PluginManifestSchema(BaseModel):
             platforms = data["platforms"]
             needs_restructure = False
 
-            for platform_key, platform_data in platforms.items():
-                if isinstance(platform_data, dict):
-                    # Check if it has flat fields like 'source: url', 'command_path', etc.
-                    if (
-                        "source" in platform_data and isinstance(platform_data.get("source"), str)
-                    ) or ("command_path" in platform_data or "download_url" in platform_data):
-                        needs_restructure = True
-                        break
+            for platform_data in platforms.values():
+                if (
+                    isinstance(platform_data, dict)
+                    and ("source" in platform_data and isinstance(platform_data.get("source"), str))
+                ) or ("command_path" in platform_data or "download_url" in platform_data):
+                    needs_restructure = True
+                    break
 
             if needs_restructure:
                 # Restructure flattened v2 format to nested v2 format
@@ -217,31 +216,35 @@ class PluginManifestSchema(BaseModel):
 
         # Check if this is a v1 manifest (has source/command but no platforms)
         schema_version = data.get("schema_version", 1)
-        if schema_version == 1 and "platforms" not in data:
+        if (
+            schema_version == 1
+            and "platforms" not in data
+            and "source" in data
+            and "command" in data
+        ):
             # Convert v1 to v2 format
-            if "source" in data and "command" in data:
-                source_data = data["source"]
-                command_data = data["command"]
+            source_data = data["source"]
+            command_data = data["command"]
 
-                # Build PlatformConfig for Windows (v1 was Windows-only)
-                platform_config = {
-                    "windows": {
-                        "source": {
-                            "type": source_data.get("type", "url"),
-                            "base_uri": source_data.get("base_uri", ""),
-                            "asset_pattern": source_data.get("asset_pattern"),
-                            "checksum_sha256": source_data.get("checksum_sha256"),
-                            "file_size": source_data.get("file_size"),
-                        },
-                        "command": {
-                            "path": command_data.get("path", ""),
-                            "executable": command_data.get("executable", ""),
-                        },
-                    }
+            # Build PlatformConfig for Windows (v1 was Windows-only)
+            platform_config = {
+                "windows": {
+                    "source": {
+                        "type": source_data.get("type", "url"),
+                        "base_uri": source_data.get("base_uri", ""),
+                        "asset_pattern": source_data.get("asset_pattern"),
+                        "checksum_sha256": source_data.get("checksum_sha256"),
+                        "file_size": source_data.get("file_size"),
+                    },
+                    "command": {
+                        "path": command_data.get("path", ""),
+                        "executable": command_data.get("executable", ""),
+                    },
                 }
+            }
 
-                data["platforms"] = platform_config
-                data["schema_version"] = 2
+            data["platforms"] = platform_config
+            data["schema_version"] = 2
 
         return data
 
