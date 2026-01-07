@@ -28,21 +28,36 @@ def sample_manifest(manifests_dir):
     plugin_dir.mkdir()
 
     manifest_content = """
+schema_version: 2
 name: TestPlugin
 version: "1.0.0"
 mandatory: false
 enabled: true
-
-source:
-  type: url
-  base_uri: https://example.com/testplugin.zip
-
-command:
-  path: bin
-  executable: test.exe
-
+prefer_system: false
 register_to_path: true
 dependencies: []
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/testplugin.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: bin
+    command_executable: test.exe
+  linux:
+    source: url
+    download_url: https://example.com/testplugin.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: bin
+    command_executable: test.exe
+  macos:
+    source: url
+    download_url: https://example.com/testplugin.zip
+    checksum_sha256: ''
+    file_size: null
+    command_path: bin
+    command_executable: test.exe
 """
 
     manifest_file = plugin_dir / "plugin.yaml"
@@ -102,17 +117,19 @@ class TestPluginManager:
         mandatory_dir = manifests_dir / "mandatory"
         mandatory_dir.mkdir()
         mandatory_manifest = """
+schema_version: 2
 name: MandatoryPlugin
 version: "1.0"
 mandatory: true
 enabled: true
-source:
-  type: url
-  base_uri: https://example.com/mandatory.zip
-command:
-  path: ""
-  executable: mandatory.exe
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/mandatory.zip
+    command_path: ""
+    command_executable: mandatory.exe
 """
         (mandatory_dir / "plugin.yaml").write_text(mandatory_manifest)
 
@@ -120,17 +137,19 @@ register_to_path: true
         optional_dir = manifests_dir / "optional"
         optional_dir.mkdir()
         optional_manifest = """
+schema_version: 2
 name: OptionalPlugin
 version: "1.0"
 mandatory: false
 enabled: true
-source:
-  type: url
-  base_uri: https://example.com/optional.zip
-command:
-  path: ""
-  executable: optional.exe
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/optional.zip
+    command_path: ""
+    command_executable: optional.exe
 """
         (optional_dir / "plugin.yaml").write_text(optional_manifest)
 
@@ -147,13 +166,19 @@ register_to_path: true
         mandatory_dir.mkdir()
         (mandatory_dir / "plugin.yaml").write_text(
             """
+schema_version: 2
 name: MandatoryPlugin
 version: "1.0"
 mandatory: true
 enabled: true
-source: {type: url, base_uri: "https://example.com"}
-command: {path: "", executable: "test.exe"}
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test.exe
 """
         )
 
@@ -161,13 +186,19 @@ register_to_path: true
         optional_dir.mkdir()
         (optional_dir / "plugin.yaml").write_text(
             """
+schema_version: 2
 name: OptionalPlugin
 version: "1.0"
 mandatory: false
 enabled: true
-source: {type: url, base_uri: "https://example.com"}
-command: {path: "", executable: "test.exe"}
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test.exe
 """
         )
 
@@ -184,13 +215,19 @@ register_to_path: true
         enabled_dir.mkdir()
         (enabled_dir / "plugin.yaml").write_text(
             """
+schema_version: 2
 name: EnabledPlugin
 version: "1.0"
 enabled: true
 mandatory: false
-source: {type: url, base_uri: "https://example.com"}
-command: {path: "", executable: "test.exe"}
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test.exe
 """
         )
 
@@ -199,13 +236,19 @@ register_to_path: true
         disabled_dir.mkdir()
         (disabled_dir / "plugin.yaml").write_text(
             """
+schema_version: 2
 name: DisabledPlugin
 version: "1.0"
 enabled: false
 mandatory: false
-source: {type: url, base_uri: "https://example.com"}
-command: {path: "", executable: "test.exe"}
+prefer_system: false
 register_to_path: true
+platforms:
+  windows:
+    source: url
+    download_url: https://example.com/test.zip
+    command_path: ""
+    command_executable: test.exe
 """
         )
 
