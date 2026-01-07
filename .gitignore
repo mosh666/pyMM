@@ -83,6 +83,7 @@ pyrightconfig.json
 
 # pipenv
 Pipfile.lock
+/get-pip.py
 
 # poetry
 poetry.lock

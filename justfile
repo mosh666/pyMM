@@ -31,7 +31,7 @@ format:
 
 # Setup git hooks
 setup-hooks:
-    python -c "import subprocess, sys, pathlib; script = pathlib.Path('scripts/setup-git-hooks.sh' if sys.platform != 'win32' else 'scripts/setup-git-hooks.ps1'); subprocess.run(['bash', str(script)] if sys.platform != 'win32' else ['pwsh.exe', '-ExecutionPolicy', 'Bypass', '-File', str(script)], check=True)"
+    python scripts/setup_hooks.py
 
 # Build documentation locally
 docs:
@@ -44,9 +44,9 @@ clean:
     -rm -rf python3* lib-py3* *.zip *.sha256 build/ dist/ *.egg-info .pytest_cache .mypy_cache __pycache__
     -rm requirements*.txt
 
-# Build portable distribution for Windows
+# Build portable distribution (Cross-platform manager)
 build v=version:
-    python scripts/build_distribution.py --version {{v}}
+    python scripts/build_manager.py --version {{v}}
 
 # Run the application locally
 run:

@@ -28,6 +28,7 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Win32 (MS Windows)",
     "Environment :: X11 Applications :: Qt",
+    "Environment :: MacOS X",
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
@@ -35,6 +36,8 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: Microsoft :: Windows :: Windows 10",
     "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -123,7 +126,7 @@ addopts = [
     "--cov=app",
     "--cov-report=html",
     "--cov-report=term-missing",
-    "--cov-fail-under=35",
+    "--cov-fail-under=70",
     "-v",
 ]
 asyncio_mode = "auto"
@@ -231,6 +234,7 @@ ignore = [
 "app/core/services/storage_service.py" = ["N806", "PLC0415", "BLE001", "C901", "PLR0911", "SIM102"]  # Windows API requires specific naming
 "app/core/services/config_service.py" = ["PTH123"]  # Config uses standard open()
 "app/services/*.py" = ["PTH123", "BLE001", "DTZ005", "PERF401", "ARG002"]  # Service layer patterns
+"scripts/*.py" = ["T201", "S603", "S607", "RUF001", "BLE001"] # Scripts use print, subprocess, and simple logic
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
@@ -255,6 +259,7 @@ warn_unused_configs = true
 warn_redundant_casts = true
 strict_equality = true
 ignore_missing_imports = true
+exclude = ["python3\\d+", "lib-py3\\d+", "build", "dist", "get-pip.py"]
 
 # Per-module overrides for gradual strict adoption
 [[tool.mypy.overrides]]

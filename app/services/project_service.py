@@ -6,7 +6,8 @@ saving, and managing media management projects with template support
 and migration capabilities.
 """
 
-from datetime import datetime
+from collections.abc import Callable
+from datetime import UTC, datetime
 import getpass
 import json
 import logging
@@ -14,13 +15,13 @@ import os
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import tempfile
 from typing import Any
 
 from packaging.version import Version
 from pydantic import BaseModel, ValidationError
 from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 import yaml
 
 from app import __version__
@@ -65,7 +66,7 @@ class MigrationDiff(BaseModel):
 class TemplateFileHandler(FileSystemEventHandler):
     """Watches template.yaml files for changes."""
 
-    def __init__(self, callback: callable):
+    def __init__(self, callback: Callable[[], None]):
         """Initialize handler with callback function."""
         self.callback = callback
         self.patterns = ["*/template.yaml"]
@@ -116,8 +117,6 @@ class ProjectService:
         # Setup templates directory
         if templates_dir is None:
             # Default to templates/ at repo root (parent of app/)
-            from pathlib import Path
-
             app_root = Path(__file__).parent.parent.parent
             templates_dir = app_root / "templates"
 
@@ -129,28 +128,32 @@ class ProjectService:
             self.discover_templates()
 
         # Setup filesystem watcher for template changes
-        self._observer: Observer | None = None
+        self._observer: Any | None = None
         disable_watch = disable_watch or os.getenv("PYMM_DISABLE_TEMPLATE_WATCH", "0") == "1"
 
         if not disable_watch and self.templates_dir.exists():
             try:
+                from watchdog.observers import Observer
+
                 handler = TemplateFileHandler(self.refresh_templates)
                 self._observer = Observer()
                 self._observer.schedule(handler, str(self.templates_dir), recursive=True)
                 self._observer.start()
                 self.logger.info("Template filesystem watcher started")
             except Exception as e:
-                self.logger.warning(f"Failed to start template watcher: {e}")
+                self.logger.warning("Failed to start template watcher: %s", e)
 
     def __del__(self) -> None:
         """Cleanup filesystem watcher on destruction."""
-        if self._observer is not None:
+        # Use getattr to safely handle partial initialization
+        observer = getattr(self, "_observer", None)
+        if observer is not None:
             try:
-                self._observer.stop()
-                self._observer.join(timeout=1.0)
+                observer.stop()
+                observer.join(timeout=1.0)
                 self.logger.info("Template filesystem watcher stopped")
             except Exception as e:
-                self.logger.warning(f"Error stopping template watcher: {e}")
+                self.logger.warning("Error stopping template watcher: %s", e)
 
     def discover_templates(self) -> dict[str, TemplateMetadata]:
         """
@@ -166,7 +169,7 @@ class ProjectService:
         self._templates.clear()
 
         if not self.templates_dir.exists():
-            self.logger.warning(f"Templates directory not found: {self.templates_dir}")
+            self.logger.warning("Templates directory not found: %s", self.templates_dir)
             return self._templates
 
         for template_dir in self.templates_dir.iterdir():
@@ -189,22 +192,22 @@ class ProjectService:
                     min_version = Version(metadata.min_app_version)
                     current_version = Version(__version__)
                     if current_version < min_version:
-                        raise ValueError(
+                        raise ValueError(  # noqa: TRY301
                             f"Template '{metadata.name}' requires pyMM >= {metadata.min_app_version}, "
                             f"but current version is {__version__}"
                         )
 
                 self._templates[template_dir.name] = metadata
-                self.logger.debug(f"Discovered template: {metadata.name} v{metadata.version}")
+                self.logger.debug("Discovered template: %s v%s", metadata.name, metadata.version)
 
-            except ValidationError as e:
-                self.logger.error(f"Invalid template schema in {template_yaml}: {e}")
+            except ValidationError:
+                self.logger.exception("Invalid template schema in %s", template_yaml)
                 raise
-            except Exception as e:
-                self.logger.error(f"Error loading template {template_yaml}: {e}")
+            except Exception:
+                self.logger.exception("Error loading template %s", template_yaml)
                 raise
 
-        self.logger.info(f"Discovered {len(self._templates)} templates")
+        self.logger.info("Discovered %d templates", len(self._templates))
         return self._templates
 
     def refresh_templates(self) -> None:
@@ -212,8 +215,8 @@ class ProjectService:
         self.logger.info("Refreshing template cache...")
         try:
             self.discover_templates()
-        except Exception as e:
-            self.logger.error(f"Error refreshing templates: {e}")
+        except Exception:
+            self.logger.exception("Error refreshing templates")
 
     def get_template(self, template_name: str) -> TemplateMetadata | None:
         """Get template metadata by name."""
@@ -240,11 +243,11 @@ class ProjectService:
             RecursionError: If inheritance depth exceeds 5 or circular dependency detected
             KeyError: If template or base template not found
         """
-        MAX_DEPTH = 5
+        max_depth = 5
 
-        if depth > MAX_DEPTH:
+        if depth > max_depth:
             raise RecursionError(
-                f"Template inheritance exceeds maximum depth of {MAX_DEPTH} levels"
+                f"Template inheritance exceeds maximum depth of {max_depth} levels"
             )
 
         if template_name not in self._templates:
@@ -256,7 +259,7 @@ class ProjectService:
         # Resolve base template if extends is specified
         if metadata.extends:
             try:
-                base_metadata, base_folders = self._resolve_template_inheritance(
+                _base_metadata, base_folders = self._resolve_template_inheritance(
                     metadata.extends, depth + 1
                 )
                 # Merge folder structures (child adds to base)
@@ -301,7 +304,7 @@ class ProjectService:
         Raises:
             ValueError: If file contains undefined variables
         """
-        ALLOWED_VARS = {
+        allowed_vars = {
             "PROJECT_NAME",
             "PROJECT_PATH",
             "DATE",
@@ -317,11 +320,11 @@ class ProjectService:
             pattern = r"\{([A-Z_]+)\}"
             variables = set(re.findall(pattern, content))
 
-            undefined = variables - ALLOWED_VARS
+            undefined = variables - allowed_vars
             if undefined:
                 raise ValueError(
                     f"File '{file_path.name}' contains undefined variables: {', '.join(sorted(undefined))}. "
-                    f"Allowed variables: {', '.join(sorted(ALLOWED_VARS))}"
+                    f"Allowed variables: {', '.join(sorted(allowed_vars))}"
                 )
         except UnicodeDecodeError:
             # Skip binary files
@@ -337,10 +340,9 @@ class ProjectService:
         try:
             if self.git_service:
                 # Try to get from Git config
-                import subprocess
-
-                result = subprocess.run(
-                    ["git", "config", "user.name"],
+                git_exe = shutil.which("git") or "git"
+                result = subprocess.run(  # noqa: S603
+                    [git_exe, "config", "user.name"],
                     capture_output=True,
                     text=True,
                     check=False,
@@ -353,9 +355,7 @@ class ProjectService:
         # Fallback to system username
         return getpass.getuser()
 
-    def _substitute_variables(
-        self, file_path: Path, variables: dict[str, str]
-    ) -> None:
+    def _substitute_variables(self, file_path: Path, variables: dict[str, str]) -> None:
         """
         Substitute template variables in text file.
 
@@ -364,9 +364,9 @@ class ProjectService:
             variables: Dictionary of variable names to values
         """
         # Only process text files with specific extensions
-        TEXT_EXTENSIONS = {".md", ".txt", ".yaml", ".yml", ".gitignore", ".py"}
+        text_extensions = {".md", ".txt", ".yaml", ".yml", ".gitignore", ".py"}
 
-        if file_path.suffix not in TEXT_EXTENSIONS:
+        if file_path.suffix not in text_extensions:
             return
 
         try:
@@ -415,7 +415,6 @@ class ProjectService:
 
         # Validate template structure
         # Note: Only validate the leaf template, not inherited ones
-        # self._validate_template(template_path, metadata)
 
         # Prepare variable substitutions
         now = datetime.now()
@@ -456,9 +455,9 @@ class ProjectService:
                 # Create initial commit
                 commit_msg = f"Initial commit from {metadata.name} template"
                 # Would need to call git_service methods here
-                self.logger.info(f"Initialized Git repository: {commit_msg}")
+                self.logger.info("Initialized Git repository: %s", commit_msg)
             except Exception as e:
-                self.logger.warning(f"Failed to initialize Git repository: {e}")
+                self.logger.warning("Failed to initialize Git repository: %s", e)
 
     def create_project(
         self,
@@ -607,7 +606,7 @@ class ProjectService:
                 project = Project.from_dict(data)
                 projects.append(project)
             except Exception as e:
-                self.logger.warning(f"Error loading project {metadata_file}: {e}")
+                self.logger.warning("Error loading project %s: %s", metadata_file, e)
 
         # Sort by modified date (most recent first)
         projects.sort(key=lambda p: p.modified, reverse=True)
@@ -661,7 +660,7 @@ class ProjectService:
                 if user_file_count > 0:
                     # Get last modification time
                     mtime = full_path.stat().st_mtime
-                    last_modified = datetime.fromtimestamp(mtime).isoformat()
+                    last_modified = datetime.fromtimestamp(mtime, tz=UTC).isoformat()
 
                     conflicts.append(
                         MigrationConflict(
@@ -672,7 +671,7 @@ class ProjectService:
                         )
                     )
             except Exception as e:
-                self.logger.warning(f"Error checking folder {full_path}: {e}")
+                self.logger.warning("Error checking folder %s: %s", full_path, e)
 
         return conflicts
 
@@ -707,9 +706,7 @@ class ProjectService:
             # For simplicity, assume current structure matches template_version
             # In real implementation, would need to store original structure
             existing_folders = {
-                f.name
-                for f in project.path.iterdir()
-                if f.is_dir() and not f.name.startswith(".")
+                f.name for f in project.path.iterdir() if f.is_dir() and not f.name.startswith(".")
             }
 
             folders_to_add = [f for f in target_folders if f not in existing_folders]
@@ -735,13 +732,11 @@ class ProjectService:
                 target_version=template.version,
             )
 
-        except Exception as e:
-            self.logger.error(f"Error calculating migration diff: {e}")
+        except Exception:
+            self.logger.exception("Error calculating migration diff")
             return None
 
-    def check_project_migration(
-        self, project: Project
-    ) -> tuple[bool, MigrationDiff | None]:
+    def check_project_migration(self, project: Project) -> tuple[bool, MigrationDiff | None]:
         """
         Check if project needs migration.
 
@@ -781,7 +776,9 @@ class ProjectService:
             settings=project.settings.copy(),
             template_name=project.template_name,
             template_version=project.template_version,
-            pending_migration=project.pending_migration.copy() if project.pending_migration else None,
+            pending_migration=project.pending_migration.copy()
+            if project.pending_migration
+            else None,
             migration_history=project.migration_history.copy(),
         )
 
@@ -798,7 +795,7 @@ class ProjectService:
             if preview_path.exists():
                 shutil.rmtree(preview_path)
         except Exception as e:
-            self.logger.warning(f"Failed to cleanup preview directory: {e}")
+            self.logger.warning("Failed to cleanup preview directory: %s", e)
 
     def schedule_deferred_migration(
         self, project: Project, target_version: str, reason: str = "user_deferred"
@@ -823,7 +820,7 @@ class ProjectService:
         self.save_project(project)
         return project
 
-    def migrate_project(
+    def migrate_project(  # noqa: C901, PLR0912
         self,
         project: Project,
         backup: bool = True,
@@ -860,7 +857,7 @@ class ProjectService:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup_path = project.path.parent / f"{project.path.name}_backup_{timestamp}"
             shutil.copytree(project.path, backup_path)
-            self.logger.info(f"Created backup at {backup_path}")
+            self.logger.info("Created backup at %s", backup_path)
 
         try:
             # Create new folders
@@ -873,7 +870,7 @@ class ProjectService:
                     # Check if this folder has conflicts
                     has_conflict = any(c.folder_path == folder for c in diff.conflicts)
                     if has_conflict:
-                        self.logger.info(f"Skipping removal of {folder} due to conflicts")
+                        self.logger.info("Skipping removal of %s due to conflicts", folder)
                         continue
 
                 folder_path = project.path / folder
@@ -904,19 +901,20 @@ class ProjectService:
             self.save_project(project)
 
             # Git commit if available and not preview mode
-            if self.git_service and not preview_mode:
+            if self.git_service and not preview_mode and project.template_name:
                 try:
                     template = self.get_template(project.template_name)
-                    commit_msg = f"Migrate from {template.name} v{diff.current_version} to v{diff.target_version}"
-                    # Would call git_service.commit() here
-                    self.logger.info(f"Would create Git commit: {commit_msg}")
+                    if template:
+                        commit_msg = f"Migrate from {template.name} v{diff.current_version} to v{diff.target_version}"
+                        # Would call git_service.commit() here
+                        self.logger.info("Would create Git commit: %s", commit_msg)
                 except Exception as e:
-                    self.logger.warning(f"Failed to create Git commit: {e}")
+                    self.logger.warning("Failed to create Git commit: %s", e)
 
             return project, backup_path
 
-        except Exception as e:
-            self.logger.error(f"Migration failed: {e}")
+        except Exception:
+            self.logger.exception("Migration failed")
             # Restore from backup if available
             if backup_path and backup_path.exists():
                 self.logger.info("Attempting to restore from backup...")
@@ -925,8 +923,8 @@ class ProjectService:
                         shutil.rmtree(project.path)
                     shutil.copytree(backup_path, project.path)
                     self.logger.info("Restored from backup")
-                except Exception as restore_error:
-                    self.logger.error(f"Failed to restore from backup: {restore_error}")
+                except Exception:
+                    self.logger.exception("Failed to restore from backup")
             raise
 
     def rollback_project(self, project: Project, backup_path: Path) -> Project:
@@ -960,9 +958,7 @@ class ProjectService:
 
         return restored
 
-    def rollback_multiple_projects(
-        self, projects: list[tuple[Project, Path]]
-    ) -> dict[str, bool]:
+    def rollback_multiple_projects(self, projects: list[tuple[Project, Path]]) -> dict[str, bool]:
         """
         Rollback multiple projects in batch.
 
@@ -978,8 +974,8 @@ class ProjectService:
             try:
                 self.rollback_project(project, backup_path)
                 results[project.name] = True
-            except Exception as e:
-                self.logger.error(f"Failed to rollback {project.name}: {e}")
+            except Exception:
+                self.logger.exception("Failed to rollback %s", project.name)
                 results[project.name] = False
 
         return results
@@ -1002,7 +998,7 @@ class ProjectService:
                 results.append((project, True, f"Migrated to v{project.template_version}"))
             except Exception as e:
                 error_msg = str(e)
-                self.logger.error(f"Failed to apply pending migration for {project.name}: {error_msg}")
+                self.logger.exception("Failed to apply pending migration for %s", project.name)
                 results.append((project, False, error_msg))
 
         return results

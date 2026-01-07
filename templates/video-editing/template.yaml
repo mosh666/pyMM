@@ -1,7 +1,7 @@
 name: Video Editing Template
 description: Professional video editing project with proxy, render, and project file organization
 version: 1.0.0
-min_app_version: 0.1.0
+min_app_version: 0.0.0
 extends: default
 required_plugins:
   - ffmpeg

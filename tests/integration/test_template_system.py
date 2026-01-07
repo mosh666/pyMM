@@ -5,16 +5,12 @@ Tests the complete template lifecycle including discovery, inheritance,
 variable substitution, migration workflows, conflict detection, and rollback.
 """
 
-import shutil
-import tempfile
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 import yaml
 
-from app import __version__
-from app.models.project import Project
 from app.services.git_service import GitService
 from app.services.project_service import ProjectService
 
@@ -56,9 +52,7 @@ def templates_dir(tmp_path):
             }
         )
     )
-    (default_dir / "README.md").write_text(
-        "# {PROJECT_NAME}\n\nAuthor: {AUTHOR}\nDate: {DATE}"
-    )
+    (default_dir / "README.md").write_text("# {PROJECT_NAME}\n\nAuthor: {AUTHOR}\nDate: {DATE}")
 
     # Video template (extends default)
     video_dir = templates / "video-editing"
@@ -87,11 +81,9 @@ def project_service(tmp_path, templates_dir):
     metadata_dir.mkdir()
 
     git_service = GitService()
-    service = ProjectService(
+    return ProjectService(
         metadata_dir, git_service=git_service, templates_dir=templates_dir, disable_watch=True
     )
-
-    return service
 
 
 @pytest.fixture
@@ -187,7 +179,7 @@ class TestTemplateInheritance:
         assert template.extends == "base"
 
         # Create project to verify inheritance is resolved
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="default", git_enabled=False
         )
 
@@ -205,7 +197,7 @@ class TestTemplateInheritance:
         assert template is not None
 
         # Create project to verify multi-level inheritance
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="video-editing", git_enabled=False
         )
 
@@ -261,7 +253,7 @@ class TestTemplateInheritance:
             dir_name = f"level{i}"
             level_dir = templates_dir / dir_name
             level_dir.mkdir()
-            extends = f"level{i-1}" if i > 0 else "base"
+            extends = f"level{i - 1}" if i > 0 else "base"
             (level_dir / "template.yaml").write_text(
                 yaml.dump(
                     {
@@ -288,7 +280,7 @@ class TestVariableSubstitution:
 
     def test_project_name_substitution(self, project_service, project_path):
         """Test {PROJECT_NAME} variable substitution."""
-        project = project_service.create_project(
+        project_service.create_project(
             name="My Test Project",
             path=project_path,
             use_template="default",
@@ -303,7 +295,7 @@ class TestVariableSubstitution:
 
     def test_date_substitution(self, project_service, project_path):
         """Test {DATE} variable substitution."""
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="default", git_enabled=False
         )
 
@@ -311,13 +303,13 @@ class TestVariableSubstitution:
         content = readme.read_text()
 
         # Should contain date in YYYY-MM-DD format
-        today = datetime.now().strftime("%Y-%m-%d")
+        today = datetime.now(UTC).strftime("%Y-%m-%d")
         assert today in content
         assert "{DATE}" not in content
 
     def test_author_substitution(self, project_service, project_path):
         """Test {AUTHOR} variable substitution."""
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="default", git_enabled=False
         )
 
@@ -352,7 +344,7 @@ class TestVariableSubstitution:
         # Refresh templates to pick up the new template
         project_service.refresh_templates()
 
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="git-test", git_enabled=True
         )
 
@@ -378,7 +370,7 @@ class TestProjectCreation:
 
     def test_create_project_with_inherited_template(self, project_service, project_path):
         """Test creating project with inherited template."""
-        project = project_service.create_project(
+        project_service.create_project(
             name="Test", path=project_path, use_template="video-editing", git_enabled=False
         )
 
@@ -573,7 +565,7 @@ class TestMigrationExecution:
         project_service.refresh_templates()
 
         # Migrate
-        updated_project, backup_path = project_service.migrate_project(
+        updated_project, _backup_path = project_service.migrate_project(
             project, backup=True, skip_conflicts=True
         )
 
@@ -653,7 +645,7 @@ class TestMigrationExecution:
         project_service.refresh_templates()
 
         # Migrate with skip_conflicts
-        updated_project, backup_path = project_service.migrate_project(
+        updated_project, _backup_path = project_service.migrate_project(
             project, backup=True, skip_conflicts=True
         )
 
@@ -713,7 +705,7 @@ class TestPreviewMode:
         project_service.refresh_templates()
 
         # Create preview
-        preview_temp_dir, preview_project = project_service.create_preview_migration(project)
+        preview_temp_dir, _preview_project = project_service.create_preview_migration(project)
         preview_dir = Path(preview_temp_dir)
 
         # Cleanup
@@ -743,7 +735,9 @@ class TestRollback:
 
         project_service.refresh_templates()
 
-        updated_project, backup_path = project_service.migrate_project(project, backup=True, skip_conflicts=True)
+        updated_project, backup_path = project_service.migrate_project(
+            project, backup=True, skip_conflicts=True
+        )
 
         # Verify migration
         assert (project_path / "new_folder").exists()
@@ -794,7 +788,9 @@ class TestRollback:
 
         migrations = []
         for proj in projects:
-            updated_proj, backup_path = project_service.migrate_project(proj, backup=True, skip_conflicts=True)
+            updated_proj, backup_path = project_service.migrate_project(
+                proj, backup=True, skip_conflicts=True
+            )
             migrations.append((updated_proj, backup_path))
 
         # Batch rollback
@@ -814,9 +810,7 @@ class TestDeferredMigrations:
             name="Test", path=project_path, use_template="base", git_enabled=False
         )
 
-        project_service.schedule_deferred_migration(
-            project, "1.1.0", reason="User deferred"
-        )
+        project_service.schedule_deferred_migration(project, "1.1.0", reason="User deferred")
 
         # Reload project
         reloaded = project_service.load_project(project_path)
@@ -835,7 +829,7 @@ class TestDeferredMigrations:
         project_service.schedule_deferred_migration(proj1, "1.1.0", "Deferred")
 
         path2 = tmp_path / "project_2"
-        proj2 = project_service.create_project(
+        project_service.create_project(
             name="Project 2", path=path2, use_template="base", git_enabled=False
         )
 
@@ -905,13 +899,9 @@ class TestEdgeCases:
             name="Test", path=project_path, use_template="base", git_enabled=False
         )
 
-        current_version = project.template_version
-
         # Try to migrate to same version - should raise ValueError (no migration available)
         with pytest.raises(ValueError):
-            project_service.migrate_project(
-                project, backup=True, skip_conflicts=True
-            )
+            project_service.migrate_project(project, backup=True, skip_conflicts=True)
 
     def test_concurrent_modifications(self, project_service, project_path):
         """Test handling of concurrent project modifications."""
@@ -921,7 +911,7 @@ class TestEdgeCases:
 
         # Simulate concurrent modification by changing metadata file
         metadata_file = project_service._get_metadata_file(project_path)
-        original_data = yaml.safe_load(metadata_file.read_text())
+        yaml.safe_load(metadata_file.read_text())
 
         # Save project multiple times (simulate concurrent saves)
         project.description = "Modified 1"

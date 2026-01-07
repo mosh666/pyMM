@@ -4,13 +4,12 @@ GUI tests for migration UI components.
 Tests the migration banner, dialogs, and UI integration using pytest-qt.
 """
 
-from pathlib import Path
+from typing import cast
 from unittest.mock import Mock, patch
 
+from PySide6.QtCore import QObject, Qt
+from PySide6.QtWidgets import QLabel
 import pytest
-import yaml
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel, QTextEdit
 
 from app.models.project import Project
 from app.services.project_service import MigrationConflict, MigrationDiff, ProjectService
@@ -25,13 +24,12 @@ def mock_project(tmp_path):
     project_path = tmp_path / "test_project"
     project_path.mkdir()
 
-    project = Project(
+    return Project(
         name="Test Project",
         path=project_path,
         template_name="default",
         template_version="1.0.0",
     )
-    return project
 
 
 @pytest.fixture
@@ -66,6 +64,7 @@ def mock_project_service(tmp_path):
 def parent_widget(qtbot):
     """Create a parent widget for dialogs."""
     from PySide6.QtWidgets import QWidget
+
     widget = QWidget()
     qtbot.addWidget(widget)
     widget.setGeometry(0, 0, 800, 600)
@@ -90,7 +89,7 @@ class TestMigrationBanner:
         qtbot.addWidget(banner)
 
         # Should display version transition
-        text_widgets = banner.findChildren(object)
+        text_widgets = banner.findChildren(QObject)
         banner_text = " ".join(str(w.text()) if hasattr(w, "text") else "" for w in text_widgets)
 
         assert "1.0.0" in banner_text or "2.0.0" in banner_text
@@ -101,7 +100,7 @@ class TestMigrationBanner:
         qtbot.addWidget(banner)
 
         # Should show counts of folders to add/remove
-        text_widgets = banner.findChildren(object)
+        text_widgets = banner.findChildren(QObject)
         banner_text = " ".join(str(w.text()) if hasattr(w, "text") else "" for w in text_widgets)
 
         # Should mention the folder counts somewhere
@@ -131,7 +130,7 @@ class TestMigrationBanner:
         qtbot.addWidget(banner)
 
         # Should show conflict indicator
-        text_widgets = banner.findChildren(object)
+        text_widgets = banner.findChildren(QObject)
         banner_text = " ".join(str(w.text()) if hasattr(w, "text") else "" for w in text_widgets)
 
         assert "conflict" in banner_text.lower()
@@ -143,7 +142,7 @@ class TestMigrationBanner:
 
         with qtbot.waitSignal(banner.preview_requested, timeout=1000):
             # Find and click preview button
-            buttons = banner.findChildren(object)
+            buttons = banner.findChildren(QObject)
             for btn in buttons:
                 if hasattr(btn, "text") and "Preview" in btn.text():
                     qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)
@@ -155,7 +154,7 @@ class TestMigrationBanner:
         qtbot.addWidget(banner)
 
         with qtbot.waitSignal(banner.apply_requested, timeout=1000):
-            buttons = banner.findChildren(object)
+            buttons = banner.findChildren(QObject)
             for btn in buttons:
                 if hasattr(btn, "text") and "Apply" in btn.text():
                     qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)
@@ -167,7 +166,7 @@ class TestMigrationBanner:
         qtbot.addWidget(banner)
 
         with qtbot.waitSignal(banner.defer_requested, timeout=1000):
-            buttons = banner.findChildren(object)
+            buttons = banner.findChildren(QObject)
             for btn in buttons:
                 if hasattr(btn, "text") and "Defer" in btn.text():
                     qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)
@@ -186,7 +185,9 @@ class TestMigrationBanner:
 class TestMigrationDialog:
     """Tests for MigrationDialog."""
 
-    def test_dialog_creation(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_creation(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test creating a migration dialog."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -196,7 +197,9 @@ class TestMigrationDialog:
         assert dialog.project == mock_project
         assert dialog.migration_diff == mock_migration_diff
 
-    def test_dialog_shows_version_info(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_shows_version_info(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test dialog displays version transition."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -204,11 +207,13 @@ class TestMigrationDialog:
         qtbot.addWidget(dialog)
 
         # Should show version transition in subtitle (second label in viewLayout)
-        labels = dialog.findChildren(QLabel)
-        version_labels = [l for l in labels if "1.0.0" in l.text() or "2.0.0" in l.text()]
+        labels = cast("list[QLabel]", dialog.findChildren(QLabel))
+        version_labels = [lbl for lbl in labels if "1.0.0" in lbl.text() or "2.0.0" in lbl.text()]
         assert len(version_labels) > 0, "Version information not found in dialog"
 
-    def test_dialog_shows_folders_to_add(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_shows_folders_to_add(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test dialog lists folders to add."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -218,13 +223,14 @@ class TestMigrationDialog:
         # Should display folders to add
         text_edits = dialog.findChildren(object)
         content = " ".join(
-            str(w.toPlainText()) if hasattr(w, "toPlainText") else ""
-            for w in text_edits
+            str(w.toPlainText()) if hasattr(w, "toPlainText") else "" for w in text_edits
         )
 
         assert "source" in content or "proxies" in content
 
-    def test_dialog_shows_folders_to_remove(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_shows_folders_to_remove(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test dialog lists folders to remove."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -233,8 +239,7 @@ class TestMigrationDialog:
 
         text_edits = dialog.findChildren(object)
         content = " ".join(
-            str(w.toPlainText()) if hasattr(w, "toPlainText") else ""
-            for w in text_edits
+            str(w.toPlainText()) if hasattr(w, "toPlainText") else "" for w in text_edits
         )
 
         assert "cache" in content
@@ -258,19 +263,23 @@ class TestMigrationDialog:
             inheritance_changes=[],
         )
 
-        dialog = MigrationDialog(mock_project, diff_with_conflicts, mock_project_service, parent_widget)
+        dialog = MigrationDialog(
+            mock_project, diff_with_conflicts, mock_project_service, parent_widget
+        )
         qtbot.addWidget(dialog)
 
         # Should show conflict information
         text_edits = dialog.findChildren(object)
         content = " ".join(
-            str(w.toPlainText()) if hasattr(w, "toPlainText") else ""
-            for w in text_edits
+            str(w.toPlainText()) if hasattr(w, "toPlainText") else "" for w in text_edits
         )
 
-        assert "cache" in content and ("conflict" in content.lower() or "user" in content.lower())
+        assert "cache" in content
+        assert "conflict" in content.lower() or "user" in content.lower()
 
-    def test_dialog_preview_checkbox(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_preview_checkbox(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test preview mode checkbox."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -284,7 +293,9 @@ class TestMigrationDialog:
         dialog.preview_checkbox.setChecked(True)
         assert dialog.preview_checkbox.isChecked()
 
-    def test_dialog_skip_conflicts_checkbox(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_skip_conflicts_checkbox(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test skip conflicts checkbox."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -294,7 +305,9 @@ class TestMigrationDialog:
         assert hasattr(dialog, "skip_conflicts_checkbox")
         assert dialog.skip_conflicts_checkbox.isChecked()  # Default checked
 
-    def test_dialog_backup_checkbox(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_dialog_backup_checkbox(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test backup checkbox."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -304,7 +317,9 @@ class TestMigrationDialog:
         assert hasattr(dialog, "backup_checkbox")
         assert dialog.backup_checkbox.isChecked()  # Default checked
 
-    def test_apply_migration_calls_service(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_apply_migration_calls_service(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test applying migration calls project service."""
         # Mock migrate_project to return True
         mock_project_service.migrate_project.return_value = True
@@ -315,15 +330,19 @@ class TestMigrationDialog:
         qtbot.addWidget(dialog)
 
         # Mock MessageBox and InfoBar to avoid blocking
-        with patch("qfluentwidgets.MessageBox"), \
-             patch("app.ui.components.migration_banner.InfoBar"):
+        with (
+            patch("qfluentwidgets.MessageBox"),
+            patch("app.ui.components.migration_banner.InfoBar"),
+        ):
             # Trigger apply
             dialog._apply_migration()
 
         # Should call migrate_project
         mock_project_service.migrate_project.assert_called_once()
 
-    def test_defer_migration_calls_service(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_defer_migration_calls_service(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test deferring migration calls service."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -331,8 +350,10 @@ class TestMigrationDialog:
         qtbot.addWidget(dialog)
 
         # Mock MessageBox and InfoBar to avoid blocking
-        with patch("qfluentwidgets.MessageBox"), \
-             patch("app.ui.components.migration_banner.InfoBar"):
+        with (
+            patch("qfluentwidgets.MessageBox"),
+            patch("app.ui.components.migration_banner.InfoBar"),
+        ):
             # Trigger defer
             dialog._defer_migration()
 
@@ -516,6 +537,7 @@ class TestMigrationHistoryDialog:
 
         # Should have 2 history entries - find the QListWidget
         from PySide6.QtWidgets import QListWidget
+
         list_widgets = dialog.findChildren(QListWidget)
         assert len(list_widgets) > 0
         assert list_widgets[0].count() == 2  # Should have exactly 2 items
@@ -569,8 +591,8 @@ class TestProjectViewIntegration:
         """Test that project list shows migration indicators."""
         # This would test the actual ProjectView with migration indicators
         # For now, verify the indicator strings exist
-        assert "🔄" is not None  # Migration available indicator
-        assert "⏰" is not None  # Pending migration indicator
+        _ = "🔄"  # Migration available indicator
+        _ = "⏰"  # Pending migration indicator
 
     def test_banner_appears_on_selection(self, qtbot):
         """Test that banner appears when project with migration is selected."""
@@ -587,6 +609,7 @@ class TestProjectViewIntegration:
 
         # Just verify the class has the method we expect
         assert hasattr(ProjectView, "_on_selection_changed")
+
     def test_migrations_menu_exists(self, qtbot):
         """Test that migrations menu item exists."""
         from app.ui.main_window import MainWindow
@@ -629,7 +652,9 @@ class TestProjectViewIntegration:
 class TestDialogInteractions:
     """Tests for dialog user interactions."""
 
-    def test_cancel_button_closes_migration_dialog(self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget):
+    def test_cancel_button_closes_migration_dialog(
+        self, qtbot, mock_project, mock_migration_diff, mock_project_service, parent_widget
+    ):
         """Test cancel button closes dialog."""
         dialog = MigrationDialog(
             mock_project, mock_migration_diff, mock_project_service, parent_widget
@@ -644,7 +669,9 @@ class TestDialogInteractions:
                     qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)
                 break
 
-    def test_migration_notes_displayed(self, qtbot, mock_project, mock_project_service, parent_widget):
+    def test_migration_notes_displayed(
+        self, qtbot, mock_project, mock_project_service, parent_widget
+    ):
         """Test migration notes are displayed."""
         diff = MigrationDiff(
             current_version="1.0.0",
@@ -662,8 +689,7 @@ class TestDialogInteractions:
         # Should display notes
         text_edits = dialog.findChildren(object)
         content = " ".join(
-            str(w.toPlainText()) if hasattr(w, "toPlainText") else ""
-            for w in text_edits
+            str(w.toPlainText()) if hasattr(w, "toPlainText") else "" for w in text_edits
         )
 
         assert "backup" in content.lower() or "important" in content.lower()

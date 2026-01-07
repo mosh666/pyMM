@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+import logging
+from typing import TYPE_CHECKING, Any
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QWidget,
+)
 from qfluentwidgets import CheckBox, MessageBoxBase, PrimaryPushButton, PushButton
 
 if TYPE_CHECKING:
@@ -107,9 +114,7 @@ class RollbackDialog(MessageBoxBase):
 
         # Options
         self.delete_backup_checkbox = CheckBox("Delete backups after rollback")
-        self.delete_backup_checkbox.setToolTip(
-            "Remove backup folders after successful rollback"
-        )
+        self.delete_backup_checkbox.setToolTip("Remove backup folders after successful rollback")
         self.delete_backup_checkbox.setChecked(False)
         self.viewLayout.addWidget(self.delete_backup_checkbox)
 
@@ -192,7 +197,9 @@ class RollbackDialog(MessageBoxBase):
         if not selected:
             from qfluentwidgets import MessageBox
 
-            MessageBox("No Selection", "Please select at least one project to preview.", self).exec()
+            MessageBox(
+                "No Selection", "Please select at least one project to preview.", self
+            ).exec()
             return
 
         # Build preview message
@@ -202,26 +209,24 @@ class RollbackDialog(MessageBoxBase):
                 latest = project.migration_history[-1]
                 from_ver = latest.get("from_version", "unknown")
                 to_ver = latest.get("to_version", "unknown")
-                preview_lines.append(
-                    f"• {project.name}: v{to_ver} → v{from_ver}"
-                )
+                preview_lines.append(f"• {project.name}: v{to_ver} → v{from_ver}")
 
-        preview_text = (
-            f"Will rollback {len(selected)} project(s):\n\n" + "\n".join(preview_lines)
-        )
+        preview_text = f"Will rollback {len(selected)} project(s):\n\n" + "\n".join(preview_lines)
 
         from qfluentwidgets import MessageBox
 
         MessageBox("Rollback Preview", preview_text, self).exec()
 
-    def _execute_rollback(self) -> None:
+    def _execute_rollback(self) -> None:  # noqa: C901
         """Execute rollback for selected projects."""
         selected = self._get_selected_projects()
 
         if not selected:
             from qfluentwidgets import MessageBox
 
-            MessageBox("No Selection", "Please select at least one project to rollback.", self).exec()
+            MessageBox(
+                "No Selection", "Please select at least one project to rollback.", self
+            ).exec()
             return
 
         # Confirm action
@@ -239,7 +244,26 @@ class RollbackDialog(MessageBoxBase):
 
         # Execute rollback
         try:
-            results = self.project_service.rollback_multiple_projects(selected)
+            rollback_targets = []
+            for project in selected:
+                if project.migration_history:
+                    # Get latest backup path
+                    # We need to find the backup path corresponding to the latest migration
+                    # Assuming last entry in history is what we're rolling back from
+                    latest = project.migration_history[-1]
+                    backup_path_str = latest.get("backup_path")
+                    if backup_path_str:
+                        from pathlib import Path
+
+                        rollback_targets.append((project, Path(backup_path_str)))
+
+            if not rollback_targets:
+                from qfluentwidgets import MessageBox
+
+                MessageBox("Error", "No backup paths found for selected projects.", self).exec()
+                return
+
+            results = self.project_service.rollback_multiple_projects(rollback_targets)
 
             # Count successes and failures
             successes = sum(1 for success in results.values() if success)
@@ -269,12 +293,12 @@ class RollbackDialog(MessageBoxBase):
         except Exception as e:
             from qfluentwidgets import MessageBox
 
-            MessageBox("Rollback Error", f"Failed to rollback projects:\n{str(e)}", self).exec()
+            MessageBox("Rollback Error", f"Failed to rollback projects:\n{e!s}", self).exec()
 
     def _delete_backups(self, projects: list[Project]) -> None:
         """Delete backup folders for projects."""
-        import shutil
         from pathlib import Path
+        import shutil
 
         for project in projects:
             backup_pattern = f"{project.name}_backup_*"
@@ -287,7 +311,7 @@ class RollbackDialog(MessageBoxBase):
                         shutil.rmtree(backup_dir)
                     except Exception as e:
                         # Log but don't fail
-                        print(f"Failed to delete backup {backup_dir}: {e}")
+                        logging.warning(f"Failed to delete backup {backup_dir}: {e}")
 
 
 class MigrationHistoryDialog(MessageBoxBase):
@@ -366,7 +390,7 @@ class MigrationHistoryDialog(MessageBoxBase):
 
         self.widget.setMinimumWidth(600)
 
-    def _format_migration_entry(self, migration: dict, index: int) -> str:
+    def _format_migration_entry(self, migration: dict[str, Any], index: int) -> str:
         """Format migration entry for display."""
         from_ver = migration.get("from_version", "unknown")
         to_ver = migration.get("to_version", "unknown")

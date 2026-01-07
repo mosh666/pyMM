@@ -139,7 +139,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
     if not get_pip_path.exists():
         download_file("https://bootstrap.pypa.io/get-pip.py", get_pip_path)
 
-    subprocess.check_call(  # noqa: S603
+    subprocess.check_call(
         [str(python_exe), str(get_pip_path), "--no-warn-script-location"], cwd=ROOT_DIR
     )
 
@@ -160,7 +160,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
         str(lib_dir),
         "--no-warn-script-location",
     ]
-    subprocess.check_call(build_tools_cmd, cwd=ROOT_DIR)  # noqa: S603
+    subprocess.check_call(build_tools_cmd, cwd=ROOT_DIR)
 
     # Check for requirements.lock
     lockfile = ROOT_DIR / "requirements.lock"
@@ -180,7 +180,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
             "--no-warn-script-location",
         ]
         logger.info(f"Running: {' '.join(install_cmd)}")
-        subprocess.check_call(install_cmd, cwd=ROOT_DIR)  # noqa: S603
+        subprocess.check_call(install_cmd, cwd=ROOT_DIR)
 
         # Install the app package itself (without deps since they are in lockfile)
         logger.info("Installing application package...")
@@ -197,7 +197,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
             "--no-warn-script-location",
         ]
         logger.info(f"Running: {' '.join(app_install_cmd)}")
-        subprocess.check_call(app_install_cmd, cwd=ROOT_DIR)  # noqa: S603
+        subprocess.check_call(app_install_cmd, cwd=ROOT_DIR)
 
     else:
         logger.info("No requirements.lock found. Installing from pyproject.toml...")
@@ -216,7 +216,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
         ]
 
         logger.info(f"Running: {' '.join(install_cmd)}")
-        subprocess.check_call(install_cmd, cwd=ROOT_DIR)  # noqa: S603
+        subprocess.check_call(install_cmd, cwd=ROOT_DIR)
 
     # 3. Cleanup: Remove the 'app' package if it got installed into lib
     app_in_lib = lib_dir / "app"
@@ -238,7 +238,7 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
             )
     except ImportError:
         logger.warning("Warning: setuptools_scm not installed. Skipping _version.py generation.")
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.warning(f"Warning: Failed to generate _version.py: {e}")
 
 

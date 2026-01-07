@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.models.project import Project
-from app.services.project_service import ProjectService
+from app.services.project_service import MigrationDiff, ProjectService
 from app.ui.components.migration_banner import MigrationBanner
 from app.ui.dialogs.migration_dialog import MigrationDialog
 
@@ -170,8 +170,8 @@ class ProjectView(QWidget):
         # Clear existing banner
         while self.migration_banner_layout.count():
             child = self.migration_banner_layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
+            if widget := child.widget():
+                widget.deleteLater()
 
         # Get selected project
         selected_items = self.projects_list.selectedItems()
@@ -186,34 +186,39 @@ class ProjectView(QWidget):
 
         # Check for migration
         try:
-            migration_diff = self.project_service.check_project_migration(project)
-            if migration_diff:
+            needs_migration, migration_diff = self.project_service.check_project_migration(project)
+            if needs_migration and migration_diff:
                 # Show migration banner
                 banner = MigrationBanner(project, migration_diff, self)
-                banner.preview_requested.connect(lambda: self._preview_migration(project, migration_diff))
-                banner.apply_requested.connect(lambda: self._apply_migration(project, migration_diff))
-                banner.defer_requested.connect(lambda: self._defer_migration(project, migration_diff))
+                banner.preview_requested.connect(
+                    lambda: self._preview_migration(project, migration_diff)
+                )
+                banner.apply_requested.connect(
+                    lambda: self._apply_migration(project, migration_diff)
+                )
+                banner.defer_requested.connect(
+                    lambda: self._defer_migration(project, migration_diff)
+                )
 
                 self.migration_banner_layout.addWidget(banner)
                 self.migration_banner_container.setVisible(True)
             else:
                 self.migration_banner_container.setVisible(False)
-        except Exception as e:
-            self.logger.error(f"Failed to check migration for {project.name}: {e}")
+        except Exception:
+            self.logger.exception("Failed to check migration for %s", project.name)
             self.migration_banner_container.setVisible(False)
 
-    def _preview_migration(self, project: Project, migration_diff) -> None:
+    def _preview_migration(self, project: Project, migration_diff: MigrationDiff) -> None:
         """Preview migration changes."""
         dialog = MigrationDialog(project, migration_diff, self.project_service, self)
         if dialog.exec():
             self._refresh_projects()
 
-    def _apply_migration(self, project: Project, migration_diff) -> None:
+    def _apply_migration(self, project: Project, migration_diff: MigrationDiff) -> None:
         """Apply migration directly."""
         try:
-            success = self.project_service.migrate_project(
+            success, _ = self.project_service.migrate_project(
                 project,
-                migration_diff.target_version,
                 backup=True,
                 skip_conflicts=True,
                 preview_mode=False,
@@ -227,7 +232,6 @@ class ProjectView(QWidget):
                     self,
                 )
                 self._refresh_projects()
-                self._on_selection_changed()  # Refresh banner
             else:
                 MigrationBanner.show_migration_error(
                     project.name,
@@ -235,10 +239,10 @@ class ProjectView(QWidget):
                     self,
                 )
         except Exception as e:
-            self.logger.error(f"Failed to apply migration: {e}")
+            self.logger.exception("Failed to apply migration")
             MigrationBanner.show_migration_error(project.name, str(e), self)
 
-    def _defer_migration(self, project: Project, migration_diff) -> None:
+    def _defer_migration(self, project: Project, migration_diff: MigrationDiff) -> None:
         """Defer migration for later."""
         try:
             self.project_service.schedule_deferred_migration(
@@ -253,7 +257,7 @@ class ProjectView(QWidget):
             self._refresh_projects()
             self._on_selection_changed()  # Refresh banner
         except Exception as e:
-            self.logger.error(f"Failed to defer migration: {e}")
+            self.logger.exception("Failed to defer migration")
             MigrationBanner.show_migration_error(project.name, str(e), self)
 
     def refresh_projects(self) -> None:

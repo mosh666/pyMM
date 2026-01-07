@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QTextEdit, QVBoxLayout, QWidget
 from qfluentwidgets import CheckBox, MessageBoxBase, PrimaryPushButton, PushButton
 
@@ -127,17 +126,13 @@ class MigrationDialog(MessageBoxBase):
         options_layout.addWidget(self.preview_checkbox)
 
         self.skip_conflicts_checkbox = CheckBox("Skip conflicting folders")
-        self.skip_conflicts_checkbox.setToolTip(
-            "Don't remove folders that contain user files"
-        )
+        self.skip_conflicts_checkbox.setToolTip("Don't remove folders that contain user files")
         self.skip_conflicts_checkbox.setChecked(True)
         self.skip_conflicts_checkbox.setEnabled(bool(self.migration_diff.conflicts))
         options_layout.addWidget(self.skip_conflicts_checkbox)
 
         self.backup_checkbox = CheckBox("Create backup before migration")
-        self.backup_checkbox.setToolTip(
-            "Create timestamped backup for rollback (recommended)"
-        )
+        self.backup_checkbox.setToolTip("Create timestamped backup for rollback (recommended)")
         self.backup_checkbox.setChecked(True)
         options_layout.addWidget(self.backup_checkbox)
 
@@ -214,20 +209,18 @@ class MigrationDialog(MessageBoxBase):
 
             if preview_mode:
                 # Create preview
-                preview_path = self.project_service.create_preview_migration(
-                    self.project, self.migration_diff.target_version
-                )
+                preview_path, _ = self.project_service.create_preview_migration(self.project)
                 self.yesSignal.emit()
-                self._show_preview_info(preview_path)
+                self._show_preview_info(str(preview_path))
             else:
                 # Apply migration
-                success = self.project_service.migrate_project(
+                self.project_service.migrate_project(
                     self.project,
-                    self.migration_diff.target_version,
                     backup=create_backup and not preview_mode,
                     skip_conflicts=skip_conflicts,
                     preview_mode=False,
                 )
+                success = True
 
                 if success:
                     self.yesSignal.emit()

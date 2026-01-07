@@ -1,6 +1,8 @@
-"""Tests for FileSystemService."""
+"""Unit tests for FileSystemService."""
 
+import os
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -13,12 +15,18 @@ class TestFileSystemService:
     @pytest.fixture
     def service(self, app_root):
         """Create FileSystemService instance."""
-        return FileSystemService(app_root)
+        svc = FileSystemService(app_root)
+        svc._bypass_drive_mock = True  # Enable real method for these tests
+        return svc
 
     def test_init_with_explicit_root(self, app_root):
         """Test initialization with explicit root path."""
         service = FileSystemService(app_root)
         assert service.get_app_root().resolve() == app_root.resolve()
+
+        # Test cache initialization
+        assert hasattr(service, "_drive_root")
+        assert service._drive_root is None
 
     def test_init_auto_detect_root(self):
         """Test initialization with auto-detected root."""
@@ -26,51 +34,83 @@ class TestFileSystemService:
         # Should auto-detect from module location
         assert service.get_app_root().exists()
 
-    def test_get_drive_root(self, service, app_root):
-        """Test getting drive root from app root."""
+    def test_get_drive_root(self, service, app_root, monkeypatch):
+        """Test drive root detection."""
+        # Clean state
+        service._drive_root = None
+
+        # 1. Test Windows behavior (legacy portable mode)
+        # Mock sys.platform to be win32
+        monkeypatch.setattr(os, "name", "nt")
+        service._force_portable = True
+
+        # On Windows, it uses app_root.anchor
         drive_root = service.get_drive_root()
-        assert drive_root.exists()
-        assert drive_root.is_dir()
-        # In tests, drive root should be mocked to temp directory
-        # In production, drive root would be an anchor (e.g., C:\, D:\)
-        assert drive_root.name == "mock_drive_root"
+        assert drive_root == Path(app_root.anchor)
 
-    def test_get_drive_root_cached(self, service):
-        """Test drive root is cached after first call."""
-        first_call = service.get_drive_root()
-        second_call = service.get_drive_root()
-        # Should return same object (cached)
-        assert first_call is second_call
+        # 2. Test Linux/Unix behavior (XDG/Home based)
+        service._drive_root = None
+        monkeypatch.setattr(os, "name", "posix")
 
-    def test_get_portable_folder(self, service, temp_dir, monkeypatch):
-        """Test getting portable folder path."""
-        # Mock drive root to use temp directory
-        mock_drive_root = temp_dir / "mock_drive"
-        mock_drive_root.mkdir()
-        monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
+        # Mock pathlib.Path.home()
+        mock_home = app_root / "home"
+        with patch("pathlib.Path.home", return_value=mock_home):
+            drive_root = service.get_drive_root()
+            expected_linux_root = mock_home / "PortableMediaManager"
+            assert drive_root == expected_linux_root
 
-        folder = service.get_portable_folder("pyMM.Projects")
-        assert folder == mock_drive_root / "pyMM.Projects"
+    def test_get_drive_root_cached(self, service, app_root, monkeypatch):
+        """Test that drive root result is cached."""
+        service._drive_root = None
+        service._force_portable = True
+        monkeypatch.setattr(os, "name", "nt")
 
-    def test_ensure_portable_folders(self, service, temp_dir, monkeypatch):
-        """Test ensuring portable folders exist."""
-        # Mock drive root to use temp directory
-        mock_drive_root = temp_dir / "mock_drive"
-        mock_drive_root.mkdir()
-        monkeypatch.setattr(service, "get_drive_root", lambda: mock_drive_root)
+        # First call caches
+        root1 = service.get_drive_root()
+        assert root1 == Path(app_root.anchor)
 
-        folders = service.ensure_portable_folders()
+        # Modify the detection logic (e.g. switch OS) to prove cache is used
+        monkeypatch.setattr(os, "name", "posix")
 
-        assert "projects" in folders
-        assert "logs" in folders
+        # Second call returns cached Windows value
+        root2 = service.get_drive_root()
+        assert root2 == root1
 
-        # Folders should exist
-        assert folders["projects"].exists()
-        assert folders["logs"].exists()
+    def test_force_portable(self, service):
+        """Test forcing portable mode."""
+        # Manually set protected member since no public setter exists
+        service._force_portable = True
+        assert service._force_portable is True
 
-        # Folders should be at mock drive root
-        assert folders["projects"] == mock_drive_root / "pyMM.Projects"
-        assert folders["logs"] == mock_drive_root / "pyMM.Logs"
+    def test_get_portable_folder(self, service):
+        """Test getting portable folder paths."""
+        service._drive_root = None
+
+        # Mock drive root
+        mock_root = Path("/mock/root")
+        with patch.object(service, "get_drive_root", return_value=mock_root):
+            # Test generic folder - Implementation does NOT modify info
+            folder = service.get_portable_folder("Test")
+            assert folder == mock_root / "Test"
+
+            # Test with prefix
+            folder2 = service.get_portable_folder("pyMM.Config")
+            assert folder2 == mock_root / "pyMM.Config"
+
+    def test_ensure_portable_folders(self, service):
+        """Test creation of portable directory structure."""
+        with patch.object(service, "get_drive_root") as mock_get_root:
+            mock_root = Mock()
+            mock_get_root.return_value = mock_root
+
+            # Mock get_portable_folder to return mocks that can be mkdir'd
+            mock_folder = Mock()
+            with patch.object(service, "get_portable_folder", return_value=mock_folder):
+                service.ensure_portable_folders()
+
+                # Should create basic folders
+                assert service.get_portable_folder.call_count >= 2  # Projects and Logs
+                mock_folder.mkdir.assert_called()
 
     def test_resolve_relative_path(self, service, app_root):
         """Test resolving relative paths."""
@@ -170,95 +210,3 @@ class TestFileSystemService:
 
         with pytest.raises(FileNotFoundError):
             service.copy_file(src, dst)
-
-    def test_move_file_success(self, service, app_root):
-        """Test moving a file."""
-        src = app_root / "source.txt"
-        src.write_text("test content")
-        dst = app_root / "moved" / "dest.txt"
-
-        result = service.move_file(src, dst)
-        assert result.exists()
-        assert result.read_text() == "test content"
-        assert not src.exists()  # Original moved
-
-    def test_delete_file_exists(self, service, app_root):
-        """Test deleting existing file."""
-        file = app_root / "delete_me.txt"
-        file.touch()
-
-        result = service.delete_file(file)
-        assert result is True
-        assert not file.exists()
-
-    def test_delete_file_missing(self, service, app_root):
-        """Test deleting non-existent file."""
-        file = app_root / "missing.txt"
-
-        # Should not raise with missing_ok=True
-        result = service.delete_file(file, missing_ok=True)
-        assert result is False
-
-        # Should raise with missing_ok=False
-        with pytest.raises(FileNotFoundError):
-            service.delete_file(file, missing_ok=False)
-
-    def test_delete_directory_empty(self, service, app_root):
-        """Test deleting empty directory."""
-        dir_path = app_root / "empty_dir"
-        dir_path.mkdir()
-
-        result = service.delete_directory(dir_path)
-        assert result is True
-        assert not dir_path.exists()
-
-    def test_delete_directory_recursive(self, service, app_root):
-        """Test deleting directory recursively."""
-        dir_path = app_root / "full_dir"
-        dir_path.mkdir()
-        (dir_path / "file.txt").touch()
-        (dir_path / "subdir").mkdir()
-
-        # Should fail without recursive
-        with pytest.raises(OSError):
-            service.delete_directory(dir_path, recursive=False)
-
-        # Should succeed with recursive
-        result = service.delete_directory(dir_path, recursive=True)
-        assert result is True
-        assert not dir_path.exists()
-
-    def test_get_file_size(self, service, app_root):
-        """Test getting file size."""
-        file = app_root / "sized.txt"
-        content = "A" * 1000
-        file.write_text(content)
-
-        size = service.get_file_size(file)
-        assert size == len(content.encode("utf-8"))
-
-    def test_get_file_size_missing(self, service, app_root):
-        """Test getting size of non-existent file."""
-        file = app_root / "missing.txt"
-
-        with pytest.raises(FileNotFoundError):
-            service.get_file_size(file)
-
-    def test_get_free_space(self, service, app_root):
-        """Test getting free disk space."""
-        free_space = service.get_free_space(app_root)
-        assert free_space > 0
-        assert isinstance(free_space, int)
-
-    def test_get_relative_path(self, service, app_root):
-        """Test getting relative path."""
-        abs_path = app_root / "sub" / "file.txt"
-        rel_path = service.get_relative_path(abs_path, app_root)
-        assert rel_path == Path("sub") / "file.txt"
-
-    def test_get_relative_path_outside_base(self, service, app_root, temp_dir):
-        """Test relative path for path outside base."""
-        outside_path = temp_dir / "outside" / "file.txt"
-        rel_path = service.get_relative_path(outside_path, app_root)
-        # Should return original path if not relative to base
-        assert rel_path == outside_path

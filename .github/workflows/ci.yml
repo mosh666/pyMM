@@ -66,13 +66,18 @@ jobs:
         run: just lint
 
   test:
-    name: Test Python ${{ matrix.python-version }}
-    runs-on: windows-latest
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     needs: [lint, type-check]
     strategy:
-      fail-fast: true  # Stop on first failure
+      fail-fast: false
       matrix:
-        python-version: ["3.12", "3.13", "3.14"]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: ["3.12", "3.13"]
+        include:
+          # Test Python 3.14 (Preview) only on Windows for now
+          - os: windows-latest
+            python-version: "3.14"
 
     steps:
       - name: Checkout code

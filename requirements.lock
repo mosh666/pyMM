@@ -14,6 +14,8 @@ annotated-types==0.7.0
     # via pydantic
 attrs==25.4.0
     # via aiohttp
+brotli==1.2.0
+    # via py7zr
 darkdetect==0.8.0
     # via pyside6-fluent-widgets
 frozenlist==1.8.0
@@ -26,6 +28,8 @@ gitpython==3.1.46
     # via pyMediaManager (pyproject.toml)
 idna==3.11
     # via yarl
+inflate64==1.0.4
+    # via py7zr
 markdown-it-py==4.0.0
     # via rich
 mdurl==0.1.2
@@ -34,18 +38,32 @@ multidict==6.7.0
     # via
     #   aiohttp
     #   yarl
+multivolumefile==0.2.3
+    # via py7zr
+packaging==25.0
+    # via pyMediaManager (pyproject.toml)
 propcache==0.4.1
     # via
     #   aiohttp
     #   yarl
 psutil==7.2.1
+    # via
+    #   py7zr
+    #   pyMediaManager (pyproject.toml)
+py7zr==1.1.0
     # via pyMediaManager (pyproject.toml)
+pybcj==1.0.7
+    # via py7zr
+pycryptodomex==3.23.0
+    # via py7zr
 pydantic==2.12.5
     # via pyMediaManager (pyproject.toml)
 pydantic-core==2.41.5
     # via pydantic
 pygments==2.19.2
     # via rich
+pyppmd==1.3.1
+    # via py7zr
 pyside6==6.10.1
     # via
     #   pyMediaManager (pyproject.toml)
@@ -75,6 +93,8 @@ shiboken6==6.10.1
     #   pyside6-essentials
 smmap==5.0.2
     # via gitdb
+texttable==1.7.0
+    # via py7zr
 typing-extensions==4.15.0
     # via
     #   pydantic
@@ -82,6 +102,8 @@ typing-extensions==4.15.0
     #   typing-inspection
 typing-inspection==0.4.2
     # via pydantic
+watchdog==6.0.0
+    # via pyMediaManager (pyproject.toml)
 wmi==1.5.1 ; platform_system == "Windows"
     # via pyMediaManager (pyproject.toml)
 yarl==1.22.0

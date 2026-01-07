@@ -67,13 +67,9 @@ class MigrationBanner(QWidget):
 
         # Conflict indicator
         if self.migration_diff.conflicts:
-            conflict_label = QLabel(
-                f"🚨 {len(self.migration_diff.conflicts)} conflict(s) detected"
-            )
+            conflict_label = QLabel(f"🚨 {len(self.migration_diff.conflicts)} conflict(s) detected")
             conflict_label.setStyleSheet("color: #d32f2f; font-weight: bold;")
-            conflict_label.setToolTip(
-                "Some folders contain user files that would be removed"
-            )
+            conflict_label.setToolTip("Some folders contain user files that would be removed")
             layout.addWidget(conflict_label)
 
         # Action buttons
@@ -85,9 +81,7 @@ class MigrationBanner(QWidget):
         apply_btn.clicked.connect(self.apply_requested.emit)
         apply_btn.setToolTip("Apply migration with automatic backup")
         if self.migration_diff.conflicts:
-            apply_btn.setToolTip(
-                "Conflicting folders will be skipped unless manually resolved"
-            )
+            apply_btn.setToolTip("Conflicting folders will be skipped unless manually resolved")
         layout.addWidget(apply_btn)
 
         defer_btn = PushButton("Defer")

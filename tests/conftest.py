@@ -2,9 +2,20 @@
 
 from pathlib import Path
 import shutil
+from unittest.mock import patch
 
 from PySide6.QtWidgets import QApplication
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def mock_app_version():
+    """Ensure app version satisfies template requirements during tests."""
+    with (
+        patch("app.__version__", "1.0.0"),
+        patch("app.services.project_service.__version__", "1.0.0"),
+    ):
+        yield
 
 
 @pytest.fixture(scope="session")
@@ -53,8 +64,15 @@ def mock_drive_root(monkeypatch, tmp_path):
     mock_drive = tmp_path / "mock_drive_root"
     mock_drive.mkdir(exist_ok=True)
 
+    # Capture original method for bypass
+    original_get_drive_root = FileSystemService.get_drive_root
+
     def mock_get_drive_root_method(self):
         """Mock implementation that returns temp directory instead of system drive."""
+        # Allow bypassing the mock for unit tests of the service itself
+        if getattr(self, "_bypass_drive_mock", False):
+            return original_get_drive_root(self)
+
         # If _drive_root was explicitly set (not None), use it
         # Otherwise return the mock drive
         if hasattr(self, "_drive_root") and self._drive_root is not None:

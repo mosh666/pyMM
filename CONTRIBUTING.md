@@ -46,7 +46,7 @@ just build
 
 - **Python:** 3.12, 3.13, or 3.14 (Python 3.13 recommended for latest features and performance)
 - **Git:** 2.30+ (latest version recommended)
-- **OS:** Windows 10/11 64-bit (Linux/macOS support planned)
+- **OS:** Windows 10/11, Linux, or macOS
 - **IDE:** VS Code recommended with Python, Ruff, and MyPy extensions
 - **Optional Tools:**
   - [uv](https://github.com/astral-sh/uv) - Fast Python package installer (alternative to pip)

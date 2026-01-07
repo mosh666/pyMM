@@ -48,9 +48,20 @@ class FileSystemService:
         """
         if self._drive_root is None:
             if self._force_portable:
-                # Get the drive root by taking the anchor of the absolute path
-                # For D:\pyMM\app, this returns D:\
-                self._drive_root = Path(self.app_root.anchor)
+                if os.name == "nt":
+                    # Get the drive root by taking the anchor of the absolute path
+                    # For D:\pyMM\app, this returns D:\
+                    self._drive_root = Path(self.app_root.anchor)
+                else:
+                    # Non-Windows: Use user's home directory for portable mode
+                    # to avoid permission issues at system root
+                    self._drive_root = Path.home() / "PortableMediaManager"
+                    try:
+                        self._drive_root.mkdir(parents=True, exist_ok=True)
+                    except OSError as e:
+                        self.logger.warning(
+                            "Could not create portable root at %s: %s", self._drive_root, e
+                        )
             else:
                 # In development/non-portable mode, use app_root (project root) as the "drive" root
                 # This keeps Projects/Logs inside the project folder

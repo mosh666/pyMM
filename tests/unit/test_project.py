@@ -342,9 +342,7 @@ class TestProjectMigrationFields:
             name="Test",
             path=sample_project_path,
             pending_migration={"target_version": "3.0.0"},
-            migration_history=[
-                {"from_version": "1.0.0", "to_version": "2.0.0"}
-            ],
+            migration_history=[{"from_version": "1.0.0", "to_version": "2.0.0"}],
         )
 
         data = project.to_dict()

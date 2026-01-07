@@ -29,7 +29,6 @@ from app.core.services.storage_service import StorageService
 from app.plugins.plugin_manager import PluginManager
 from app.services.project_service import ProjectService
 from app.ui.components.migration_banner import MigrationBanner
-from app.ui.dialogs.migration_dialog import MigrationDialog
 from app.ui.dialogs.rollback_dialog import MigrationHistoryDialog, RollbackDialog
 
 
@@ -307,8 +306,8 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
                     f"📢 {self._pending_migration_count} project(s) have pending migrations",
                     parent=self,
                 )
-        except Exception as e:
-            self.logger.error(f"Failed to check pending migrations: {e}")
+        except Exception:
+            self.logger.exception("Failed to check pending migrations")
 
     def _check_migrations(self) -> None:
         """Check all projects for available template updates."""
@@ -338,13 +337,13 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             self.switchTo(self.project_view)
 
         except Exception as e:
-            self.logger.error(f"Failed to check migrations: {e}")
+            self.logger.exception("Failed to check migrations")
             from PySide6.QtWidgets import QMessageBox
 
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to check for migrations:\n{str(e)}",
+                f"Failed to check for migrations:\n{e!s}",
             )
 
     def _apply_pending_migrations(self) -> None:
@@ -392,8 +391,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
                     self,
                     "Migration Results",
                     f"Applied {successes} migration(s) successfully.\n"
-                    f"Failed: {failures}\n\n"
-                    + "\n".join(error_msgs[:5]),
+                    f"Failed: {failures}\n\n" + "\n".join(error_msgs[:5]),
                 )
 
             # Refresh pending count
@@ -404,13 +402,13 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
                 self.project_view.refresh_projects()
 
         except Exception as e:
-            self.logger.error(f"Failed to apply pending migrations: {e}")
+            self.logger.exception("Failed to apply pending migrations")
             from PySide6.QtWidgets import QMessageBox
 
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to apply pending migrations:\n{str(e)}",
+                f"Failed to apply pending migrations:\n{e!s}",
             )
 
     def _show_rollback_dialog(self) -> None:
@@ -421,10 +419,9 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
 
             # Filter projects with migration backups
             projects_with_backups = [
-                p for p in all_projects
-                if p.migration_history and any(
-                    m.get("backup_path") for m in p.migration_history
-                )
+                p
+                for p in all_projects
+                if p.migration_history and any(m.get("backup_path") for m in p.migration_history)
             ]
 
             if not projects_with_backups:
@@ -450,13 +447,13 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
                 )
 
         except Exception as e:
-            self.logger.error(f"Failed to show rollback dialog: {e}")
+            self.logger.exception("Failed to show rollback dialog")
             from PySide6.QtWidgets import QMessageBox
 
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to open rollback dialog:\n{str(e)}",
+                f"Failed to open rollback dialog:\n{e!s}",
             )
 
     def _show_migration_history(self) -> None:
@@ -475,11 +472,11 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             dialog = MigrationHistoryDialog(self.current_project, self)
             dialog.exec()
         except Exception as e:
-            self.logger.error(f"Failed to show migration history: {e}")
+            self.logger.exception("Failed to show migration history")
             from PySide6.QtWidgets import QMessageBox
 
             QMessageBox.critical(
                 self,
                 "Error",
-                f"Failed to open migration history:\n{str(e)}",
+                f"Failed to open migration history:\n{e!s}",
             )

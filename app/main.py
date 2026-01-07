@@ -36,7 +36,6 @@ def initialize_services(
         Dictionary with initialized services and components
     """
     from app.core.logging_service import LoggingService
-    from app.core.services.config_service import ConfigService
     from app.core.services.file_system_service import FileSystemService
     from app.core.services.storage_service import StorageService
     from app.plugins.plugin_manager import PluginManager
@@ -143,12 +142,10 @@ def run_application() -> int:
     )
 
     # Extract services
-    file_system_service = services["file_system_service"]
     logger = services["logger"]
     storage_service = services["storage_service"]
     plugin_manager = services["plugin_manager"]
     project_service = services["project_service"]
-    portable_folders = services["portable_folders"]
 
     # Define show_main_window function
     def show_main_window() -> None:
