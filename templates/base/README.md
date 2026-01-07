@@ -1,6 +1,6 @@
 # {PROJECT_NAME}
 
-**Created:** {DATE}  
+**Created:** {DATE}
 **Template:** Base Template v1.0.0
 
 ## Project Structure
@@ -15,4 +15,6 @@
 
 ---
 
+<!-- markdownlint-disable MD036 -->
 *Managed by pyMediaManager*
+<!-- markdownlint-enable MD036 -->

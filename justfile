@@ -35,6 +35,11 @@ test-unit:
 # Run linter (Ruff)
 lint:
     {{python}} -m ruff check .
+    @just lint-md
+
+# Lint markdown files
+lint-md:
+    npx --yes markdownlint-cli2 --config .markdownlint.json "**/*.md"
 
 # Run type checker (MyPy)
 type-check:

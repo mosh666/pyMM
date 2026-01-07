@@ -8,4 +8,6 @@ Test project created on {DATE}.
 
 ---
 
+<!-- markdownlint-disable MD036 -->
 *Test template for pyMediaManager*
+<!-- markdownlint-enable MD036 -->

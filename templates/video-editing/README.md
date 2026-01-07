@@ -1,8 +1,8 @@
 # {PROJECT_NAME}
 
-**Created:** {DATE}  
-**Template:** Video Editing Template v1.0.0  
-**Author:** {AUTHOR}  
+**Created:** {DATE}
+**Template:** Video Editing Template v1.0.0
+**Author:** {AUTHOR}
 **Project Path:** {PROJECT_PATH}
 
 ## Project Structure
@@ -38,4 +38,6 @@ Git Enabled: {GIT_ENABLED}
 
 ---
 
+<!-- markdownlint-disable MD036 -->
 *Managed by pyMediaManager - {DATETIME}*
+<!-- markdownlint-enable MD036 -->
