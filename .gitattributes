@@ -74,7 +74,6 @@ README text eol=lf
 .editorconfig export-ignore
 .pre-commit-config.yaml export-ignore
 tests/ export-ignore
-docs/ export-ignore
 *.md export-ignore
 htmlcov/ export-ignore
 .coverage export-ignore

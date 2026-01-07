@@ -1,7 +1,6 @@
 """Sphinx configuration file for pyMediaManager documentation."""
 
 from datetime import UTC, datetime
-from importlib.metadata import version as get_version
 from pathlib import Path
 import sys
 
@@ -14,13 +13,21 @@ project_copyright = f"2024-{datetime.now(tz=UTC).year}, mosh666"
 author = "mosh666"
 
 # The full version, including alpha/beta/rc tags
+# For sphinx-multiversion: Use a simple fallback since the package isn't installed
+# in the temp git checkouts. The actual version will be set by sphinx-multiversion
+# from git tags.
+release = "latest"
+version = "latest"
+
+# Try to get the actual version if available (when building from installed package)
 try:
+    from importlib.metadata import version as get_version
     release = get_version("pyMediaManager")
     version = release
 except Exception:  # noqa: BLE001
-    # Fallback if package is not installed
-    release = "0.0.0-dev"
-    version = release
+    # In sphinx-multiversion temp checkouts, we can't get the version from the package
+    # The version will be available via smv_current_version at build time
+    pass
 
 # -- General configuration ---------------------------------------------------
 
