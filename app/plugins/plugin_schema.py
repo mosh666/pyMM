@@ -32,12 +32,13 @@ class PluginSource(BaseModel):
     @classmethod
     def validate_checksum(cls, v: str | None) -> str | None:
         """Validate SHA-256 checksum format."""
-        if v is not None:
+        if v is not None and v != "":
             if len(v) != 64:
                 raise ValueError(f"SHA-256 checksum must be exactly 64 characters, got {len(v)}")
             if not all(c in "0123456789ABCDEFabcdef" for c in v):
                 raise ValueError("SHA-256 checksum must contain only hexadecimal characters")
-        return v
+        # Convert empty string to None
+        return v if v else None
 
     @field_validator("file_size")
     @classmethod
