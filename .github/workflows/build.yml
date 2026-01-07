@@ -47,7 +47,7 @@ jobs:
 
       - name: Run Build Script
         run: |
-          python scripts/build_distribution.py --version ${{ matrix.python-version }}
+          python scripts/build_manager.py --version ${{ matrix.python-version }}
 
       - name: Freeze dependencies
         run: |

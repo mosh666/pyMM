@@ -333,7 +333,7 @@ You can build the portable Windows distribution locally without relying on CI:
 just build
 
 # Or using the python script directly
-python scripts/build_distribution.py --version 3.13
+python scripts/build_manager.py --version 3.13
 ```
 
 This will:

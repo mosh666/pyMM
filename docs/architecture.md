@@ -777,7 +777,7 @@ pyMM/
 │   └── ...
 │
 ├── scripts/                      # Build and maintenance scripts
-│   ├── build_distribution.py    # Create distributable package
+│   ├── build_manager.py    # Create distributable package
 │   ├── setup-git-hooks.ps1      # Install pre-commit hooks (Windows)
 │   └── setup-git-hooks.sh       # Install pre-commit hooks (Unix)
 │
