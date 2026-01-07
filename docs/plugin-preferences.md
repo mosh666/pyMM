@@ -2,18 +2,23 @@
 
 ## Overview
 
-The plugin preferences system allows users to override default plugin execution behavior on a per-plugin basis. Users can choose whether each plugin should prefer system packages, portable binaries, or follow the plugin's default setting.
+The plugin preferences system allows users to override default plugin
+execution behavior on a per-plugin basis. Users can choose whether each plugin
+should prefer system packages, portable binaries, or follow the plugin's
+default setting.
 
 ## Architecture
 
 ### Data Model
 
 **ExecutionPreference Enum** (`config_service.py`):
+
 - `AUTO` - Use plugin's `prefer_system` setting (default)
 - `SYSTEM` - Always try system packages first
 - `PORTABLE` - Always use portable binaries
 
 **PluginPreferences Model** (`config_service.py`):
+
 ```python
 class PluginPreferences(BaseModel):
     execution_preference: ExecutionPreference = ExecutionPreference.AUTO
@@ -22,6 +27,7 @@ class PluginPreferences(BaseModel):
 ```
 
 **AppConfig** includes:
+
 ```python
 plugin_preferences: dict[str, PluginPreferences]  # plugin_id -> preferences
 ```
@@ -48,6 +54,7 @@ imagemagick:
 ```
 
 **Location**:
+
 - **Windows**: `%APPDATA%\pyMediaManager\plugins.yaml`
 - **Linux**: `~/.config/pymediamanager/plugins.yaml`
 - **macOS**: `~/Library/Application Support/pyMediaManager/plugins.yaml`

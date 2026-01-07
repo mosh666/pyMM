@@ -8,11 +8,15 @@
 
 ## 📋 Overview
 
-This document summarizes the complete refactoring of pyMediaManager to support cross-platform operations following 2026 best practices. The refactoring transforms pyMM from a Windows-only application to a fully cross-platform media management solution.
+This document summarizes the complete refactoring of pyMediaManager to support
+cross-platform operations following 2026 best practices. The refactoring
+transforms pyMM from a Windows-only application to a fully cross-platform media
+management solution.
 
 ### Key Achievements
 
-✅ **Plugin System v2**: Hybrid executable resolution (system + portable)
+✅ **Plugin System v2**: Hybrid executable resolution (system +
+portable)
 ✅ **Platform Abstraction**: Windows/Linux/macOS storage detection
 ✅ **XDG Compliance**: Standard directory structures on Linux/macOS
 ✅ **Security**: Platform-specific privilege escalation dialogs
@@ -264,7 +268,7 @@ def list_plugin_preferences(self) -> dict[str, PluginPreferences]
 
 **User Experience:**
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │ Version Mismatch Detected               │
 ├─────────────────────────────────────────┤
@@ -764,28 +768,28 @@ With Python versions:
 
 **Before:**
 
-```
+```bash
 D:\pyMM.Config\app.yaml
 D:\pyMM.Config\user.yaml
 ```
 
 **After (Windows):**
 
-```
+```bash
 %APPDATA%\pyMM\config\app.yaml
 %APPDATA%\pyMM\config\user.yaml
 ```
 
 **After (Linux):**
 
-```
+```bash
 ~/.config/pyMM/app.yaml
 ~/.config/pyMM/user.yaml
 ```
 
 **After (macOS):**
 
-```
+```bash
 ~/Library/Application Support/pyMM/config/app.yaml
 ~/Library/Application Support/pyMM/config/user.yaml
 ```
@@ -1022,4 +1026,6 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines.
 
 ---
 
-*This refactoring represents a comprehensive modernization of pyMediaManager to support cross-platform operations while maintaining backward compatibility and user experience.*
+*This refactoring represents a comprehensive modernization of
+pyMediaManager to support cross-platform operations while maintaining backward
+compatibility and user experience.*

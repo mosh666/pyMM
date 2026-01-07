@@ -2,23 +2,31 @@
 
 ## Overview
 
-pyMediaManager now follows platform conventions for configuration, data, and cache directories. This ensures compliance with operating system standards and improves integration with system-level tools.
+pyMediaManager now follows platform conventions for configuration, data, and
+cache directories. This ensures compliance with operating system standards and
+improves integration with system-level tools.
 
 ## Directory Structure
 
 ### Windows
-- **Config/Data**: `%APPDATA%\pyMediaManager` (e.g., `C:\Users\John\AppData\Roaming\pyMediaManager`)
+
+- **Config/Data**: `%APPDATA%\pyMediaManager` (e.g.,
+  `C:\Users\John\AppData\Roaming\pyMediaManager`)
 - **Cache**: `%LOCALAPPDATA%\pyMediaManager\Cache` (e.g., `C:\Users\John\AppData\Local\pyMediaManager\Cache`)
 
 ### macOS
+
 - **Config/Data**: `~/Library/Application Support/pyMediaManager`
 - **Logs**: `~/Library/Logs/pyMediaManager` (future enhancement)
 - **Cache**: `~/Library/Caches/pyMediaManager`
 
 ### Linux
-Follows [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html):
 
-- **Config**: `$XDG_CONFIG_HOME/pymediamanager` or `~/.config/pymediamanager`
+Follows [XDG Base Directory Specification](
+https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html):
+
+- **Config**: `$XDG_CONFIG_HOME/pymediamanager` or
+  `~/.config/pymediamanager`
 - **Data**: `$XDG_DATA_HOME/pymediamanager` or `~/.local/share/pymediamanager`
 - **Cache**: `$XDG_CACHE_HOME/pymediamanager` or `~/.cache/pymediamanager`
 
@@ -60,12 +68,15 @@ config_service = ConfigService(config_dir="/custom/path")
 
 ### Automatic Migration
 
-When `ConfigService` initializes, it automatically migrates configuration files from the legacy location (`app_root/config`) to the platform-specific directory if:
+When `ConfigService` initializes, it automatically migrates configuration files
+from the legacy location (`app_root/config`) to the platform-specific directory
+if:
 
 1. The platform-specific directory is empty (no `user.yaml` exists)
 2. Files exist in the legacy location (`app_root/config`)
 
 Migration copies:
+
 - `user.yaml` - User configuration overrides
 - `app.yaml` - Default application configuration
 
@@ -113,6 +124,7 @@ def config_service(tmp_path):
 ## Platform Detection
 
 Platform detection uses `sys.platform`:
+
 - `"win32"` → Windows
 - `"darwin"` → macOS
 - `"linux"` → Linux (and other Unix-like systems)

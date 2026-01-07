@@ -2,16 +2,19 @@
 
 ## Overview
 
-The Linux udev rules installer provides automatic USB device detection for pyMediaManager on Linux systems by installing system-level udev rules.
+The Linux udev rules installer provides automatic USB device detection for
+pyMediaManager on Linux systems by installing system-level udev rules.
 
 ## Implementation
 
 ### Files Created
 
-1. **app/platform/__init__.py** - Platform package
-2. **app/platform/linux/__init__.py** - Linux platform subpackage
-3. **app/platform/linux/udev_installer.py** - LinuxUdevInstaller implementation (165 lines)
-4. **tests/unit/test_udev_installer.py** - Comprehensive test suite (19 tests passing, 2 skipped on Windows)
+1. **app/platform/\_\_init\_\_.py** - Platform package
+2. **app/platform/linux/\_\_init\_\_.py** - Linux platform subpackage
+3. **app/platform/linux/udev_installer.py** - LinuxUdevInstaller
+   implementation (165 lines)
+4. **tests/unit/test_udev_installer.py** - Comprehensive test suite (19 tests
+   passing, 2 skipped on Windows)
 
 ### Core Components
 
@@ -20,6 +23,7 @@ The Linux udev rules installer provides automatic USB device detection for pyMed
 **Location**: `app/platform/linux/udev_installer.py`
 
 **Features**:
+
 - Install udev rules with GUI privilege elevation (pkexec)
 - Direct installation for root users
 - Uninstall with privilege elevation
@@ -27,6 +31,7 @@ The Linux udev rules installer provides automatic USB device detection for pyMed
 - Automatic udev rules reload
 
 **Key Methods**:
+
 ```python
 def install(use_privilege_dialog: bool = True) -> UdevInstallResult:
     """Install udev rules with optional GUI elevation."""
@@ -41,6 +46,7 @@ def verify_installation() -> dict[str, bool]:
 #### UdevInstallStatus Enum
 
 Status codes for installation operations:
+
 - `SUCCESS` - Operation completed successfully
 - `ALREADY_INSTALLED` - Rules already present
 - `PERMISSION_DENIED` - User denied privilege request
@@ -53,6 +59,7 @@ Status codes for installation operations:
 **File**: `/etc/udev/rules.d/99-pymm-usb.rules`
 
 **Content**:
+
 ```udev
 # pyMediaManager USB Storage Detection Rules
 # Automatically trigger pyMediaManager notifications for USB storage devices
@@ -75,6 +82,7 @@ ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", \
 The installer uses **LinuxPrivilegeDialog.run_with_privileges()** for secure GUI-based privilege escalation via **pkexec**.
 
 **Integration**:
+
 - User is prompted for authentication
 - pkexec returns 126 when cancelled
 - Commands executed: `cp`, `rm`, `udevadm`
@@ -94,6 +102,7 @@ The installer uses **LinuxPrivilegeDialog.run_with_privileges()** for secure GUI
 **Test Coverage**: 71% (19/21 tests passing)
 
 **Test Categories**:
+
 1. Platform detection (3 tests)
 2. Installation status checks (3 tests)
 3. Installation with GUI elevation (2 tests)
@@ -103,6 +112,7 @@ The installer uses **LinuxPrivilegeDialog.run_with_privileges()** for secure GUI
 7. Installation verification (3 tests)
 
 **Skipped Tests**:
+
 - `test_is_linux_on_linux` - Requires actual Linux platform
 - `test_install_direct_without_root` - Requires `os.geteuid()` (Linux-only)
 
@@ -136,10 +146,12 @@ print(f"udevadm available: {verification['udevadm_available']}")
 ### Integration Points
 
 **Depends On**:
+
 - `app.ui.dialogs.privilege_dialog.LinuxPrivilegeDialog` - pkexec elevation
 - System tools: `cp`, `rm`, `udevadm`
 
 **Used By**:
+
 - **Settings Dialog** - Install/uninstall udev rules from GUI
 - **First Run Wizard** - Optional installation during setup
 - **Storage Service** - Check installation status for USB detection
@@ -171,12 +183,14 @@ print(f"udevadm available: {verification['udevadm_available']}")
 ### Dependencies
 
 **Runtime**:
+
 - Python 3.12+
 - Linux with udev
 - pkexec (polkit)
 - udevadm
 
 **Development**:
+
 - pytest
 - pytest-mock
 - unittest.mock
@@ -189,6 +203,7 @@ print(f"udevadm available: {verification['udevadm_available']}")
 ### Error Handling
 
 All methods return structured results:
+
 - `UdevInstallResult` dataclass with status, message, and optional path
 - `dict[str, bool]` for verification results
 - Exceptions logged but not raised
@@ -198,6 +213,7 @@ All methods return structured results:
 Module logger: `app.platform.linux.udev_installer`
 
 **Log Levels**:
+
 - INFO: Installation/uninstallation success
 - WARNING: udevadm not found, reload failures
 - EXCEPTION: Unexpected errors during operations
@@ -207,6 +223,7 @@ Module logger: `app.platform.linux.udev_installer`
 ✅ **Task 13 Complete** - Linux udev rules installer implemented and tested
 
 **Deliverables**:
+
 - [x] LinuxUdevInstaller class with install/uninstall/verify
 - [x] Integration with LinuxPrivilegeDialog for pkexec elevation
 - [x] Comprehensive test suite (19 tests, 71% coverage)
@@ -214,5 +231,6 @@ Module logger: `app.platform.linux.udev_installer`
 - [x] Documentation
 
 **Next Steps**:
+
 - Task 14: Multi-platform CI/CD pipeline (GitHub Actions)
 - Task 15: Update documentation for all completed tasks
