@@ -42,6 +42,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application
 COPY . .
 
-# Default command: run tests
-# We use xvfb-run to provide a virtual display for GUI tests
-CMD ["xvfb-run", "-a", "pytest"]
+# Default command: run tests with coverage
+# We use bash -c to ensure proper output handling in CI
+CMD ["bash", "-c", "xvfb-run -a pytest tests/ --cov=app --cov-report=term --tb=short"]

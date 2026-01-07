@@ -254,6 +254,7 @@ jobs:
           echo "✅ Docker image built successfully"
 
       - name: Run tests in Docker container
+        timeout-minutes: 15
         run: |
           echo "🧪 Running tests in Docker container..."
           docker run --rm \
