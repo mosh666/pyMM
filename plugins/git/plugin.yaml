@@ -26,8 +26,6 @@ platforms:
     file_size: null
     command_path: ''
     command_executable: git
-    system_package: git
-    version_constraint: '>=2.0'
   macos:
     source: url
     download_url: ''
@@ -35,5 +33,3 @@ platforms:
     file_size: null
     command_path: ''
     command_executable: git
-    system_package: git
-    version_constraint: '>=2.0'
