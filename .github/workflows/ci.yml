@@ -257,7 +257,7 @@ jobs:
       - name: Build Docker image
         run: |
           echo "🐳 Building Docker image..."
-          docker build -t pymm-ci:${{ github.sha }} .
+          docker build --target test -t pymm-ci:${{ github.sha }} .
           echo "✅ Docker image built successfully"
 
       - name: Run tests in Docker container
