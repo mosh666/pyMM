@@ -254,18 +254,57 @@ Version={desktop_version}
     # Copy desktop file to standard location
     shutil.copy(desktop_file, appdir / "usr" / "share" / "applications" / "pyMediaManager.desktop")
 
-    # Create a simple icon (placeholder - should be replaced with actual icon)
+    # Create a simple placeholder icon (required by AppImage)
     icon_path = (
         appdir / "usr" / "share" / "icons" / "hicolor" / "256x256" / "apps" / "pymediamanager.png"
     )
-    # For now, just create a symlink to the desktop file as fallback
-    # In production, you should include an actual PNG icon
-    logger.warning("No icon file found - AppImage will use default icon")
+
+    # Create a minimal 256x256 PNG icon using PIL
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+
+        # Create a simple icon with "pyMM" text
+        img = Image.new("RGB", (256, 256), color="#2C3E50")
+        draw = ImageDraw.Draw(img)
+
+        # Draw a simple design
+        draw.rectangle([20, 20, 236, 236], outline="#3498DB", width=8)
+
+        # Try to add text (will use default font if custom font not available)
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
+        except Exception:
+            font = ImageFont.load_default()
+
+        # Center text
+        text = "pyMM"
+        bbox = draw.textbbox((0, 0), text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        x = (256 - text_width) // 2
+        y = (256 - text_height) // 2
+
+        draw.text((x, y), text, fill="#ECF0F1", font=font)
+
+        # Save the icon
+        icon_path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(icon_path, "PNG")
+        logger.info("Created placeholder icon")
+    except ImportError:
+        logger.warning("PIL not available - creating minimal icon")
+        # Create a minimal valid PNG file (1x1 pixel) as absolute fallback
+        icon_path.parent.mkdir(parents=True, exist_ok=True)
+        # Minimal 1x1 transparent PNG (67 bytes)
+        minimal_png = (
+            b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+            b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01"
+            b"\x00\x00\x05\x00\x01\r\n-\xb4\x00\x00\x00\x00IEND\xaeB`\x82"
+        )
+        icon_path.write_bytes(minimal_png)
 
     # Copy icon to root (required by AppImage)
     icon_root = appdir / "pymediamanager.png"
-    if icon_path.exists():
-        shutil.copy(icon_path, icon_root)
+    shutil.copy(icon_path, icon_root)
 
     logger.info(f"AppImage directory structure created at {appdir}")
     return appdir
