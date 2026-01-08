@@ -72,12 +72,14 @@ pyMM/
 ```
 
 **To Run:**
+
 - **Windows:** `.\pyMediaManager.exe` or `python launcher.py`
 - **Linux/macOS:** `./pyMediaManager` or `python3 launcher.py`
 
 ### Developer Setup
 
 **Prerequisites:**
+
 - Python 3.13 (recommended), 3.12, or 3.14
 - Git 2.30+
 - **[just](https://github.com/casey/just)** (recommended task runner)
@@ -135,6 +137,7 @@ We adhere to strict 2026 Python best practices:
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for style guides and workflows.
 
 **Quick Workflow:**
+
 1. Fork & Clone
 2. `just install`
 3. Create branch `feat/my-feature`

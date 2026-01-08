@@ -119,7 +119,7 @@ This guide helps you migrate between different versions of pyMediaManager and up
 **Supported Migrations:**
 
 | From | To | Notes |
-|------|-----|-------|
+| ------ | ----- | ------- |
 | `base` | `default` | Adds standard media project structure |
 | `base` | `photo-management` | Adds photo-specific folders and plugins |
 | `base` | `video-editing` | Adds video-specific folders and plugins |

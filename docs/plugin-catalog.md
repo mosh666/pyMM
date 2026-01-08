@@ -376,7 +376,7 @@ Change priority in Settings → Plugins → [Plugin Name] → Preferences
 ## Plugin Feature Matrix
 
 | Plugin | Version Control | Media Processing | Metadata | Batch Ops | Cross-Platform |
-|--------|----------------|------------------|----------|-----------|----------------|
+| -------- | ---------------- | ------------------ | ---------- | ----------- | ---------------- |
 | Git | ✅ | ❌ | ❌ | ❌ | ✅ |
 | Git LFS | ✅ | ❌ | ❌ | ❌ | ✅ |
 | GitVersion | ✅ | ❌ | ❌ | ❌ | ✅ |
