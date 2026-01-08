@@ -40,7 +40,7 @@ class TestFileSystemService:
         service._drive_root = None
 
         # 1. Test Windows behavior (legacy portable mode)
-        # Mock sys.platform to be win32
+        # Mock os.name to be nt (Windows)
         monkeypatch.setattr(os, "name", "nt")
         service._force_portable = True
 
