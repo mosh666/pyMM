@@ -217,14 +217,6 @@ ci-docker-build-all:
     @just ci-docker-build 3.13
     @just ci-docker-build 3.14
 
-# Build Docker image then immediately delete it (for testing build process)
-ci-docker-build-delete PYTHON_VER=python_version PLATFORM="linux/amd64":
-    @echo "Building and testing Docker image for Python {{PYTHON_VER}}..."
-    @just ci-docker-build {{PYTHON_VER}} {{PLATFORM}}
-    @echo ""
-    @echo "Cleaning up built image..."
-    @just ci-docker-clean
-
 # Run complete CI pipeline in Docker (lint, type-check, test)
 ci-docker-test IMAGE="pymm-ci:latest":
     @echo "==> Running linting in Docker..."
@@ -286,6 +278,49 @@ ci-docker-clean:
         sys.exit(1)
     except Exception as e:
         print(f"✗ Error during cleanup: {e}", file=sys.stderr)
+        sys.exit(1)
+
+# Clean Docker build cache and records (cross-platform)
+ci-docker-build-delete:
+    #!{{python}}
+    import subprocess
+    import sys
+
+    print("🧹 Cleaning Docker build cache and records...")
+
+    try:
+        # Get build cache info before deletion
+        result = subprocess.run(
+            ["docker", "builder", "du"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+
+        if result.returncode == 0:
+            print("\nCurrent build cache:")
+            print(result.stdout)
+
+        # Prune all build cache (not just dangling)
+        print("\n🗑️  Removing all build cache...")
+        prune_result = subprocess.run(
+            ["docker", "builder", "prune", "-a", "-f"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+
+        print(prune_result.stdout.strip())
+        print("✨ Docker build cache cleanup complete")
+
+    except subprocess.CalledProcessError as e:
+        print(f"✗ Error during build cache cleanup: {e.stderr}", file=sys.stderr)
+        sys.exit(1)
+    except FileNotFoundError:
+        print("✗ Error: Docker is not installed or not in PATH", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"✗ Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 # =============================================================================
