@@ -54,6 +54,14 @@ repos:
         name: Check Test Naming
         args: ['--pytest-test-first']
 
+  # Commit Message Linting (Conventional Commits)
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.1.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
+
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.42.0
