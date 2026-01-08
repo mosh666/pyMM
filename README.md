@@ -43,40 +43,118 @@
 
 ## 🚀 Quick Start
 
-### Portable Installation (End Users)
+### 📦 Download & Installation
 
-pyMediaManager is self-contained. Extract the release to your preferred location:
+pyMediaManager provides portable distributions for Windows, Linux, and macOS. Download the latest release from [GitHub Releases](https://github.com/mosh666/pyMM/releases).
 
-**Windows** (`D:\pyMM\`):
-```text
-pyMM/
-├── python313/       # Embedded Python runtime
-├── app/             # Application code
-└── launcher.py      # Entry point
+#### Windows (Portable ZIP)
+
+**Recommended:** Python 3.13 for x64 systems
+
+1. **Download:**
+   - **Intel/AMD (x64):** `pyMM-v{VERSION}-py3.13-win-amd64.zip` (most Windows PCs)
+   - **ARM64:** `pyMM-v{VERSION}-py3.13-win-arm64.zip` (Surface Pro X, ARM-based Windows devices)
+
+2. **Extract** to your preferred location (e.g., `D:\pyMM\`)
+
+3. **Run:**
+   ```powershell
+   # For AMD64/x64 systems:
+   .\python313\python.exe launcher.py
+
+   # For ARM64 systems:
+   .\python313-arm64\python.exe launcher.py
+
+   # Option 2: Create a shortcut with target:
+   D:\pyMM\python313\python.exe D:\pyMM\launcher.py
+   # (or python313-arm64\python.exe for ARM64)
+   ```
+
+4. **First Launch:** Complete the setup wizard to configure your workspace
+
+**Verification (PowerShell):**
+```powershell
+(Get-FileHash -Path pyMM-*.zip -Algorithm SHA256).Hash -eq (Get-Content pyMM-*.sha256)
 ```
 
-**Linux** (`/opt/pyMM` or `/media/usb/pyMM`):
-```text
-pyMM/
-├── python313/       # Embedded runtime
-├── app/
-└── launcher.py
+---
+
+#### Linux (AppImage)
+
+**Recommended:** Python 3.13 for x86_64 systems
+
+1. **Download:**
+   - **x86_64 (Intel/AMD):** `pyMM-v{VERSION}-py3.13-x86_64.AppImage`
+   - **ARM64 (Raspberry Pi, ARM servers):** `pyMM-v{VERSION}-py3.13-aarch64.AppImage`
+
+2. **Make Executable & Run:**
+   ```bash
+   chmod +x pyMM-*.AppImage
+   ./pyMM-*.AppImage
+   ```
+
+3. **Optional - Desktop Integration:**
+   ```bash
+   # Create desktop menu entry
+   ./pyMM-*.AppImage --appimage-install
+
+   # Uninstall desktop entry
+   ./pyMM-*.AppImage --appimage-uninstall
+   ```
+
+**Verification:**
+```bash
+sha256sum -c pyMM-*.sha256
 ```
 
-**macOS** (`/Applications/pyMM` or `/Volumes/USB/pyMM`):
-```text
-pyMM/
-├── python313/       # Embedded runtime
-├── app/
-└── launcher.py
+**Portable Usage:**
+- Copy AppImage to USB drive or any directory
+- Run directly - no installation required
+- All settings stored in `~/.config/pyMediaManager/` or `$XDG_CONFIG_HOME`
+
+**System Requirements:**
+- FUSE 2 or FUSE 3 (usually pre-installed)
+- Qt dependencies (bundled, but may need system libs on minimal distros)
+
+---
+
+#### macOS (DMG)
+
+**Recommended:** Python 3.13
+
+1. **Download:**
+   - **Intel Macs (x86_64):** `pyMM-v{VERSION}-py3.13-macos-x86_64.dmg`
+   - **Apple Silicon (M1/M2/M3 - arm64):** `pyMM-v{VERSION}-py3.13-macos-arm64.dmg`
+
+2. **Install:**
+   - Open the DMG file
+   - Drag `pyMediaManager.app` to your **Applications** folder
+
+3. **First Launch (Gatekeeper Bypass):**
+   ```bash
+   # Option 1: Right-click → Open (bypasses Gatekeeper)
+
+   # Option 2: Command line
+   xattr -cr /Applications/pyMediaManager.app
+   open /Applications/pyMediaManager.app
+   ```
+
+4. **Portable Usage:**
+   - Copy `.app` bundle to USB drive or any folder
+   - Run from Finder or terminal
+
+**Verification:**
+```bash
+shasum -a 256 -c pyMM-*.sha256
 ```
 
-**To Run:**
+**System Requirements:**
+- macOS 11 (Big Sur) or later
+- Rosetta 2 for Intel apps on Apple Silicon (auto-installs if needed)
 
-- **Windows:** `.\pyMediaManager.exe` or `python launcher.py`
-- **Linux/macOS:** `./pyMediaManager` or `python3 launcher.py`
+---
 
-### Developer Setup
+### 🔧 Developer Setup
 
 **Prerequisites:**
 
@@ -99,6 +177,38 @@ just --list     # Show all available build/test recipes
 # 4. Run
 python launcher.py
 ```
+
+---
+
+### 🏗️ Building from Source
+
+Build portable distributions for all platforms:
+
+**Windows:**
+```powershell
+# Requires Windows to build
+# AMD64/x64 (most PCs):
+python scripts/build_manager.py --version 3.13 --arch amd64
+
+# ARM64 (Surface Pro X, ARM devices):
+python scripts/build_manager.py --version 3.13 --arch arm64
+```
+
+**Linux AppImage:**
+```bash
+# Requires Linux to build
+python scripts/build_manager.py --version 3.13 --arch x86_64
+python scripts/build_manager.py --version 3.13 --arch aarch64
+```
+
+**macOS DMG:**
+```bash
+# Requires macOS to build
+python scripts/build_manager.py --version 3.13 --arch x86_64  # Intel
+python scripts/build_manager.py --version 3.13 --arch arm64   # Apple Silicon
+```
+
+**Outputs:** Built packages appear in `dist/` directory with SHA256 checksums.
 
 ---
 
