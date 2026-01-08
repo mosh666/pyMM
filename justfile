@@ -217,10 +217,13 @@ ci-docker-build-all:
     @just ci-docker-build 3.13
     @just ci-docker-build 3.14
 
-# Clean and rebuild all Docker images (fresh build)
-ci-docker-build-clean:
+# Build Docker image then immediately delete it (for testing build process)
+ci-docker-build-delete PYTHON_VER=python_version PLATFORM="linux/amd64":
+    @echo "Building and testing Docker image for Python {{PYTHON_VER}}..."
+    @just ci-docker-build {{PYTHON_VER}} {{PLATFORM}}
+    @echo ""
+    @echo "Cleaning up built image..."
     @just ci-docker-clean
-    @just ci-docker-build-all
 
 # Run complete CI pipeline in Docker (lint, type-check, test)
 ci-docker-test IMAGE="pymm-ci:latest":
