@@ -217,6 +217,11 @@ ci-docker-build-all:
     @just ci-docker-build 3.13
     @just ci-docker-build 3.14
 
+# Clean and rebuild all Docker images (fresh build)
+ci-docker-build-clean:
+    @just ci-docker-clean
+    @just ci-docker-build-all
+
 # Run complete CI pipeline in Docker (lint, type-check, test)
 ci-docker-test IMAGE="pymm-ci:latest":
     @echo "==> Running linting in Docker..."
