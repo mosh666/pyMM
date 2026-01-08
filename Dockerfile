@@ -76,6 +76,7 @@ COPY . .
 
 # Verify installation
 RUN python -c "import app; print(f'pyMediaManager version: {app.__version__}')" && \
+    python -c "import PySide6.QtCore; print(f'PySide6 version: {PySide6.QtCore.__version__}')" && \
     pytest --version && \
     ruff --version && \
     mypy --version
