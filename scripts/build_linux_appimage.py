@@ -199,7 +199,7 @@ def build_with_pyinstaller(spec_file: Path) -> Path:
     return app_dir
 
 
-def create_appimage_structure(app_dir: Path, version: str, arch: str) -> Path:
+def create_appimage_structure(app_dir: Path, arch: str) -> Path:
     """Create AppImage directory structure."""
     appdir = BUILD_DIR / f"pyMM.AppDir-{arch}"
 
@@ -235,6 +235,9 @@ exec "${HERE}/usr/bin/pyMM/pyMM" "$@"
 
     # Create .desktop file
     desktop_file = appdir / "pyMediaManager.desktop"
+    # Desktop Entry spec requires simple version format (e.g., "1.0")
+    # Strip git metadata from version string (e.g., "0.0.post247+gb8766145l" -> "1.0")
+    desktop_version = "1.0"  # Use static version for desktop file spec compliance
     desktop_content = f"""[Desktop Entry]
 Type=Application
 Name=pyMediaManager
@@ -243,7 +246,7 @@ Exec=pyMM
 Icon=pymediamanager
 Categories=AudioVideo;Video;Photography;
 Terminal=false
-Version={version}
+Version={desktop_version}
 """
     with desktop_file.open("w") as f:
         f.write(desktop_content)
@@ -361,7 +364,7 @@ def build(python_version: str, arch: str) -> None:
     app_dir = build_with_pyinstaller(spec_file)
 
     # Create AppImage
-    appdir = create_appimage_structure(app_dir, version, arch)
+    appdir = create_appimage_structure(app_dir, arch)
     appimage_path = create_appimage(appdir, version, arch)
 
     # Create checksum
