@@ -17,7 +17,9 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
-        arch: ["amd64", "arm64"]
+        arch: ["amd64"]
+        # Note: ARM64 builds excluded - GitHub Actions doesn't provide ARM64 Windows runners,
+        # so we cannot execute ARM64 Python to install dependencies
 
     steps:
       - name: Checkout code
