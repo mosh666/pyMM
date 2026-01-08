@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 import asyncio
-from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
 import logging
@@ -18,6 +17,9 @@ from typing import TYPE_CHECKING
 import aiohttp
 
 from app.core.platform import Platform, current_platform
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 if TYPE_CHECKING:
     from app.ui.dialogs.tool_version_dialog import VersionChoice

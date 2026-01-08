@@ -9,6 +9,7 @@ import logging
 import os
 from pathlib import Path
 import shutil
+import sys
 
 from app.core.platform import PortableConfig, PortableMode, is_windows
 
@@ -35,8 +36,6 @@ def resolve_portable_config(
     Returns:
         PortableConfig with resolved settings
     """
-    import sys
-
     # 1. CLI argument takes highest precedence
     if cli_portable is not None:
         return PortableConfig(enabled=cli_portable, source=PortableMode.CLI)
@@ -64,7 +63,7 @@ def resolve_portable_config(
                         source=PortableMode.AUTO,
                         auto_detected_removable=True,
                     )
-        except Exception:
+        except (AttributeError, OSError):
             pass  # Fall through to default
 
     # 5. Default: portable mode enabled (original behavior)

@@ -170,7 +170,8 @@ def run_application(args: argparse.Namespace | None = None) -> int:
     if args.version:
         from app import __version__
 
-        print(f"pyMediaManager {__version__}")
+        # Print to stdout for version query
+        sys.stdout.write(f"pyMediaManager {__version__}\n")
         return 0
 
     # Enable High DPI scaling
