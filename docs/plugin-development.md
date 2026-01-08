@@ -11,16 +11,16 @@
 
 - [Overview](#-overview)
 - [Quick Start](#-quick-start)
-- [Plugin Architecture](#plugin-architecture)
-- [YAML Manifest Schema](#yaml-manifest-schema)
+- [Plugin Architecture](#-plugin-architecture)
+- [YAML Manifest Schema](#-yaml-manifest-schema)
 - [Plugin Types](#-plugin-types)
-- [Creating Your First Plugin](#creating-your-first-plugin)
+- [Creating Your First Plugin](#-creating-your-first-plugin)
 - [Advanced Configuration](#️-advanced-configuration)
 - [Testing Plugins](#-testing-plugins)
-- [Publishing Plugins](#publishing-plugins)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
-- [API Reference](#api-reference)
+- [Publishing Plugins](#-publishing-plugins)
+- [Best Practices](#-best-practices)
+- [Troubleshooting](#-troubleshooting)
+- [API Reference](#-api-reference)
 
 ---
 
