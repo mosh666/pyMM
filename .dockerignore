@@ -1,5 +1,5 @@
 # Git
-.git/
+# .git/ - Needed by Dockerfile for setuptools-scm version detection
 .gitignore
 .gitattributes
 

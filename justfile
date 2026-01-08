@@ -205,6 +205,7 @@ ci-docker-build PYTHON_VER=python_version PLATFORM="linux/amd64":
     docker build \
         --build-arg PYTHON_VERSION={{PYTHON_VER}} \
         --platform {{PLATFORM}} \
+        --target test \
         -t pymm-ci:{{PYTHON_VER}} \
         -t pymm-ci:latest \
         .
