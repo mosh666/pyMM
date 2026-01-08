@@ -147,7 +147,9 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
-        arch: ["x86_64", "aarch64"]
+        arch: ["x86_64"]
+        # Note: aarch64 builds excluded - GitHub Actions doesn't provide ARM64 Linux runners,
+        # and appimagetool-aarch64.AppImage cannot execute on x86_64 runners
 
     steps:
       - name: Checkout code
