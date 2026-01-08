@@ -9,18 +9,18 @@
 
 ## 📚 Table of Contents
 
-- [Overview](#overview)
+- [Overview](#-overview)
 - [High-Level Architecture](#high-level-architecture)
 - [Core Components](#core-components)
 - [Data Flow](#data-flow)
-- [Design Patterns](#design-patterns)
+- [Design Patterns](#-design-patterns)
 - [Technology Stack](#technology-stack)
-- [Directory Structure](#directory-structure)
+- [Directory Structure](#-directory-structure)
 - [Module Dependencies](#module-dependencies)
-- [Security Architecture](#security-architecture)
-- [Testing Strategy](#testing-strategy)
-- [Performance Considerations](#performance-considerations)
-- [Extension Points](#extension-points)
+- [Security Architecture](#-security-architecture)
+- [Testing Strategy](#-testing-strategy)
+- [Performance Considerations](#-performance-considerations)
+- [Extension Points](#-extension-points)
 
 ---
 
