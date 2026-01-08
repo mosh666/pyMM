@@ -33,26 +33,30 @@ def main() -> None:
             sys.exit(e.returncode)
 
     elif system == "Linux":
-        script = script_dir / "build_linux.py"
-        if script.exists():
-            print("[INFO] Launching Linux build...")
-            cmd = [sys.executable, str(script), *args]
-            try:
-                subprocess.run(cmd, check=True)
-            except subprocess.CalledProcessError as e:
-                sys.exit(e.returncode)
-        else:
-            print("[INFO] Linux build script not found.")
-            print("[INFO] To build for Linux, please use Flatpak.")
-            print("   Manifest location: dist/flatpak/org.pymmediamanager.yaml")
-            print("\n   Example command:")
-            print(
-                "   flatpak-builder --user --install build-dir dist/flatpak/org.pymmediamanager.yaml --force-clean"
-            )
+        script = script_dir / "build_linux_appimage.py"
+        if not script.exists():
+            print(f"[ERROR] {script.name} not found!")
+            sys.exit(1)
+
+        cmd = [sys.executable, str(script), *args]
+        print("[INFO] Launching Linux AppImage build...")
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
 
     elif system == "Darwin":
-        print("[INFO] macOS builds are not yet fully automated.")
-        print("   Please use py2app or similar tools manually for now.")
+        script = script_dir / "build_macos.py"
+        if not script.exists():
+            print(f"[ERROR] {script.name} not found!")
+            sys.exit(1)
+
+        cmd = [sys.executable, str(script), *args]
+        print("[INFO] Launching macOS build...")
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
 
     else:
         print(f"[WARNING] Unsupported platform for automated build: {system}")

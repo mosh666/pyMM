@@ -24,21 +24,43 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("builder")
 
 # Python Embeddable Distributions
+# Structure: version -> arch -> config
 PYTHON_VERSIONS = {
     "3.12": {
-        "url": "https://www.python.org/ftp/python/3.12.8/python-3.12.8-embed-amd64.zip",
-        "dir_name": "python312",
-        "lib_dir": "lib-py312",
+        "amd64": {
+            "url": "https://www.python.org/ftp/python/3.12.8/python-3.12.8-embed-amd64.zip",
+            "dir_name": "python312",
+            "lib_dir": "lib-py312",
+        },
+        "arm64": {
+            "url": "https://www.python.org/ftp/python/3.12.8/python-3.12.8-embed-arm64.zip",
+            "dir_name": "python312-arm64",
+            "lib_dir": "lib-py312-arm64",
+        },
     },
     "3.13": {
-        "url": "https://www.python.org/ftp/python/3.13.1/python-3.13.1-embed-amd64.zip",
-        "dir_name": "python313",
-        "lib_dir": "lib-py313",
+        "amd64": {
+            "url": "https://www.python.org/ftp/python/3.13.1/python-3.13.1-embed-amd64.zip",
+            "dir_name": "python313",
+            "lib_dir": "lib-py313",
+        },
+        "arm64": {
+            "url": "https://www.python.org/ftp/python/3.13.1/python-3.13.1-embed-arm64.zip",
+            "dir_name": "python313-arm64",
+            "lib_dir": "lib-py313-arm64",
+        },
     },
     "3.14": {
-        "url": "https://www.python.org/ftp/python/3.14.0/python-3.14.0-embed-amd64.zip",
-        "dir_name": "python314",
-        "lib_dir": "lib-py314",
+        "amd64": {
+            "url": "https://www.python.org/ftp/python/3.14.0/python-3.14.0-embed-amd64.zip",
+            "dir_name": "python314",
+            "lib_dir": "lib-py314",
+        },
+        "arm64": {
+            "url": "https://www.python.org/ftp/python/3.14.0/python-3.14.0-embed-arm64.zip",
+            "dir_name": "python314-arm64",
+            "lib_dir": "lib-py314-arm64",
+        },
     },
 }
 
@@ -242,14 +264,19 @@ def install_dependencies(python_dir: Path, lib_dir: Path) -> None:
         logger.warning(f"Warning: Failed to generate _version.py: {e}")
 
 
-def build(version: str) -> None:
+def build(version: str, arch: str = "amd64") -> None:
     if version not in PYTHON_VERSIONS:
         logger.error(f"Unsupported version: {version}")
         logger.info(f"Available versions: {', '.join(PYTHON_VERSIONS.keys())}")
         sys.exit(1)
 
-    config = PYTHON_VERSIONS[version]
-    logger.info(f"Building for Python {version}...")
+    if arch not in PYTHON_VERSIONS[version]:
+        logger.error(f"Unsupported architecture: {arch}")
+        logger.info(f"Available architectures: {', '.join(PYTHON_VERSIONS[version].keys())}")
+        sys.exit(1)
+
+    config = PYTHON_VERSIONS[version][arch]
+    logger.info(f"Building for Python {version} ({arch})...")
 
     # Output dirs
     python_dir_name = config["dir_name"]
@@ -282,6 +309,12 @@ def main() -> None:
         default="3.12",
         help="Python version to build for",
     )
+    parser.add_argument(
+        "--arch",
+        choices=["amd64", "arm64"],
+        default="amd64",
+        help="Target architecture (amd64 or arm64)",
+    )
     args = parser.parse_args()
 
     if platform.system() != "Windows":
@@ -291,7 +324,7 @@ def main() -> None:
         logger.warning("Cross-platform building is not strictly supported by this script yet.")
         # Proceeding anyway just in case the user knows what they are doing (e.g. Wine)
 
-    build(args.version)
+    build(args.version, args.arch)
 
 
 if __name__ == "__main__":
