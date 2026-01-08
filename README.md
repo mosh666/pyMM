@@ -108,11 +108,13 @@ sha256sum -c pyMM-*.sha256
 ```
 
 **Portable Usage:**
+
 - Copy AppImage to USB drive or any directory
 - Run directly - no installation required
 - All settings stored in `~/.config/pyMediaManager/` or `$XDG_CONFIG_HOME`
 
 **System Requirements:**
+
 - FUSE 2 or FUSE 3 (usually pre-installed)
 - Qt dependencies (bundled, but may need system libs on minimal distros)
 
@@ -149,6 +151,7 @@ shasum -a 256 -c pyMM-*.sha256
 ```
 
 **System Requirements:**
+
 - macOS 11 (Big Sur) or later
 - Rosetta 2 for Intel apps on Apple Silicon (auto-installs if needed)
 
