@@ -366,6 +366,7 @@ We follow a generic [Semantic Release](https://github.com/python-semantic-releas
 We strictly enforce [Conventional Commits](https://www.conventionalcommits.org/) to automate versioning and changelogs.
 
 **Format:**
+
 ```text
 <type>(<scope>): <subject>
 
