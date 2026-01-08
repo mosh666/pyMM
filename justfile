@@ -253,34 +253,88 @@ ci-docker-clean:
 # Cleanup Recipes
 # =============================================================================
 
-# Clean build artifacts and cache (using pathlib for cross-platform)
+# Clean Python build artifacts (dist, build, eggs)
+clean-build:
+    #!{{python}}
+    from pathlib import Path
+    import shutil
+
+    build_patterns = [
+        "build",
+        "dist",
+        "*.egg-info",
+        "*.egg",
+        ".eggs",
+    ]
+
+    print("🧹 Cleaning build artifacts...")
+    removed_count = 0
+
+    for pattern in build_patterns:
+        for path in Path(".").glob(pattern):
+            try:
+                if path.is_dir():
+                    shutil.rmtree(path)
+                    print(f"  ✓ Removed directory {path}")
+                else:
+                    path.unlink()
+                    print(f"  ✓ Removed file {path}")
+                removed_count += 1
+            except Exception as e:
+                print(f"  ✗ Failed to remove {path}: {e}")
+
+    if removed_count == 0:
+        print("  ℹ No build artifacts to clean")
+    else:
+        print(f"\n✨ Removed {removed_count} build artifact(s)")
+
+# Clean test artifacts and cache (using pathlib for cross-platform)
 clean:
     #!{{python}}
     from pathlib import Path
     import shutil
 
-    # Root level patterns to clean
-    root_patterns = [
-        "build", "dist", "*.egg-info", ".coverage", ".coverage.*",
-        "htmlcov", "*.zip", "*.sha256", "get-pip.py"
+    # Coverage and test result patterns
+    test_patterns = [
+        ".coverage",
+        ".coverage.*",
+        "htmlcov",
+        ".pytest_cache",
+    ]
+
+    # Cache patterns (root level)
+    cache_patterns = [
+        ".mypy_cache",
+        ".ruff_cache",
     ]
 
     # Recursive patterns (cleans subdirectories)
     recursive_patterns = [
         "**/__pycache__",
         "**/.pytest_cache",
-        "**/.mypy_cache",
-        "**/.ruff_cache",
         "**/*.pyc",
         "**/*.pyo",
         "**/*.pyd",
     ]
 
-    print("🧹 Cleaning artifacts...")
+    print("🧹 Cleaning test artifacts and cache...")
     removed_count = 0
 
-    # Clean root patterns
-    for pattern in root_patterns:
+    # Clean test patterns
+    for pattern in test_patterns:
+        for path in Path(".").glob(pattern):
+            try:
+                if path.is_dir():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
+                print(f"  ✓ Removed {path}")
+                removed_count += 1
+            except Exception as e:
+                print(f"  ✗ Failed to remove {path}: {e}")
+
+    # Clean cache patterns
+    for pattern in cache_patterns:
         for path in Path(".").glob(pattern):
             try:
                 if path.is_dir():
@@ -305,8 +359,11 @@ clean:
             except Exception as e:
                 print(f"  ✗ Failed to remove {path}: {e}")
 
-    print(f"\n✨ Cleanup complete! Removed {removed_count} items.")
+    if removed_count == 0:
+        print("  ℹ No test artifacts or cache to clean")
+    else:
+        print(f"\n✨ Cleanup complete! Removed {removed_count} items.")
 
-# Clean everything (includes docs build)
-clean-all: clean docs-clean
+# Clean everything (build, test, docs, cache)
+clean-all: clean-build clean docs-clean
     @echo "✨ Complete cleanup finished!"
