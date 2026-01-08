@@ -3,6 +3,12 @@
 
 app_name: pyMediaManager
 
+# Platform compatibility settings
+# strict_platform_checks: If true, plugins using direct sys.platform access will
+# raise an error instead of a deprecation warning. Recommended for v2.0+.
+# Plugins should use app.core.platform.Platform instead.
+strict_platform_checks: false
+
 paths:
   projects_dir: pyMM.Projects
   logs_dir: pyMM.Logs

@@ -138,6 +138,10 @@ markers = [
     "slow: Tests that may take significant time to complete",
     "ui: Tests that require GUI components",
     "gui: GUI tests that use Qt widgets and dialogs",
+    "windows: Tests that only run on Windows (composable with other platform markers)",
+    "linux: Tests that only run on Linux (composable with other platform markers)",
+    "macos: Tests that only run on macOS (composable with other platform markers)",
+    "unix: Tests that run on Unix-like systems (Linux and macOS)",
 ]
 
 [tool.coverage.run]

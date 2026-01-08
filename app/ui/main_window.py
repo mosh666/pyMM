@@ -24,6 +24,7 @@ except ImportError:
     # Fallback to standard Qt widgets
     from PySide6.QtWidgets import QMainWindow as FluentWindow
 
+from app.core.platform import PortableConfig
 from app.core.services.config_service import ConfigService
 from app.core.services.storage_service import StorageService
 from app.plugins.plugin_manager import PluginManager
@@ -41,6 +42,7 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         storage_service: StorageService,
         plugin_manager: PluginManager,
         project_service: ProjectService,
+        portable_config: PortableConfig | None = None,
     ):
         super().__init__()
 
@@ -50,11 +52,14 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         self.storage_service = storage_service
         self.plugin_manager = plugin_manager
         self.project_service = project_service
+        self.portable_config = portable_config
         self.current_project = None
         self._pending_migration_count = 0
+        self._portable_status_label: QLabel | None = None
 
         self._init_window()
         self._init_navigation()
+        self._init_status_bar()
         self._apply_theme()
         self._check_pending_migrations()
 
@@ -201,6 +206,81 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         )
         warning.setAlignment(Qt.AlignCenter)
         layout.addWidget(warning)
+
+    def _init_status_bar(self) -> None:
+        """Initialize the status bar with portable mode indicator."""
+        if not FLUENT_AVAILABLE:
+            return
+
+        # Get or create status bar
+        # FluentWindow uses a custom status area, we'll add to the title bar area
+        if self.portable_config is not None:
+            # Create portable status label
+            self._portable_status_label = QLabel()
+            self._update_portable_status_display()
+
+            # Style the label
+            self._portable_status_label.setStyleSheet(
+                """
+                QLabel {
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                }
+                """
+            )
+
+            # Add to window - for FluentWindow, add to the title bar
+            try:
+                if hasattr(self, "titleBar") and self.titleBar is not None:
+                    # Insert before the close button area
+                    self.titleBar.hBoxLayout.insertWidget(
+                        self.titleBar.hBoxLayout.count() - 3,
+                        self._portable_status_label,
+                    )
+            except (AttributeError, RuntimeError):
+                # Fallback: just keep the label reference for later use
+                self.logger.debug("Could not add portable status to title bar")
+
+    def _update_portable_status_display(self) -> None:
+        """Update the portable status label display."""
+        if self._portable_status_label is None or self.portable_config is None:
+            return
+
+        icon = self.portable_config.status_icon
+        text = self.portable_config.status_text
+        self._portable_status_label.setText(f"{icon} {text}")
+
+        # Set color based on portable mode
+        if self.portable_config.enabled:
+            # Green tint for portable
+            self._portable_status_label.setStyleSheet(
+                """
+                QLabel {
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    background-color: rgba(76, 175, 80, 0.2);
+                    color: #4CAF50;
+                }
+                """
+            )
+        else:
+            # Neutral gray for installed
+            self._portable_status_label.setStyleSheet(
+                """
+                QLabel {
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    background-color: rgba(158, 158, 158, 0.2);
+                    color: #9E9E9E;
+                }
+                """
+            )
+
+        # Set tooltip with full details
+        self._portable_status_label.setToolTip(str(self.portable_config))
 
     def _apply_theme(self) -> None:
         """Apply theme based on configuration."""

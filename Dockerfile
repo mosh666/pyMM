@@ -1,20 +1,28 @@
-# Use a modern Python version
-FROM python:3.12-slim-bookworm
+# syntax=docker/dockerfile:1.4
+# Multi-stage Dockerfile for pyMediaManager CI Testing
+# Supports Python 3.12, 3.13, and 3.14
+# Build: docker build --build-arg PYTHON_VERSION=3.13 -t pymm:latest .
+
+# Build argument for Python version (default 3.13)
+ARG PYTHON_VERSION=3.13
+
+# =============================================================================
+# Base stage: System dependencies and common setup
+# =============================================================================
+FROM python:${PYTHON_VERSION}-slim-bookworm AS base
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    QT_QPA_PLATFORM=offscreen
+    QT_QPA_PLATFORM=offscreen \
+    DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-# Copy git metadata and app structure first for setuptools-scm version detection
-COPY .git .git
-COPY app app
-COPY pyproject.toml .
-
-# Install system dependencies required for PySide6 and Git
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install system dependencies required for PySide6, Git, and Xvfb
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     git \
     libgl1-mesa-glx \
     libegl1 \
@@ -33,15 +41,71 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libx11-xcb1 \
     xvfb \
     xauth \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
-# Install dependencies including dev dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir .[dev]
+# =============================================================================
+# Builder stage: Install Python dependencies
+# =============================================================================
+FROM base AS builder
 
-# Copy the rest of the application
+# Upgrade pip and install build tools
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy only dependency files first for better caching
+COPY pyproject.toml README.md ./
+
+# Copy git metadata for setuptools-scm version detection
+COPY .git .git
+
+# Copy minimal app structure for version detection
+COPY app/__init__.py app/_version.py app/
+
+# Install dependencies (production + dev)
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir ".[dev,test,docs]"
+
+# =============================================================================
+# Test stage: Full application with all files for testing
+# =============================================================================
+FROM builder AS test
+
+# Copy the entire application
 COPY . .
 
+# Verify installation
+RUN python -c "import app; print(f'pyMediaManager version: {app.__version__}')" && \
+    pytest --version && \
+    ruff --version && \
+    mypy --version
+
 # Default command: run tests with coverage
-# We use bash -c to ensure proper output handling in CI
-CMD ["bash", "-c", "xvfb-run -a pytest tests/ --cov=app --cov-report=term --tb=short"]
+CMD ["bash", "-c", "xvfb-run -a pytest tests/ -v --cov=app --cov-report=term --cov-report=html --tb=short"]
+
+# =============================================================================
+# Production stage: Minimal runtime image (optional, for future use)
+# =============================================================================
+FROM base AS production
+
+# Copy Python packages from builder
+COPY --from=builder /usr/local/lib/python*/site-packages/ /usr/local/lib/python*/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+
+# Copy application
+COPY app app
+COPY config config
+COPY plugins plugins
+COPY templates templates
+COPY launcher.py pyproject.toml ./
+
+# Create non-root user for security
+RUN useradd -m -u 1000 pymm && chown -R pymm:pymm /app
+
+USER pymm
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import app; print('OK')" || exit 1
+
+# Default entrypoint
+ENTRYPOINT ["python", "launcher.py"]

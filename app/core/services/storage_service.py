@@ -2,14 +2,17 @@
 Storage service for detecting and managing portable drives.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 import contextlib
 from dataclasses import dataclass
 from pathlib import Path
-import sys
 from typing import Any
 
 import psutil
+
+from app.core.platform import Platform, current_platform
 
 try:
     import wmi
@@ -480,14 +483,13 @@ class StorageService:
     @staticmethod
     def _create_platform_impl() -> StoragePlatform:
         """Factory method to create platform-specific storage implementation."""
-        if sys.platform == "win32":
-            return WindowsStorage()
-        if sys.platform == "linux":
-            return LinuxStorage()
-        if sys.platform == "darwin":
-            return MacOSStorage()
-        # Fallback to Linux implementation for unknown platforms
-        return LinuxStorage()
+        match current_platform():
+            case Platform.WINDOWS:
+                return WindowsStorage()
+            case Platform.MACOS:
+                return MacOSStorage()
+            case Platform.LINUX:
+                return LinuxStorage()
 
     def get_all_drives(self) -> list[DriveInfo]:
         """

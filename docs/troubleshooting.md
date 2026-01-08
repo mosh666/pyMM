@@ -1,0 +1,688 @@
+# Troubleshooting Guide
+
+> **Last Updated:** January 8, 2026
+
+This guide covers common issues, error messages, and solutions for pyMediaManager.
+
+## Table of Contents
+
+- [Installation Issues](#installation-issues)
+- [Startup Problems](#startup-problems)
+- [Plugin Issues](#plugin-issues)
+- [Project Management](#project-management)
+- [Git Integration](#git-integration)
+- [UI and Display Issues](#ui-and-display-issues)
+- [Performance Problems](#performance-problems)
+- [Platform-Specific Issues](#platform-specific-issues)
+- [Log File Analysis](#log-file-analysis)
+- [Getting Additional Help](#getting-additional-help)
+
+---
+
+## Installation Issues
+
+### Python Version Not Supported
+
+**Error:** `Python 3.12 or higher is required`
+
+**Solution:**
+
+- Install Python 3.12, 3.13, or 3.14 from [python.org](https://www.python.org/downloads/)
+- On Windows: Use the official installer and check "Add to PATH"
+- On Linux: Use your package manager (e.g., `sudo apt install python3.13`)
+- On macOS: Use Homebrew (`brew install python@3.13`) or the official installer
+
+### PySide6 Installation Fails
+
+**Error:** `Failed building wheel for PySide6` or `Qt platform plugin not found`
+
+**Solutions:**
+
+**Windows:**
+
+```powershell
+# Install Visual C++ Redistributables
+# Download from: https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+# Then reinstall PySide6
+pip uninstall PySide6
+pip install PySide6
+```
+
+**Linux (Ubuntu/Debian):**
+
+```bash
+sudo apt update
+sudo apt install python3-dev libxcb-xinerama0 libxcb-cursor0 \
+                 libxkbcommon-x11-0 libegl1-mesa libglib2.0-0
+pip install --force-reinstall PySide6
+```
+
+**macOS:**
+
+```bash
+# Ensure Xcode Command Line Tools are installed
+xcode-select --install
+
+pip install --force-reinstall PySide6
+```
+
+### Missing Dependencies
+
+**Error:** `ModuleNotFoundError: No module named 'X'`
+
+**Solution:**
+
+```bash
+# Reinstall all dependencies
+pip install -e ".[dev,test,docs]"
+
+# Or for production only
+pip install -e .
+```
+
+---
+
+## Startup Problems
+
+### Application Won't Start
+
+**Symptoms:** Double-clicking launcher.py or running from terminal produces no window
+
+**Diagnostics:**
+
+1. Check if Python is correctly installed:
+
+   ```bash
+   python --version  # Should show 3.12+
+   ```
+
+2. Try running with verbose logging:
+
+   ```bash
+   python -m app --log-level DEBUG
+   ```
+
+3. Check for conflicting Qt installations:
+
+   ```bash
+   python -c "from PySide6 import QtCore; print(QtCore.__version__)"
+   ```
+
+**Solutions:**
+
+- **Virtual environment issues:** Recreate your venv
+
+  ```bash
+  rm -rf .venv  # or Remove-Item -Recurse .venv on Windows
+  python -m venv .venv
+  .venv\Scripts\activate  # Windows
+  source .venv/bin/activate  # Linux/macOS
+  pip install -e ".[dev]"
+  ```
+
+- **Permission issues:** Run as administrator (Windows) or with appropriate permissions
+
+### Portable Mode Not Working
+
+**Symptoms:** Application creates files in system directories instead of on USB drive
+
+**Solution:**
+
+- Ensure `portable.flag` file exists in the application root directory
+- Check that the drive is writable (not read-only)
+- On Windows: Right-click drive → Properties → uncheck "Read-only"
+- Verify directory paths in logs: Check `pyMM.Logs/app.log`
+
+### Configuration File Errors
+
+**Error:** `YAML parsing error in config/user.yaml`
+
+**Solution:**
+
+1. Validate YAML syntax: <https://www.yamllint.com/>
+2. Common issues:
+   - Incorrect indentation (must use spaces, not tabs)
+   - Missing quotes around special characters
+   - Incorrect Windows path escaping (use `\\` or `/`)
+
+3. Reset to default:
+
+   ```bash
+   mv config/user.yaml config/user.yaml.backup
+   # Restart application to regenerate default config
+   ```
+
+---
+
+## Plugin Issues
+
+### Plugin Not Detected
+
+**Symptoms:** System tool (Git, FFmpeg, etc.) is installed but not showing in pyMM
+
+**Solutions:**
+
+1. **Refresh plugin list:**
+   - Settings → Plugins → Refresh System Tools
+   - Or restart the application
+
+2. **Check PATH environment variable:**
+
+   ```bash
+   # Windows
+   where git
+
+   # Linux/macOS
+   which git
+   ```
+
+3. **Manually specify plugin path:**
+   - Go to Settings → Plugins → [Plugin Name]
+   - Click "Locate Manually" and browse to executable
+   - Windows: Usually `C:\Program Files\Git\bin\git.exe`
+   - Linux: Usually `/usr/bin/git`
+   - macOS: Usually `/usr/local/bin/git` or `/opt/homebrew/bin/git`
+
+### Plugin Download Fails
+
+**Error:** `SHA-256 checksum mismatch` or `Download failed`
+
+**Solutions:**
+
+1. **Checksum mismatch:**
+   - File may be corrupted during download
+   - Delete cached file: `pyMM.Plugins/.cache/[plugin_name]`
+   - Try downloading again
+
+2. **Network issues:**
+   - Check internet connection
+   - Try disabling VPN or proxy temporarily
+   - Check firewall settings
+
+3. **Manual installation:**
+   - Download tool from official website
+   - Install normally
+   - Let pyMM auto-detect (Settings → Plugins → Refresh)
+
+### Plugin Version Incompatible
+
+**Error:** `Plugin requires version X.X but found Y.Y`
+
+**Solutions:**
+
+- Update the tool to the required version
+- Or disable version checking (not recommended):
+
+  ```yaml
+  # config/user.yaml
+  plugins:
+    strict_version_check: false
+  ```
+
+---
+
+## Project Management
+
+### Cannot Create Project
+
+**Error:** `Permission denied` or `Path not accessible`
+
+**Solutions:**
+
+1. **Check write permissions:**
+   - Windows: Right-click folder → Properties → Security
+   - Linux/macOS: `chmod +w /path/to/projects`
+
+2. **Drive not mounted:**
+   - Ensure external drive is properly connected and mounted
+   - Check drive letter/mount point in File Explorer/Finder
+
+3. **Path too long (Windows):**
+   - Windows has 260 character path limit
+   - Use shorter project names or move projects directory closer to root
+   - Or enable long path support (Windows 10 1607+):
+
+     ```powershell
+     # Run as Administrator
+     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+       -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+     ```
+
+### Project Won't Open
+
+**Symptoms:** Double-clicking project shows error or nothing happens
+
+**Diagnostics:**
+
+1. Check project metadata file: `.pymm/project.yaml`
+2. Verify project structure integrity
+3. Check logs: `pyMM.Logs/app.log`
+
+**Solutions:**
+
+- **Corrupted metadata:** Delete `.pymm` folder and re-add project
+- **Missing template:** Install required template or migrate to different template
+- **Drive letter changed (Windows):** Update project path in recent projects list
+
+### Template Not Found
+
+**Error:** `Template 'X' not found`
+
+**Solutions:**
+
+1. **Reinstall templates:**
+
+   ```bash
+   # Templates are bundled with application
+   # Verify templates/ directory exists in app root
+   ls templates/  # Linux/macOS
+   dir templates\  # Windows
+   ```
+
+2. **Use migration tool:**
+   - Tools → Migrate Template
+   - Select old template and new template
+   - Apply migration
+
+---
+
+## Git Integration
+
+### Git Not Initialized
+
+**Symptoms:** Git features disabled or greyed out
+
+**Solutions:**
+
+1. **Initialize Git for project:**
+   - Open project
+   - Project → Enable Git
+   - Or manually: `cd /path/to/project && git init`
+
+2. **Check Git installation:**
+
+   ```bash
+   git --version  # Should show 2.40+
+   ```
+
+### Git Conflicts
+
+**Error:** `Merge conflict in file X`
+
+**Solutions:**
+
+1. **Resolve manually:**
+   - Open conflicted files in text editor
+   - Look for conflict markers: `<<<<<<<`, `=======`, `>>>>>>>`
+   - Edit to resolve conflicts
+   - Remove conflict markers
+   - Save and commit
+
+2. **Use external merge tool:**
+
+   ```bash
+   cd /path/to/project
+   git mergetool
+   ```
+
+3. **Abort merge:**
+
+   ```bash
+   git merge --abort
+   ```
+
+### Git LFS Issues
+
+**Error:** `Git LFS: filter 'lfs' failed` or large files not tracked
+
+**Solutions:**
+
+1. **Install Git LFS:**
+
+   ```bash
+   # Windows: Download from https://git-lfs.github.com/
+   # Linux: sudo apt install git-lfs
+   # macOS: brew install git-lfs
+
+   git lfs install
+   ```
+
+2. **Track large files:**
+
+   ```bash
+   cd /path/to/project
+   git lfs track "*.psd"
+   git lfs track "*.mp4"
+   git add .gitattributes
+   git commit -m "Track large files with LFS"
+   ```
+
+---
+
+## UI and Display Issues
+
+### Blurry Text (Windows)
+
+**Symptoms:** Text appears blurry or scaled incorrectly on high-DPI displays
+
+**Solutions:**
+
+1. **Enable high-DPI support:**
+   - Right-click `launcher.py` → Properties → Compatibility
+   - Check "Override high DPI scaling behavior"
+   - Select "Application" in dropdown
+
+2. **Adjust Windows scaling:**
+   - Settings → Display → Scale and layout
+   - Try 100%, 125%, or 150%
+
+### Dark Theme Issues
+
+**Symptoms:** Text unreadable or incorrect colors
+
+**Solutions:**
+
+- Switch theme: Settings → Appearance → Theme → Light/Dark/Auto
+- Check Qt style settings:
+
+  ```yaml
+  # config/user.yaml
+  ui:
+    theme: auto  # or light, dark
+  ```
+
+### Window Won't Maximize
+
+**Symptoms:** Window size incorrect or maximized state not saved
+
+**Solutions:**
+
+1. **Reset window geometry:**
+
+   ```yaml
+   # Delete from config/user.yaml
+   # ui:
+   #   window:
+   #     maximized: true
+   ```
+
+2. **Check multi-monitor setup:**
+   - Disconnect external monitors temporarily
+   - Reset window position: Settings → Reset Window Layout
+
+---
+
+## Performance Problems
+
+### Slow Startup
+
+**Symptoms:** Application takes 10+ seconds to start
+
+**Diagnostics:**
+
+- Check startup time in logs
+- Monitor CPU/RAM usage
+
+**Solutions:**
+
+1. **Disable auto-detection:**
+
+   ```yaml
+   # config/user.yaml
+   plugins:
+     auto_detect: false  # Manually refresh when needed
+   ```
+
+2. **Reduce recent projects:**
+   - Clear old projects from recent list
+   - Settings → Privacy → Clear Recent Projects
+
+3. **Check disk health:**
+   - Run disk check utility (especially for external drives)
+   - Windows: `chkdsk D: /f`
+   - Linux: `sudo fsck /dev/sdX`
+   - macOS: Disk Utility → First Aid
+
+### High Memory Usage
+
+**Symptoms:** Application uses excessive RAM (500+ MB)
+
+**Solutions:**
+
+1. **Reduce thread pool size:**
+
+   ```yaml
+   # config/user.yaml
+   advanced:
+     thread_pool_size: 2  # Default: 4
+     max_concurrent_operations: 2  # Default: 3
+   ```
+
+2. **Clear cache:**
+   - Settings → Advanced → Clear Cache
+   - Or manually delete: `pyMM.Plugins/.cache/`
+
+### Slow Project Loading
+
+**Symptoms:** Opening large projects takes minutes
+
+**Solutions:**
+
+1. **Optimize project structure:**
+   - Limit files per directory to < 10,000
+   - Use subdirectories for organization
+
+2. **Disable file watchers temporarily:**
+
+   ```yaml
+   # config/user.yaml
+   advanced:
+     file_watcher_delay: 2000  # Increase debounce (ms)
+   ```
+
+---
+
+## Platform-Specific Issues
+
+### Windows
+
+#### UAC Prompts
+
+**Issue:** Repeated User Account Control prompts
+
+**Solution:**
+
+- Don't install to `C:\Program Files\` (requires admin)
+- Use user directory: `C:\Users\<YourName>\pyMM\`
+- Or create portable installation on external drive
+
+#### Drive Letter Changes
+
+**Issue:** USB drive gets different letter (D: → E:), projects not found
+
+**Solution:**
+
+1. **Assign permanent drive letter:**
+   - Open Disk Management (`diskmgmt.msc`)
+   - Right-click drive → Change Drive Letter
+   - Assign fixed letter (e.g., M: for Media)
+
+2. **Use volume label instead:** (pyMM v1.3+)
+   - Projects tracked by volume GUID, not drive letter
+
+### Linux
+
+#### USB Drive Auto-Mount Issues
+
+**Issue:** USB drive not auto-mounting or wrong permissions
+
+**Solution:**
+
+1. **Check udev rules:**
+
+   ```bash
+   # See docs/linux-udev-installer.md for complete guide
+   sudo nano /etc/udev/rules.d/99-pymm-usb.rules
+   ```
+
+2. **Manual mount:**
+
+   ```bash
+   sudo mkdir /mnt/pymm
+   sudo mount /dev/sdX1 /mnt/pymm
+   sudo chown $USER:$USER /mnt/pymm
+   ```
+
+#### Qt Platform Plugin Missing
+
+**Error:** `Could not load the Qt platform plugin "xcb"`
+
+**Solution:**
+
+```bash
+# Install missing Qt dependencies
+sudo apt install libxcb-xinerama0 libxcb-cursor0 libxkbcommon-x11-0
+```
+
+### macOS
+
+#### Gatekeeper Blocks Application
+
+**Issue:** "pyMM cannot be opened because it is from an unidentified developer"
+
+**Solution:**
+
+```bash
+# Remove quarantine attribute
+xattr -d com.apple.quarantine /path/to/launcher.py
+
+# Or: Right-click → Open (hold Control key)
+```
+
+#### Apple Silicon (M1/M2/M3) Issues
+
+**Issue:** Performance problems or compatibility warnings
+
+**Solution:**
+
+- Install native ARM64 Python 3.13+
+
+  ```bash
+  # Check architecture
+  python -c "import platform; print(platform.machine())"
+  # Should show "arm64" not "x86_64"
+
+  # Install native Python
+  brew install python@3.13
+  ```
+
+---
+
+## Log File Analysis
+
+### Finding Logs
+
+**Location:**
+
+- **Portable mode:** `pyMM.Logs/app.log` (in application root)
+- **Installed mode:**
+  - Windows: `%LOCALAPPDATA%\pyMediaManager\logs\`
+  - Linux: `~/.local/share/pyMediaManager/logs/`
+  - macOS: `~/Library/Application Support/pyMediaManager/logs/`
+
+### Understanding Log Levels
+
+```log
+DEBUG - Detailed diagnostic information (verbose)
+INFO - Normal application events
+WARNING - Something unexpected but not critical
+ERROR - Functionality affected but app continues
+CRITICAL - Severe error, app may crash
+```
+
+### Common Error Patterns
+
+**Pattern:** `PermissionError: [Errno 13]`
+
+- **Meaning:** Cannot access file/directory due to permissions
+- **Check:** File permissions, antivirus, drive lock status
+
+**Pattern:** `FileNotFoundError: [Errno 2]`
+
+- **Meaning:** Expected file doesn't exist
+- **Check:** Path spelling, drive mounted, file deleted
+
+**Pattern:** `yaml.scanner.ScannerError`
+
+- **Meaning:** YAML syntax error in configuration
+- **Check:** config/user.yaml for syntax errors
+
+**Pattern:** `RuntimeError: Platform not supported`
+
+- **Meaning:** Feature not available on current OS
+- **Check:** Platform-specific documentation
+
+### Increasing Log Verbosity
+
+```yaml
+# config/user.yaml
+logging:
+  level: DEBUG  # Show all diagnostic information
+  console_enabled: true  # Print to terminal
+  file_enabled: true
+```
+
+Or temporary override:
+
+```bash
+python -m app --log-level DEBUG
+```
+
+---
+
+## Getting Additional Help
+
+### Before Asking for Help
+
+1. ✅ Check this troubleshooting guide
+2. ✅ Search [existing issues](https://github.com/mosh666/pyMM/issues)
+3. ✅ Search [discussions](https://github.com/mosh666/pyMM/discussions)
+4. ✅ Review [user guide](user-guide.md) and [documentation](../README.md)
+5. ✅ Collect diagnostic information (see below)
+
+### Diagnostic Information to Provide
+
+When reporting issues, include:
+
+```bash
+# System information
+python --version
+pip list | grep -i pyside  # or Select-String on Windows
+
+# pyMM version
+python -m app --version
+
+# Operating system
+# Windows: winver
+# Linux: uname -a && lsb_release -a
+# macOS: sw_vers
+
+# Relevant log excerpts (last 50 lines)
+# Windows: Get-Content pyMM.Logs\app.log -Tail 50
+# Linux/macOS: tail -50 pyMM.Logs/app.log
+```
+
+### Where to Get Help
+
+- **🐛 Bug Reports:** [GitHub Issues](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
+- **💡 Feature Requests:** [GitHub Issues](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)
+- **❓ Questions:** [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
+- **📖 Documentation:** [User Guide](user-guide.md), [Architecture](architecture.md)
+- **🔒 Security Issues:** See [Security Policy](../SECURITY.md)
+
+---
+
+**Document Version:** 1.0
+**Last Updated:** January 8, 2026
+**Compatible with:** pyMediaManager v1.0+

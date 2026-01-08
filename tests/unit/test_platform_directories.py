@@ -17,7 +17,7 @@ from app.core.services.config_service import (
 class TestPlatformDirectories:
     """Test platform-specific directory functions."""
 
-    @pytest.mark.skipif(sys.platform != "win32", reason="Windows-only test")
+    @pytest.mark.windows
     def test_windows_directories(self):
         """Test Windows directory resolution."""
         config_dir = get_platform_config_dir()
@@ -37,7 +37,7 @@ class TestPlatformDirectories:
         assert "pyMediaManager" in str(data_dir)
         assert "pyMediaManager" in str(cache_dir)
 
-    @pytest.mark.skipif(sys.platform != "darwin", reason="macOS-only test")
+    @pytest.mark.macos
     def test_macos_directories(self):
         """Test macOS directory resolution."""
         config_dir = get_platform_config_dir()
@@ -50,7 +50,7 @@ class TestPlatformDirectories:
         assert data_dir == home / "Library" / "Application Support" / "pyMediaManager"
         assert cache_dir == home / "Library" / "Caches" / "pyMediaManager"
 
-    @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
+    @pytest.mark.linux
     def test_linux_directories_default(self):
         """Test Linux directory resolution with default XDG paths."""
         with patch.dict(os.environ, {}, clear=False):
@@ -69,7 +69,7 @@ class TestPlatformDirectories:
             assert data_dir == home / ".local" / "share" / "pymediamanager"
             assert cache_dir == home / ".cache" / "pymediamanager"
 
-    @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
+    @pytest.mark.linux
     def test_linux_directories_xdg_override(self):
         """Test Linux directory resolution with XDG environment variables."""
         with patch.dict(

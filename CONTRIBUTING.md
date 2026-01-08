@@ -481,6 +481,74 @@ Located in `tests/gui/`, these test UI components using pytest-qt:
 - `test_settings_dialog.py`: Settings tabs, validation, persistence
 - `test_views.py`: Storage, Plugin, and Project views
 
+### Platform-Specific Test Markers
+
+pyMM provides composable pytest markers for platform-specific tests. These markers use **OR logic**:
+a test marked with multiple platform markers will run if the current platform matches **any** of them.
+
+**Available Markers:**
+
+| Marker | Platforms | Description |
+| ------ | --------- | ----------- |
+| `@pytest.mark.windows` | Windows | Windows-only tests |
+| `@pytest.mark.linux` | Linux | Linux-only tests |
+| `@pytest.mark.macos` | macOS | macOS-only tests |
+| `@pytest.mark.unix` | Linux, macOS | Unix-like systems (Linux + macOS) |
+
+**Example Usage:**
+
+```python
+import pytest
+
+@pytest.mark.linux
+def test_udev_installation():
+    """This test only runs on Linux."""
+    ...
+
+@pytest.mark.windows
+def test_registry_access():
+    """This test only runs on Windows."""
+    ...
+
+@pytest.mark.unix
+def test_posix_permissions():
+    """This test runs on Linux and macOS."""
+    ...
+
+# Composable markers (OR logic) - runs on Linux OR macOS
+@pytest.mark.linux
+@pytest.mark.macos
+def test_unix_like_behavior():
+    """This test runs on both Linux and macOS."""
+    ...
+```
+
+**How It Works:**
+
+The markers are registered in `pyproject.toml` and auto-skip logic is implemented in
+`tests/conftest.py` via the `pytest_collection_modifyitems` hook. Tests without any platform
+markers run on all platforms.
+
+**Migration from skipif:**
+
+Replace the old pattern:
+
+```python
+# Old (deprecated)
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
+def test_linux_feature():
+    ...
+```
+
+With the new marker:
+
+```python
+# New
+@pytest.mark.linux
+def test_linux_feature():
+    ...
+```
+
 **Example GUI Test**:
 
 ```python

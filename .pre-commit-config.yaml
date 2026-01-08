@@ -4,9 +4,9 @@
 # Test: pre-commit run --all-files
 
 repos:
-  # Ruff - fast Python linter and formatter
+  # Ruff - fast Python linter and formatter (2026 latest)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    rev: v0.9.2  # Update to latest 2026 release
     hooks:
       # Run the linter
       - id: ruff

@@ -2,6 +2,8 @@
 Plugin manager for discovering, installing, and managing plugins.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 import logging
 from pathlib import Path
@@ -10,6 +12,7 @@ from typing import Any
 from pydantic import ValidationError
 import yaml
 
+from app.core.platform import check_plugin_platform_usage
 from app.plugins.plugin_base import PluginBase, PluginManifest, SimplePluginImplementation
 from app.plugins.plugin_schema import PluginManifestSchema
 
@@ -17,19 +20,26 @@ from app.plugins.plugin_schema import PluginManifestSchema
 class PluginManager:
     """Manager for application plugins."""
 
-    def __init__(self, plugins_dir: Path, manifests_dir: Path):
+    def __init__(
+        self,
+        plugins_dir: Path,
+        manifests_dir: Path,
+        strict_platform_checks: bool = False,
+    ):
         """
         Initialize plugin manager.
 
         Args:
             plugins_dir: Directory where plugins are installed (e.g., D:\\pyMM.Plugins)
             manifests_dir: Directory containing plugin manifest YAML files
+            strict_platform_checks: If True, raise error on direct sys.platform usage in plugins
         """
         self.logger = logging.getLogger(__name__)
         self.plugins_dir = Path(plugins_dir)
         self.manifests_dir = Path(manifests_dir)
         self.plugins: dict[str, PluginBase] = {}
         self.manifests: dict[str, PluginManifest] = {}
+        self.strict_platform_checks = strict_platform_checks
 
     def discover_plugins(self) -> int:
         """
@@ -49,6 +59,9 @@ class PluginManager:
 
         for manifest_file in manifest_files:
             try:
+                # Check for deprecated platform usage in any Python files in plugin directory
+                self._check_plugin_platform_usage(manifest_file.parent)
+
                 manifest = self._load_manifest(manifest_file)
                 if manifest:
                     self.manifests[manifest.name] = manifest
@@ -64,6 +77,19 @@ class PluginManager:
                 self.logger.exception("Error loading manifest %s", manifest_file)
 
         return len(self.plugins)
+
+    def _check_plugin_platform_usage(self, plugin_dir: Path) -> None:
+        """
+        Check plugin Python files for deprecated direct platform access.
+
+        Emits DeprecationWarning if found, or raises PlatformCheckError if strict mode.
+
+        Args:
+            plugin_dir: Directory containing plugin files
+        """
+        python_files = list(plugin_dir.glob("*.py"))
+        for py_file in python_files:
+            check_plugin_platform_usage(py_file, strict=self.strict_platform_checks)
 
     def _load_manifest(self, manifest_file: Path) -> PluginManifest | None:
         """

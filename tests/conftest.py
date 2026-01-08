@@ -1,11 +1,84 @@
 """Pytest configuration and shared fixtures."""
 
+from __future__ import annotations
+
 from pathlib import Path
-import shutil
 from unittest.mock import patch
 
 from PySide6.QtWidgets import QApplication
 import pytest
+
+from app.core.platform import Platform, current_platform
+
+# Platform marker names for auto-skip logic
+PLATFORM_MARKERS = {"windows", "linux", "macos", "unix"}
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """Configure pytest with platform markers."""
+    # Register markers (also defined in pyproject.toml, but this ensures they're available)
+    config.addinivalue_line(
+        "markers",
+        "windows: Tests that only run on Windows (composable with other platform markers)",
+    )
+    config.addinivalue_line(
+        "markers",
+        "linux: Tests that only run on Linux (composable with other platform markers)",
+    )
+    config.addinivalue_line(
+        "markers",
+        "macos: Tests that only run on macOS (composable with other platform markers)",
+    )
+    config.addinivalue_line(
+        "markers",
+        "unix: Tests that run on Unix-like systems (Linux and macOS)",
+    )
+
+
+def pytest_collection_modifyitems(
+    config: pytest.Config,
+    items: list[pytest.Item],
+) -> None:
+    """
+    Modify test collection to skip tests based on platform markers.
+
+    Platform markers are composable with OR logic:
+    - @pytest.mark.linux @pytest.mark.macos -> runs on Linux OR macOS
+    - @pytest.mark.windows -> runs only on Windows
+    - @pytest.mark.unix -> runs on Linux OR macOS (shorthand)
+    - No platform markers -> runs on all platforms
+    """
+    platform = current_platform()
+
+    for item in items:
+        # Get all platform markers on this test
+        test_platforms: set[str] = set()
+        for marker_name in PLATFORM_MARKERS:
+            if item.get_closest_marker(marker_name):
+                test_platforms.add(marker_name)
+
+        # If no platform markers, test runs everywhere
+        if not test_platforms:
+            continue
+
+        # Check if current platform matches any marker (OR logic)
+        should_run = False
+
+        if "windows" in test_platforms and platform == Platform.WINDOWS:
+            should_run = True
+        if "linux" in test_platforms and platform == Platform.LINUX:
+            should_run = True
+        if "macos" in test_platforms and platform == Platform.MACOS:
+            should_run = True
+        if "unix" in test_platforms and platform in (Platform.LINUX, Platform.MACOS):
+            should_run = True
+
+        if not should_run:
+            skip_marker = pytest.mark.skip(
+                reason=f"Test requires platform(s): {', '.join(sorted(test_platforms))}; "
+                f"current platform: {platform.value}"
+            )
+            item.add_marker(skip_marker)
 
 
 @pytest.fixture(autouse=True)

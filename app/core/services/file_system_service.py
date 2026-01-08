@@ -3,21 +3,88 @@ File system service for pyMediaManager.
 Provides abstraction layer for file operations with portable path handling.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
 import shutil
 
+from app.core.platform import PortableConfig, PortableMode, is_windows
+
+
+def resolve_portable_config(
+    cli_portable: bool | None = None,
+    storage_service: object | None = None,
+    executable_path: Path | None = None,
+) -> PortableConfig:
+    """
+    Resolve portable mode configuration using cascade precedence.
+
+    Resolution order:
+    1. CLI arguments (--portable / --no-portable)
+    2. PYMM_PORTABLE environment variable
+    3. Legacy config file portable setting (deprecated, auto-migrates)
+    4. Auto-detection based on removable media
+
+    Args:
+        cli_portable: Value from CLI args, or None if not specified
+        storage_service: StorageService instance for removable drive detection
+        executable_path: Path to check for removable media (defaults to sys.executable)
+
+    Returns:
+        PortableConfig with resolved settings
+    """
+    import sys
+
+    # 1. CLI argument takes highest precedence
+    if cli_portable is not None:
+        return PortableConfig(enabled=cli_portable, source=PortableMode.CLI)
+
+    # 2. Check environment variable
+    env_value = os.environ.get("PYMM_PORTABLE")
+    if env_value is not None:
+        enabled = env_value.lower() not in ("0", "false", "off", "no")
+        return PortableConfig(enabled=enabled, source=PortableMode.ENV)
+
+    # 3. Check legacy config file (handled by ConfigService during migration)
+    # This is done in ConfigService.load() which will set PYMM_PORTABLE env var
+    # if legacy portable setting is found, so we don't need to check here
+
+    # 4. Auto-detect based on removable media
+    if storage_service is not None:
+        try:
+            exe_path = executable_path or Path(sys.executable)
+            # Check if running from removable drive
+            if hasattr(storage_service, "is_path_on_removable_drive"):
+                is_removable = storage_service.is_path_on_removable_drive(exe_path)
+                if is_removable:
+                    return PortableConfig(
+                        enabled=True,
+                        source=PortableMode.AUTO,
+                        auto_detected_removable=True,
+                    )
+        except Exception:
+            pass  # Fall through to default
+
+    # 5. Default: portable mode enabled (original behavior)
+    return PortableConfig(enabled=True, source=PortableMode.DEFAULT)
+
 
 class FileSystemService:
     """Service for file system operations with portable path handling."""
 
-    def __init__(self, app_root: Path | None = None):
+    def __init__(
+        self,
+        app_root: Path | None = None,
+        portable_config: PortableConfig | None = None,
+    ):
         """
         Initialize file system service.
 
         Args:
             app_root: Application root directory. If None, auto-detects from module path.
+            portable_config: Pre-resolved portable configuration. If None, resolves from env.
         """
         self.logger = logging.getLogger(__name__)
         if app_root is None:
@@ -27,10 +94,20 @@ class FileSystemService:
             self.app_root = Path(app_root).resolve()
 
         self._drive_root: Path | None = None
-        # Check environment variable for development/portable mode
-        # If PYMM_PORTABLE is set to "0", "false", "off", we use APP_ROOT as drive root equivalent
-        portable_env = os.environ.get("PYMM_PORTABLE", "true").lower()
-        self._force_portable = portable_env not in ("0", "false", "off", "no")
+
+        # Use provided config or resolve from environment
+        if portable_config is not None:
+            self._portable_config = portable_config
+        else:
+            self._portable_config = resolve_portable_config()
+
+        # Legacy compatibility property
+        self._force_portable = self._portable_config.enabled
+
+    @property
+    def portable_config(self) -> PortableConfig:
+        """Get the current portable configuration."""
+        return self._portable_config
 
     def get_app_root(self) -> Path:
         """Get the application root directory."""
@@ -47,8 +124,8 @@ class FileSystemService:
             Path to drive root directory
         """
         if self._drive_root is None:
-            if self._force_portable:
-                if os.name == "nt":
+            if self._portable_config.enabled:
+                if is_windows():
                     # Get the drive root by taking the anchor of the absolute path
                     # For D:\pyMM\app, this returns D:\
                     self._drive_root = Path(self.app_root.anchor)

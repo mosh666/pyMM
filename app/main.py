@@ -3,12 +3,58 @@ Main application entry point for pyMediaManager.
 Initializes services and launches the PySide6 GUI.
 """
 
+from __future__ import annotations
+
+import argparse
 from pathlib import Path
 import sys
 from typing import Any
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
+
+from app.core.platform import PortableConfig
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        prog="pyMediaManager",
+        description="Portable Python-based media management application",
+    )
+    portable_group = parser.add_mutually_exclusive_group()
+    portable_group.add_argument(
+        "--portable",
+        action="store_true",
+        default=None,
+        help="Enable portable mode (store data relative to executable)",
+    )
+    portable_group.add_argument(
+        "--no-portable",
+        action="store_true",
+        default=None,
+        help="Disable portable mode (use platform-specific directories)",
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Show version information and exit",
+    )
+    return parser.parse_args()
+
+
+def get_cli_portable_setting(args: argparse.Namespace) -> bool | None:
+    """
+    Extract portable setting from CLI args.
+
+    Returns:
+        True if --portable, False if --no-portable, None if neither specified
+    """
+    if args.portable:
+        return True
+    if args.no_portable:
+        return False
+    return None
 
 
 def get_app_root() -> Path:
@@ -20,6 +66,7 @@ def get_app_root() -> Path:
 def initialize_services(
     app_root: Path,
     config: Any,
+    portable_config: PortableConfig | None = None,
     templates_dir: Path | None = None,
     disable_template_watch: bool = False,
 ) -> dict[str, Any]:
@@ -29,6 +76,7 @@ def initialize_services(
     Args:
         app_root: Root directory of the application
         config: Configuration object
+        portable_config: Resolved portable configuration
         templates_dir: Optional custom templates directory
         disable_template_watch: Whether to disable template filesystem watching
 
@@ -42,8 +90,8 @@ def initialize_services(
     from app.services.git_service import GitService
     from app.services.project_service import ProjectService
 
-    # File system service
-    file_system_service = FileSystemService(app_root)
+    # File system service with portable config
+    file_system_service = FileSystemService(app_root, portable_config=portable_config)
 
     # Ensure portable folders exist at drive root
     portable_folders = file_system_service.ensure_portable_folders()
@@ -57,11 +105,14 @@ def initialize_services(
         file_system_service=file_system_service,
     )
     logger = logging_service.setup()
-    logger.info(f"Starting {config.app_name} v{config.app_version}")
-    logger.info(f"App root: {app_root}")
-    logger.info(f"Drive root: {file_system_service.get_drive_root()}")
+    logger.info("Starting %s v%s", config.app_name, config.app_version)
+    logger.info("App root: %s", app_root)
+    logger.info("Drive root: %s", file_system_service.get_drive_root())
+    logger.info("Portable mode: %s", file_system_service.portable_config)
     logger.info(
-        f"Portable folders: Projects={portable_folders['projects']}, Logs={portable_folders['logs']}"
+        "Portable folders: Projects=%s, Logs=%s",
+        portable_folders["projects"],
+        portable_folders["logs"],
     )
 
     # Storage service
@@ -73,7 +124,7 @@ def initialize_services(
     plugin_manager = PluginManager(plugins_dir, manifests_dir)
     plugin_manager.discover_plugins()
 
-    logger.info(f"Discovered {len(plugin_manager.get_all_plugins())} plugins")
+    logger.info("Discovered %d plugins", len(plugin_manager.get_all_plugins()))
 
     # Git service
     git_service = GitService()
@@ -86,8 +137,8 @@ def initialize_services(
         templates_dir=templates_dir,
         disable_watch=disable_template_watch,
     )
-    logger.info(f"Project service initialized: {projects_metadata_dir}")
-    logger.info(f"Discovered {len(project_service.list_templates())} templates")
+    logger.info("Project service initialized: %s", projects_metadata_dir)
+    logger.info("Discovered %d templates", len(project_service.list_templates()))
 
     return {
         "file_system_service": file_system_service,
@@ -102,13 +153,26 @@ def initialize_services(
     }
 
 
-def run_application() -> int:
+def run_application(args: argparse.Namespace | None = None) -> int:
     """
     Initialize and run the pyMediaManager application.
+
+    Args:
+        args: Parsed command line arguments. If None, parses sys.argv.
 
     Returns:
         Exit code (0 for success, non-zero for errors)
     """
+    if args is None:
+        args = parse_args()
+
+    # Handle --version flag
+    if args.version:
+        from app import __version__
+
+        print(f"pyMediaManager {__version__}")
+        return 0
+
     # Enable High DPI scaling
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
@@ -127,25 +191,39 @@ def run_application() -> int:
     app_root = get_app_root()
 
     from app.core.services.config_service import ConfigService
+    from app.core.services.file_system_service import resolve_portable_config
+    from app.core.services.storage_service import StorageService
 
     # ConfigService now uses platform-specific directories by default
     # Pass app_root for legacy config migration fallback
     config_service = ConfigService(app_root=app_root)
     config = config_service.load()
 
+    # Resolve portable configuration with cascade: CLI > env > auto-detect
+    storage_service = StorageService()
+    cli_portable = get_cli_portable_setting(args)
+    portable_config = resolve_portable_config(
+        cli_portable=cli_portable,
+        storage_service=storage_service,
+    )
+
     # Check if template watching should be disabled
     import os
 
     disable_watch = os.getenv("PYMM_DISABLE_TEMPLATE_WATCH", "0") == "1"
 
-    # Initialize services
+    # Initialize services with resolved portable config
     services = initialize_services(
-        app_root, config, templates_dir=None, disable_template_watch=disable_watch
+        app_root,
+        config,
+        portable_config=portable_config,
+        templates_dir=None,
+        disable_template_watch=disable_watch,
     )
 
     # Extract services
     logger = services["logger"]
-    storage_service = services["storage_service"]
+    file_system_service = services["file_system_service"]
     plugin_manager = services["plugin_manager"]
     project_service = services["project_service"]
 
@@ -154,7 +232,13 @@ def run_application() -> int:
         """Create and show the main window."""
         from app.ui.main_window import MainWindow
 
-        main_window = MainWindow(config_service, storage_service, plugin_manager, project_service)
+        main_window = MainWindow(
+            config_service,
+            storage_service,
+            plugin_manager,
+            project_service,
+            portable_config=file_system_service.portable_config,
+        )
         main_window.show()
 
         # Store reference to prevent garbage collection
@@ -171,7 +255,7 @@ def run_application() -> int:
         wizard = FirstRunWizard(storage_service, optional_plugins)
 
         def on_wizard_finished(data: dict[str, Any]) -> None:
-            logger.info(f"First-run wizard completed: {data}")
+            logger.info("First-run wizard completed: %s", data)
             # Update config to not show wizard again
             if data.get("dont_show_again"):
                 config_service.update_config(ui={"show_first_run": False})

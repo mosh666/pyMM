@@ -3,17 +3,19 @@ Configuration service for pyMediaManager.
 Handles layered configuration (defaults → environment → user) with Pydantic models.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 import os
 from pathlib import Path
 import shutil
-import sys
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
 from app import __commit_id__, __version__
+from app.core.platform import Platform, current_platform
 
 
 def get_platform_config_dir(app_name: str = "pyMediaManager") -> Path:
@@ -30,17 +32,19 @@ def get_platform_config_dir(app_name: str = "pyMediaManager") -> Path:
     Returns:
         Path to configuration directory
     """
-    if sys.platform == "win32":
-        # Windows: %APPDATA%\pyMediaManager
-        base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
-        return base_dir / app_name
-    if sys.platform == "darwin":
-        # macOS: ~/Library/Application Support/pyMediaManager
-        return Path.home() / "Library" / "Application Support" / app_name
-    # Linux: XDG Base Directory
-    xdg_config = os.getenv("XDG_CONFIG_HOME")
-    base_dir = Path(xdg_config) if xdg_config else Path.home() / ".config"
-    return base_dir / app_name.lower()
+    match current_platform():
+        case Platform.WINDOWS:
+            # Windows: %APPDATA%\pyMediaManager
+            base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
+            return base_dir / app_name
+        case Platform.MACOS:
+            # macOS: ~/Library/Application Support/pyMediaManager
+            return Path.home() / "Library" / "Application Support" / app_name
+        case Platform.LINUX:
+            # Linux: XDG Base Directory
+            xdg_config = os.getenv("XDG_CONFIG_HOME")
+            base_dir = Path(xdg_config) if xdg_config else Path.home() / ".config"
+            return base_dir / app_name.lower()
 
 
 def get_platform_data_dir(app_name: str = "pyMediaManager") -> Path:
@@ -57,17 +61,19 @@ def get_platform_data_dir(app_name: str = "pyMediaManager") -> Path:
     Returns:
         Path to data directory
     """
-    if sys.platform == "win32":
-        # Windows: %APPDATA%\pyMediaManager
-        base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
-        return base_dir / app_name
-    if sys.platform == "darwin":
-        # macOS: ~/Library/Application Support/pyMediaManager
-        return Path.home() / "Library" / "Application Support" / app_name
-    # Linux: XDG Base Directory
-    xdg_data = os.getenv("XDG_DATA_HOME")
-    base_dir = Path(xdg_data) if xdg_data else Path.home() / ".local" / "share"
-    return base_dir / app_name.lower()
+    match current_platform():
+        case Platform.WINDOWS:
+            # Windows: %APPDATA%\pyMediaManager
+            base_dir = Path(os.getenv("APPDATA", "~")).expanduser()
+            return base_dir / app_name
+        case Platform.MACOS:
+            # macOS: ~/Library/Application Support/pyMediaManager
+            return Path.home() / "Library" / "Application Support" / app_name
+        case Platform.LINUX:
+            # Linux: XDG Base Directory
+            xdg_data = os.getenv("XDG_DATA_HOME")
+            base_dir = Path(xdg_data) if xdg_data else Path.home() / ".local" / "share"
+            return base_dir / app_name.lower()
 
 
 def get_platform_cache_dir(app_name: str = "pyMediaManager") -> Path:
@@ -84,17 +90,19 @@ def get_platform_cache_dir(app_name: str = "pyMediaManager") -> Path:
     Returns:
         Path to cache directory
     """
-    if sys.platform == "win32":
-        # Windows: %LOCALAPPDATA%\pyMediaManager\Cache
-        base_dir = Path(os.getenv("LOCALAPPDATA", "~")).expanduser()
-        return base_dir / app_name / "Cache"
-    if sys.platform == "darwin":
-        # macOS: ~/Library/Caches/pyMediaManager
-        return Path.home() / "Library" / "Caches" / app_name
-    # Linux: XDG Base Directory
-    xdg_cache = os.getenv("XDG_CACHE_HOME")
-    base_dir = Path(xdg_cache) if xdg_cache else Path.home() / ".cache"
-    return base_dir / app_name.lower()
+    match current_platform():
+        case Platform.WINDOWS:
+            # Windows: %LOCALAPPDATA%\pyMediaManager\Cache
+            base_dir = Path(os.getenv("LOCALAPPDATA", "~")).expanduser()
+            return base_dir / app_name / "Cache"
+        case Platform.MACOS:
+            # macOS: ~/Library/Caches/pyMediaManager
+            return Path.home() / "Library" / "Caches" / app_name
+        case Platform.LINUX:
+            # Linux: XDG Base Directory
+            xdg_cache = os.getenv("XDG_CACHE_HOME")
+            base_dir = Path(xdg_cache) if xdg_cache else Path.home() / ".cache"
+            return base_dir / app_name.lower()
 
 
 class LogLevel(str, Enum):

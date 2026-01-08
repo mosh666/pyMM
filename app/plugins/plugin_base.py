@@ -2,6 +2,8 @@
 Plugin base class and plugin management system.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 import asyncio
 from collections.abc import Callable
@@ -11,10 +13,11 @@ import logging
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 from typing import TYPE_CHECKING
 
 import aiohttp
+
+from app.core.platform import Platform, current_platform
 
 if TYPE_CHECKING:
     from app.ui.dialogs.tool_version_dialog import VersionChoice
@@ -71,13 +74,13 @@ class PluginManifest:
 
     def get_current_platform_config(self) -> PlatformManifest | None:
         """Get configuration for current platform."""
-        if sys.platform == "win32":
-            return self.windows_config
-        if sys.platform == "linux":
-            return self.linux_config
-        if sys.platform == "darwin":
-            return self.macos_config
-        return None
+        match current_platform():
+            case Platform.WINDOWS:
+                return self.windows_config
+            case Platform.LINUX:
+                return self.linux_config
+            case Platform.MACOS:
+                return self.macos_config
 
     def has_v2_config(self) -> bool:
         """Check if manifest has v2 platform-specific configuration."""
@@ -239,7 +242,7 @@ class PluginBase(ABC):
 
     def _handle_version_mismatch(
         self, _tool_path: str, found_version: str, required_version: str
-    ) -> "VersionChoice":
+    ) -> VersionChoice:
         """
         Handle system tool version mismatch by showing dialog.
 

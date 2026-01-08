@@ -72,8 +72,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-14]
         python-version: ["3.12", "3.13", "3.14"]
+        exclude:
+          # Reduce matrix size by not testing all Python versions on ARM
+          - os: macos-14
+            python-version: "3.14"
 
     steps:
       - name: Checkout code
@@ -124,9 +128,12 @@ jobs:
         run: echo "QT_QPA_PLATFORM=offscreen" >> $GITHUB_ENV
 
       - name: Run pytest with coverage (strict)
+        shell: bash
         run: |
           echo "🧪 Running all tests with coverage..."
-          pytest tests/ --cov=app --cov-report=xml
+          # Platform markers auto-skip tests for wrong platforms via conftest.py
+          # Run all tests - platform-specific tests are automatically skipped on wrong OS
+          pytest tests/ --cov=app --cov-report=xml -v
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

@@ -1,7 +1,6 @@
 """Tests for Linux udev rules installer."""
 
 from pathlib import Path
-import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -22,7 +21,7 @@ class TestLinuxUdevInstaller:
         assert Path("/etc/udev/rules.d") == installer.RULES_DIR
         assert installer.rules_path == Path("/etc/udev/rules.d/99-pymm-usb.rules")
 
-    @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
+    @pytest.mark.linux
     def test_is_linux_on_linux(self):
         """Test is_linux on Linux systems."""
         installer = LinuxUdevInstaller()
@@ -112,7 +111,7 @@ class TestLinuxUdevInstaller:
 
         assert result.status == UdevInstallStatus.PERMISSION_DENIED
 
-    @pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test (requires os.geteuid)")
+    @pytest.mark.linux
     @patch("sys.platform", "linux")
     @patch("os.geteuid", return_value=1000)
     def test_install_direct_without_root(self, _mock_geteuid):  # noqa: PT019

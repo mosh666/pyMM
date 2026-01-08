@@ -123,11 +123,136 @@ def config_service(tmp_path):
 
 ## Platform Detection
 
-Platform detection uses `sys.platform`:
+pyMM uses a centralized `Platform` enum for all platform detection, replacing scattered
+`sys.platform` checks throughout the codebase.
 
-- `"win32"` → Windows
-- `"darwin"` → macOS
-- `"linux"` → Linux (and other Unix-like systems)
+### Platform Enum API
+
+```python
+from app.core.platform import (
+    Platform,
+    current_platform,
+    is_windows,
+    is_linux,
+    is_macos,
+    is_unix,
+)
+
+# Get current platform as enum
+platform = current_platform()  # Platform.WINDOWS, Platform.LINUX, or Platform.MACOS
+
+# Platform-specific checks
+if is_windows():
+    # Windows-specific code
+    pass
+
+# Unix covers both Linux and macOS
+if is_unix():
+    # Unix-specific code (Linux + macOS)
+    pass
+
+# Use match statements for platform-specific logic (Python 3.12+)
+match current_platform():
+    case Platform.WINDOWS:
+        config_dir = Path(os.environ["APPDATA"]) / "pyMediaManager"
+    case Platform.MACOS:
+        config_dir = Path.home() / "Library" / "Application Support" / "pyMediaManager"
+    case Platform.LINUX:
+        config_dir = Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser() / "pymediamanager"
+```
+
+### Migration from sys.platform
+
+The old pattern:
+
+```python
+import sys
+
+if sys.platform == "win32":
+    # Windows code
+elif sys.platform == "darwin":
+    # macOS code
+else:
+    # Linux code
+```
+
+Should be replaced with:
+
+```python
+from app.core.platform import Platform, current_platform
+
+match current_platform():
+    case Platform.WINDOWS:
+        # Windows code
+    case Platform.MACOS:
+        # macOS code
+    case Platform.LINUX:
+        # Linux code
+```
+
+## Portable Mode
+
+pyMM supports portable installations where all data is stored relative to the application
+directory. This is useful for USB drives or environments without write access to system directories.
+
+### Portable Mode Configuration Cascade
+
+Portable mode is determined by the following precedence (highest to lowest):
+
+1. **CLI Flags**: `--portable` or `--no-portable`
+2. **Environment Variable**: `PYMM_PORTABLE=true` or `PYMM_PORTABLE=false`
+3. **Legacy Config**: `portable_mode` setting in `user.yaml`
+4. **Auto-Detection**: Automatically enables if running from removable media
+
+### CLI Usage
+
+```bash
+# Force portable mode
+python launcher.py --portable
+
+# Force non-portable mode (use platform directories)
+python launcher.py --no-portable
+```
+
+### Environment Variable
+
+```bash
+# Linux/macOS
+export PYMM_PORTABLE=true
+
+# Windows (PowerShell)
+$env:PYMM_PORTABLE = "true"
+
+# Windows (Command Prompt)
+set PYMM_PORTABLE=true
+```
+
+### PortableConfig API
+
+```python
+from app.core.platform import PortableConfig, PortableMode
+from app.core.services.file_system_service import resolve_portable_config
+
+# Resolve portable configuration
+config = resolve_portable_config(
+    cli_portable=True,  # From argparse, or None if not specified
+    env_var="PYMM_PORTABLE",
+    config_key="portable_mode",
+)
+
+# Check configuration
+if config.enabled:
+    print(f"Portable mode enabled via {config.source.value}")
+    if config.auto_detected_removable:
+        print("Running from removable media")
+```
+
+### Status Bar Indicator
+
+When running, the main window status bar displays the portable mode status:
+
+- 📦 **Portable mode** - Shows source (CLI, ENV, config, or auto-detected)
+- 💻 **Standard mode** - Uses platform-specific directories
 
 ## Environment Variables
 

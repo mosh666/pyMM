@@ -9,6 +9,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Documentation Expansion (2026-01-08)
+
+- New comprehensive documentation files (2,000+ lines total)
+  - `docs/troubleshooting.md` (688 lines) - Common issues and solutions
+    - Installation troubleshooting (permissions, missing files, Python environment)
+    - Plugin management issues (download failures, installation errors, version conflicts)
+    - Project management problems (creation failures, Git integration, drive detection)
+    - Performance optimization tips (startup time, plugin loading, system resource usage)
+    - Platform-specific guides for Windows, Linux, and macOS
+  - `docs/migration-guide.md` (527 lines) - Plugin migration guide
+    - Comprehensive guide for migrating plugins from v0.x to v1.x format
+    - Detailed manifest schema updates and breaking changes
+    - Installation method migration (installer → package manager)
+    - Verification strategy changes (checksums → integrity checking)
+    - Step-by-step migration examples with before/after code
+  - `docs/plugin-catalog.md` (448 lines) - Official plugin catalog
+    - Detailed documentation for all 9 official plugins
+    - Each plugin documented with purpose, features, supported platforms, version requirements
+    - Installation commands and configuration examples
+    - Usage guides with real-world examples
+    - Troubleshooting sections for common plugin issues
+  - `docs/api-reference.md` (324 lines) - API documentation
+    - Core APIs: Platform detection, logging, configuration
+    - Service APIs: Project, Git, file system services
+    - Plugin APIs: Base classes, manager, schema validation
+    - UI APIs: Main window, dialogs, components
+    - Type hints and usage examples for all public APIs
+- Enhanced configuration examples
+  - `config/user.yaml.example` expanded from 12 to 205 lines
+    - Complete configuration examples for all application settings
+    - Platform-specific path examples (Windows/Linux/macOS)
+    - Plugin configuration templates with common options
+    - Project defaults and template settings
+    - Logging and performance tuning options
+  - `.dockerignore` expanded from 20 to 104 lines
+    - Comprehensive exclusion patterns for efficient Docker builds
+    - Categorized sections: development, testing, documentation, IDE configs, OS files
+    - Security improvements (exclude .env, .git, credentials)
+
+#### Platform Abstraction (2026-01-08)
+
+- Cross-platform architecture implementation (320 lines)
+  - `app/core/platform.py` - Unified platform detection and abstraction
+    - Platform enum (WINDOWS, LINUX, MACOS, UNKNOWN)
+    - Automatic platform detection with fallback handling
+    - Cross-platform service discovery and initialization
+    - Type-safe platform checks for conditional logic
+  - Platform-specific implementations
+    - `app/platform/windows/` - Windows-specific utilities (storage, registry, WMI)
+    - `app/platform/linux/` - Linux-specific utilities (udisks2, sysfs)
+    - `app/platform/macos/` - macOS-specific utilities (diskutil, IOKit)
+  - Storage service abstraction
+    - `app/core/services/storage_service.py` - Cross-platform drive detection
+    - Windows: WMI and Win32 API integration
+    - Linux: udisks2 D-Bus and /sys/block parsing
+    - macOS: diskutil command-line interface
+    - Unified DriveInfo model across all platforms
+- Test infrastructure enhancements
+  - Platform-specific test markers in `pyproject.toml` (windows, linux, macos)
+  - Platform detection in `conftest.py` for conditional test execution
+  - Cross-platform temp directory handling
+  - Mock implementations for drive detection on all platforms
+
+#### Build System Modernization (2026-01-08)
+
+- Justfile comprehensive refactoring (14 → 37 recipes)
+  - **Build Recipes:** Cross-platform builds (Windows, Linux), clean operations
+  - **Testing Recipes:** Unit tests, integration tests, coverage reports, watch mode
+  - **Docker Recipes:** Multi-Python builds (3.12-3.14), container management, cleanup
+  - **Documentation Recipes:** Sphinx builds (HTML, PDF), link checking, preview server
+  - **Quality Recipes:** Lint, format, type checking, security scanning
+  - **Development Recipes:** Dependency management, virtual environment setup, pre-commit
+  - Cross-platform shell configuration (PowerShell for Windows, bash for Linux/macOS)
+  - Python version selection for Docker builds (defaults to 3.13)
+  - Enhanced error handling and progress feedback
+- Docker modernization
+  - Multi-stage Dockerfile with BuildKit syntax
+  - Python version as build argument (3.12, 3.13, 3.14)
+  - Layered caching for faster rebuilds
+  - Security improvements (non-root user, minimal base image)
+  - Healthcheck endpoint for container monitoring
+
 #### Documentation Overhaul (2026-01-07)
 
 - Complete README.md rewrite from scratch following 2026 best practices
@@ -55,7 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions workflows following 2026 best practices
   - `ci.yml` - Matrix testing on Python 3.12, 3.13, 3.14 with proper token permissions
   - `security.yml` - CodeQL analysis for vulnerability detection
-  - `scorecard.yml` - Daily OpenSSF Scorecard at 07:15 UTC
+  - `scorecard.yml` - Weekly OpenSSF Scorecard analysis (Saturdays at 01:30 UTC)
   - `build.yml` - Portable distribution building with embedded Python runtime
   - `release.yml` - Automated releases with changelog generation
   - `docs.yml` - Documentation building and deployment
@@ -110,6 +192,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Code Quality Standards (2026-01-08)
+
+- Pre-commit hooks updated to latest versions
+  - Ruff upgraded from v0.8.4 to v0.9.2
+  - Enhanced linting rules and performance improvements
+  - Better error messages and auto-fix capabilities
+  - Improved type checking integration with MyPy
+
 #### Documentation Improvements (2026-01-07)
 
 - README.md completely rewritten with modern structure
@@ -130,7 +220,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Python 3.13 recommended (supports 3.12, 3.14)
   - Modern type hints: `list[T]`, `dict[K, V]`, `tuple[T, ...]` (Python 3.12+)
   - 193 tests with 73% code coverage prominently featured
-  - Daily OpenSSF Scorecard metrics (changed from weekly)
+  - Weekly OpenSSF Scorecard metrics (Saturdays at 01:30 UTC)
   - Modern tooling: uv (fast package installation), just (command runner)
   - Proper bash code fences throughout
   - No print statements (structured logging only)
@@ -146,10 +236,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### CI/CD Improvements (2026-01-05)
 
 - Updated Codecov action from v4 to v5 with explicit token authentication
-- Modified OpenSSF Scorecard schedule to daily runs at 07:15 UTC
-  - More frequent security metrics and faster vulnerability detection
-  - Daily monitoring of security best practices compliance
-  - Better resource utilization and earlier daily reports
+
 - Enhanced GitHub Actions workflows
   - Proper GITHUB_TOKEN permissions (read-only by default, write when needed)
   - Matrix testing across Python versions (3.12, 3.13, 3.14)
@@ -209,7 +296,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Security scanning integrated into CI/CD pipeline
   - CodeQL analysis on all pull requests and scheduled weekly
-  - Daily OpenSSF Scorecard assessments (upgraded from weekly)
   - Dependabot for automated dependency updates
   - Branch protection rules enforced
 - Pre-commit security validation
@@ -277,7 +363,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Enhanced Security Measures (2026-01-05)
 
-- Daily OpenSSF Scorecard monitoring (upgraded from weekly)
+- Weekly OpenSSF Scorecard monitoring (Saturdays at 01:30 UTC)
   - Tracks 18 security best practices
   - Public scorecard badge on README
   - Automated security posture reporting
@@ -300,12 +386,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Prevents supply chain attacks
   - Retry logic with integrity checking
   - Progress tracking for large downloads
-
-## [Unreleased] - Development Branch
-
-> **Note:** Changes in this section are in the `dev` branch and not yet released to `main`.
-
-See above for current unreleased changes.
 
 ## Version History
 

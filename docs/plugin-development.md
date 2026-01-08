@@ -777,7 +777,79 @@ For unofficial/experimental plugins:
 
 ## ✅ Best Practices
 
-### 1. Naming Conventions
+### 1. Platform Detection (Python 3.12+)
+
+> **⚠️ Deprecation Notice**: Direct usage of `sys.platform`, `os.name`, or `platform.system()`
+> in plugin code is deprecated and will emit `DeprecationWarning` during plugin discovery.
+> This behavior can be made strict (raising errors) by setting `strict_platform_checks: true`
+> in `config/app.yaml`.
+
+**✅ DO**: Use the centralized Platform module
+
+```python
+from app.core.platform import (
+    Platform,
+    current_platform,
+    is_windows,
+    is_linux,
+    is_macos,
+    is_unix,
+)
+
+# Simple boolean checks
+if is_windows():
+    executable = "tool.exe"
+else:
+    executable = "tool"
+
+# Match statements for platform-specific logic
+match current_platform():
+    case Platform.WINDOWS:
+        config_path = Path(os.environ["APPDATA"]) / "MyTool"
+    case Platform.MACOS:
+        config_path = Path.home() / "Library" / "Application Support" / "MyTool"
+    case Platform.LINUX:
+        config_path = Path.home() / ".config" / "mytool"
+```
+
+**❌ DON'T**: Use direct platform checks
+
+```python
+import sys
+import platform
+
+# Deprecated - will emit DeprecationWarning
+if sys.platform == "win32":
+    ...
+
+# Deprecated
+if platform.system() == "Windows":
+    ...
+
+# Deprecated
+import os
+if os.name == "nt":
+    ...
+```
+
+**Deprecation Timeline**:
+
+- **v2.5.0** (January 2026): DeprecationWarning emitted during plugin discovery
+- **v3.0.0** (July 2026): Strict mode becomes default (`strict_platform_checks: true`)
+- **v4.0.0** (2027): Direct platform checks will fail plugin validation
+
+**Configuration** (`config/app.yaml`):
+
+```yaml
+# Plugin platform usage checking
+# When false: Emit DeprecationWarning for sys.platform/os.name/platform.system() usage
+# When true: Raise ImportError for deprecated platform usage (enforced in v3.0.0+)
+strict_platform_checks: false
+```
+
+---
+
+### 2. Naming Conventions
 
 | Element | Convention | Example |
 |---------|-----------|---------|

@@ -582,10 +582,10 @@ Client_Wedding_2026/
    │ Tags: wedding, 2026, client                                │
    │ [Open] [Properties] [Export] [Archive]                     │
    ├────────────────────────────────────────────────────────────┤
-   │ Video_Project_Nov2025             Modified: Yesterday      │
-   │ E:\pyMM.Projects\Video_Project_Nov2025                     │
+   │ Video_Project_Jan2026             Modified: Yesterday      │
+   │ E:\pyMM.Projects\Video_Project_Jan2026                     │
    │ Type: Video  |  Size: 120 GB  |  Files: 345                │
-   │ Tags: video, 2025, editing                                 │
+   │ Tags: video, 2026, editing                                 │
    │ [Open] [Properties] [Export] [Archive]                     │
    └────────────────────────────────────────────────────────────┘
    ```
@@ -1063,7 +1063,7 @@ ui:
     maximized: false
   recent_projects:
     - "D:\\pyMM.Projects\\Client_Wedding_2026"
-    - "D:\\pyMM.Projects\\Video_Project_Nov2025"
+    - "D:\\pyMM.Projects\\Video_Project_Jan2026"
   sidebar_width: 250
 
 privacy:
