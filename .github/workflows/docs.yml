@@ -13,6 +13,13 @@ on:
       - 'docs/**'
       - 'app/**/*.py'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Semantic Release"]
+    types:
+      - completed
+    branches:
+      - main
+      - dev
 
 permissions:
   contents: read

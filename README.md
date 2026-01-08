@@ -13,6 +13,8 @@
 
 [![CI](https://github.com/mosh666/pyMM/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/mosh666/pyMM/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/mosh666/pyMM/branch/main/graph/badge.svg)](https://codecov.io/gh/mosh666/pyMM)
+[![Stable Release](https://img.shields.io/github/v/release/mosh666/pyMM?label=stable&color=success)](https://github.com/mosh666/pyMM/releases/latest)
+[![Beta Release](https://img.shields.io/github/v/release/mosh666/pyMM?include_prereleases&label=beta&color=orange)](https://github.com/mosh666/pyMM/releases)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mosh666/pyMM/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mosh666/pyMM)
 [![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 

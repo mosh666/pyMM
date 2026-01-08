@@ -1,0 +1,130 @@
+name: Cleanup Beta Releases
+
+on:
+  schedule:
+    # Weekly on Sundays at 2:00 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run - preview deletions without actually deleting'
+        required: false
+        default: true
+        type: boolean
+      age_days:
+        description: 'Delete beta releases older than this many days'
+        required: false
+        default: '30'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup old beta releases
+        run: |
+          echo "## 🧹 Beta Release Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Set variables
+          DRY_RUN="${{ inputs.dry_run || 'false' }}"
+          AGE_DAYS="${{ inputs.age_days || '30' }}"
+          CUTOFF_DATE=$(date -d "$AGE_DAYS days ago" +%s)
+
+          echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Age threshold: ${AGE_DAYS} days" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry run: ${DRY_RUN}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Get all releases
+          RELEASES=$(gh release list --repo "${{ github.repository }}" --limit 1000 --json tagName,createdAt,isPrerelease)
+
+          # Find the latest beta release
+          LATEST_BETA=$(echo "$RELEASES" | jq -r '[.[] | select(.isPrerelease == true and (.tagName | contains("-beta.")))] | sort_by(.createdAt) | reverse | .[0].tagName // ""')
+
+          if [ -n "$LATEST_BETA" ]; then
+            echo "**Latest beta release (will be preserved):** \`$LATEST_BETA\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No beta releases found." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Find old beta releases to delete
+          OLD_BETAS=$(echo "$RELEASES" | jq -r --arg cutoff "$CUTOFF_DATE" --arg latest "$LATEST_BETA" '
+            [.[] |
+              select(
+                .isPrerelease == true and
+                (.tagName | contains("-beta.")) and
+                .tagName != $latest and
+                (.createdAt | fromdateiso8601) < ($cutoff | tonumber)
+              )
+            ] | sort_by(.createdAt) | reverse | .[].tagName
+          ')
+
+          if [ -z "$OLD_BETAS" ]; then
+            echo "### ✅ No old beta releases to clean up" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "All beta releases are within the ${AGE_DAYS} day retention period." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Count releases to delete
+          DELETE_COUNT=$(echo "$OLD_BETAS" | wc -l)
+
+          echo "### 🗑️ Releases to Delete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Found **$DELETE_COUNT** old beta release(s) to clean up:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # List releases to delete
+          echo "$OLD_BETAS" | while read -r TAG; do
+            if [ -n "$TAG" ]; then
+              RELEASE_DATE=$(echo "$RELEASES" | jq -r --arg tag "$TAG" '.[] | select(.tagName == $tag) | .createdAt')
+              echo "- \`$TAG\` (created: $RELEASE_DATE)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Delete releases
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "### 🔍 Dry Run Mode" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Dry run enabled - no releases were actually deleted." >> $GITHUB_STEP_SUMMARY
+            echo "Run with \`dry_run: false\` to perform actual deletion." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ⚙️ Deleting Releases..." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            DELETED=0
+            FAILED=0
+
+            echo "$OLD_BETAS" | while read -r TAG; do
+              if [ -n "$TAG" ]; then
+                echo "Deleting $TAG..."
+                if gh release delete "$TAG" --repo "${{ github.repository }}" --yes; then
+                  DELETED=$((DELETED + 1))
+                  echo "✅ Deleted \`$TAG\`" >> $GITHUB_STEP_SUMMARY
+                else
+                  FAILED=$((FAILED + 1))
+                  echo "❌ Failed to delete \`$TAG\`" >> $GITHUB_STEP_SUMMARY
+                fi
+              fi
+            done
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📊 Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- Successfully deleted: $DELETE_COUNT release(s)" >> $GITHUB_STEP_SUMMARY
+
+            if [ $FAILED -gt 0 ]; then
+              echo "- Failed: $FAILED release(s)" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

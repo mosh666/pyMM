@@ -673,6 +673,203 @@ python -m app --version
 # Linux/macOS: tail -50 pyMM.Logs/app.log
 ```
 
+---
+
+## Release Automation Issues
+
+### Failed Automated Release
+
+**Symptom:** Daily scheduled release did not run or failed
+
+**Common Causes:**
+
+1. **No commits since last release** - This is expected behavior. Check workflow summary for "No changes to release."
+2. **Workflow permissions** - Ensure `GITHUB_TOKEN` has `contents: write` permission
+3. **Branch protection** - Release commits may be blocked by branch protection rules
+4. **Conventional commits** - Invalid commit format prevents version calculation
+
+**Solutions:**
+
+**Check workflow run logs:**
+
+```bash
+# View recent workflow runs
+gh run list --workflow=semantic-release.yml --limit 5
+
+# View specific run details
+gh run view <run-id> --log
+```
+
+**Verify commit format:**
+
+```bash
+# Check recent commits follow conventional format
+git log --oneline -10
+
+# Valid examples:
+# ✅ feat(plugins): add new feature
+# ✅ fix(ui): resolve button alignment
+# ❌ Fixed the bug (missing type)
+```
+
+**Manual trigger:**
+
+If you need to force a release:
+
+1. Go to [Actions → Semantic Release](https://github.com/mosh666/pyMM/actions/workflows/semantic-release.yml)
+2. Click "Run workflow"
+3. Select branch (`dev` or `main`)
+4. Enable "force" if no new commits exist
+5. Click "Run workflow"
+
+### Beta Release Not Created
+
+**Symptom:** Expected daily beta release was not created
+
+**Diagnostic Steps:**
+
+1. **Check if commits exist:**
+
+   ```bash
+   # Get latest tag
+   git describe --tags --abbrev=0
+
+   # Count commits since last tag
+   git rev-list v0.2.0-beta.1..HEAD --count
+   ```
+
+   If count is 0, no release is needed.
+
+2. **Check workflow schedule:**
+
+   - Daily releases run at 00:00 UTC
+   - Check your timezone: UTC = GMT
+   - Verify in [Actions tab](https://github.com/mosh666/pyMM/actions)
+
+3. **Review excluded commits:**
+
+   Commits with these types are excluded from releases:
+   - `chore`, `ci`, `refactor`, `style`, `test`, `docs`, `build` (non-deps)
+
+   If ALL commits since last tag are excluded types, no version bump occurs.
+
+**Solution:**
+
+To trigger a beta release manually:
+
+```bash
+# Option 1: Via GitHub UI (recommended)
+# Go to Actions → Semantic Release → Run workflow → Select 'dev' branch
+
+# Option 2: Create a version bump commit
+git commit --allow-empty -m "chore(release): trigger beta release"
+git push origin dev
+```
+
+### Version Number Issues
+
+**Symptom:** Version doesn't match expectations (e.g., 0.1.0-beta.1 instead of 0.2.0-beta.1)
+
+**Explanation:**
+
+- **`feat` commits** → Minor bump (0.1.0 → 0.2.0)
+- **`fix` commits** → Patch bump (0.1.0 → 0.1.1)
+- **Breaking changes (`!` or `BREAKING CHANGE:`)** → Minor bump in v0.x (0.1.0 → 0.2.0)
+- All versions stay in `0.y.z` format until manual release of `v1.0.0`
+
+**Check what version would be calculated:**
+
+```bash
+# Preview next version without creating release
+just release-preview
+
+# Or using python-semantic-release directly
+semantic-release version --print
+```
+
+### Release Assets Missing
+
+**Symptom:** GitHub release exists but no ZIP/AppImage/DMG files attached
+
+**Common Causes:**
+
+1. **Build workflow failed** - Check build.yml workflow logs
+2. **Upload step failed** - Check semantic-release.yml upload-assets job
+3. **Artifact retention** - Artifacts expire after 90 days
+
+**Solutions:**
+
+**Check build status:**
+
+```bash
+gh run list --workflow=build.yml --limit 5
+gh run view <run-id> --log
+```
+
+**Re-upload assets manually:**
+
+If build succeeded but upload failed:
+
+1. Download artifacts from build workflow run
+2. Upload to release manually:
+
+   ```bash
+   gh release upload v0.3.0-beta.1 \
+     pyMM-Windows-3.13-x64.zip \
+     pyMM-Linux-3.13-x86_64.AppImage \
+     pyMM-macOS-3.13-x86_64.dmg \
+     SHA256SUMS.txt
+   ```
+
+### Changelog Not Updated
+
+**Symptom:** CHANGELOG.md not updated after release
+
+**Common Causes:**
+
+1. **All commits excluded** - Only `feat`, `fix`, and `perf` types appear in changelog
+2. **Merge conflicts** - CHANGELOG.md has conflicts from manual edits
+3. **Configuration error** - `changelog.mode = "update"` setting incorrect
+
+**Solutions:**
+
+**Verify changelog configuration:**
+
+```bash
+# Check pyproject.toml
+grep -A 10 "\[tool.semantic_release.changelog\]" pyproject.toml
+```
+
+**Manually update if needed:**
+
+```bash
+# Generate changelog without committing
+semantic-release changelog --unreleased
+
+# Or view what would be generated
+semantic-release version --changelog --no-commit
+```
+
+### Permission Denied Errors
+
+**Symptom:** `refusing to allow a GitHub App to create or update workflow` or `Resource not accessible by integration`
+
+**Cause:** `GITHUB_TOKEN` permissions insufficient for scheduled workflows
+
+**Solution:**
+
+Repository settings must allow GitHub Actions to:
+
+1. Go to repository **Settings → Actions → General**
+2. Under "Workflow permissions":
+   - Select "Read and write permissions"
+   - Check "Allow GitHub Actions to create and approve pull requests"
+3. Save changes
+
+**Note:** This is required for automated releases triggered by schedule or workflow_dispatch.
+
+---
+
 ### Where to Get Help
 
 - **🐛 Bug Reports:** [GitHub Issues](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
@@ -683,6 +880,6 @@ python -m app --version
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 2.0
 **Last Updated:** January 8, 2026
-**Compatible with:** pyMediaManager v1.0+
+**Compatible with:** pyMediaManager v0.1+

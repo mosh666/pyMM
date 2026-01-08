@@ -323,6 +323,39 @@ ruff format app/ tests/
 
 ## Release Process
 
+### Automated Release System
+
+pyMediaManager uses a fully automated release system powered by
+[python-semantic-release](https://python-semantic-release.readthedocs.io/) and GitHub Actions.
+Releases are triggered automatically based on commit history and conventional commits.
+
+#### Daily Beta Releases (Dev Branch)
+
+- **Automatic:** Every day at midnight UTC, the system checks for new commits on the `dev` branch
+- **Conditional:** A beta release is only created if there are commits since the last tag
+- **Versioning:** Beta releases follow the format `v0.y.z-beta.N` (e.g., `v0.3.0-beta.1`)
+- **Pre-v1.0.0:** All versions remain at `0.y.z` until the first stable `v1.0.0` release
+- **GitHub Releases:** Each beta is published with a "Latest Beta" badge in the description
+
+#### Manual Release Trigger
+
+You can manually trigger a release via GitHub Actions:
+
+1. Go to the [Actions tab](../../actions/workflows/semantic-release.yml)
+2. Click "Run workflow"
+3. Select the branch (`dev` or `main`)
+4. Optionally enable "force" to release even without new commits
+5. Click "Run workflow"
+
+This is useful for immediate releases or testing the release pipeline.
+
+#### Stable Releases (Main Branch)
+
+- **Trigger:** Merging `dev` into `main` automatically creates a stable release
+- **Versioning:** Stable releases follow `v0.y.z` format (or `v1.y.z` after first major release)
+- **Changelog:** Automatically updated from conventional commits
+- **Documentation:** Rebuilt and deployed with each release
+
 ### Building the Portable Distribution
 
 You can build the portable Windows distribution locally without relying on CI:
@@ -344,26 +377,51 @@ This will:
 
 ### Branch Strategy
 
-We follow a generic [Semantic Release](https://github.com/python-semantic-release/python-semantic-release) flow:
+We follow a [Semantic Release](https://github.com/python-semantic-release/python-semantic-release) flow with automated versioning:
 
 1. **Development (`dev` branch)**
-   - All new features and fixes are merged here.
-   - Pushes to `dev` automatically trigger a **Beta Release** (e.g. `v1.2.0-beta.1`).
-   - Tags are created automatically based on commit history.
+   - All new features and fixes are merged here
+   - Daily automated beta releases at midnight UTC (when changes exist)
+   - Beta versions: `v0.y.z-beta.N` (e.g., `v0.3.0-beta.1`)
+   - Tags created automatically based on conventional commits
 
 2. **Stable (`main` branch)**
-   - Stable releases are created by merging `dev` into `main`.
-   - This triggers a semantic version tag (e.g., `v1.2.0`) and publishes the release.
-   - **Do not** manually tag releases.
+   - Stable releases created by merging `dev` into `main`
+   - Triggers semantic version tag (e.g., `v0.3.0`)
+   - Publishes official release with complete changelog
+   - **Do not** manually tag releases
 
-3. **Versioning**
-    - We use [Semantic Versioning](https://semver.org/).
-    - Managed automatically via [python-semantic-release](https://python-semantic-release.readthedocs.io/).
-    - The next version is calculated from [Conventional Commits](https://www.conventionalcommits.org/).
+3. **Versioning Rules**
+    - **Pre-v1.0.0:** All versions stay at `0.y.z` format
+    - **`feat` commits:** Bump minor version (0.1.0 → 0.2.0)
+    - **`fix` commits:** Bump patch version (0.1.0 → 0.1.1)
+    - **Breaking changes:** Will bump minor version until v1.0.0 is released
+    - **First major release (v1.0.0):** Manual decision by maintainers
+    - Managed automatically via [python-semantic-release](https://python-semantic-release.readthedocs.io/)
+    - Version calculated from [Conventional Commits](https://www.conventionalcommits.org/)
+    - Uses [setuptools-scm](https://setuptools-scm.readthedocs.io/) for version from git tags
+
+### Release Artifacts
+
+Each release automatically includes:
+
+- **Windows Portable ZIP** (Python 3.12, 3.13, 3.14)
+- **Linux AppImage** (Python 3.12, 3.13, 3.14)
+- **macOS DMG** (Python 3.12, 3.13, 3.14, Intel only - ARM64 via manual builds)
+- **SHA256 Checksums** for all artifacts
+- **Automated Changelog** from conventional commits
+- **Updated Documentation** with version selector
+
+### Release Notes
+
+Release notes are automatically generated from conventional commits. Commits of type `chore`, `ci`,
+`refactor`, `style`, `test`, and `docs` are excluded from the changelog to keep it focused on
+user-facing changes.
 
 ## Commit Messages
 
-We strictly enforce [Conventional Commits](https://www.conventionalcommits.org/) to automate versioning and changelogs.
+We strictly enforce [Conventional Commits](https://www.conventionalcommits.org/) to automate
+versioning and changelogs. Pre-commit hooks validate commit message format before allowing commits.
 
 **Format:**
 
@@ -379,14 +437,26 @@ We strictly enforce [Conventional Commits](https://www.conventionalcommits.org/)
 
 ### Types
 
-- `feat`: New feature (**Minor** version bump, e.g. 1.1.0 -> 1.2.0)
-- `fix`: Bug fix (**Patch** version bump, e.g. 1.1.0 -> 1.1.1)
+- `feat`: New feature (**Minor** version bump in v0.x, e.g., 0.1.0 → 0.2.0)
+- `fix`: Bug fix (**Patch** version bump, e.g., 0.1.0 → 0.1.1)
 - `perf`: Performance improvements (**Patch**)
-- `docs`: Documentation changes (No version bump)
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
+- `docs`: Documentation changes (No version bump, excluded from changelog)
+- `style`: Code style changes (No version bump, excluded from changelog)
+- `refactor`: Code refactoring (No version bump, excluded from changelog)
+- `test`: Adding or updating tests (No version bump, excluded from changelog)
+- `chore`: Maintenance tasks (No version bump, excluded from changelog)
+- `ci`: CI/CD changes (No version bump, excluded from changelog)
+
+### Breaking Changes
+
+To indicate a breaking change (which will bump minor version in v0.x):
+
+```text
+feat(api)!: redesign plugin configuration API
+
+BREAKING CHANGE: Plugin configuration now uses YAML instead of TOML.
+Migration guide available in docs/migration-guide.md
+```
 
 ### Examples
 

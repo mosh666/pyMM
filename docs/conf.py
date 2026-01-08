@@ -51,7 +51,8 @@ templates_path = ["_templates"]
 # Whitelist pattern for branches (set to None to ignore all branches)
 smv_branch_whitelist = r"^(main|dev)$"
 smv_remote_whitelist = r"^origin$"
-smv_tag_whitelist = r"^v\d+\.\d+.*$"
+# Include beta versions in documentation (v0.1.0, v0.1.0-beta.1, v1.0.0, etc.)
+smv_tag_whitelist = r"^v\d+\.\d+\.\d+(-beta\.\d+)?$"
 
 # List of patterns, relative to source directory, to ignore when looking for source files
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

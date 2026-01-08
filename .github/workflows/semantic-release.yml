@@ -5,6 +5,24 @@ on:
     branches:
       - main
       - dev
+  schedule:
+    # Daily at midnight UTC - automated beta releases for dev branch
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - main
+      force:
+        description: 'Force release even if no changes detected'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -12,9 +30,61 @@ permissions:
   pull-requests: write
 
 jobs:
-  semantic-release:
+  check-changes:
     runs-on: ubuntu-latest
-    concurrency: release
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+      skip_message: ${{ steps.check.outputs.skip_message }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Check for changes since last release
+        id: check
+        run: |
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "skip_message=No previous releases found, proceeding with first release" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check if there are commits since the last tag
+          COMMITS_SINCE=$(git rev-list ${LATEST_TAG}..HEAD --count)
+
+          if [ "$COMMITS_SINCE" -eq 0 ]; then
+            if [ "${{ inputs.force }}" = "true" ]; then
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "skip_message=No changes but force flag enabled, proceeding" >> $GITHUB_OUTPUT
+            else
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "skip_message=No changes to release since ${LATEST_TAG}" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "skip_message=Found ${COMMITS_SINCE} commit(s) since ${LATEST_TAG}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add workflow summary
+        if: steps.check.outputs.has_changes == 'false'
+        run: |
+          echo "## 📭 No Changes to Release" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.check.outputs.skip_message }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The workflow will be skipped as there are no new commits to release." >> $GITHUB_STEP_SUMMARY
+
+  semantic-release:
+    needs: check-changes
+    if: needs.check-changes.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: semantic-release-${{ github.ref }}
+      cancel-in-progress: false
     permissions:
       contents: write
       issues: write
@@ -22,16 +92,45 @@ jobs:
     outputs:
       new_release_published: ${{ steps.semantic.outputs.new_release_published }}
       new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_notes: ${{ steps.semantic.outputs.new_release_notes }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.branch || github.ref }}
 
       - name: Python Semantic Release
         id: semantic
         uses: python-semantic-release/python-semantic-release@v9.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Release Summary
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo "## 🚀 New Release Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** \`v${{ steps.semantic.outputs.new_release_version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Determine if this is a beta release
+          if [[ "${{ steps.semantic.outputs.new_release_version }}" == *"-beta."* ]]; then
+            echo "**Type:** 🧪 Beta Release (Development)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Type:** ✅ Stable Release" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### 📦 Download Links" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Release artifacts will be available at:" >> $GITHUB_STEP_SUMMARY
+          echo "https://github.com/${{ github.repository }}/releases/tag/v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### 📝 Changelog Excerpt" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          # Extract recent changelog entries (first 20 lines of release notes)
+          echo "${{ steps.semantic.outputs.new_release_notes }}" | head -n 20 >> $GITHUB_STEP_SUMMARY || echo "See full changelog in release notes" >> $GITHUB_STEP_SUMMARY
 
   build:
     needs: semantic-release
@@ -63,3 +162,18 @@ jobs:
           files: dist/**
           tag_name: v${{ needs.semantic-release.outputs.new_release_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Release Description for Beta
+        if: contains(needs.semantic-release.outputs.new_release_version, '-beta.')
+        run: |
+          gh release edit "v${{ needs.semantic-release.outputs.new_release_version }}" \
+            --repo "${{ github.repository }}" \
+            --notes "🧪 **Latest Beta** - Development Release
+
+          $(gh release view "v${{ needs.semantic-release.outputs.new_release_version }}" --repo "${{ github.repository }}" --json body --jq .body)
+
+          ---
+
+          > ⚠️ This is a pre-release version for testing purposes. For production use, please use the latest stable release."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -311,6 +311,9 @@ logging_use_named_masks = false
 major_on_zero = false
 tag_format = "v{version}"
 build_command = "pip install build && python -m build"
+# Disable version stamping - rely on setuptools_scm for dynamic versioning from git tags
+version_toml = []
+version_variables = []
 
 [tool.semantic_release.branches.main]
 match = "main"
@@ -321,6 +324,29 @@ prerelease = false
 match = "dev"
 prerelease = true
 prerelease_token = "beta"
+
+[tool.semantic_release.changelog]
+mode = "update"
+# Exclude commits that don't affect end users (matching pre-commit conventional-commits config)
+exclude_commit_patterns = [
+    "^chore(\\(.+\\))?: .+",
+    "^ci(\\(.+\\))?: .+",
+    "^refactor(\\(.+\\))?: .+",
+    "^style(\\(.+\\))?: .+",
+    "^test(\\(.+\\))?: .+",
+    "^build(\\(.+\\))?: (?!deps).+",
+    "^docs(\\(.+\\))?: .+",
+    "^perf(\\(.+\\))?: .+",
+    "^revert: .+",
+    "^Merge branch .+",
+    "^Merge pull request .+",
+    "^Initial [Cc]ommit",
+    "^\\[pre-commit\\.ci\\] .+",
+]
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"
+output_format = "md"
 
 [tool.semantic_release.publish]
 dist_glob = "dist/*"

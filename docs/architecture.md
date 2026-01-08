@@ -689,7 +689,214 @@ class StorageService:
 | **Security** | Ruff (S rules) | Security checks | `pyproject.toml` |
 | **Testing** | pytest | 193 tests, 73% coverage | `pyproject.toml` |
 | **Pre-commit** | pre-commit | Git hooks | `.pre-commit-config.yaml` |
-| **CI/CD** | GitHub Actions | Build, test, release | `.github/workflows/` |
+| **CI/CD** | GitHub Actions | Automated releases, build, test | `.github/workflows/` |
+| **Versioning** | python-semantic-release | Automated semantic versioning | `pyproject.toml` |
+| **Changelog** | python-semantic-release | Auto-generated from commits | `CHANGELOG.md` |
+
+---
+
+## CI/CD Release Pipeline
+
+### Overview
+
+pyMediaManager uses a fully automated release system built on GitHub Actions and python-semantic-release. The pipeline handles versioning, changelog generation, artifact building, and deployment with zero manual intervention.
+
+### Release Workflow Architecture
+
+```mermaid
+graph TD
+    A[Dev Branch Push/Schedule] --> B{Check Changes}
+    B -->|No Changes| C[Skip - Summary Note]
+    B -->|New Commits| D[Calculate Next Version]
+    D --> E[Create Beta Tag v0.y.z-beta.N]
+    E --> F[Update CHANGELOG.md]
+    F --> G[Build Artifacts Matrix]
+    G --> H[Windows ZIP]
+    G --> I[Linux AppImage]
+    G --> J[macOS DMG]
+    H --> K[Upload to GitHub Release]
+    I --> K
+    J --> K
+    K --> L[Mark as Latest Beta]
+    K --> M[Rebuild Documentation]
+
+    N[Main Branch Push] --> O[Calculate Stable Version]
+    O --> P[Create Stable Tag v0.y.z]
+    P --> Q[Update CHANGELOG.md]
+    Q --> R[Build Artifacts Matrix]
+    R --> S[Upload to GitHub Release]
+    S --> T[Rebuild Documentation]
+
+    U[Weekly Cleanup] --> V[Delete Betas >30 Days Old]
+    V --> W[Preserve Latest Beta]
+```
+
+### Workflow Components
+
+#### 1. Semantic Release (`.github/workflows/semantic-release.yml`)
+
+**Triggers:**
+- **Push** to `main` or `dev` branches
+- **Schedule** (daily at 00:00 UTC)
+- **Manual** via workflow_dispatch
+
+**Jobs:**
+
+1. **check-changes**
+   - Compares current HEAD with latest tag
+   - Counts commits since last release
+   - Exits silently if no changes (with workflow summary)
+   - Respects "force" flag for manual triggers
+
+2. **semantic-release**
+   - Runs python-semantic-release v9.8.0
+   - Parses conventional commits for version calculation
+   - Creates git tag and GitHub release
+   - Updates CHANGELOG.md automatically
+   - Concurrency: Queues releases on same branch (`cancel-in-progress: false`)
+
+3. **build**
+   - Calls build.yml workflow
+   - Matrix: Python 3.12/3.13/3.14 × Windows/Linux/macOS
+   - Passes calculated version to build
+
+4. **upload-assets**
+   - Downloads all build artifacts
+   - Uploads to GitHub release
+   - Adds "Latest Beta" badge for dev releases
+   - Generates SHA256 checksums
+
+**Outputs:**
+- Workflow summary with version, changelog excerpt, download links
+- GitHub release with artifacts and automated release notes
+
+#### 2. Build Workflow (`.github/workflows/build.yml`)
+
+**Platforms:**
+- **Windows:** Embedded Python + PyInstaller → ZIP
+- **Linux:** PyInstaller + AppImage → AppImage
+- **macOS:** PyInstaller + create-dmg → DMG (Intel only, ARM64 via manual builds)
+
+**Matrix Testing:**
+- Python versions: 3.12, 3.13, 3.14
+- Platform-specific dependencies auto-installed
+- Artifacts expire after 90 days
+
+#### 3. Documentation Workflow (`.github/workflows/docs.yml`)
+
+**Triggers:**
+- Push/PR with docs changes
+- **Workflow run** completion of semantic-release
+- Manual trigger
+
+**Actions:**
+- Builds Sphinx documentation with `sphinx-multiversion`
+- Generates version switcher including beta tags
+- Deploys to GitHub Pages
+- Supports both `main` and `dev` branch docs
+
+#### 4. Beta Cleanup Workflow (`.github/workflows/cleanup-beta-releases.yml`)
+
+**Schedule:** Weekly on Sundays at 02:00 UTC
+
+**Actions:**
+- Lists all beta releases (tag contains `-beta.`)
+- Filters releases older than 30 days
+- Preserves latest beta release
+- Deletes old releases via GitHub CLI
+- Dry-run mode available for testing
+
+**Manual Trigger Options:**
+- `dry_run`: Preview deletions without executing
+- `age_days`: Customize retention period (default: 30)
+
+### Version Calculation Rules
+
+#### Pre-v1.0.0 Versioning (Current State)
+
+| Commit Type | Example Commit | Version Bump | Example |
+|-------------|----------------|--------------|---------|
+| `feat:` | `feat: add new feature` | Minor | 0.1.0 → 0.2.0 |
+| `fix:` | `fix: resolve bug` | Patch | 0.1.0 → 0.1.1 |
+| `feat!:` or `BREAKING CHANGE:` | `feat!: redesign API` | Minor | 0.1.0 → 0.2.0 |
+| `perf:` | `perf: optimize query` | Patch | 0.1.0 → 0.1.1 |
+
+**Excluded from changelog:** `chore`, `ci`, `refactor`, `style`, `test`, `docs`, `build`
+
+**Beta releases:** Append `-beta.N` counter (e.g., `v0.2.0-beta.1`, `v0.2.0-beta.2`)
+
+#### Post-v1.0.0 Versioning (Future)
+
+Breaking changes will bump major version (1.0.0 → 2.0.0) following standard semantic versioning.
+
+### Configuration
+
+**`pyproject.toml`:**
+```toml
+[tool.semantic_release]
+major_on_zero = false  # Keep 0.y.z until manual v1.0.0
+tag_format = "v{version}"
+commit_parser = "conventional"
+version_toml = []  # Disable - use setuptools_scm
+version_variables = []
+
+[tool.semantic_release.branches.dev]
+match = "dev"
+prerelease = true
+prerelease_token = "beta"
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
+[tool.semantic_release.changelog]
+changelog_file = "CHANGELOG.md"
+mode = "update"
+exclude_commit_patterns = [
+    "^chore\\(.+\\)?: .+",
+    "^ci\\(.+\\)?: .+",
+    # ... see pyproject.toml for full list
+]
+```
+
+**Version Source:** `setuptools_scm` reads git tags directly (no conflicts with python-semantic-release)
+
+### Security and Permissions
+
+**Required Permissions:**
+- `contents: write` - Create tags and releases
+- `issues: write` - Post release notifications (future)
+- `pull-requests: write` - Comment on PRs (future)
+
+**Token:** Uses `secrets.GITHUB_TOKEN` (automatically provided by GitHub Actions)
+
+**Branch Protection:**
+- Semantic-release commits bypass protection via GitHub App authentication
+- Manual commits still require PR review
+
+### Monitoring and Debugging
+
+**View Workflow Runs:**
+```bash
+gh run list --workflow=semantic-release.yml --limit 10
+gh run view <run-id> --log
+```
+
+**Preview Next Version:**
+```bash
+just release-preview
+# Or: semantic-release version --print
+```
+
+**Force Manual Release:**
+1. GitHub UI: Actions → Semantic Release → Run workflow
+2. Select branch (`dev` or `main`)
+3. Enable "force" checkbox
+4. Click "Run workflow"
+
+**Troubleshooting:** See [Troubleshooting Guide](troubleshooting.md#release-automation-issues)
+
+---
 
 ### Modern Python Features Used
 
