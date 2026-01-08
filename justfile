@@ -239,102 +239,79 @@ ci-docker-shell IMAGE="pymm-ci:latest":
 
 # Clean Docker images and containers (cross-platform)
 ci-docker-clean:
-    @echo "Cleaning pyMM Docker images..."
-    -@docker rmi -f pymm-ci:3.12 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:3.13 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:3.14 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:3.12-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:3.13-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:3.14-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    -@docker rmi -f pymm-ci:latest {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
-    @echo "Docker cleanup complete"
+    #!{{python}}
+    import subprocess
+    import sys
+
+    print("🧹 Cleaning pyMM Docker images...")
+
+    try:
+        # List all pymm-ci images using docker's built-in filtering
+        result = subprocess.run(
+            ["docker", "images", "--filter", "reference=pymm-ci", "-q"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+
+        image_ids = result.stdout.strip().split('\n')
+        image_ids = [img for img in image_ids if img]  # Filter empty strings
+
+        if image_ids:
+            print(f"Found {len(image_ids)} image(s) to remove")
+            for img_id in image_ids:
+                try:
+                    subprocess.run(
+                        ["docker", "rmi", "-f", img_id],
+                        check=True,
+                        capture_output=True
+                    )
+                    print(f"  ✓ Removed image {img_id}")
+                except subprocess.CalledProcessError as e:
+                    print(f"  ✗ Failed to remove {img_id}: {e.stderr.decode()}")
+        else:
+            print("No pymm-ci images found")
+
+        print("✨ Docker cleanup complete")
+    except FileNotFoundError:
+        print("✗ Error: Docker is not installed or not in PATH", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"✗ Error during cleanup: {e}", file=sys.stderr)
+        sys.exit(1)
 
 # =============================================================================
 # Cleanup Recipes
 # =============================================================================
 
-# Clean Python build artifacts (dist, build, eggs)
-clean-build:
-    #!{{python}}
-    from pathlib import Path
-    import shutil
-
-    build_patterns = [
-        "build",
-        "dist",
-        "*.egg-info",
-        "*.egg",
-        ".eggs",
-    ]
-
-    print("🧹 Cleaning build artifacts...")
-    removed_count = 0
-
-    for pattern in build_patterns:
-        for path in Path(".").glob(pattern):
-            try:
-                if path.is_dir():
-                    shutil.rmtree(path)
-                    print(f"  ✓ Removed directory {path}")
-                else:
-                    path.unlink()
-                    print(f"  ✓ Removed file {path}")
-                removed_count += 1
-            except Exception as e:
-                print(f"  ✗ Failed to remove {path}: {e}")
-
-    if removed_count == 0:
-        print("  ℹ No build artifacts to clean")
-    else:
-        print(f"\n✨ Removed {removed_count} build artifact(s)")
-
-# Clean test artifacts and cache (using pathlib for cross-platform)
+# Clean build artifacts and cache (using pathlib for cross-platform)
 clean:
     #!{{python}}
     from pathlib import Path
     import shutil
 
-    # Coverage and test result patterns
-    test_patterns = [
-        ".coverage",
-        ".coverage.*",
-        "htmlcov",
-        ".pytest_cache",
-    ]
-
-    # Cache patterns (root level)
-    cache_patterns = [
-        ".mypy_cache",
-        ".ruff_cache",
+    # Root level patterns to clean
+    root_patterns = [
+        "build", "dist", "*.egg-info", ".coverage", ".coverage.*",
+        "htmlcov", "*.zip", "*.sha256", "get-pip.py"
     ]
 
     # Recursive patterns (cleans subdirectories)
     recursive_patterns = [
         "**/__pycache__",
         "**/.pytest_cache",
+        "**/.mypy_cache",
+        "**/.ruff_cache",
         "**/*.pyc",
         "**/*.pyo",
         "**/*.pyd",
     ]
 
-    print("🧹 Cleaning test artifacts and cache...")
+    print("🧹 Cleaning artifacts...")
     removed_count = 0
 
-    # Clean test patterns
-    for pattern in test_patterns:
-        for path in Path(".").glob(pattern):
-            try:
-                if path.is_dir():
-                    shutil.rmtree(path)
-                else:
-                    path.unlink()
-                print(f"  ✓ Removed {path}")
-                removed_count += 1
-            except Exception as e:
-                print(f"  ✗ Failed to remove {path}: {e}")
-
-    # Clean cache patterns
-    for pattern in cache_patterns:
+    # Clean root patterns
+    for pattern in root_patterns:
         for path in Path(".").glob(pattern):
             try:
                 if path.is_dir():
@@ -359,11 +336,8 @@ clean:
             except Exception as e:
                 print(f"  ✗ Failed to remove {path}: {e}")
 
-    if removed_count == 0:
-        print("  ℹ No test artifacts or cache to clean")
-    else:
-        print(f"\n✨ Cleanup complete! Removed {removed_count} items.")
+    print(f"\n✨ Cleanup complete! Removed {removed_count} items.")
 
-# Clean everything (build, test, docs, cache)
-clean-all: clean-build clean docs-clean
+# Clean everything (includes docs build)
+clean-all: clean docs-clean
     @echo "✨ Complete cleanup finished!"
