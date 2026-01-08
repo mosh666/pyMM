@@ -12,11 +12,12 @@ permissions:
 
 jobs:
   build-windows:
-    name: Build for Python ${{ matrix.python-version }}
+    name: Build Windows - Python ${{ matrix.python-version }} (${{ matrix.arch }})
     runs-on: windows-latest
     strategy:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
+        arch: ["amd64", "arm64"]
 
     steps:
       - name: Checkout code
@@ -47,13 +48,18 @@ jobs:
 
       - name: Run Build Script
         run: |
-          python scripts/build_manager.py --version ${{ matrix.python-version }}
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }}
 
       - name: Freeze dependencies
         run: |
           $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
-          $pythonDir = "python$pyNoDot"
-          $reqFile = "requirements-frozen-py${pyNoDot}.txt"
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $pythonDir = "python$pyNoDot-arm64"
+          } else {
+            $pythonDir = "python$pyNoDot"
+          }
+          $reqFile = "requirements-frozen-py${pyNoDot}-${arch}.txt"
 
           & "./$pythonDir/python.exe" -m pip freeze > $reqFile
           echo "REQUIREMENTS_FILE=$reqFile" >> $env:GITHUB_OUTPUT
@@ -61,10 +67,17 @@ jobs:
       - name: Create portable archive
         run: |
           $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
-          $pythonDir = "python$pyNoDot"
-          $libDir = "lib-py$pyNoDot"
-          $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win64.zip"
-          $reqFile = "requirements-frozen-py${pyNoDot}.txt"
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $pythonDir = "python$pyNoDot-arm64"
+            $libDir = "lib-py$pyNoDot-arm64"
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
+          } else {
+            $pythonDir = "python$pyNoDot"
+            $libDir = "lib-py$pyNoDot"
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
+          }
+          $reqFile = "requirements-frozen-py${pyNoDot}-${arch}.txt"
 
           Compress-Archive -Path `
             $pythonDir, `
@@ -82,7 +95,13 @@ jobs:
 
       - name: Calculate SHA256 checksum
         run: |
-          $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win64.zip"
+          $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
+          } else {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
+          }
           $hash = (Get-FileHash -Path $archiveName -Algorithm SHA256).Hash
           $hash | Out-File -FilePath "${archiveName}.sha256" -NoNewline
           echo "CHECKSUM=$hash" >> $env:GITHUB_OUTPUT
@@ -91,7 +110,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
         with:
-          name: pyMM-py${{ matrix.python-version }}-build
+          name: pyMM-py${{ matrix.python-version }}-win-${{ matrix.arch }}-build
           path: |
             pyMM-v*.zip
             pyMM-v*.sha256
@@ -119,3 +138,182 @@ jobs:
         with:
           name: recommended-metadata
           path: RECOMMENDED.txt
+
+  build-linux:
+    name: Build Linux AppImage - Python ${{ matrix.python-version }} (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+        arch: ["x86_64", "aarch64"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python for build script
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1-mesa-glx libegl1 libglib2.0-0 libfontconfig1 \
+            libxkbcommon-x11-0 libdbus-1-3 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+            libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0 libx11-xcb1 \
+            fuse libfuse2
+
+      - name: Install Python build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools-scm pyinstaller
+
+      - name: Get version
+        id: version
+        run: |
+          version=$(python -m setuptools_scm)
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "Version: $version"
+
+      - name: Generate _version.py
+        run: |
+          python -m setuptools_scm
+
+      - name: Install application dependencies
+        run: |
+          pip install -e .
+
+      - name: Run Build Script
+        run: |
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }}
+
+      - name: Smoke test - Verify AppImage exists and is executable
+        run: |
+          appimage_file=$(find dist -name "pyMM-*.AppImage" -type f | head -n 1)
+
+          if [ -z "$appimage_file" ]; then
+            echo "❌ Error: No AppImage found in dist/"
+            exit 1
+          fi
+
+          echo "✅ Found AppImage: $appimage_file"
+
+          # Make executable
+          chmod +x "$appimage_file"
+
+          # Test --version flag
+          echo "Testing AppImage --version..."
+          "$appimage_file" --version || echo "⚠️ Warning: --version check failed (may be expected)"
+
+          # Verify file is not empty
+          size=$(stat -c%s "$appimage_file")
+          if [ "$size" -lt 10000000 ]; then
+            echo "❌ Error: AppImage seems too small ($size bytes)"
+            exit 1
+          fi
+
+          echo "✅ AppImage smoke test passed ($size bytes)"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pyMM-py${{ matrix.python-version }}-linux-${{ matrix.arch }}-build
+          path: |
+            dist/pyMM-*.AppImage
+            dist/pyMM-*.sha256
+          retention-days: 30
+
+  build-macos:
+    name: Build macOS - Python ${{ matrix.python-version }} (${{ matrix.arch }})
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+        arch: ["x86_64", "arm64"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python for build script
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools-scm pyinstaller
+
+      - name: Get version
+        id: version
+        run: |
+          version=$(python -m setuptools_scm)
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "Version: $version"
+
+      - name: Generate _version.py
+        run: |
+          python -m setuptools_scm
+
+      - name: Install application dependencies
+        run: |
+          pip install -e .
+
+      - name: Run Build Script
+        run: |
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }} --format dmg
+
+      - name: Smoke test - Verify DMG exists
+        run: |
+          dmg_file=$(find dist -name "pyMM-*.dmg" -type f | head -n 1)
+
+          if [ -z "$dmg_file" ]; then
+            echo "❌ Error: No DMG found in dist/"
+            exit 1
+          fi
+
+          echo "✅ Found DMG: $dmg_file"
+
+          # Mount DMG and test .app bundle
+          echo "Mounting DMG..."
+          hdiutil attach "$dmg_file" -nobrowse -mountpoint /Volumes/pyMediaManager
+
+          if [ -d "/Volumes/pyMediaManager/pyMediaManager.app" ]; then
+            echo "✅ Found .app bundle in DMG"
+
+            # Test --version if possible
+            echo "Testing .app --version..."
+            /Volumes/pyMediaManager/pyMediaManager.app/Contents/MacOS/pyMediaManager --version || echo "⚠️ Warning: --version check failed (may be expected)"
+
+            hdiutil detach /Volumes/pyMediaManager
+          else
+            echo "❌ Error: .app bundle not found in DMG"
+            hdiutil detach /Volumes/pyMediaManager
+            exit 1
+          fi
+
+          # Verify file size
+          size=$(stat -f%z "$dmg_file")
+          if [ "$size" -lt 10000000 ]; then
+            echo "❌ Error: DMG seems too small ($size bytes)"
+            exit 1
+          fi
+
+          echo "✅ DMG smoke test passed ($size bytes)"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pyMM-py${{ matrix.python-version }}-macos-${{ matrix.arch }}-build
+          path: |
+            dist/pyMM-*.dmg
+            dist/pyMM-*.sha256
+          retention-days: 30

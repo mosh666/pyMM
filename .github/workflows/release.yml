@@ -39,6 +39,8 @@ jobs:
         run: |
           mkdir -p release-assets
           find artifacts/ -name "*.zip" -exec cp {} release-assets/ \;
+          find artifacts/ -name "*.AppImage" -exec cp {} release-assets/ \;
+          find artifacts/ -name "*.dmg" -exec cp {} release-assets/ \;
           find artifacts/ -name "*.sha256" -exec cp {} release-assets/ \;
           ls -lah release-assets/
 
@@ -146,23 +148,59 @@ jobs:
 
           ## Download Instructions
 
-          ### Recommended (Python 3.13)
-          Download \`pyMM-*-py3.13-win64.zip\` for the latest Python version with best compatibility.
+          ### Windows (Recommended: Python 3.13, AMD64)
+          **Intel/AMD (x64)**: Download \`pyMM-*-py3.13-win-amd64.zip\` for most Windows PCs
+          **ARM64**: Download \`pyMM-*-py3.13-win-arm64.zip\` for ARM-based Windows devices (Surface Pro X, etc.)
 
-          ### Python 3.12
-          Download \`pyMM-*-py3.12-win64.zip\` if you need Python 3.12 specifically.
+          **Other Python Versions**:
+          - Python 3.12: \`pyMM-*-py3.12-win-{amd64|arm64}.zip\`
+          - Python 3.14: \`pyMM-*-py3.14-win-{amd64|arm64}.zip\`
+
+          **Installation**:
+          1. Extract ZIP to your portable drive (e.g., \`D:\pyMM\\\`)
+          2. Run: \`D:\pyMM\python313\python.exe D:\pyMM\launcher.py\` (or \`python313-arm64\python.exe\` for ARM64)
+          3. Complete first-run setup wizard
+
+          ### Linux (Recommended: Python 3.13, x86_64)
+          Download \`pyMM-*-py3.13-x86_64.AppImage\` for most systems.
+
+          **ARM64**: Download \`pyMM-*-py3.13-aarch64.AppImage\` for ARM-based systems (Raspberry Pi, etc.)
+
+          **Installation**:
+          \`\`\`bash
+          # Make executable
+          chmod +x pyMM-*.AppImage
+
+          # Run directly
+          ./pyMM-*.AppImage
+
+          # Optional: integrate with desktop (creates menu entry)
+          ./pyMM-*.AppImage --appimage-install
+          \`\`\`
+
+          ### macOS (Recommended: Python 3.13)
+          **Intel Macs**: Download \`pyMM-*-py3.13-macos-x86_64.dmg\`
+          **Apple Silicon (M1/M2/M3)**: Download \`pyMM-*-py3.13-macos-arm64.dmg\`
+
+          **Installation**:
+          1. Open the DMG file
+          2. Drag \`pyMediaManager.app\` to your Applications folder
+          3. First launch: Right-click → Open (to bypass Gatekeeper)
 
           ### Verification
           Verify your download using the SHA256 checksums:
-          \`\`\`bash
-          # PowerShell
+
+          **Windows (PowerShell)**:
+          \`\`\`powershell
           (Get-FileHash -Path pyMM-*.zip -Algorithm SHA256).Hash -eq (Get-Content pyMM-*.sha256)
           \`\`\`
 
-          ### Installation
-          1. Extract ZIP to your portable drive (e.g., \`D:\pyMM\\\`)
-          2. Run: \`D:\pyMM\python313\python.exe D:\pyMM\launcher.py\`
-          3. Complete first-run setup wizard
+          **Linux/macOS**:
+          \`\`\`bash
+          sha256sum -c pyMM-*.sha256
+          \`\`\`
+
+          ---
 
           See [README.md](https://github.com/mosh666/pyMM/blob/main/README.md) for detailed instructions.
           EOF
