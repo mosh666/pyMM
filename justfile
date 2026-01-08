@@ -237,10 +237,16 @@ ci-docker-test IMAGE="pymm-ci:latest":
 ci-docker-shell IMAGE="pymm-ci:latest":
     docker run --rm -it {{IMAGE}} /bin/bash
 
-# Clean Docker images and containers
+# Clean Docker images and containers (cross-platform)
 ci-docker-clean:
     @echo "Cleaning pyMM Docker images..."
-    docker images | grep pymm-ci | awk '{print $3}' | xargs -r docker rmi -f || true
+    -@docker rmi -f pymm-ci:3.12 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:3.13 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:3.14 {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:3.12-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:3.13-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:3.14-test {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
+    -@docker rmi -f pymm-ci:latest {{ if os() == "windows" { "2>$null" } else { "2>/dev/null" } }}
     @echo "Docker cleanup complete"
 
 # =============================================================================
