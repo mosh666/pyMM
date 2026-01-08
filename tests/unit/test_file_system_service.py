@@ -34,27 +34,29 @@ class TestFileSystemService:
         # Should auto-detect from module location
         assert service.get_app_root().exists()
 
-    def test_get_drive_root(self, service, app_root, monkeypatch):
+    def test_get_drive_root(self, service, app_root):
         """Test drive root detection."""
         # Clean state
         service._drive_root = None
 
         # 1. Test Windows behavior (legacy portable mode)
-        # Mock os.name to be nt (Windows)
-        monkeypatch.setattr(os, "name", "nt")
-        service._force_portable = True
+        # Mock is_windows() to return True
+        with patch("app.core.services.file_system_service.is_windows", return_value=True):
+            service._force_portable = True
 
-        # On Windows, it uses app_root.anchor
-        drive_root = service.get_drive_root()
-        assert drive_root == Path(app_root.anchor)
+            # On Windows, it uses app_root.anchor
+            drive_root = service.get_drive_root()
+            assert drive_root == Path(app_root.anchor)
 
         # 2. Test Linux/Unix behavior (XDG/Home based)
         service._drive_root = None
-        monkeypatch.setattr(os, "name", "posix")
 
-        # Mock pathlib.Path.home()
+        # Mock is_windows() to return False and Path.home()
         mock_home = app_root / "home"
-        with patch("pathlib.Path.home", return_value=mock_home):
+        with (
+            patch("app.core.services.file_system_service.is_windows", return_value=False),
+            patch("pathlib.Path.home", return_value=mock_home),
+        ):
             drive_root = service.get_drive_root()
             expected_linux_root = mock_home / "PortableMediaManager"
             assert drive_root == expected_linux_root
