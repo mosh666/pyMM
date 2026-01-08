@@ -261,7 +261,7 @@ Version={desktop_version}
 
     # Create a minimal 256x256 PNG icon using PIL
     try:
-        from PIL import Image, ImageDraw, ImageFont
+        from PIL import Image, ImageDraw, ImageFont  # noqa: PLC0415
 
         # Create a simple icon with "pyMM" text
         img = Image.new("RGB", (256, 256), color="#2C3E50")
