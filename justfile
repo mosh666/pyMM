@@ -85,20 +85,22 @@ format-all: format lint-fix
 # Install pre-commit hooks
 pre-commit-install:
     {{python}} -m pip install pre-commit
-    pre-commit install
+    {{python}} -m pre_commit install
+    {{python}} -m pre_commit install --hook-type commit-msg --hook-type pre-push
     @echo "Pre-commit hooks installed successfully"
 
 # Run pre-commit on all files
 pre-commit-run:
-    pre-commit run --all-files
+    {{python}} -m pre_commit run --all-files
 
 # Update pre-commit hooks to latest versions
 pre-commit-update:
-    pre-commit autoupdate
+    {{python}} -m pre_commit autoupdate
 
-# Setup git hooks (legacy - use pre-commit-install)
-setup-hooks:
-    {{python}} scripts/setup_hooks.py
+# Run semantic-release in dry-run mode to preview version changes
+release-dry-run:
+    {{python}} -m pip install python-semantic-release
+    {{python}} -m semantic_release version --print
 
 # Validate configuration files
 validate-config:

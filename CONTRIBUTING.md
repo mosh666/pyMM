@@ -344,27 +344,28 @@ This will:
 
 ### Branch Strategy
 
-We follow a branch-based release flow:
+We follow a generic [Semantic Release](https://github.com/python-semantic-release/python-semantic-release) flow:
 
 1. **Development (`dev` branch)**
    - All new features and fixes are merged here.
-   - Pushes to `dev` automatically trigger a **Beta Release** (tagged `latest-beta`).
-   - These releases are marked as "Pre-release" on GitHub.
+   - Pushes to `dev` automatically trigger a **Beta Release** (e.g. `v1.2.0-beta.1`).
+   - Tags are created automatically based on commit history.
 
 2. **Stable (`main` branch)**
-   - Stable releases are created by pushing a semantic version tag (e.g., `vX.Y.Z`) to `main`.
-   - **Do not** push directly to `main`. Use Pull Requests from `dev` to `main`.
-   - The workflow will automatically build and publish the release.
+   - Stable releases are created by merging `dev` into `main`.
+   - This triggers a semantic version tag (e.g., `v1.2.0`) and publishes the release.
+   - **Do not** manually tag releases.
 
 3. **Versioning**
-   - We use [Semantic Versioning](https://semver.org/).
-   - Format: `vX.Y.Z` (Stable) or `vX.Y.Z-alpha.N` / `vX.Y.Z-beta.N` (Prerelease).
-   - `setuptools_scm` automatically handles versioning based on git tags.
+    - We use [Semantic Versioning](https://semver.org/).
+    - Managed automatically via [python-semantic-release](https://python-semantic-release.readthedocs.io/).
+    - The next version is calculated from [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## Commit Messages
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+We strictly enforce [Conventional Commits](https://www.conventionalcommits.org/) to automate versioning and changelogs.
 
+**Format:**
 ```text
 <type>(<scope>): <subject>
 
@@ -373,11 +374,14 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 <footer>
 ```
 
+**Important:** The `<type>` determines the version bump!
+
 ### Types
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
+- `feat`: New feature (**Minor** version bump, e.g. 1.1.0 -> 1.2.0)
+- `fix`: Bug fix (**Patch** version bump, e.g. 1.1.0 -> 1.1.1)
+- `perf`: Performance improvements (**Patch**)
+- `docs`: Documentation changes (No version bump)
 - `style`: Code style changes (formatting, etc.)
 - `refactor`: Code refactoring
 - `test`: Adding or updating tests
