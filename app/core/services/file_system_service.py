@@ -131,7 +131,8 @@ class FileSystemService:
                 else:
                     # Non-Windows: Use user's home directory for portable mode
                     # to avoid permission issues at system root
-                    self._drive_root = Path.home() / "PortableMediaManager"
+                    # Use Path() constructor to avoid platform-specific path type issues in Python 3.14+
+                    self._drive_root = Path(Path.home(), "PortableMediaManager")
                     try:
                         self._drive_root.mkdir(parents=True, exist_ok=True)
                     except OSError as e:
