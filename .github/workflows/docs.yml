@@ -125,6 +125,19 @@ jobs:
           git config --global user.email "actions@github.com"
           sphinx-multiversion docs docs/_build/html --dump-metadata
 
+      - name: Generate versions.json
+        run: |
+          # Get list of all version directories
+          $versions = Get-ChildItem -Path docs/_build/html -Directory |
+              Where-Object { $_.Name -match '^(main|dev|v\d+\.\d+\.\d+)' } |
+              Select-Object -ExpandProperty Name |
+              Sort-Object -Descending
+
+          # Create versions.json
+          $versionsJson = $versions | ConvertTo-Json -Compress
+          Set-Content -Path docs/_build/html/versions.json -Value $versionsJson
+          Write-Host "Created versions.json with: $versionsJson"
+
       - name: Create landing page
         run: |
           New-Item -ItemType File -Force -Path docs/_build/html/index.html | Out-Null
@@ -285,28 +298,25 @@ jobs:
               </div>
 
               <script>
-                  // Dynamically populate tag versions from directory listing
-                  fetch('.')
-                      .then(r => r.text())
-                      .then(html => {
-                          const parser = new DOMParser();
-                          const doc = parser.parseFromString(html, 'text/html');
-                          const links = Array.from(doc.querySelectorAll('a'))
-                              .map(a => a.getAttribute('href'))
-                              .filter(href => href && href.match(/^v\d+\.\d+\.\d+/));
+                  // Fetch versions from generated JSON file
+                  fetch('versions.json')
+                      .then(r => r.json())
+                      .then(versions => {
+                          // Filter out branch versions (main, dev) and get only tags
+                          const tags = versions.filter(v => v.match(/^v\d+\.\d+\.\d+/));
 
                           const tagLinksDiv = document.getElementById('tag-links');
-                          if (links.length > 0) {
-                              tagLinksDiv.innerHTML = links
-                                  .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
-                                  .slice(0, 10) // Show latest 10 tags
-                                  .map(tag => `<a href="`+tag+`/index.html" class="version-link tag"><span>🏷️</span><span>`+tag.replace(/\/$/, '')+`</span></a>`)
+                          if (tags.length > 0) {
+                              tagLinksDiv.innerHTML = tags
+                                  .slice(0, 10) // Show latest 10 tags (already sorted by build script)
+                                  .map(tag => '<a href="'+tag+'/index.html" class="version-link tag"><span>🏷️</span><span>'+tag+'</span></a>')
                                   .join('');
                           } else {
                               tagLinksDiv.innerHTML = '<p style="color: #a0aec0; font-style: italic;">No tagged versions available yet</p>';
                           }
                       })
-                      .catch(() => {
+                      .catch(err => {
+                          console.error('Failed to load versions:', err);
                           document.getElementById('tag-links').innerHTML = '<p style="color: #a0aec0; font-style: italic;">No tagged versions available</p>';
                       });
               </script>
