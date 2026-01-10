@@ -43,6 +43,19 @@
   - **macOS:** diskutil / IOKit
 - **📁 Project Management** - Metadata-rich project organization with templates and Git integration.
 
+<!-- AUTO-GENERATED:STATS:START -->
+### 📊 Project Statistics
+
+| Metric | Value |
+|--------|-------|
+| **Python Versions** | 3.12, 3.13, 3.14 |
+| **Plugins Available** | 9 |
+| **Test Cases** | 193+ |
+| **Test Coverage** | 73% |
+| **Lines of Code** | ~15,000 Python |
+| **Documentation** | ~5,000 lines |
+<!-- AUTO-GENERATED:STATS:END -->
+
 ---
 
 ## 🚀 Quick Start
@@ -216,6 +229,26 @@ python scripts/build_manager.py --version 3.13 --arch arm64   # Apple Silicon
 ```
 
 **Outputs:** Built packages appear in `dist/` directory with SHA256 checksums.
+
+---
+
+### 🔌 Available Plugins
+
+<!-- AUTO-GENERATED:PLUGIN_LIST:START -->
+| Plugin | Status |
+|--------|--------|
+| **Digikam** | ✅ Configured |
+| **Exiftool** | ✅ Configured |
+| **Ffmpeg** | ✅ Configured |
+| **Git** | ✅ Configured |
+| **Gitlfs** | ✅ Configured |
+| **Gitversion** | ✅ Configured |
+| **Imagemagick** | ✅ Configured |
+| **Mariadb** | ✅ Configured |
+| **Mkvtoolnix** | ✅ Configured |
+<!-- AUTO-GENERATED:PLUGIN_LIST:END -->
+
+See [Plugin Catalog](docs/plugin-catalog.md) for detailed usage examples.
 
 ---
 

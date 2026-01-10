@@ -120,6 +120,14 @@ validate-config:
 # Documentation Recipes
 # =============================================================================
 
+# Update README.md with current project statistics
+update-docs:
+    {{python}} scripts/update_readme_stats.py --verbose
+
+# Update README.md (dry-run to preview changes)
+update-docs-dry:
+    {{python}} scripts/update_readme_stats.py --dry-run
+
 # Build documentation locally with sphinx-multiversion
 docs: _docs-build _docs-redirect
 
