@@ -127,16 +127,28 @@ jobs:
 
       - name: Generate versions.json
         run: |
-          # Get list of all version directories
-          $versions = Get-ChildItem -Path docs/_build/html -Directory |
-              Where-Object { $_.Name -match '^(main|dev|v\d+\.\d+\.\d+)' } |
-              Select-Object -ExpandProperty Name |
-              Sort-Object -Descending
+          # Check if directory exists and list its contents
+          if (Test-Path docs/_build/html) {
+            Write-Host "Contents of docs/_build/html:"
+            Get-ChildItem -Path docs/_build/html | ForEach-Object { Write-Host "  $_" }
 
-          # Create versions.json
-          $versionsJson = $versions | ConvertTo-Json -Compress
-          Set-Content -Path docs/_build/html/versions.json -Value $versionsJson
-          Write-Host "Created versions.json with: $versionsJson"
+            # Get list of all version directories
+            $versions = Get-ChildItem -Path docs/_build/html -Directory |
+                Where-Object { $_.Name -match '^(main|dev|v\d+\.\d+\.\d+)' } |
+                Select-Object -ExpandProperty Name |
+                Sort-Object -Descending
+
+            # Create versions.json
+            $versionsJson = $versions | ConvertTo-Json -Compress
+            Set-Content -Path docs/_build/html/versions.json -Value $versionsJson
+            Write-Host "Created versions.json with: $versionsJson"
+          } else {
+            Write-Host "ERROR: docs/_build/html directory does not exist"
+            Write-Host "Current directory: $(Get-Location)"
+            Write-Host "Directory contents:"
+            Get-ChildItem -Recurse -Directory -Depth 2 | ForEach-Object { Write-Host "  $($_.FullName)" }
+            exit 1
+          }
 
       - name: Create landing page
         run: |
