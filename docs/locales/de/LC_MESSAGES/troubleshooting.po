@@ -1,0 +1,1344 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../troubleshooting.md:1
+msgid "Troubleshooting Guide"
+msgstr ""
+
+#: ../../troubleshooting.md:3
+msgid "**Last Updated:** January 8, 2026"
+msgstr ""
+
+#: ../../troubleshooting.md:5
+msgid ""
+"This guide covers common issues, error messages, and solutions for "
+"pyMediaManager."
+msgstr ""
+
+#: ../../troubleshooting.md:7
+msgid "Table of Contents"
+msgstr ""
+
+#: ../../troubleshooting.md:9
+msgid "[Installation Issues](installation-issues)"
+msgstr ""
+
+#: ../../troubleshooting.md:10
+msgid "[Startup Problems](startup-problems)"
+msgstr ""
+
+#: ../../troubleshooting.md:11
+msgid "[Plugin Issues](plugin-issues)"
+msgstr ""
+
+#: ../../troubleshooting.md:12
+msgid "[Project Management](project-management)"
+msgstr ""
+
+#: ../../troubleshooting.md:13
+msgid "[Git Integration](git-integration)"
+msgstr ""
+
+#: ../../troubleshooting.md:14
+msgid "[UI and Display Issues](ui-and-display-issues)"
+msgstr ""
+
+#: ../../troubleshooting.md:15
+msgid "[Performance Problems](performance-problems)"
+msgstr ""
+
+#: ../../troubleshooting.md:16
+msgid "[Platform-Specific Issues](platform-specific-issues)"
+msgstr ""
+
+#: ../../troubleshooting.md:17
+msgid "[Log File Analysis](log-file-analysis)"
+msgstr ""
+
+#: ../../troubleshooting.md:18
+msgid "[Getting Additional Help](getting-additional-help)"
+msgstr ""
+
+#: ../../troubleshooting.md:22
+msgid "Installation Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:24
+msgid "Python Version Not Supported"
+msgstr ""
+
+#: ../../troubleshooting.md:26
+msgid "**Error:** `Python 3.12 or higher is required`"
+msgstr ""
+
+#: ../../troubleshooting.md:28 ../../troubleshooting.md:74
+#: ../../troubleshooting.md:130 ../../troubleshooting.md:141
+#: ../../troubleshooting.md:494 ../../troubleshooting.md:504
+#: ../../troubleshooting.md:520 ../../troubleshooting.md:541
+#: ../../troubleshooting.md:554 ../../troubleshooting.md:567
+#: ../../troubleshooting.md:756 ../../troubleshooting.md:859
+msgid "**Solution:**"
+msgstr ""
+
+#: ../../troubleshooting.md:30
+msgid ""
+"Install Python 3.12, 3.13, or 3.14 from "
+"[python.org](https://www.python.org/downloads/)"
+msgstr ""
+
+#: ../../troubleshooting.md:31
+msgid "On Windows: Use the official installer and check \"Add to PATH\""
+msgstr ""
+
+#: ../../troubleshooting.md:32
+msgid "On Linux: Use your package manager (e.g., `sudo apt install python3.13`)"
+msgstr ""
+
+#: ../../troubleshooting.md:33
+msgid ""
+"On macOS: Use Homebrew (`brew install python@3.13`) or the official "
+"installer"
+msgstr ""
+
+#: ../../troubleshooting.md:35
+msgid "PySide6 Installation Fails"
+msgstr ""
+
+#: ../../troubleshooting.md:37
+msgid ""
+"**Error:** `Failed building wheel for PySide6` or `Qt platform plugin not"
+" found`"
+msgstr ""
+
+#: ../../troubleshooting.md:39 ../../troubleshooting.md:112
+#: ../../troubleshooting.md:164 ../../troubleshooting.md:191
+#: ../../troubleshooting.md:212 ../../troubleshooting.md:231
+#: ../../troubleshooting.md:262 ../../troubleshooting.md:272
+#: ../../troubleshooting.md:296 ../../troubleshooting.md:313
+#: ../../troubleshooting.md:339 ../../troubleshooting.md:369
+#: ../../troubleshooting.md:384 ../../troubleshooting.md:399
+#: ../../troubleshooting.md:427 ../../troubleshooting.md:451
+#: ../../troubleshooting.md:470 ../../troubleshooting.md:691
+#: ../../troubleshooting.md:800 ../../troubleshooting.md:834
+msgid "**Solutions:**"
+msgstr ""
+
+#: ../../troubleshooting.md:41
+msgid "**Windows:**"
+msgstr ""
+
+#: ../../troubleshooting.md:52
+msgid "**Linux (Ubuntu/Debian):**"
+msgstr ""
+
+#: ../../troubleshooting.md:61
+msgid "**macOS:**"
+msgstr ""
+
+#: ../../troubleshooting.md:70
+msgid "Missing Dependencies"
+msgstr ""
+
+#: ../../troubleshooting.md:72
+msgid "**Error:** `ModuleNotFoundError: No module named 'X'`"
+msgstr ""
+
+#: ../../troubleshooting.md:86
+msgid "Startup Problems"
+msgstr ""
+
+#: ../../troubleshooting.md:88
+msgid "Application Won't Start"
+msgstr ""
+
+#: ../../troubleshooting.md:90
+msgid ""
+"**Symptoms:** Double-clicking launcher.py or running from terminal "
+"produces no window"
+msgstr ""
+
+#: ../../troubleshooting.md:92 ../../troubleshooting.md:256
+#: ../../troubleshooting.md:422
+msgid "**Diagnostics:**"
+msgstr ""
+
+#: ../../troubleshooting.md:94
+msgid "Check if Python is correctly installed:"
+msgstr ""
+
+#: ../../troubleshooting.md:100
+msgid "Try running with verbose logging:"
+msgstr ""
+
+#: ../../troubleshooting.md:106
+msgid "Check for conflicting Qt installations:"
+msgstr ""
+
+#: ../../troubleshooting.md:114
+msgid "**Virtual environment issues:** Recreate your venv"
+msgstr ""
+
+#: ../../troubleshooting.md:124
+msgid ""
+"**Permission issues:** Run as administrator (Windows) or with appropriate"
+" permissions"
+msgstr ""
+
+#: ../../troubleshooting.md:126
+msgid "Portable Mode Not Working"
+msgstr ""
+
+#: ../../troubleshooting.md:128
+msgid ""
+"**Symptoms:** Application creates files in system directories instead of "
+"on USB drive"
+msgstr ""
+
+#: ../../troubleshooting.md:132
+msgid "Ensure `portable.flag` file exists in the application root directory"
+msgstr ""
+
+#: ../../troubleshooting.md:133
+msgid "Check that the drive is writable (not read-only)"
+msgstr ""
+
+#: ../../troubleshooting.md:134
+msgid "On Windows: Right-click drive → Properties → uncheck \"Read-only\""
+msgstr ""
+
+#: ../../troubleshooting.md:135
+msgid "Verify directory paths in logs: Check `pyMM.Logs/app.log`"
+msgstr ""
+
+#: ../../troubleshooting.md:137
+msgid "Configuration File Errors"
+msgstr ""
+
+#: ../../troubleshooting.md:139
+msgid "**Error:** `YAML parsing error in config/user.yaml`"
+msgstr ""
+
+#: ../../troubleshooting.md:143
+msgid "Validate YAML syntax: <https://www.yamllint.com/>"
+msgstr ""
+
+#: ../../troubleshooting.md:144
+msgid "Common issues:"
+msgstr ""
+
+#: ../../troubleshooting.md:145
+msgid "Incorrect indentation (must use spaces, not tabs)"
+msgstr ""
+
+#: ../../troubleshooting.md:146
+msgid "Missing quotes around special characters"
+msgstr ""
+
+#: ../../troubleshooting.md:147
+msgid "Incorrect Windows path escaping (use `\\\\` or `/`)"
+msgstr ""
+
+#: ../../troubleshooting.md:149
+msgid "Reset to default:"
+msgstr ""
+
+#: ../../troubleshooting.md:158
+msgid "Plugin Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:160
+msgid "Plugin Not Detected"
+msgstr ""
+
+#: ../../troubleshooting.md:162
+msgid ""
+"**Symptoms:** System tool (Git, FFmpeg, etc.) is installed but not "
+"showing in pyMM"
+msgstr ""
+
+#: ../../troubleshooting.md:166
+msgid "**Refresh plugin list:**"
+msgstr ""
+
+#: ../../troubleshooting.md:167
+msgid "Settings → Plugins → Refresh System Tools"
+msgstr ""
+
+#: ../../troubleshooting.md:168
+msgid "Or restart the application"
+msgstr ""
+
+#: ../../troubleshooting.md:170
+msgid "**Check PATH environment variable:**"
+msgstr ""
+
+#: ../../troubleshooting.md:180
+msgid "**Manually specify plugin path:**"
+msgstr ""
+
+#: ../../troubleshooting.md:181
+msgid "Go to Settings → Plugins → [Plugin Name]"
+msgstr ""
+
+#: ../../troubleshooting.md:182
+msgid "Click \"Locate Manually\" and browse to executable"
+msgstr ""
+
+#: ../../troubleshooting.md:183
+msgid "Windows: Usually `C:\\Program Files\\Git\\bin\\git.exe`"
+msgstr ""
+
+#: ../../troubleshooting.md:184
+msgid "Linux: Usually `/usr/bin/git`"
+msgstr ""
+
+#: ../../troubleshooting.md:185
+msgid "macOS: Usually `/usr/local/bin/git` or `/opt/homebrew/bin/git`"
+msgstr ""
+
+#: ../../troubleshooting.md:187
+msgid "Plugin Download Fails"
+msgstr ""
+
+#: ../../troubleshooting.md:189
+msgid "**Error:** `SHA-256 checksum mismatch` or `Download failed`"
+msgstr ""
+
+#: ../../troubleshooting.md:193
+msgid "**Checksum mismatch:**"
+msgstr ""
+
+#: ../../troubleshooting.md:194
+msgid "File may be corrupted during download"
+msgstr ""
+
+#: ../../troubleshooting.md:195
+msgid "Delete cached file: `pyMM.Plugins/.cache/[plugin_name]`"
+msgstr ""
+
+#: ../../troubleshooting.md:196
+msgid "Try downloading again"
+msgstr ""
+
+#: ../../troubleshooting.md:198
+msgid "**Network issues:**"
+msgstr ""
+
+#: ../../troubleshooting.md:199
+msgid "Check internet connection"
+msgstr ""
+
+#: ../../troubleshooting.md:200
+msgid "Try disabling VPN or proxy temporarily"
+msgstr ""
+
+#: ../../troubleshooting.md:201
+msgid "Check firewall settings"
+msgstr ""
+
+#: ../../troubleshooting.md:203
+msgid "**Manual installation:**"
+msgstr ""
+
+#: ../../troubleshooting.md:204
+msgid "Download tool from official website"
+msgstr ""
+
+#: ../../troubleshooting.md:205
+msgid "Install normally"
+msgstr ""
+
+#: ../../troubleshooting.md:206
+msgid "Let pyMM auto-detect (Settings → Plugins → Refresh)"
+msgstr ""
+
+#: ../../troubleshooting.md:208
+msgid "Plugin Version Incompatible"
+msgstr ""
+
+#: ../../troubleshooting.md:210
+msgid "**Error:** `Plugin requires version X.X but found Y.Y`"
+msgstr ""
+
+#: ../../troubleshooting.md:214
+msgid "Update the tool to the required version"
+msgstr ""
+
+#: ../../troubleshooting.md:215
+msgid "Or disable version checking (not recommended):"
+msgstr ""
+
+#: ../../troubleshooting.md:225
+msgid "Project Management"
+msgstr ""
+
+#: ../../troubleshooting.md:227
+msgid "Cannot Create Project"
+msgstr ""
+
+#: ../../troubleshooting.md:229
+msgid "**Error:** `Permission denied` or `Path not accessible`"
+msgstr ""
+
+#: ../../troubleshooting.md:233
+msgid "**Check write permissions:**"
+msgstr ""
+
+#: ../../troubleshooting.md:234
+msgid "Windows: Right-click folder → Properties → Security"
+msgstr ""
+
+#: ../../troubleshooting.md:235
+msgid "Linux/macOS: `chmod +w /path/to/projects`"
+msgstr ""
+
+#: ../../troubleshooting.md:237
+msgid "**Drive not mounted:**"
+msgstr ""
+
+#: ../../troubleshooting.md:238
+msgid "Ensure external drive is properly connected and mounted"
+msgstr ""
+
+#: ../../troubleshooting.md:239
+msgid "Check drive letter/mount point in File Explorer/Finder"
+msgstr ""
+
+#: ../../troubleshooting.md:241
+msgid "**Path too long (Windows):**"
+msgstr ""
+
+#: ../../troubleshooting.md:242
+msgid "Windows has 260 character path limit"
+msgstr ""
+
+#: ../../troubleshooting.md:243
+msgid "Use shorter project names or move projects directory closer to root"
+msgstr ""
+
+#: ../../troubleshooting.md:244
+msgid "Or enable long path support (Windows 10 1607+):"
+msgstr ""
+
+#: ../../troubleshooting.md:252
+msgid "Project Won't Open"
+msgstr ""
+
+#: ../../troubleshooting.md:254
+msgid "**Symptoms:** Double-clicking project shows error or nothing happens"
+msgstr ""
+
+#: ../../troubleshooting.md:258
+msgid "Check project metadata file: `.pymm/project.yaml`"
+msgstr ""
+
+#: ../../troubleshooting.md:259
+msgid "Verify project structure integrity"
+msgstr ""
+
+#: ../../troubleshooting.md:260
+msgid "Check logs: `pyMM.Logs/app.log`"
+msgstr ""
+
+#: ../../troubleshooting.md:264
+msgid "**Corrupted metadata:** Delete `.pymm` folder and re-add project"
+msgstr ""
+
+#: ../../troubleshooting.md:265
+msgid ""
+"**Missing template:** Install required template or migrate to different "
+"template"
+msgstr ""
+
+#: ../../troubleshooting.md:266
+msgid ""
+"**Drive letter changed (Windows):** Update project path in recent "
+"projects list"
+msgstr ""
+
+#: ../../troubleshooting.md:268
+msgid "Template Not Found"
+msgstr ""
+
+#: ../../troubleshooting.md:270
+msgid "**Error:** `Template 'X' not found`"
+msgstr ""
+
+#: ../../troubleshooting.md:274
+msgid "**Reinstall templates:**"
+msgstr ""
+
+#: ../../troubleshooting.md:283
+msgid "**Use migration tool:**"
+msgstr ""
+
+#: ../../troubleshooting.md:284
+msgid "Tools → Migrate Template"
+msgstr ""
+
+#: ../../troubleshooting.md:285
+msgid "Select old template and new template"
+msgstr ""
+
+#: ../../troubleshooting.md:286
+msgid "Apply migration"
+msgstr ""
+
+#: ../../troubleshooting.md:290
+msgid "Git Integration"
+msgstr ""
+
+#: ../../troubleshooting.md:292
+msgid "Git Not Initialized"
+msgstr ""
+
+#: ../../troubleshooting.md:294
+msgid "**Symptoms:** Git features disabled or greyed out"
+msgstr ""
+
+#: ../../troubleshooting.md:298
+msgid "**Initialize Git for project:**"
+msgstr ""
+
+#: ../../troubleshooting.md:299
+msgid "Open project"
+msgstr ""
+
+#: ../../troubleshooting.md:300
+msgid "Project → Enable Git"
+msgstr ""
+
+#: ../../troubleshooting.md:301
+msgid "Or manually: `cd /path/to/project && git init`"
+msgstr ""
+
+#: ../../troubleshooting.md:303
+msgid "**Check Git installation:**"
+msgstr ""
+
+#: ../../troubleshooting.md:309
+msgid "Git Conflicts"
+msgstr ""
+
+#: ../../troubleshooting.md:311
+msgid "**Error:** `Merge conflict in file X`"
+msgstr ""
+
+#: ../../troubleshooting.md:315
+msgid "**Resolve manually:**"
+msgstr ""
+
+#: ../../troubleshooting.md:316
+msgid "Open conflicted files in text editor"
+msgstr ""
+
+#: ../../troubleshooting.md:317
+msgid "Look for conflict markers: `<<<<<<<`, `=======`, `>>>>>>>`"
+msgstr ""
+
+#: ../../troubleshooting.md:318
+msgid "Edit to resolve conflicts"
+msgstr ""
+
+#: ../../troubleshooting.md:319
+msgid "Remove conflict markers"
+msgstr ""
+
+#: ../../troubleshooting.md:320
+msgid "Save and commit"
+msgstr ""
+
+#: ../../troubleshooting.md:322
+msgid "**Use external merge tool:**"
+msgstr ""
+
+#: ../../troubleshooting.md:329
+msgid "**Abort merge:**"
+msgstr ""
+
+#: ../../troubleshooting.md:335
+msgid "Git LFS Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:337
+msgid "**Error:** `Git LFS: filter 'lfs' failed` or large files not tracked"
+msgstr ""
+
+#: ../../troubleshooting.md:341
+msgid "**Install Git LFS:**"
+msgstr ""
+
+#: ../../troubleshooting.md:351
+msgid "**Track large files:**"
+msgstr ""
+
+#: ../../troubleshooting.md:363
+msgid "UI and Display Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:365
+msgid "Blurry Text (Windows)"
+msgstr ""
+
+#: ../../troubleshooting.md:367
+msgid ""
+"**Symptoms:** Text appears blurry or scaled incorrectly on high-DPI "
+"displays"
+msgstr ""
+
+#: ../../troubleshooting.md:371
+msgid "**Enable high-DPI support:**"
+msgstr ""
+
+#: ../../troubleshooting.md:372
+msgid "Right-click `launcher.py` → Properties → Compatibility"
+msgstr ""
+
+#: ../../troubleshooting.md:373
+msgid "Check \"Override high DPI scaling behavior\""
+msgstr ""
+
+#: ../../troubleshooting.md:374
+msgid "Select \"Application\" in dropdown"
+msgstr ""
+
+#: ../../troubleshooting.md:376
+msgid "**Adjust Windows scaling:**"
+msgstr ""
+
+#: ../../troubleshooting.md:377
+msgid "Settings → Display → Scale and layout"
+msgstr ""
+
+#: ../../troubleshooting.md:378
+msgid "Try 100%, 125%, or 150%"
+msgstr ""
+
+#: ../../troubleshooting.md:380
+msgid "Dark Theme Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:382
+msgid "**Symptoms:** Text unreadable or incorrect colors"
+msgstr ""
+
+#: ../../troubleshooting.md:386
+msgid "Switch theme: Settings → Appearance → Theme → Light/Dark/Auto"
+msgstr ""
+
+#: ../../troubleshooting.md:387
+msgid "Check Qt style settings:"
+msgstr ""
+
+#: ../../troubleshooting.md:395
+msgid "Window Won't Maximize"
+msgstr ""
+
+#: ../../troubleshooting.md:397
+msgid "**Symptoms:** Window size incorrect or maximized state not saved"
+msgstr ""
+
+#: ../../troubleshooting.md:401
+msgid "**Reset window geometry:**"
+msgstr ""
+
+#: ../../troubleshooting.md:410
+msgid "**Check multi-monitor setup:**"
+msgstr ""
+
+#: ../../troubleshooting.md:411
+msgid "Disconnect external monitors temporarily"
+msgstr ""
+
+#: ../../troubleshooting.md:412
+msgid "Reset window position: Settings → Reset Window Layout"
+msgstr ""
+
+#: ../../troubleshooting.md:416
+msgid "Performance Problems"
+msgstr ""
+
+#: ../../troubleshooting.md:418
+msgid "Slow Startup"
+msgstr ""
+
+#: ../../troubleshooting.md:420
+msgid "**Symptoms:** Application takes 10+ seconds to start"
+msgstr ""
+
+#: ../../troubleshooting.md:424
+msgid "Check startup time in logs"
+msgstr ""
+
+#: ../../troubleshooting.md:425
+msgid "Monitor CPU/RAM usage"
+msgstr ""
+
+#: ../../troubleshooting.md:429
+msgid "**Disable auto-detection:**"
+msgstr ""
+
+#: ../../troubleshooting.md:437
+msgid "**Reduce recent projects:**"
+msgstr ""
+
+#: ../../troubleshooting.md:438
+msgid "Clear old projects from recent list"
+msgstr ""
+
+#: ../../troubleshooting.md:439
+msgid "Settings → Privacy → Clear Recent Projects"
+msgstr ""
+
+#: ../../troubleshooting.md:441
+msgid "**Check disk health:**"
+msgstr ""
+
+#: ../../troubleshooting.md:442
+msgid "Run disk check utility (especially for external drives)"
+msgstr ""
+
+#: ../../troubleshooting.md:443
+msgid "Windows: `chkdsk D: /f`"
+msgstr ""
+
+#: ../../troubleshooting.md:444
+msgid "Linux: `sudo fsck /dev/sdX`"
+msgstr ""
+
+#: ../../troubleshooting.md:445
+msgid "macOS: Disk Utility → First Aid"
+msgstr ""
+
+#: ../../troubleshooting.md:447
+msgid "High Memory Usage"
+msgstr ""
+
+#: ../../troubleshooting.md:449
+msgid "**Symptoms:** Application uses excessive RAM (500+ MB)"
+msgstr ""
+
+#: ../../troubleshooting.md:453
+msgid "**Reduce thread pool size:**"
+msgstr ""
+
+#: ../../troubleshooting.md:462
+msgid "**Clear cache:**"
+msgstr ""
+
+#: ../../troubleshooting.md:463
+msgid "Settings → Advanced → Clear Cache"
+msgstr ""
+
+#: ../../troubleshooting.md:464
+msgid "Or manually delete: `pyMM.Plugins/.cache/`"
+msgstr ""
+
+#: ../../troubleshooting.md:466
+msgid "Slow Project Loading"
+msgstr ""
+
+#: ../../troubleshooting.md:468
+msgid "**Symptoms:** Opening large projects takes minutes"
+msgstr ""
+
+#: ../../troubleshooting.md:472
+msgid "**Optimize project structure:**"
+msgstr ""
+
+#: ../../troubleshooting.md:473
+msgid "Limit files per directory to < 10,000"
+msgstr ""
+
+#: ../../troubleshooting.md:474
+msgid "Use subdirectories for organization"
+msgstr ""
+
+#: ../../troubleshooting.md:476
+msgid "**Disable file watchers temporarily:**"
+msgstr ""
+
+#: ../../troubleshooting.md:486
+msgid "Platform-Specific Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:488
+msgid "Windows"
+msgstr ""
+
+#: ../../troubleshooting.md:490
+msgid "UAC Prompts"
+msgstr ""
+
+#: ../../troubleshooting.md:492
+msgid "**Issue:** Repeated User Account Control prompts"
+msgstr ""
+
+#: ../../troubleshooting.md:496
+msgid "Don't install to `C:\\Program Files\\` (requires admin)"
+msgstr ""
+
+#: ../../troubleshooting.md:497
+msgid "Use user directory: `C:\\Users\\<YourName>\\pyMM\\`"
+msgstr ""
+
+#: ../../troubleshooting.md:498
+msgid "Or create portable installation on external drive"
+msgstr ""
+
+#: ../../troubleshooting.md:500
+msgid "Drive Letter Changes"
+msgstr ""
+
+#: ../../troubleshooting.md:502
+msgid "**Issue:** USB drive gets different letter (D: → E:), projects not found"
+msgstr ""
+
+#: ../../troubleshooting.md:506
+msgid "**Assign permanent drive letter:**"
+msgstr ""
+
+#: ../../troubleshooting.md:507
+msgid "Open Disk Management (`diskmgmt.msc`)"
+msgstr ""
+
+#: ../../troubleshooting.md:508
+msgid "Right-click drive → Change Drive Letter"
+msgstr ""
+
+#: ../../troubleshooting.md:509
+msgid "Assign fixed letter (e.g., M: for Media)"
+msgstr ""
+
+#: ../../troubleshooting.md:511
+msgid "**Use volume label instead:** (pyMM v1.3+)"
+msgstr ""
+
+#: ../../troubleshooting.md:512
+msgid "Projects tracked by volume GUID, not drive letter"
+msgstr ""
+
+#: ../../troubleshooting.md:514
+msgid "Linux"
+msgstr ""
+
+#: ../../troubleshooting.md:516
+msgid "USB Drive Auto-Mount Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:518
+msgid "**Issue:** USB drive not auto-mounting or wrong permissions"
+msgstr ""
+
+#: ../../troubleshooting.md:522
+msgid "**Check udev rules:**"
+msgstr ""
+
+#: ../../troubleshooting.md:529
+msgid "**Manual mount:**"
+msgstr ""
+
+#: ../../troubleshooting.md:537
+msgid "Qt Platform Plugin Missing"
+msgstr ""
+
+#: ../../troubleshooting.md:539
+msgid "**Error:** `Could not load the Qt platform plugin \"xcb\"`"
+msgstr ""
+
+#: ../../troubleshooting.md:548
+msgid "macOS"
+msgstr ""
+
+#: ../../troubleshooting.md:550
+msgid "Gatekeeper Blocks Application"
+msgstr ""
+
+#: ../../troubleshooting.md:552
+msgid ""
+"**Issue:** \"pyMM cannot be opened because it is from an unidentified "
+"developer\""
+msgstr ""
+
+#: ../../troubleshooting.md:563
+msgid "Apple Silicon (M1/M2/M3) Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:565
+msgid "**Issue:** Performance problems or compatibility warnings"
+msgstr ""
+
+#: ../../troubleshooting.md:569
+msgid "Install native ARM64 Python 3.13+"
+msgstr ""
+
+#: ../../troubleshooting.md:582
+msgid "Log File Analysis"
+msgstr ""
+
+#: ../../troubleshooting.md:584
+msgid "Finding Logs"
+msgstr ""
+
+#: ../../troubleshooting.md:586
+msgid "**Location:**"
+msgstr ""
+
+#: ../../troubleshooting.md:588
+msgid "**Portable mode:** `pyMM.Logs/app.log` (in application root)"
+msgstr ""
+
+#: ../../troubleshooting.md:589
+msgid "**Installed mode:**"
+msgstr ""
+
+#: ../../troubleshooting.md:590
+msgid "Windows: `%LOCALAPPDATA%\\pyMediaManager\\logs\\`"
+msgstr ""
+
+#: ../../troubleshooting.md:591
+msgid "Linux: `~/.local/share/pyMediaManager/logs/`"
+msgstr ""
+
+#: ../../troubleshooting.md:592
+msgid "macOS: `~/Library/Application Support/pyMediaManager/logs/`"
+msgstr ""
+
+#: ../../troubleshooting.md:594
+msgid "Understanding Log Levels"
+msgstr ""
+
+#: ../../troubleshooting.md:604
+msgid "Common Error Patterns"
+msgstr ""
+
+#: ../../troubleshooting.md:606
+msgid "**Pattern:** `PermissionError: [Errno 13]`"
+msgstr ""
+
+#: ../../troubleshooting.md:608
+msgid "**Meaning:** Cannot access file/directory due to permissions"
+msgstr ""
+
+#: ../../troubleshooting.md:609
+msgid "**Check:** File permissions, antivirus, drive lock status"
+msgstr ""
+
+#: ../../troubleshooting.md:611
+msgid "**Pattern:** `FileNotFoundError: [Errno 2]`"
+msgstr ""
+
+#: ../../troubleshooting.md:613
+msgid "**Meaning:** Expected file doesn't exist"
+msgstr ""
+
+#: ../../troubleshooting.md:614
+msgid "**Check:** Path spelling, drive mounted, file deleted"
+msgstr ""
+
+#: ../../troubleshooting.md:616
+msgid "**Pattern:** `yaml.scanner.ScannerError`"
+msgstr ""
+
+#: ../../troubleshooting.md:618
+msgid "**Meaning:** YAML syntax error in configuration"
+msgstr ""
+
+#: ../../troubleshooting.md:619
+msgid "**Check:** config/user.yaml for syntax errors"
+msgstr ""
+
+#: ../../troubleshooting.md:621
+msgid "**Pattern:** `RuntimeError: Platform not supported`"
+msgstr ""
+
+#: ../../troubleshooting.md:623
+msgid "**Meaning:** Feature not available on current OS"
+msgstr ""
+
+#: ../../troubleshooting.md:624
+msgid "**Check:** Platform-specific documentation"
+msgstr ""
+
+#: ../../troubleshooting.md:626
+msgid "Increasing Log Verbosity"
+msgstr ""
+
+#: ../../troubleshooting.md:636
+msgid "Or temporary override:"
+msgstr ""
+
+#: ../../troubleshooting.md:644
+msgid "Getting Additional Help"
+msgstr ""
+
+#: ../../troubleshooting.md:646
+msgid "Before Asking for Help"
+msgstr ""
+
+#: ../../troubleshooting.md:648
+msgid "✅ Check this troubleshooting guide"
+msgstr ""
+
+#: ../../troubleshooting.md:649
+msgid "✅ Search [existing issues](https://github.com/mosh666/pyMM/issues)"
+msgstr ""
+
+#: ../../troubleshooting.md:650
+msgid "✅ Search [discussions](https://github.com/mosh666/pyMM/discussions)"
+msgstr ""
+
+#: ../../troubleshooting.md:651
+msgid "✅ Review [user guide](user-guide.md) and [documentation](../README.md)"
+msgstr ""
+
+#: ../../troubleshooting.md:652
+msgid "✅ Collect diagnostic information (see below)"
+msgstr ""
+
+#: ../../troubleshooting.md:654
+msgid "Diagnostic Information to Provide"
+msgstr ""
+
+#: ../../troubleshooting.md:656
+msgid "When reporting issues, include:"
+msgstr ""
+
+#: ../../troubleshooting.md:678
+msgid "Release Automation Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:680
+msgid "Failed Automated Release"
+msgstr ""
+
+#: ../../troubleshooting.md:682
+msgid "**Symptom:** Daily scheduled release did not run or failed"
+msgstr ""
+
+#: ../../troubleshooting.md:684 ../../troubleshooting.md:794
+#: ../../troubleshooting.md:828
+msgid "**Common Causes:**"
+msgstr ""
+
+#: ../../troubleshooting.md:686
+msgid ""
+"**No commits since last release** - This is expected behavior. Check "
+"workflow summary for \"No changes to release.\""
+msgstr ""
+
+#: ../../troubleshooting.md:687
+msgid ""
+"**Workflow permissions** - Ensure `GITHUB_TOKEN` has `contents: write` "
+"permission"
+msgstr ""
+
+#: ../../troubleshooting.md:688
+msgid ""
+"**Branch protection** - Release commits may be blocked by branch "
+"protection rules"
+msgstr ""
+
+#: ../../troubleshooting.md:689
+msgid ""
+"**Conventional commits** - Invalid commit format prevents version "
+"calculation"
+msgstr ""
+
+#: ../../troubleshooting.md:693
+msgid "**Check workflow run logs:**"
+msgstr ""
+
+#: ../../troubleshooting.md:703
+msgid "**Verify commit format:**"
+msgstr ""
+
+#: ../../troubleshooting.md:715
+msgid "**Manual trigger:**"
+msgstr ""
+
+#: ../../troubleshooting.md:717
+msgid "If you need to force a release:"
+msgstr ""
+
+#: ../../troubleshooting.md:719
+msgid ""
+"Go to [Actions → Semantic "
+"Release](https://github.com/mosh666/pyMM/actions/workflows/semantic-"
+"release.yml)"
+msgstr ""
+
+#: ../../troubleshooting.md:720 ../../troubleshooting.md:723
+msgid "Click \"Run workflow\""
+msgstr ""
+
+#: ../../troubleshooting.md:721
+msgid "Select branch (`dev` or `main`)"
+msgstr ""
+
+#: ../../troubleshooting.md:722
+msgid "Enable \"force\" if no new commits exist"
+msgstr ""
+
+#: ../../troubleshooting.md:725
+msgid "Beta Release Not Created"
+msgstr ""
+
+#: ../../troubleshooting.md:727
+msgid "**Symptom:** Expected daily beta release was not created"
+msgstr ""
+
+#: ../../troubleshooting.md:729
+msgid "**Diagnostic Steps:**"
+msgstr ""
+
+#: ../../troubleshooting.md:731
+msgid "**Check if commits exist:**"
+msgstr ""
+
+#: ../../troubleshooting.md:741
+msgid "If count is 0, no release is needed."
+msgstr ""
+
+#: ../../troubleshooting.md:743
+msgid "**Check workflow schedule:**"
+msgstr ""
+
+#: ../../troubleshooting.md:745
+msgid "Daily releases run at 00:00 UTC"
+msgstr ""
+
+#: ../../troubleshooting.md:746
+msgid "Check your timezone: UTC = GMT"
+msgstr ""
+
+#: ../../troubleshooting.md:747
+msgid "Verify in [Actions tab](https://github.com/mosh666/pyMM/actions)"
+msgstr ""
+
+#: ../../troubleshooting.md:749
+msgid "**Review excluded commits:**"
+msgstr ""
+
+#: ../../troubleshooting.md:751
+msgid "Commits with these types are excluded from releases:"
+msgstr ""
+
+#: ../../troubleshooting.md:752
+msgid "`chore`, `ci`, `refactor`, `style`, `test`, `docs`, `build` (non-deps)"
+msgstr ""
+
+#: ../../troubleshooting.md:754
+msgid "If ALL commits since last tag are excluded types, no version bump occurs."
+msgstr ""
+
+#: ../../troubleshooting.md:758
+msgid "To trigger a beta release manually:"
+msgstr ""
+
+#: ../../troubleshooting.md:769
+msgid "Version Number Issues"
+msgstr ""
+
+#: ../../troubleshooting.md:771
+msgid ""
+"**Symptom:** Version doesn't match expectations (e.g., 0.1.0-beta.1 "
+"instead of 0.2.0-beta.1)"
+msgstr ""
+
+#: ../../troubleshooting.md:773
+msgid "**Explanation:**"
+msgstr ""
+
+#: ../../troubleshooting.md:775
+msgid "**`feat` commits** → Minor bump (0.1.0 → 0.2.0)"
+msgstr ""
+
+#: ../../troubleshooting.md:776
+msgid "**`fix` commits** → Patch bump (0.1.0 → 0.1.1)"
+msgstr ""
+
+#: ../../troubleshooting.md:777
+msgid ""
+"**Breaking changes (`!` or `BREAKING CHANGE:`)** → Minor bump in v0.x "
+"(0.1.0 → 0.2.0)"
+msgstr ""
+
+#: ../../troubleshooting.md:778
+msgid "All versions stay in `0.y.z` format until manual release of `v1.0.0`"
+msgstr ""
+
+#: ../../troubleshooting.md:780
+msgid "**Check what version would be calculated:**"
+msgstr ""
+
+#: ../../troubleshooting.md:790
+msgid "Release Assets Missing"
+msgstr ""
+
+#: ../../troubleshooting.md:792
+msgid "**Symptom:** GitHub release exists but no ZIP/AppImage/DMG files attached"
+msgstr ""
+
+#: ../../troubleshooting.md:796
+msgid "**Build workflow failed** - Check build.yml workflow logs"
+msgstr ""
+
+#: ../../troubleshooting.md:797
+msgid "**Upload step failed** - Check semantic-release.yml upload-assets job"
+msgstr ""
+
+#: ../../troubleshooting.md:798
+msgid "**Artifact retention** - Artifacts expire after 90 days"
+msgstr ""
+
+#: ../../troubleshooting.md:802
+msgid "**Check build status:**"
+msgstr ""
+
+#: ../../troubleshooting.md:809
+msgid "**Re-upload assets manually:**"
+msgstr ""
+
+#: ../../troubleshooting.md:811
+msgid "If build succeeded but upload failed:"
+msgstr ""
+
+#: ../../troubleshooting.md:813
+msgid "Download artifacts from build workflow run"
+msgstr ""
+
+#: ../../troubleshooting.md:814
+msgid "Upload to release manually:"
+msgstr ""
+
+#: ../../troubleshooting.md:824
+msgid "Changelog Not Updated"
+msgstr ""
+
+#: ../../troubleshooting.md:826
+msgid "**Symptom:** CHANGELOG.md not updated after release"
+msgstr ""
+
+#: ../../troubleshooting.md:830
+msgid ""
+"**All commits excluded** - Only `feat`, `fix`, and `perf` types appear in"
+" changelog"
+msgstr ""
+
+#: ../../troubleshooting.md:831
+msgid "**Merge conflicts** - CHANGELOG.md has conflicts from manual edits"
+msgstr ""
+
+#: ../../troubleshooting.md:832
+msgid "**Configuration error** - `changelog.mode = \"update\"` setting incorrect"
+msgstr ""
+
+#: ../../troubleshooting.md:836
+msgid "**Verify changelog configuration:**"
+msgstr ""
+
+#: ../../troubleshooting.md:843
+msgid "**Manually update if needed:**"
+msgstr ""
+
+#: ../../troubleshooting.md:853
+msgid "Permission Denied Errors"
+msgstr ""
+
+#: ../../troubleshooting.md:855
+msgid ""
+"**Symptom:** `refusing to allow a GitHub App to create or update "
+"workflow` or `Resource not accessible by integration`"
+msgstr ""
+
+#: ../../troubleshooting.md:857
+msgid "**Cause:** `GITHUB_TOKEN` permissions insufficient for scheduled workflows"
+msgstr ""
+
+#: ../../troubleshooting.md:861
+msgid "Repository settings must allow GitHub Actions to:"
+msgstr ""
+
+#: ../../troubleshooting.md:863
+msgid "Go to repository **Settings → Actions → General**"
+msgstr ""
+
+#: ../../troubleshooting.md:864
+msgid "Under \"Workflow permissions\":"
+msgstr ""
+
+#: ../../troubleshooting.md:865
+msgid "Select \"Read and write permissions\""
+msgstr ""
+
+#: ../../troubleshooting.md:866
+msgid "Check \"Allow GitHub Actions to create and approve pull requests\""
+msgstr ""
+
+#: ../../troubleshooting.md:867
+msgid "Save changes"
+msgstr ""
+
+#: ../../troubleshooting.md:869
+msgid ""
+"**Note:** This is required for automated releases triggered by schedule "
+"or workflow_dispatch."
+msgstr ""
+
+#: ../../troubleshooting.md:873
+msgid "Where to Get Help"
+msgstr ""
+
+#: ../../troubleshooting.md:875
+msgid ""
+"**🐛 Bug Reports:** [GitHub "
+"Issues](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)"
+msgstr ""
+
+#: ../../troubleshooting.md:876
+msgid ""
+"**💡 Feature Requests:** [GitHub "
+"Issues](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)"
+msgstr ""
+
+#: ../../troubleshooting.md:877
+msgid ""
+"**❓ Questions:** [GitHub "
+"Discussions](https://github.com/mosh666/pyMM/discussions)"
+msgstr ""
+
+#: ../../troubleshooting.md:878
+msgid ""
+"**📖 Documentation:** [User Guide](user-guide.md), "
+"[Architecture](architecture.md)"
+msgstr ""
+
+#: ../../troubleshooting.md:879
+msgid "**🔒 Security Issues:** See [Security Policy](../SECURITY.md)"
+msgstr ""
+
+#: ../../troubleshooting.md:883
+msgid ""
+"**Document Version:** 2.0 **Last Updated:** January 8, 2026 **Compatible "
+"with:** pyMediaManager v0.1+"
+msgstr ""

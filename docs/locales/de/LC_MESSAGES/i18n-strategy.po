@@ -1,0 +1,697 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../i18n-strategy.md:1
+msgid "Internationalization (i18n) Strategy for pyMediaManager Documentation"
+msgstr ""
+
+#: ../../i18n-strategy.md:3
+msgid "Overview"
+msgstr ""
+
+#: ../../i18n-strategy.md:5
+msgid ""
+"This document outlines the internationalization strategy for "
+"pyMediaManager documentation, designed to support multi-language "
+"documentation with a focus on community-driven translations."
+msgstr ""
+
+#: ../../i18n-strategy.md:7
+msgid "Primary Target Language"
+msgstr ""
+
+#: ../../i18n-strategy.md:9
+msgid ""
+"**German (Deutsch)** - Primary translation target for the following "
+"reasons:"
+msgstr ""
+
+#: ../../i18n-strategy.md:11
+msgid "Strong European open-source community"
+msgstr ""
+
+#: ../../i18n-strategy.md:12
+msgid ""
+"Significant user base in German-speaking countries (Germany, Austria, "
+"Switzerland)"
+msgstr ""
+
+#: ../../i18n-strategy.md:13
+msgid "Active contributor base for translation maintenance"
+msgstr ""
+
+#: ../../i18n-strategy.md:14
+msgid "Natural second language for expanding international reach"
+msgstr ""
+
+#: ../../i18n-strategy.md:16
+msgid "Translation Infrastructure"
+msgstr ""
+
+#: ../../i18n-strategy.md:18
+msgid "Technology Stack"
+msgstr ""
+
+#: ../../i18n-strategy.md:20
+msgid ""
+"**Sphinx i18n**: Built-in internationalization support using "
+"`sphinx.ext.intl`"
+msgstr ""
+
+#: ../../i18n-strategy.md:21
+msgid "**sphinx-intl**: Command-line tool for managing translations"
+msgstr ""
+
+#: ../../i18n-strategy.md:22
+msgid "**gettext**: Standard GNU translation system (.po/.pot files)"
+msgstr ""
+
+#: ../../i18n-strategy.md:23
+msgid ""
+"**Transifex/Weblate** (future): Optional web-based translation platform "
+"integration"
+msgstr ""
+
+#: ../../i18n-strategy.md:25
+msgid "Directory Structure"
+msgstr ""
+
+#: ../../i18n-strategy.md:46
+msgid "Translation Workflow"
+msgstr ""
+
+#: ../../i18n-strategy.md:48
+msgid "For Contributors"
+msgstr ""
+
+#: ../../i18n-strategy.md:50
+msgid "1. Extract Translatable Strings"
+msgstr ""
+
+#: ../../i18n-strategy.md:60
+msgid "2. Update Translation Files"
+msgstr ""
+
+#: ../../i18n-strategy.md:70
+msgid "3. Translate Content"
+msgstr ""
+
+#: ../../i18n-strategy.md:72
+msgid "Edit `.po` files in `docs/locales/de/LC_MESSAGES/`:"
+msgstr ""
+
+#: ../../i18n-strategy.md:85
+msgid "4. Build Translated Documentation"
+msgstr ""
+
+#: ../../i18n-strategy.md:95
+msgid "For Maintainers"
+msgstr ""
+
+#: ../../i18n-strategy.md:97
+msgid "Review Translation Quality"
+msgstr ""
+
+#: ../../i18n-strategy.md:99
+msgid "Verify technical terminology consistency"
+msgstr ""
+
+#: ../../i18n-strategy.md:100
+msgid "Check formatting and markup preservation"
+msgstr ""
+
+#: ../../i18n-strategy.md:101
+msgid "Ensure code examples remain unchanged"
+msgstr ""
+
+#: ../../i18n-strategy.md:102
+msgid "Test rendered output in target language"
+msgstr ""
+
+#: ../../i18n-strategy.md:104
+msgid "Merge Translation PRs"
+msgstr ""
+
+#: ../../i18n-strategy.md:106
+msgid "Translations submitted via pull requests"
+msgstr ""
+
+#: ../../i18n-strategy.md:107
+msgid "Review by native speakers when possible"
+msgstr ""
+
+#: ../../i18n-strategy.md:108
+msgid "Automated checks for .po file validity"
+msgstr ""
+
+#: ../../i18n-strategy.md:109
+msgid "CI builds translated documentation to verify"
+msgstr ""
+
+#: ../../i18n-strategy.md:111
+msgid "Community-Driven Translation Model"
+msgstr ""
+
+#: ../../i18n-strategy.md:113
+msgid "Contribution Guidelines"
+msgstr ""
+
+#: ../../i18n-strategy.md:115
+msgid ""
+"**No Technical Expertise Required**: Translators don't need programming "
+"knowledge"
+msgstr ""
+
+#: ../../i18n-strategy.md:116
+msgid "**Clear Attribution**: Translators credited in documentation footer"
+msgstr ""
+
+#: ../../i18n-strategy.md:117
+msgid ""
+"**Incremental Translation**: Partial translations acceptable and "
+"encouraged"
+msgstr ""
+
+#: ../../i18n-strategy.md:118
+msgid "**Quality Over Speed**: Prefer accurate translations over quick completion"
+msgstr ""
+
+#: ../../i18n-strategy.md:120
+msgid "Translation Priorities"
+msgstr ""
+
+#: ../../i18n-strategy.md:122
+msgid "**Priority 1 - High Impact** (Translate First):"
+msgstr ""
+
+#: ../../i18n-strategy.md:123
+msgid "README.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:124
+msgid "docs/index.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:125
+msgid "docs/user-guide.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:126
+msgid "docs/troubleshooting.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:128
+msgid "**Priority 2 - User-Facing**:"
+msgstr ""
+
+#: ../../i18n-strategy.md:129
+msgid "docs/plugin-catalog.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:130
+msgid "docs/migration-guide.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:131
+msgid "docs/platform-directories.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:133
+msgid "**Priority 3 - Developer Documentation**:"
+msgstr ""
+
+#: ../../i18n-strategy.md:134
+msgid "docs/plugin-development.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:135
+msgid "docs/architecture.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:136
+msgid "docs/api-reference.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:138
+msgid "**Priority 4 - Advanced Topics**:"
+msgstr ""
+
+#: ../../i18n-strategy.md:139
+msgid "docs/docker-ci-testing.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:140
+msgid "docs/linux-udev-installer.md"
+msgstr ""
+
+#: ../../i18n-strategy.md:142
+msgid "Translation Terminology"
+msgstr ""
+
+#: ../../i18n-strategy.md:144
+msgid "Maintain a **glossary** for consistent technical term translation:"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "English"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Deutsch"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Notes"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Project"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Projekt"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Plugin"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Keep as-is (common in German)"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Portable Mode"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Portabler Modus"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Storage"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Speicher"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Tool"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Werkzeug"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Template"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Vorlage"
+msgstr ""
+
+#: ../../i18n-strategy.md ../../i18n-strategy.md:250
+msgid "Configuration"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Konfiguration"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Fluent UI"
+msgstr ""
+
+#: ../../i18n-strategy.md
+msgid "Keep as-is (product name)"
+msgstr ""
+
+#: ../../i18n-strategy.md:157
+msgid "Future Language Expansion"
+msgstr ""
+
+#: ../../i18n-strategy.md:159
+msgid "Criteria for Adding Languages"
+msgstr ""
+
+#: ../../i18n-strategy.md:161
+msgid "**Active Community**: At least 2-3 committed translators"
+msgstr ""
+
+#: ../../i18n-strategy.md:162
+msgid "**Maintenance Plan**: Long-term maintenance commitment"
+msgstr ""
+
+#: ../../i18n-strategy.md:163
+msgid "**User Demand**: Documented user requests or analytics data"
+msgstr ""
+
+#: ../../i18n-strategy.md:164
+msgid "**Resource Availability**: Sufficient CI/hosting resources"
+msgstr ""
+
+#: ../../i18n-strategy.md:166
+msgid "Potential Future Languages"
+msgstr ""
+
+#: ../../i18n-strategy.md:168
+msgid "**French (Français)**: Large European/Canadian user base"
+msgstr ""
+
+#: ../../i18n-strategy.md:169
+msgid "**Spanish (Español)**: Global reach (Spain + Latin America)"
+msgstr ""
+
+#: ../../i18n-strategy.md:170
+msgid "**Italian (Italiano)**: European community"
+msgstr ""
+
+#: ../../i18n-strategy.md:171
+msgid "**Portuguese (Português)**: Brazilian open-source community"
+msgstr ""
+
+#: ../../i18n-strategy.md:172
+msgid "**Japanese (日本語)**: Asian market interest"
+msgstr ""
+
+#: ../../i18n-strategy.md:173
+msgid "**Chinese (中文)**: Largest potential user base"
+msgstr ""
+
+#: ../../i18n-strategy.md:175
+msgid "Translation Management Tools"
+msgstr ""
+
+#: ../../i18n-strategy.md:177
+msgid "Current: Manual Git Workflow"
+msgstr ""
+
+#: ../../i18n-strategy.md:179
+msgid "Translations in Git repository"
+msgstr ""
+
+#: ../../i18n-strategy.md:180
+msgid "Pull request-based contributions"
+msgstr ""
+
+#: ../../i18n-strategy.md:181
+msgid "CI automated testing"
+msgstr ""
+
+#: ../../i18n-strategy.md:183
+msgid "Future: Web Platform Integration"
+msgstr ""
+
+#: ../../i18n-strategy.md:185
+msgid "**Option 1: Weblate** (Open Source)"
+msgstr ""
+
+#: ../../i18n-strategy.md:186
+msgid "Self-hosted or cloud-hosted"
+msgstr ""
+
+#: ../../i18n-strategy.md:187
+msgid "Git integration"
+msgstr ""
+
+#: ../../i18n-strategy.md:188
+msgid "Translation memory"
+msgstr ""
+
+#: ../../i18n-strategy.md:189
+msgid "Community features"
+msgstr ""
+
+#: ../../i18n-strategy.md:191
+msgid "**Option 2: Transifex** (Commercial/Free for OSS)"
+msgstr ""
+
+#: ../../i18n-strategy.md:192
+msgid "Popular in open-source"
+msgstr ""
+
+#: ../../i18n-strategy.md:193
+msgid "Good tooling"
+msgstr ""
+
+#: ../../i18n-strategy.md:194
+msgid "Active community"
+msgstr ""
+
+#: ../../i18n-strategy.md:196
+msgid "**Option 3: Crowdin** (Commercial/Free for OSS)"
+msgstr ""
+
+#: ../../i18n-strategy.md:197
+msgid "Strong GitHub integration"
+msgstr ""
+
+#: ../../i18n-strategy.md:198
+msgid "Real-time collaboration"
+msgstr ""
+
+#: ../../i18n-strategy.md:199
+msgid "In-context translation"
+msgstr ""
+
+#: ../../i18n-strategy.md:201
+msgid "Translation Quality Assurance"
+msgstr ""
+
+#: ../../i18n-strategy.md:203
+msgid "Automated Checks"
+msgstr ""
+
+#: ../../i18n-strategy.md:205
+msgid "**Syntax validation**: `msgfmt --check` for .po files"
+msgstr ""
+
+#: ../../i18n-strategy.md:206
+msgid "**Coverage tracking**: Monitor translation completion percentage"
+msgstr ""
+
+#: ../../i18n-strategy.md:207
+msgid "**Build verification**: CI builds all language versions"
+msgstr ""
+
+#: ../../i18n-strategy.md:208
+msgid "**Link validation**: Ensure cross-references work in translations"
+msgstr ""
+
+#: ../../i18n-strategy.md:210
+msgid "Manual Review"
+msgstr ""
+
+#: ../../i18n-strategy.md:212
+msgid "Native speaker review before major releases"
+msgstr ""
+
+#: ../../i18n-strategy.md:213
+msgid "Community feedback mechanism"
+msgstr ""
+
+#: ../../i18n-strategy.md:214
+msgid "Regular translation audits"
+msgstr ""
+
+#: ../../i18n-strategy.md:215
+msgid "Update notifications for source changes"
+msgstr ""
+
+#: ../../i18n-strategy.md:217
+msgid "Version Management"
+msgstr ""
+
+#: ../../i18n-strategy.md:219
+msgid "Handling Documentation Updates"
+msgstr ""
+
+#: ../../i18n-strategy.md:221
+msgid "**Source changes tracked**: Git history shows English updates"
+msgstr ""
+
+#: ../../i18n-strategy.md:222
+msgid "**Translation outdated markers**: sphinx-intl marks outdated translations"
+msgstr ""
+
+#: ../../i18n-strategy.md:223
+msgid "**Fuzzy matching**: Automatic matching for minor changes"
+msgstr ""
+
+#: ../../i18n-strategy.md:224
+msgid "**Translator notifications**: GitHub issues/PRs for translation updates"
+msgstr ""
+
+#: ../../i18n-strategy.md:226
+msgid "Release Coordination"
+msgstr ""
+
+#: ../../i18n-strategy.md:228
+msgid "Translations updated before major releases"
+msgstr ""
+
+#: ../../i18n-strategy.md:229
+msgid "Feature documentation translated with feature releases"
+msgstr ""
+
+#: ../../i18n-strategy.md:230
+msgid "Hotfix documentation in English first, translations follow"
+msgstr ""
+
+#: ../../i18n-strategy.md:232
+msgid "Contributor Recognition"
+msgstr ""
+
+#: ../../i18n-strategy.md:234
+msgid "Attribution"
+msgstr ""
+
+#: ../../i18n-strategy.md:236
+msgid "**Translation credits**: Added to documentation footer"
+msgstr ""
+
+#: ../../i18n-strategy.md:237
+msgid "**Contributors page**: Dedicated translators section"
+msgstr ""
+
+#: ../../i18n-strategy.md:238
+msgid "**Commit history**: Preserves individual contributions"
+msgstr ""
+
+#: ../../i18n-strategy.md:239
+msgid "**Release notes**: Mention translation updates"
+msgstr ""
+
+#: ../../i18n-strategy.md:241
+msgid "Community Building"
+msgstr ""
+
+#: ../../i18n-strategy.md:243
+msgid "**Translation team**: Create dedicated GitHub team"
+msgstr ""
+
+#: ../../i18n-strategy.md:244
+msgid "**Communication channels**: Discord/Matrix channel for translators"
+msgstr ""
+
+#: ../../i18n-strategy.md:245
+msgid "**Translation sprints**: Organized events for focused translation"
+msgstr ""
+
+#: ../../i18n-strategy.md:246
+msgid "**Documentation**: This strategy document + CONTRIBUTING.md guidelines"
+msgstr ""
+
+#: ../../i18n-strategy.md:248
+msgid "Technical Implementation Notes"
+msgstr ""
+
+#: ../../i18n-strategy.md:252
+msgid "In `docs/conf.py`:"
+msgstr ""
+
+#: ../../i18n-strategy.md:261
+msgid "Build System Integration"
+msgstr ""
+
+#: ../../i18n-strategy.md:263
+msgid "In `justfile`:"
+msgstr ""
+
+#: ../../i18n-strategy.md:279
+msgid "GitHub Actions"
+msgstr ""
+
+#: ../../i18n-strategy.md:281
+msgid "Future CI integration:"
+msgstr ""
+
+#: ../../i18n-strategy.md:292
+msgid "Resources"
+msgstr ""
+
+#: ../../i18n-strategy.md:294
+msgid "Documentation"
+msgstr ""
+
+#: ../../i18n-strategy.md:296
+msgid ""
+"[Sphinx Internationalization](https://www.sphinx-"
+"doc.org/en/master/usage/advanced/intl.html)"
+msgstr ""
+
+#: ../../i18n-strategy.md:297
+msgid "[sphinx-intl Documentation](https://sphinx-intl.readthedocs.io/)"
+msgstr ""
+
+#: ../../i18n-strategy.md:298
+msgid "[GNU gettext Manual](https://www.gnu.org/software/gettext/manual/)"
+msgstr ""
+
+#: ../../i18n-strategy.md:300
+msgid "Tools"
+msgstr ""
+
+#: ../../i18n-strategy.md:302
+msgid "`sphinx-intl`: Translation file management"
+msgstr ""
+
+#: ../../i18n-strategy.md:303
+msgid "`poedit`: GUI editor for .po files"
+msgstr ""
+
+#: ../../i18n-strategy.md:304
+msgid "`msgfmt`: .po file validation"
+msgstr ""
+
+#: ../../i18n-strategy.md:305
+msgid "`translate-toolkit`: Advanced translation utilities"
+msgstr ""
+
+#: ../../i18n-strategy.md:307
+msgid "Contact"
+msgstr ""
+
+#: ../../i18n-strategy.md:309
+msgid "For questions about translation:"
+msgstr ""
+
+#: ../../i18n-strategy.md:311
+msgid "**GitHub Discussions**: Translation-related topics"
+msgstr ""
+
+#: ../../i18n-strategy.md:312
+msgid "**Issues**: Translation bugs or suggestions"
+msgstr ""
+
+#: ../../i18n-strategy.md:313
+msgid "**Contributing Guide**: See [CONTRIBUTING.md](../CONTRIBUTING.md)"
+msgstr ""
+
+#: ../../i18n-strategy.md:317
+msgid ""
+"**Last Updated**: January 10, 2026 **Status**: Active - Seeking German "
+"translators **Next Review**: Upon completion of first German translation "
+"milestone"
+msgstr ""

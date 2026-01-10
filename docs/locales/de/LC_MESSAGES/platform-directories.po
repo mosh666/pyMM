@@ -1,0 +1,367 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../platform-directories.md:1
+msgid "Platform-Specific Directory Support"
+msgstr ""
+
+#: ../../platform-directories.md:3
+msgid "Overview"
+msgstr ""
+
+#: ../../platform-directories.md:5
+msgid ""
+"pyMediaManager now follows platform conventions for configuration, data, "
+"and cache directories. This ensures compliance with operating system "
+"standards and improves integration with system-level tools."
+msgstr ""
+
+#: ../../platform-directories.md:9
+msgid "Directory Structure"
+msgstr ""
+
+#: ../../platform-directories.md:11 ../../platform-directories.md:269
+msgid "Windows"
+msgstr ""
+
+#: ../../platform-directories.md:13
+msgid ""
+"**Config/Data**: `%APPDATA%\\pyMediaManager` (e.g., "
+"`C:\\Users\\John\\AppData\\Roaming\\pyMediaManager`)"
+msgstr ""
+
+#: ../../platform-directories.md:15
+msgid ""
+"**Cache**: `%LOCALAPPDATA%\\pyMediaManager\\Cache` (e.g., "
+"`C:\\Users\\John\\AppData\\Local\\pyMediaManager\\Cache`)"
+msgstr ""
+
+#: ../../platform-directories.md:17 ../../platform-directories.md:278
+msgid "macOS"
+msgstr ""
+
+#: ../../platform-directories.md:19
+msgid "**Config/Data**: `~/Library/Application Support/pyMediaManager`"
+msgstr ""
+
+#: ../../platform-directories.md:20
+msgid "**Logs**: `~/Library/Logs/pyMediaManager` (future enhancement)"
+msgstr ""
+
+#: ../../platform-directories.md:21
+msgid "**Cache**: `~/Library/Caches/pyMediaManager`"
+msgstr ""
+
+#: ../../platform-directories.md:23
+msgid "Linux"
+msgstr ""
+
+#: ../../platform-directories.md:25
+msgid ""
+"Follows [XDG Base Directory Specification]( "
+"https://specifications.freedesktop.org/basedir-spec/basedir-spec-"
+"latest.html):"
+msgstr ""
+
+#: ../../platform-directories.md:28
+msgid ""
+"**Config**: `$XDG_CONFIG_HOME/pymediamanager` or "
+"`~/.config/pymediamanager`"
+msgstr ""
+
+#: ../../platform-directories.md:30
+msgid ""
+"**Data**: `$XDG_DATA_HOME/pymediamanager` or "
+"`~/.local/share/pymediamanager`"
+msgstr ""
+
+#: ../../platform-directories.md:31
+msgid "**Cache**: `$XDG_CACHE_HOME/pymediamanager` or `~/.cache/pymediamanager`"
+msgstr ""
+
+#: ../../platform-directories.md:33
+msgid "API"
+msgstr ""
+
+#: ../../platform-directories.md:35
+msgid "Functions"
+msgstr ""
+
+#: ../../platform-directories.md:55
+msgid "ConfigService"
+msgstr ""
+
+#: ../../platform-directories.md:67
+msgid "Migration"
+msgstr ""
+
+#: ../../platform-directories.md:69
+msgid "Automatic Migration"
+msgstr ""
+
+#: ../../platform-directories.md:71
+msgid ""
+"When `ConfigService` initializes, it automatically migrates configuration"
+" files from the legacy location (`app_root/config`) to the platform-"
+"specific directory if:"
+msgstr ""
+
+#: ../../platform-directories.md:75
+msgid "The platform-specific directory is empty (no `user.yaml` exists)"
+msgstr ""
+
+#: ../../platform-directories.md:76
+msgid "Files exist in the legacy location (`app_root/config`)"
+msgstr ""
+
+#: ../../platform-directories.md:78
+msgid "Migration copies:"
+msgstr ""
+
+#: ../../platform-directories.md:80
+msgid "`user.yaml` - User configuration overrides"
+msgstr ""
+
+#: ../../platform-directories.md:81
+msgid "`app.yaml` - Default application configuration"
+msgstr ""
+
+#: ../../platform-directories.md:83
+msgid "Manual Migration"
+msgstr ""
+
+#: ../../platform-directories.md:85
+msgid "If you need to manually migrate configuration:"
+msgstr ""
+
+#: ../../platform-directories.md:101
+msgid "Testing"
+msgstr ""
+
+#: ../../platform-directories.md:103
+msgid ""
+"Tests use explicit `config_dir` parameters to avoid platform-specific "
+"behavior:"
+msgstr ""
+
+#: ../../platform-directories.md:118
+msgid "Backward Compatibility"
+msgstr ""
+
+#: ../../platform-directories.md:120
+msgid "Legacy installations continue to work through automatic migration"
+msgstr ""
+
+#: ../../platform-directories.md:121
+msgid "Custom `config_dir` can be specified to override platform defaults"
+msgstr ""
+
+#: ../../platform-directories.md:122
+msgid "Tests explicitly specify `config_dir` for consistent behavior"
+msgstr ""
+
+#: ../../platform-directories.md:124
+msgid "Platform Detection"
+msgstr ""
+
+#: ../../platform-directories.md:126
+msgid ""
+"pyMM uses a centralized `Platform` enum for all platform detection, "
+"replacing scattered `sys.platform` checks throughout the codebase."
+msgstr ""
+
+#: ../../platform-directories.md:129
+msgid "Platform Enum API"
+msgstr ""
+
+#: ../../platform-directories.md:164
+msgid "Migration from sys.platform"
+msgstr ""
+
+#: ../../platform-directories.md:166
+msgid "The old pattern:"
+msgstr ""
+
+#: ../../platform-directories.md:179
+msgid "Should be replaced with:"
+msgstr ""
+
+#: ../../platform-directories.md:193
+msgid "Portable Mode"
+msgstr ""
+
+#: ../../platform-directories.md:195
+msgid ""
+"pyMM supports portable installations where all data is stored relative to"
+" the application directory. This is useful for USB drives or environments"
+" without write access to system directories."
+msgstr ""
+
+#: ../../platform-directories.md:198
+msgid "Portable Mode Configuration Cascade"
+msgstr ""
+
+#: ../../platform-directories.md:200
+msgid ""
+"Portable mode is determined by the following precedence (highest to "
+"lowest):"
+msgstr ""
+
+#: ../../platform-directories.md:202
+msgid "**CLI Flags**: `--portable` or `--no-portable`"
+msgstr ""
+
+#: ../../platform-directories.md:203
+msgid "**Environment Variable**: `PYMM_PORTABLE=true` or `PYMM_PORTABLE=false`"
+msgstr ""
+
+#: ../../platform-directories.md:204
+msgid "**Legacy Config**: `portable_mode` setting in `user.yaml`"
+msgstr ""
+
+#: ../../platform-directories.md:205
+msgid "**Auto-Detection**: Automatically enables if running from removable media"
+msgstr ""
+
+#: ../../platform-directories.md:207
+msgid "CLI Usage"
+msgstr ""
+
+#: ../../platform-directories.md:217
+msgid "Environment Variable"
+msgstr ""
+
+#: ../../platform-directories.md:230
+msgid "PortableConfig API"
+msgstr ""
+
+#: ../../platform-directories.md:250
+msgid "Status Bar Indicator"
+msgstr ""
+
+#: ../../platform-directories.md:252
+msgid ""
+"When running, the main window status bar displays the portable mode "
+"status:"
+msgstr ""
+
+#: ../../platform-directories.md:254
+msgid "📦 **Portable mode** - Shows source (CLI, ENV, config, or auto-detected)"
+msgstr ""
+
+#: ../../platform-directories.md:255
+msgid "💻 **Standard mode** - Uses platform-specific directories"
+msgstr ""
+
+#: ../../platform-directories.md:257
+msgid "Environment Variables"
+msgstr ""
+
+#: ../../platform-directories.md:259
+msgid "Linux (XDG)"
+msgstr ""
+
+#: ../../platform-directories.md:261
+msgid "Override default XDG directories:"
+msgstr ""
+
+#: ../../platform-directories.md:271
+msgid "Override default AppData locations:"
+msgstr ""
+
+#: ../../platform-directories.md:280
+msgid ""
+"macOS uses hardcoded `~/Library` paths and does not support environment "
+"variable overrides (as per macOS conventions)."
+msgstr ""
+
+#: ../../platform-directories.md:282
+msgid "Benefits"
+msgstr ""
+
+#: ../../platform-directories.md:284
+msgid ""
+"**Standards Compliance**: Follows OS-specific conventions for file "
+"organization"
+msgstr ""
+
+#: ../../platform-directories.md:285
+msgid ""
+"**Better Integration**: Works with system backup tools, sync services, "
+"and package managers"
+msgstr ""
+
+#: ../../platform-directories.md:286
+msgid "**User Familiarity**: Users expect config files in standard locations"
+msgstr ""
+
+#: ../../platform-directories.md:287
+msgid ""
+"**Packaging**: Simplifies creation of system packages (apt, homebrew, "
+"chocolatey)"
+msgstr ""
+
+#: ../../platform-directories.md:288
+msgid "**Isolation**: Separates config, data, and cache for better management"
+msgstr ""
+
+#: ../../platform-directories.md:290
+msgid "Future Enhancements"
+msgstr ""
+
+#: ../../platform-directories.md:292
+msgid "Support for `XDG_STATE_HOME` (Linux) for runtime state"
+msgstr ""
+
+#: ../../platform-directories.md:293
+msgid "macOS-specific log directory (`~/Library/Logs/pyMediaManager`)"
+msgstr ""
+
+#: ../../platform-directories.md:294
+msgid "System-wide configuration in `/etc/pymediamanager` (Linux)"
+msgstr ""
+
+#: ../../platform-directories.md:295
+msgid "Windows registry integration for advanced settings"
+msgstr ""
+
+#: ../../platform-directories.md:297
+msgid "References"
+msgstr ""
+
+#: ../../platform-directories.md:299
+msgid ""
+"[XDG Base Directory Specification](https://specifications.freedesktop.org"
+"/basedir-spec/basedir-spec-latest.html)"
+msgstr ""
+
+#: ../../platform-directories.md:300
+msgid ""
+"[Apple File System "
+"Basics](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html)"
+msgstr ""
+
+#: ../../platform-directories.md:301
+msgid ""
+"[Windows Known Folders](https://docs.microsoft.com/en-"
+"us/windows/win32/shell/knownfolderid)"
+msgstr ""

@@ -1,0 +1,269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../examples/README.md:1
+msgid "pyMediaManager Examples"
+msgstr ""
+
+#: ../../examples/README.md:3
+msgid ""
+"This directory contains working Python examples demonstrating "
+"pyMediaManager's API and features."
+msgstr ""
+
+#: ../../examples/README.md:5
+msgid "Structure"
+msgstr ""
+
+#: ../../examples/README.md:7
+msgid "Examples are organized by **feature area** and **complexity level**:"
+msgstr ""
+
+#: ../../examples/README.md:19
+msgid "Each feature directory contains three complexity levels:"
+msgstr ""
+
+#: ../../examples/README.md:21
+msgid "**basic/** - Simple, single-concept examples for getting started"
+msgstr ""
+
+#: ../../examples/README.md:22
+msgid "**intermediate/** - Multi-step workflows combining several features"
+msgstr ""
+
+#: ../../examples/README.md:23
+msgid "**advanced/** - Complex scenarios with error handling and edge cases"
+msgstr ""
+
+#: ../../examples/README.md:25
+msgid "Running Examples"
+msgstr ""
+
+#: ../../examples/README.md:27
+msgid "All examples are standalone Python scripts that can be run directly:"
+msgstr ""
+
+#: ../../examples/README.md:37
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../examples/README.md:39
+msgid "Examples require pyMediaManager to be installed:"
+msgstr ""
+
+#: ../../examples/README.md:45
+msgid ""
+"Some UI examples require a display environment (not suitable for headless"
+" servers)."
+msgstr ""
+
+#: ../../examples/README.md:47
+msgid "Example Categories"
+msgstr ""
+
+#: ../../examples/README.md:49
+msgid "Plugins"
+msgstr ""
+
+#: ../../examples/README.md:51
+msgid "Learn how to work with pyMM's plugin system:"
+msgstr ""
+
+#: ../../examples/README.md:53
+msgid "**Basic**: List plugins, check plugin status, get plugin metadata"
+msgstr ""
+
+#: ../../examples/README.md:54
+msgid "**Intermediate**: Install plugins, validate manifests, handle dependencies"
+msgstr ""
+
+#: ../../examples/README.md:55
+msgid ""
+"**Advanced**: Create custom plugins, verify SHA-256, handle platform-"
+"specific code"
+msgstr ""
+
+#: ../../examples/README.md:57
+msgid "Projects"
+msgstr ""
+
+#: ../../examples/README.md:59
+msgid "Project creation, management, and migration:"
+msgstr ""
+
+#: ../../examples/README.md:61
+msgid "**Basic**: Create project, load project, list projects"
+msgstr ""
+
+#: ../../examples/README.md:62
+msgid "**Intermediate**: Project templates, project migration, batch operations"
+msgstr ""
+
+#: ../../examples/README.md:63
+msgid ""
+"**Advanced**: Custom project types, migration rollback, conflict "
+"resolution"
+msgstr ""
+
+#: ../../examples/README.md:65
+msgid "Storage"
+msgstr ""
+
+#: ../../examples/README.md:67
+msgid "Storage detection and drive management:"
+msgstr ""
+
+#: ../../examples/README.md:69
+msgid "**Basic**: List drives, check drive status, get drive information"
+msgstr ""
+
+#: ../../examples/README.md:70
+msgid ""
+"**Intermediate**: Monitor drive changes, portable mode detection, drive "
+"validation"
+msgstr ""
+
+#: ../../examples/README.md:71
+msgid ""
+"**Advanced**: Cross-platform storage handling, network drives, custom "
+"storage backends"
+msgstr ""
+
+#: ../../examples/README.md:73
+msgid "UI"
+msgstr ""
+
+#: ../../examples/README.md:75
+msgid "Build custom interfaces with pyMM's UI components:"
+msgstr ""
+
+#: ../../examples/README.md:77
+msgid "**Basic**: Create simple dialogs, show notifications, use widgets"
+msgstr ""
+
+#: ../../examples/README.md:78
+msgid "**Intermediate**: Custom wizard pages, themed components, signal handling"
+msgstr ""
+
+#: ../../examples/README.md:79
+msgid "**Advanced**: Custom views, complex layouts, integration with main window"
+msgstr ""
+
+#: ../../examples/README.md:81
+msgid "Config"
+msgstr ""
+
+#: ../../examples/README.md:83
+msgid "Configuration management and validation:"
+msgstr ""
+
+#: ../../examples/README.md:85
+msgid "**Basic**: Read config, update config, save config"
+msgstr ""
+
+#: ../../examples/README.md:86
+msgid "**Intermediate**: Config layering, environment variables, portable mode"
+msgstr ""
+
+#: ../../examples/README.md:87
+msgid "**Advanced**: Custom validators, config migration, schema evolution"
+msgstr ""
+
+#: ../../examples/README.md:89
+msgid "Platform"
+msgstr ""
+
+#: ../../examples/README.md:91
+msgid "Cross-platform code and platform abstraction:"
+msgstr ""
+
+#: ../../examples/README.md:93
+msgid "**Basic**: Detect platform, use platform paths, check platform features"
+msgstr ""
+
+#: ../../examples/README.md:94
+msgid ""
+"**Intermediate**: Platform-specific config, conditional imports, platform"
+" testing"
+msgstr ""
+
+#: ../../examples/README.md:95
+msgid ""
+"**Advanced**: Platform compatibility checks, custom platform handlers, "
+"AST validation"
+msgstr ""
+
+#: ../../examples/README.md:97
+msgid "Documentation"
+msgstr ""
+
+#: ../../examples/README.md:99
+msgid "For detailed API documentation, see:"
+msgstr ""
+
+#: ../../examples/README.md:101
+msgid "[API Reference](../api-reference.md)"
+msgstr ""
+
+#: ../../examples/README.md:102
+msgid "[User Guide](../user-guide.md)"
+msgstr ""
+
+#: ../../examples/README.md:103
+msgid "[Plugin Development](../plugin-development.md)"
+msgstr ""
+
+#: ../../examples/README.md:105
+msgid "Contributing Examples"
+msgstr ""
+
+#: ../../examples/README.md:107
+msgid ""
+"We welcome contributions! See [CONTRIBUTING.md](../../CONTRIBUTING.md) "
+"for guidelines."
+msgstr ""
+
+#: ../../examples/README.md:109
+msgid "Good examples are:"
+msgstr ""
+
+#: ../../examples/README.md:111
+msgid "**Self-contained**: Can run independently without external files"
+msgstr ""
+
+#: ../../examples/README.md:112
+msgid "**Well-commented**: Explain what the code does and why"
+msgstr ""
+
+#: ../../examples/README.md:113
+msgid "**Realistic**: Show actual use cases, not contrived scenarios"
+msgstr ""
+
+#: ../../examples/README.md:114
+msgid "**Educational**: Teach one clear concept per example"
+msgstr ""
+
+#: ../../examples/README.md:118
+msgid ""
+"**Note**: Examples use development APIs marked with `.. versionadded:: "
+"dev` that may change before release."
+msgstr ""

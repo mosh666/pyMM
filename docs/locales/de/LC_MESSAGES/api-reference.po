@@ -1,0 +1,2756 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../api-reference.md:1
+msgid "API Reference"
+msgstr ""
+
+#: ../../api-reference.md:7
+#, python-format
+msgid ""
+"**Status:** Complete with 100% docstring coverage (477/477 functions "
+"documented)"
+msgstr ""
+
+#: ../../api-reference.md:9
+msgid "**Last Updated:** January 10, 2026"
+msgstr ""
+
+#: ../../api-reference.md:11
+msgid ""
+"Complete API reference for pyMediaManager with detailed documentation for"
+" all modules, classes, and functions. All APIs include comprehensive "
+"docstrings with type hints, examples, and cross-references."
+msgstr ""
+
+#: ../../api-reference.md:13
+msgid "Quick Navigation"
+msgstr ""
+
+#: ../../api-reference.md:19
+msgid "🔌 Plugin System"
+msgstr ""
+
+#: ../../api-reference.md:21
+msgid ""
+"Discover, install, and manage plugins with manifest-based architecture "
+"and SHA-256 verification."
+msgstr ""
+
+#: ../../api-reference.md:23
+msgid "See: [Plugin System](#plugin-system)"
+msgstr ""
+
+#: ../../api-reference.md:26
+msgid "📁 Project Management"
+msgstr ""
+
+#: ../../api-reference.md:28
+msgid ""
+"Create and manage media projects with templates, migrations, and version "
+"control integration."
+msgstr ""
+
+#: ../../api-reference.md:30
+msgid "See: [Project Service API](#project-service-api)"
+msgstr ""
+
+#: ../../api-reference.md:33
+msgid "⚙️ Configuration"
+msgstr ""
+
+#: ../../api-reference.md:35
+msgid ""
+"Layered configuration system with validation, portable mode, and "
+"environment variables."
+msgstr ""
+
+#: ../../api-reference.md:37
+msgid "See: [Configuration Service API](#configuration-service-api)"
+msgstr ""
+
+#: ../../api-reference.md:40
+msgid "💾 Storage Detection"
+msgstr ""
+
+#: ../../api-reference.md:42
+msgid ""
+"Cross-platform drive detection with portable mode support and real-time "
+"monitoring."
+msgstr ""
+
+#: ../../api-reference.md:44 ../../api-reference.md:58
+msgid "See: [Platform Specific Modules](#platform-specific-modules)"
+msgstr ""
+
+#: ../../api-reference.md:47
+msgid "🖥️ User Interface"
+msgstr ""
+
+#: ../../api-reference.md:49
+msgid ""
+"PySide6 + QFluentWidgets components for building modern Fluent Design "
+"interfaces."
+msgstr ""
+
+#: ../../api-reference.md:51
+msgid "See: [User Interface](#user-interface)"
+msgstr ""
+
+#: ../../api-reference.md:54
+msgid "🌍 Platform Abstraction"
+msgstr ""
+
+#: ../../api-reference.md:56
+msgid ""
+"Cross-platform utilities for Windows, Linux, and macOS with XDG "
+"compliance."
+msgstr ""
+
+#: ../../api-reference.md:62
+msgid "Architecture Overview"
+msgstr ""
+
+#: ../../api-reference.md:64
+msgid "pyMediaManager follows a layered architecture:"
+msgstr ""
+
+#: ../../api-reference.md:93
+msgid "Plugin System"
+msgstr ""
+
+#: ../../api-reference.md:95
+msgid ""
+"The plugin system provides extensible functionality through manifest-"
+"based plugins with SHA-256 verification for security."
+msgstr ""
+
+#: ../../api-reference.md:101
+msgid "📖 Learn More"
+msgstr ""
+
+#: ../../api-reference.md:102
+msgid "[Plugin Development Guide](plugin-development.md)"
+msgstr ""
+
+#: ../../api-reference.md:103
+msgid "[Plugin Catalog](plugin-catalog.md)"
+msgstr ""
+
+#: ../../api-reference.md:104
+msgid "[Example: List Plugins](examples/plugins/basic/list_plugins.py)"
+msgstr ""
+
+#: ../../api-reference.md:107
+msgid "🎯 Key Features"
+msgstr ""
+
+#: ../../api-reference.md:108
+msgid "Manifest-based architecture (YAML)"
+msgstr ""
+
+#: ../../api-reference.md:109
+msgid "SHA-256 file integrity verification"
+msgstr ""
+
+#: ../../api-reference.md:110
+msgid "Platform-specific plugin support"
+msgstr ""
+
+#: ../../api-reference.md:111
+msgid "Automatic dependency checking"
+msgstr ""
+
+#: ../../api-reference.md:112
+msgid "Template-based project migration"
+msgstr ""
+
+#: ../../api-reference.md:117
+msgid "PluginManager"
+msgstr ""
+
+#: ../../api-reference.md:119
+msgid "Central hub for plugin discovery, installation, and lifecycle management."
+msgstr ""
+
+#: app.core.logging_service.LoggingService:1 app.core.platform.PortableConfig:1
+#: app.core.services.config_service.ConfigService:1
+#: app.core.services.file_system_service.FileSystemService:1
+#: app.models.project.Project:1 app.plugins.plugin_manager.PluginManager:1
+#: app.plugins.system_tool_detector.SystemToolDetector:1
+#: app.services.git_service.GitService:1
+#: app.services.project_service.ProjectService:1 of
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager:1 of
+msgid "Manager for application plugins."
+msgstr ""
+
+#: ../../api-reference.md:129 ../../api-reference.md:261
+#: ../../api-reference.md:312
+msgid "Usage Example"
+msgstr ""
+
+#: ../../api-reference.md:153
+msgid ":doc:`plugin-development`"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.__init__:1 of
+msgid "Initialize plugin manager."
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Parameters"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.__init__:3 of
+msgid "Directory where plugins are installed (e.g., D:\\pyMM.Plugins)"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.__init__:4 of
+msgid "Directory containing plugin manifest YAML files"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.__init__:5 of
+msgid "If True, raise error on direct sys.platform usage in plugins"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.discover_plugins:1 of
+msgid "Discover plugins from manifest files."
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Returns"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.discover_plugins:3 of
+msgid "Number of plugins discovered"
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Return type"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_plugin:1 of
+msgid "Get plugin by name."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_plugin:3
+#: app.plugins.plugin_manager.PluginManager.get_plugin_status:3
+#: app.plugins.plugin_manager.PluginManager.install_plugin:3
+#: app.plugins.plugin_manager.PluginManager.uninstall_plugin:3
+#: app.plugins.plugin_manager.PluginManager.update_plugin:3 of
+msgid "Plugin name"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_plugin:5 of
+msgid "Plugin instance or None"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_all_plugins:1 of
+msgid "Get all discovered plugins."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_all_plugins:3 of
+msgid "List of plugin instances"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_mandatory_plugins:1 of
+msgid "Get mandatory plugins only."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_mandatory_plugins:3 of
+msgid "List of mandatory plugin instances"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_optional_plugins:1 of
+msgid "Get optional plugins only."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_optional_plugins:3 of
+msgid "List of optional plugin instances"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_enabled_plugins:1 of
+msgid "Get enabled plugins only."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_enabled_plugins:3 of
+msgid "List of enabled plugin instances"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_installed_plugins:1 of
+msgid "Get plugins that are currently installed."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_installed_plugins:3 of
+msgid "List of installed plugin instances"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.install_plugin:1 of
+msgid "Install a plugin by name."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.install_plugin:4
+#: app.plugins.plugin_manager.PluginManager.update_plugin:4 of
+msgid "Optional callback for progress updates"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.install_plugin:6 of
+msgid "True if installation successful"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.uninstall_plugin:1 of
+msgid "Uninstall a plugin by name."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.uninstall:3
+#: app.plugins.plugin_manager.PluginManager.uninstall_plugin:5 of
+msgid "True if uninstallation successful"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.update_plugin:1 of
+msgid "Update a plugin to latest version."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.update_plugin:6 of
+msgid "True if update successful"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_plugin_status:1 of
+msgid "Get detailed status of a plugin."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.get_plugin_status:5 of
+msgid "Dictionary with plugin status information"
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.register_plugins_to_path:1 of
+msgid "Get list of plugin paths that should be registered to PATH."
+msgstr ""
+
+#: app.plugins.plugin_manager.PluginManager.register_plugins_to_path:3 of
+msgid "List of paths to add to PATH environment variable"
+msgstr ""
+
+#: ../../api-reference.md:156
+msgid "PluginBase"
+msgstr ""
+
+#: ../../api-reference.md:158
+msgid "Abstract base class for all plugin implementations."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase:1 of
+msgid "Bases: :py:class:`~abc.ABC`"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase:1 of
+msgid "Abstract base class for plugins."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.__init__:1 of
+msgid "Initialize plugin."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.__init__:3 of
+msgid "Plugin manifest configuration"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.__init__:4 of
+msgid "Directory where plugin will be installed"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.download:1 of
+msgid "Download plugin binaries."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.download:3 of
+msgid "Optional callback for progress updates (current, total)"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.download:5 of
+msgid "True if download successful"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.extract:1 of
+msgid "Extract downloaded plugin archive."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.extract:3 of
+msgid "True if extraction successful"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.validate_installation:1 of
+msgid "Validate that plugin is properly installed."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.validate_installation:3 of
+msgid "True if plugin is installed and functional"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_version:1 of
+msgid "Get installed plugin version."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_version:3 of
+msgid "Version string or None if not installed"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_executable_path:1 of
+msgid "Get path to plugin executable (backwards compatible wrapper)."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_executable_path:3 of
+msgid "Path to executable or None if not found"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_executable_info:1 of
+msgid "Get plugin executable with hybrid system/portable resolution."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.get_executable_info:3 of
+msgid "Tuple of (path, source, version) or (None, ExecutableSource.NONE, None)"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.is_installed:1 of
+msgid "Check if plugin is installed."
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.is_installed:3 of
+msgid "True if plugin directory exists and validates"
+msgstr ""
+
+#: app.plugins.plugin_base.PluginBase.uninstall:1 of
+msgid "Uninstall plugin by removing its directory."
+msgstr ""
+
+#: ../../api-reference.md:167
+msgid "Plugin Manifest Schema"
+msgstr ""
+
+#: ../../api-reference.md:169
+msgid "Pydantic models for plugin manifest validation."
+msgstr ""
+
+#: app.plugins.plugin_schema:1 of
+msgid "Pydantic schema models for plugin YAML validation."
+msgstr ""
+
+#: ../../api-reference.md:179
+msgid "Manifest Structure"
+msgstr ""
+
+#: ../../api-reference.md:180
+msgid ""
+"Plugin manifests are YAML files defining metadata, dependencies, and "
+"files:"
+msgstr ""
+
+#: app.plugins.plugin_schema.PlatformConfig:1
+#: app.plugins.plugin_schema.PluginCommand:1
+#: app.plugins.plugin_schema.PluginManifestSchema:1
+#: app.plugins.plugin_schema.PluginSource:1 of
+msgid "Bases: :py:class:`~pydantic.main.BaseModel`"
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginSource:1 of
+msgid "Plugin source configuration for downloading."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginSource.validate_type:1 of
+msgid "Validate that source type is supported."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginSource.validate_checksum:1 of
+msgid "Validate SHA-256 checksum format."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginSource.validate_file_size:1 of
+msgid "Validate file size is positive."
+msgstr ""
+
+#: ../../../docstring app.plugins.plugin_schema.PlatformConfig.model_config:1
+#: app.plugins.plugin_schema.PluginCommand.model_config:1
+#: app.plugins.plugin_schema.PluginManifestSchema.model_config:1
+#: app.plugins.plugin_schema.PluginSource.model_config:1 of
+msgid ""
+"Configuration for the model, should be a dictionary conforming to "
+"[`ConfigDict`][pydantic.config.ConfigDict]."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginCommand:1 of
+msgid "Plugin command configuration for executable location."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginCommand.validate_executable:1 of
+msgid "Validate executable is not empty."
+msgstr ""
+
+#: app.plugins.plugin_schema.PlatformConfig:1 of
+msgid "Platform-specific plugin configuration."
+msgstr ""
+
+#: app.plugins.plugin_schema.PlatformConfig:3 of
+msgid ""
+"Defines how a plugin should be installed and configured on a specific "
+"platform (Windows, Linux, or macOS)."
+msgstr ""
+
+#: app.plugins.plugin_schema.PlatformConfig.validate_version_constraint:1 of
+msgid "Validate version constraint format."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema:1 of
+msgid "Complete plugin manifest schema for YAML validation."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema:3 of
+msgid ""
+"This schema validates all fields in plugin.yaml files to ensure they meet"
+" the requirements for the plugin system."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema:6 of
+msgid ""
+"Schema version 2 introduces platform-specific configuration allowing "
+"cross-platform support with system package detection and portable binary "
+"fallback."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema:9 of
+msgid ""
+"For backward compatibility, v1 manifests are automatically detected and "
+"converted."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema.convert_v1_to_v2:1 of
+msgid "Auto-convert v1 manifests and flattened v2 manifests to proper v2 format."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema.validate_platforms:1 of
+msgid "Validate platforms contains at least one valid platform."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema.validate_name:1 of
+msgid "Validate plugin name is not empty."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema.validate_version:1 of
+msgid "Validate version string is not empty."
+msgstr ""
+
+#: app.plugins.plugin_schema.PluginManifestSchema.validate_dependencies:1 of
+msgid "Validate dependencies list contains no empty strings."
+msgstr ""
+
+#: ../../api-reference.md:208
+msgid "PluginMigrator"
+msgstr ""
+
+#: ../../api-reference.md:210
+msgid "Handles project template migrations when plugins are updated."
+msgstr ""
+
+#: ../../api-reference.md:219
+msgid "Class implementation pending."
+msgstr ""
+
+#: ../../api-reference.md:222
+msgid "SystemToolDetector"
+msgstr ""
+
+#: ../../api-reference.md:224
+msgid "Cross-platform system tool detection and validation."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector:1 of
+msgid "Detector for system-installed tools with version validation."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector:3 of
+msgid ""
+"Uses shutil.which() to find tools in PATH and validates versions against "
+"packaging specifiers. Results are cached per session."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.__init__:1 of
+msgid "Initialize system tool detector."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.find_system_tool:1 of
+msgid "Find a system-installed tool and validate its version."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.find_system_tool:3 of
+msgid "Tool executable name (e.g., 'git', 'ffmpeg')"
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.find_system_tool:4 of
+msgid "Optional version constraint (e.g., '>=2.40,<4.0')"
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.find_system_tool:6 of
+msgid "SystemToolInfo if tool found, None otherwise"
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.clear_cache:1 of
+msgid "Clear the tool detection cache."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.get_cache_stats:1 of
+msgid "Get cache statistics."
+msgstr ""
+
+#: app.plugins.system_tool_detector.SystemToolDetector.get_cache_stats:3 of
+msgid "Dictionary with cache stats"
+msgstr ""
+
+#: ../../api-reference.md:236
+msgid "Services Layer"
+msgstr ""
+
+#: ../../api-reference.md:238
+msgid "Business logic services providing core application functionality."
+msgstr ""
+
+#: ../../api-reference.md:241
+msgid "ProjectService"
+msgstr ""
+
+#: ../../api-reference.md:243
+msgid "Manages project creation, discovery, and template migrations."
+msgstr ""
+
+#: app.services.project_service.ProjectService:1 of
+msgid "Service for managing project lifecycle with template support."
+msgstr ""
+
+#: app.services.project_service.ProjectService:3 of
+msgid ""
+"Handles project creation, loading, saving, deletion, listing, template "
+"management, and migration capabilities."
+msgstr ""
+
+#: ../../api-reference.md:252
+msgid "Project Lifecycle"
+msgstr ""
+
+#: ../../api-reference.md:253
+msgid "The ProjectService handles the complete project lifecycle:"
+msgstr ""
+
+#: ../../api-reference.md:255
+msgid "**Creation**: Create projects from templates"
+msgstr ""
+
+#: ../../api-reference.md:256
+msgid "**Discovery**: Scan storage locations for existing projects"
+msgstr ""
+
+#: ../../api-reference.md:257
+msgid "**Migration**: Update projects when templates change"
+msgstr ""
+
+#: ../../api-reference.md:258
+msgid "**Validation**: Ensure project integrity and structure"
+msgstr ""
+
+#: ../../api-reference.md:289
+msgid ":doc:`user-guide` (Projects section)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:1 of
+msgid "Initialize the project service."
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:3 of
+msgid "Directory where project metadata files are stored"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:4 of
+msgid "Optional GitService for Git integration"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:5 of
+msgid "Directory containing project templates (defaults to <app_root>/templates)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:6 of
+msgid "Filesystem watch polling interval in seconds"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__init__:7 of
+msgid ""
+"Disable template filesystem watching (also reads "
+"PYMM_DISABLE_TEMPLATE_WATCH env var)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.__del__:1 of
+msgid "Cleanup filesystem watcher on destruction."
+msgstr ""
+
+#: app.services.project_service.ProjectService.discover_templates:1 of
+msgid "Discover and validate all templates in templates directory."
+msgstr ""
+
+#: app.services.project_service.ProjectService.discover_templates:3 of
+msgid "Dictionary mapping template names to metadata"
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Raises"
+msgstr ""
+
+#: app.services.project_service.ProjectService.discover_templates:5 of
+msgid "If template.yaml has invalid schema"
+msgstr ""
+
+#: app.services.project_service.ProjectService.discover_templates:6 of
+msgid "If template version incompatible with current app version"
+msgstr ""
+
+#: app.services.project_service.ProjectService.refresh_templates:1 of
+msgid "Refresh template cache by rescanning filesystem."
+msgstr ""
+
+#: app.services.project_service.ProjectService.get_template:1 of
+msgid "Get template metadata by name."
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_templates:1 of
+msgid "List all available templates."
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:1 of
+msgid "Create a new project."
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:3 of
+msgid "Project name"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:4 of
+msgid "Project directory path"
+msgstr ""
+
+#: app.models.project.Project:34
+#: app.services.project_service.ProjectService.create_project:5 of
+msgid "Optional project description"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:6 of
+msgid "Optional template name to use"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:7 of
+msgid "Whether to initialize Git repository"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:9 of
+msgid "Created Project instance"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:11 of
+msgid "If project already exists or path is invalid"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_project:12 of
+msgid "If template not found"
+msgstr ""
+
+#: app.services.project_service.ProjectService.load_project:1 of
+msgid "Load a project from its directory."
+msgstr ""
+
+#: app.services.project_service.ProjectService.load_project:3 of
+msgid "Path to the project directory"
+msgstr ""
+
+#: app.services.project_service.ProjectService.load_project:5 of
+msgid "Project instance or None if not found"
+msgstr ""
+
+#: app.services.project_service.ProjectService.save_project:1 of
+msgid "Save project metadata."
+msgstr ""
+
+#: app.services.project_service.ProjectService.save_project:3 of
+msgid "Project to save"
+msgstr ""
+
+#: app.services.project_service.ProjectService.delete_project:1 of
+msgid "Delete a project."
+msgstr ""
+
+#: app.services.project_service.ProjectService.delete_project:3 of
+msgid "Project to delete"
+msgstr ""
+
+#: app.services.project_service.ProjectService.delete_project:4 of
+msgid "Whether to delete project files (default: False)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_projects:1 of
+msgid "List all known projects."
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_projects:3 of
+msgid "List of Project instances"
+msgstr ""
+
+#: app.services.project_service.ProjectService.calculate_migration_diff:1 of
+msgid "Calculate differences between project and target template version."
+msgstr ""
+
+#: app.services.project_service.ProjectService.calculate_migration_diff:3 of
+msgid "Project to check for migration"
+msgstr ""
+
+#: app.services.project_service.ProjectService.calculate_migration_diff:5 of
+msgid "MigrationDiff if migration available, None otherwise"
+msgstr ""
+
+#: app.services.project_service.ProjectService.check_project_migration:1 of
+msgid "Check if project needs migration."
+msgstr ""
+
+#: app.services.project_service.ProjectService.check_project_migration:3 of
+msgid "Project to check"
+msgstr ""
+
+#: app.services.project_service.ProjectService.check_project_migration:5 of
+msgid "Tuple of (needs_migration, migration_diff)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_preview_migration:1 of
+msgid "Create temporary copy of project for migration preview."
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_preview_migration:3 of
+msgid "Project to preview"
+msgstr ""
+
+#: app.services.project_service.ProjectService.create_preview_migration:5 of
+msgid "Tuple of (preview_path, preview_project)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.cleanup_preview_migration:1 of
+msgid "Remove temporary preview directory."
+msgstr ""
+
+#: app.services.project_service.ProjectService.cleanup_preview_migration:3 of
+msgid "Path to preview temp directory"
+msgstr ""
+
+#: app.services.project_service.ProjectService.schedule_deferred_migration:1 of
+msgid "Schedule migration to be applied later."
+msgstr ""
+
+#: app.services.project_service.ProjectService.schedule_deferred_migration:3 of
+msgid "Project to schedule migration for"
+msgstr ""
+
+#: app.services.project_service.ProjectService.schedule_deferred_migration:4 of
+msgid "Target template version"
+msgstr ""
+
+#: app.services.project_service.ProjectService.schedule_deferred_migration:5 of
+msgid "Reason for deferral"
+msgstr ""
+
+#: app.services.project_service.ProjectService.schedule_deferred_migration:7 of
+msgid "Updated project"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:1 of
+msgid "Migrate project to latest template version."
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:3
+#: app.ui.dialogs.migration_dialog.MigrationDialog.__init__:3 of
+msgid "Project to migrate"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:4 of
+msgid "Create backup before migration"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:5 of
+msgid "Skip removal of folders with conflicts"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:6 of
+msgid "Name of person/process applying migration"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:7 of
+msgid "Whether this was a deferred migration"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:8 of
+msgid "If True, skip backup and Git operations"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:10 of
+msgid "Tuple of (updated_project, backup_path)"
+msgstr ""
+
+#: app.services.project_service.ProjectService.migrate_project:12 of
+msgid "If migration not available or fails"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_project:1 of
+msgid "Rollback project to backup."
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_project:3 of
+msgid "Project to rollback"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_project:4 of
+msgid "Path to backup directory"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_project:6 of
+msgid "Restored project"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_project:8 of
+msgid "If backup doesn't exist"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_multiple_projects:1 of
+msgid "Rollback multiple projects in batch."
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_multiple_projects:3 of
+msgid "List of (project, backup_path) tuples"
+msgstr ""
+
+#: app.services.project_service.ProjectService.rollback_multiple_projects:5 of
+msgid "Dictionary mapping project names to success status"
+msgstr ""
+
+#: app.services.project_service.ProjectService.apply_pending_migrations:1 of
+msgid "Apply all pending migrations."
+msgstr ""
+
+#: app.services.project_service.ProjectService.apply_pending_migrations:3 of
+msgid "List of (project, success, message) tuples"
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_migratable_projects:1 of
+msgid "List all projects that have available migrations."
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_migratable_projects:3 of
+msgid "List of (project, migration_diff) tuples"
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_projects_with_pending_migrations:1
+#: of
+msgid "List all projects with pending migrations."
+msgstr ""
+
+#: app.services.project_service.ProjectService.list_projects_with_pending_migrations:3
+#: of
+msgid "List of projects"
+msgstr ""
+
+#: ../../api-reference.md:293
+msgid "ConfigService"
+msgstr ""
+
+#: ../../api-reference.md:295
+msgid "Layered configuration management with Pydantic validation."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService:1 of
+msgid "Service for managing layered application configuration."
+msgstr ""
+
+#: ../../api-reference.md:304
+msgid "Configuration Layers"
+msgstr ""
+
+#: ../../api-reference.md:305
+msgid "Configuration is resolved in priority order:"
+msgstr ""
+
+#: ../../api-reference.md:307
+msgid "**Portable Config** (highest priority) - USB drive portable mode"
+msgstr ""
+
+#: ../../api-reference.md:308
+msgid "**User Config** - ~/.config/pyMediaManager/config.yaml"
+msgstr ""
+
+#: ../../api-reference.md:309
+msgid "**Default Config** - Built-in application defaults"
+msgstr ""
+
+#: ../../api-reference.md:335
+msgid "Environment variable support for configuration overrides"
+msgstr ""
+
+#: ../../api-reference.md:340 ../../api-reference.md:453
+msgid ":doc:`platform-directories`"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.__init__:1 of
+msgid "Initialize configuration service."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.__init__:3 of
+msgid "Application root directory (for legacy fallback, deprecated)"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.__init__:4 of
+msgid "Configuration directory (defaults to platform-specific location)"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.load:1 of
+msgid "Load configuration from all layers (defaults → file → environment → user)."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.load:3 of
+msgid "Loaded AppConfig object"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.save_user_config:1 of
+msgid "Save user configuration to user.yaml."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.save_user_config:3 of
+msgid "AppConfig object to save"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.get_config:1 of
+msgid "Get current configuration, loading it if not already loaded."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.get_config:3 of
+msgid "Current AppConfig object"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.update_config:1 of
+msgid "Update configuration values and save to user config."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.update_config:3 of
+msgid "Configuration values to update"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.update_config:5 of
+msgid "Updated AppConfig object"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.reset_to_defaults:1 of
+msgid "Reset configuration to defaults by removing user config."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.reset_to_defaults:3 of
+msgid "Default AppConfig object"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.load_plugin_preferences:1 of
+msgid "Load plugin preferences from plugins.yaml."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.load_plugin_preferences:3
+#: app.core.services.config_service.ConfigService.save_plugin_preferences:3 of
+msgid "Dictionary mapping plugin IDs to PluginPreferences"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.save_plugin_preferences:1 of
+msgid "Save plugin preferences to plugins.yaml."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.get_plugin_preference:1 of
+msgid "Get preference for a specific plugin."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.get_plugin_preference:3
+#: app.core.services.config_service.ConfigService.set_plugin_preference:3 of
+msgid "Plugin identifier"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.get_plugin_preference:5 of
+msgid "PluginPreferences for the plugin (default if not set)"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.set_plugin_preference:1 of
+msgid "Set preference for a specific plugin."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.set_plugin_preference:4 of
+msgid "PluginPreferences object (or None to use kwargs)"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.set_plugin_preference:5 of
+msgid "Preference fields to update (execution_preference, enabled, notes)"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.export_config:1 of
+msgid "Export current configuration to a file."
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.export_config:3 of
+msgid "Path to output file"
+msgstr ""
+
+#: app.core.services.config_service.ConfigService.export_config:4 of
+msgid "If True, redact sensitive values"
+msgstr ""
+
+#: ../../api-reference.md:344
+msgid "StorageService"
+msgstr ""
+
+#: ../../api-reference.md:346
+msgid "Cross-platform storage and drive detection."
+msgstr ""
+
+#: ../../api-reference.md:385
+msgid "GitService"
+msgstr ""
+
+#: ../../api-reference.md:387
+msgid "Git repository operations and version control integration."
+msgstr ""
+
+#: app.services.git_service.GitService:1 of
+msgid "Service for Git repository operations."
+msgstr ""
+
+#: app.services.git_service.GitService:3 of
+msgid ""
+"Provides methods for: - Repository initialization - Status checking - "
+"Committing changes - Pushing to remotes"
+msgstr ""
+
+#: ../../api-reference.md:396
+msgid ""
+"Requires Git plugin to be installed. The service wraps GitPython for "
+"repository operations."
+msgstr ""
+
+#: app.services.git_service.GitService.init_repository:1 of
+msgid "Initialize a Git repository."
+msgstr ""
+
+#: app.services.git_service.GitService.init_repository:3 of
+msgid "Path to the directory to initialize"
+msgstr ""
+
+#: app.services.git_service.GitService.init_repository:4 of
+msgid "Whether to create an initial commit"
+msgstr ""
+
+#: app.services.git_service.GitService.init_repository:6 of
+msgid "Git Repo object"
+msgstr ""
+
+#: app.services.git_service.GitService.init_repository:8 of
+msgid "If Git initialization fails"
+msgstr ""
+
+#: app.services.git_service.GitService.get_repository:1 of
+msgid "Get a Git repository at the specified path."
+msgstr ""
+
+#: app.services.git_service.GitService.add_remote:3
+#: app.services.git_service.GitService.commit:3
+#: app.services.git_service.GitService.get_log:3
+#: app.services.git_service.GitService.get_remotes:3
+#: app.services.git_service.GitService.get_repository:3
+#: app.services.git_service.GitService.get_status:3
+#: app.services.git_service.GitService.push:3 of
+msgid "Path to the repository"
+msgstr ""
+
+#: app.services.git_service.GitService.get_repository:5 of
+msgid "Repo object or None if not a Git repository"
+msgstr ""
+
+#: app.services.git_service.GitService.is_repository:1 of
+msgid "Check if a directory is a Git repository."
+msgstr ""
+
+#: app.services.git_service.GitService.is_repository:3 of
+msgid "Path to check"
+msgstr ""
+
+#: app.services.git_service.GitService.is_repository:5 of
+msgid "True if it's a Git repository"
+msgstr ""
+
+#: app.services.git_service.GitService.get_status:1 of
+msgid "Get the status of a Git repository."
+msgstr ""
+
+#: app.services.git_service.GitService.get_status:5 of
+msgid "Dictionary with status information or None if not a repo"
+msgstr ""
+
+#: app.services.git_service.GitService.commit:1 of
+msgid "Commit changes to the repository."
+msgstr ""
+
+#: app.services.git_service.GitService.commit:4 of
+msgid "Commit message"
+msgstr ""
+
+#: app.services.git_service.GitService.commit:5 of
+msgid "Whether to stage all changes before committing"
+msgstr ""
+
+#: app.services.git_service.GitService.commit:6 of
+msgid "Specific files to stage (if add_all is False)"
+msgstr ""
+
+#: app.services.git_service.GitService.commit:8 of
+msgid "True if commit was successful"
+msgstr ""
+
+#: app.services.git_service.GitService.commit:10 of
+msgid "If commit fails"
+msgstr ""
+
+#: app.services.git_service.GitService.push:1 of
+msgid "Push commits to a remote repository."
+msgstr ""
+
+#: app.services.git_service.GitService.push:4 of
+msgid "Name of the remote (default: \"origin\")"
+msgstr ""
+
+#: app.services.git_service.GitService.push:5 of
+msgid "Branch to push (default: current branch)"
+msgstr ""
+
+#: app.services.git_service.GitService.push:7 of
+msgid "Tuple of (success, message)"
+msgstr ""
+
+#: app.services.git_service.GitService.add_remote:1 of
+msgid "Add a remote to the repository."
+msgstr ""
+
+#: app.services.git_service.GitService.add_remote:4 of
+msgid "Name of the remote"
+msgstr ""
+
+#: app.services.git_service.GitService.add_remote:5 of
+msgid "URL of the remote"
+msgstr ""
+
+#: app.services.git_service.GitService.add_remote:7 of
+msgid "True if remote was added successfully"
+msgstr ""
+
+#: app.services.git_service.GitService.get_remotes:1 of
+msgid "Get list of remotes for the repository."
+msgstr ""
+
+#: app.services.git_service.GitService.get_remotes:5 of
+msgid "List of dictionaries with remote information"
+msgstr ""
+
+#: app.services.git_service.GitService.get_log:1 of
+msgid "Get commit log for the repository."
+msgstr ""
+
+#: app.services.git_service.GitService.get_log:4 of
+msgid "Maximum number of commits to retrieve"
+msgstr ""
+
+#: app.services.git_service.GitService.get_log:6 of
+msgid "List of commit dictionaries"
+msgstr ""
+
+#: ../../api-reference.md:400
+msgid "FileSystemService"
+msgstr ""
+
+#: ../../api-reference.md:402
+msgid "Cross-platform file system operations with error handling."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService:1 of
+msgid "Service for file system operations with portable path handling."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.__init__:1 of
+msgid "Initialize file system service."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.__init__:3 of
+msgid "Application root directory. If None, auto-detects from module path."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.__init__:4 of
+msgid "Pre-resolved portable configuration. If None, resolves from env."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.portable_config:1 of
+msgid "Get the current portable configuration."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_app_root:1 of
+msgid "Get the application root directory."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_drive_root:1 of
+msgid "Get the root of the drive containing the app."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_drive_root:3 of
+msgid ""
+"Returns the drive root (e.g., D:\\ if app is at D:\\pyMM). Caches the "
+"result after first call."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_drive_root:6 of
+msgid "Path to drive root directory"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_portable_folder:1
+#: of
+msgid "Get path to a portable folder at the drive root."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_portable_folder:3
+#: of
+msgid ""
+"For portable operation, certain folders (Projects, Logs) should be at the"
+" drive root rather than within the app directory."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_portable_folder:6
+#: of
+msgid "Name of the folder (e.g., \"pyMM.Projects\", \"pyMM.Logs\")"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_portable_folder:8
+#: of
+msgid "Path to the portable folder at drive root"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_portable_folders:1
+#: of
+msgid "Ensure all portable folders exist at the drive root."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_portable_folders:3
+#: of
+msgid ""
+"Creates pyMM.Projects and pyMM.Logs folders at the root of the drive "
+"containing the application."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_portable_folders:6
+#: of
+msgid "Dictionary mapping folder names to their resolved paths"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_relative_path:1
+#: of
+msgid "Get path relative to base directory."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_relative_path:3
+#: of
+msgid "Absolute path to convert"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_relative_path:4
+#: of
+msgid "Base directory (defaults to app_root)"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_relative_path:6
+#: of
+msgid "Relative path from base to path"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.resolve_path:1 of
+msgid "Resolve a path that may be relative or absolute."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.resolve_path:3 of
+msgid "Path to resolve (string or Path object)"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.resolve_path:4 of
+msgid "Base directory for relative paths (defaults to app_root)"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.resolve_path:6 of
+msgid "Resolved absolute path"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_directory:1
+#: of
+msgid "Ensure a directory exists, creating it if necessary."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_directory:3
+#: of
+msgid "Directory path to create"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_directory:5
+#: of
+msgid "Resolved path to the directory"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.ensure_directory:7
+#: of
+msgid "If directory creation fails"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.list_directory:1 of
+msgid "List files in a directory matching a pattern."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.list_directory:3 of
+msgid "Directory to list"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.list_directory:4 of
+msgid "Glob pattern to match (default: \"*\")"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.list_directory:5 of
+msgid "If True, search recursively with rglob"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.list_directory:7 of
+msgid "List of matching paths"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:1 of
+msgid "Copy a file from source to destination."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:3
+#: app.core.services.file_system_service.FileSystemService.move_file:3 of
+msgid "Source file path"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:4
+#: app.core.services.file_system_service.FileSystemService.move_file:4 of
+msgid "Destination file path"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:5
+#: app.core.services.file_system_service.FileSystemService.move_file:5 of
+msgid "If True, overwrite existing destination"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:7 of
+msgid "Path to the copied file"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:9
+#: app.core.services.file_system_service.FileSystemService.move_file:9 of
+msgid "If source doesn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.copy_file:10
+#: app.core.services.file_system_service.FileSystemService.move_file:10 of
+msgid "If destination exists and overwrite=False"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.move_file:1 of
+msgid "Move a file from source to destination."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.move_file:7 of
+msgid "Path to the moved file"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_file:1 of
+msgid "Delete a file."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_file:3 of
+msgid "File path to delete"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_file:4 of
+msgid "If True, don't raise error if file doesn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_file:6 of
+msgid "True if file was deleted, False if it didn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_file:8 of
+msgid "If file doesn't exist and missing_ok=False"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:1
+#: of
+msgid "Delete a directory."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:3
+#: of
+msgid "Directory path to delete"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:4
+#: of
+msgid "If True, don't raise error if directory doesn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:5
+#: of
+msgid "If True, delete recursively (rmtree)"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:7
+#: of
+msgid "True if directory was deleted, False if it didn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:9
+#: of
+msgid "If directory doesn't exist and missing_ok=False"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.delete_directory:10
+#: of
+msgid "If directory is not empty and recursive=False"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_file_size:1 of
+msgid "Get file size in bytes."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_file_size:3 of
+msgid "File path"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_file_size:5 of
+msgid "File size in bytes"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_file_size:7 of
+msgid "If file doesn't exist"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_free_space:1 of
+msgid "Get free disk space for the drive containing the path."
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_free_space:3 of
+msgid "Any path on the drive"
+msgstr ""
+
+#: app.core.services.file_system_service.FileSystemService.get_free_space:5 of
+msgid "Free space in bytes"
+msgstr ""
+
+#: ../../api-reference.md:414
+msgid "Core Modules"
+msgstr ""
+
+#: ../../api-reference.md:416
+msgid "Foundation modules providing platform abstraction and logging."
+msgstr ""
+
+#: ../../api-reference.md:418
+msgid "Platform Abstraction"
+msgstr ""
+
+#: ../../api-reference.md:420
+msgid "Cross-platform utilities and platform detection."
+msgstr ""
+
+#: app.core.platform:1 of
+msgid "Platform detection and cross-platform utilities for pyMediaManager."
+msgstr ""
+
+#: app.core.platform:3 of
+msgid ""
+"This module provides a centralized, type-safe way to handle platform "
+"detection throughout the application. All platform-specific code should "
+"use these utilities instead of directly checking sys.platform or "
+"platform.system()."
+msgstr ""
+
+#: app.core.platform:7 of
+msgid "Python 3.12+ is required for match statement support."
+msgstr ""
+
+#: app.core.platform:9 of
+msgid "Example usage:"
+msgstr ""
+
+#: app.core.platform:10 of
+msgid "from app.core.platform import Platform, current_platform, is_windows"
+msgstr ""
+
+#: app.core.platform:12 of
+msgid "match current_platform():"
+msgstr ""
+
+#: app.core.platform:13 of
+msgid "case Platform.WINDOWS:"
+msgstr ""
+
+#: app.core.platform:14 app.core.platform:19 of
+msgid "# Windows-specific code"
+msgstr ""
+
+#: app.core.platform:15 of
+msgid "case Platform.LINUX | Platform.MACOS:"
+msgstr ""
+
+#: app.core.platform:16 of
+msgid "# Unix-like code"
+msgstr ""
+
+#: app.core.platform:18 app.platform.windows:23 of
+msgid "if is_windows():"
+msgstr ""
+
+#: ../../api-reference.md:430
+msgid "Platform Detection"
+msgstr ""
+
+#: ../../api-reference.md:431
+msgid "Use the Platform enum for platform-specific code:"
+msgstr ""
+
+#: ../../api-reference.md:448
+msgid ""
+"Do not use ``sys.platform`` or ``os.name`` directly in plugin code. The "
+"platform module performs AST validation to prevent this."
+msgstr ""
+
+#: app.core.platform.Platform:1 app.core.platform.PortableMode:1 of
+msgid "Bases: :py:class:`~enum.StrEnum`"
+msgstr ""
+
+#: app.core.platform.Platform:1 of
+msgid "Enumeration of supported platforms."
+msgstr ""
+
+#: app.core.platform.Platform:3 of
+msgid ""
+"Uses StrEnum (Python 3.11+) for easy string comparison and serialization."
+" Values match sys.platform for direct comparison when needed."
+msgstr ""
+
+#: app.core.platform.Platform.from_sys_platform:1 of
+msgid "Convert a sys.platform string to Platform enum."
+msgstr ""
+
+#: app.core.platform.Platform.from_sys_platform:3 of
+msgid "Value from sys.platform"
+msgstr ""
+
+#: app.core.platform.Platform.from_sys_platform:5 of
+msgid "Matching Platform enum value, defaults to LINUX for unknown platforms"
+msgstr ""
+
+#: app.core.platform.PlatformCheckError:1 of
+msgid "Bases: :py:class:`Exception`"
+msgstr ""
+
+#: app.core.platform.PlatformCheckError:1 of
+msgid ""
+"Exception raised when strict platform checks are enabled and violations "
+"are found."
+msgstr ""
+
+#: app.core.platform.PlatformCheckError:3 of
+msgid ""
+"This is raised during plugin loading when: 1. strict_platform_checks is "
+"True in app.yaml 2. A plugin uses direct sys.platform access instead of "
+"the Platform API"
+msgstr ""
+
+#: app.core.platform.PlatformCheckError.__init__:1 of
+msgid "Initialize platform check error with violation details."
+msgstr ""
+
+#: app.core.platform.PlatformCheckError.__init__:3 of
+msgid "Path to the plugin with violations."
+msgstr ""
+
+#: app.core.platform.PlatformCheckError.__init__:4 of
+msgid "List of (line_number, code_snippet) tuples."
+msgstr ""
+
+#: app.core.platform.PlatformCheckError.__init__:6
+#: app.ui.components.first_run_wizard.FirstRunWizard.__init__:7
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog.__init__:6
+#: app.ui.dialogs.project_wizard.ProjectWizard.__init__:6
+#: app.ui.dialogs.settings_dialog.SettingsDialog.__init__:6
+#: app.ui.main_window.MainWindow.__init__:9
+#: app.ui.views.plugin_view.PluginView.__init__:6
+#: app.ui.views.project_view.ProjectView.__init__:6
+#: app.ui.views.storage_view.StorageView.__init__:6 of
+msgid "Examples"
+msgstr ""
+
+#: app.core.platform.PortableConfig:1 of
+msgid "Configuration for portable mode operation."
+msgstr ""
+
+#: app.core.platform.PortableConfig:3 of
+msgid ""
+"Portable mode affects where the application stores data: - Portable: Data"
+" stored relative to executable/drive root - Non-portable: Data stored in "
+"platform-specific directories"
+msgstr ""
+
+#: app.core.platform.PortableConfig:10 of
+msgid "Whether portable mode is active"
+msgstr ""
+
+#: app.core.platform.PortableConfig app.models.project.Project of
+msgid "type"
+msgstr ""
+
+#: app.core.platform.PortableConfig:12 app.core.platform.PortableConfig:26 of
+msgid "bool"
+msgstr ""
+
+#: app.core.platform.PortableConfig:17 of
+msgid "How portable mode was determined"
+msgstr ""
+
+#: app.core.platform.PortableConfig:19 of
+msgid "app.core.platform.PortableMode"
+msgstr ""
+
+#: app.core.platform.PortableConfig:24 of
+msgid "If AUTO, whether removable media was detected"
+msgstr ""
+
+#: app.core.platform.PortableConfig.__str__:1 of
+msgid "Human-readable representation of portable config."
+msgstr ""
+
+#: app.core.platform.PortableConfig.status_icon:1 of
+msgid "Get status icon for UI display."
+msgstr ""
+
+#: app.core.platform.PortableConfig.status_text:1 of
+msgid "Get short status text for UI display."
+msgstr ""
+
+#: app.core.platform.PortableMode:1 of
+msgid "Source of portable mode configuration."
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:1 of
+msgid "Check a Python file for direct sys.platform usage."
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:3 of
+msgid ""
+"Scans the AST of a Python file to find direct usage of sys.platform, "
+"platform.system(), or os.name for platform detection. These should be "
+"replaced with the Platform API from this module."
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:7 of
+msgid "Path to the Python file to check"
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:8 of
+msgid "If True, raise PlatformCheckError on violations"
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:9 of
+msgid ""
+"Module names that are allowed to use direct platform access (e.g., "
+"[\"app.core.platform\"] for the platform module itself)"
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:12 of
+msgid "List of (line_number, code_snippet) tuples for violations"
+msgstr ""
+
+#: app.core.platform.check_plugin_platform_usage:14 of
+msgid "If strict=True and violations are found"
+msgstr ""
+
+#: app.core.platform.current_platform:1 of
+msgid "Get the current platform as a Platform enum."
+msgstr ""
+
+#: app.core.platform.current_platform:3 of
+msgid "Platform enum value for the current system"
+msgstr ""
+
+#: app.core.platform.is_linux:1 of
+msgid "Check if running on Linux."
+msgstr ""
+
+#: app.core.platform.is_macos:1 of
+msgid "Check if running on macOS."
+msgstr ""
+
+#: app.core.platform.is_unix:1 of
+msgid "Check if running on a Unix-like system (Linux or macOS)."
+msgstr ""
+
+#: app.core.platform.is_windows:1 of
+msgid "Check if running on Windows."
+msgstr ""
+
+#: app.core.platform.platform_name:1 of
+msgid "Get a human-readable platform name."
+msgstr ""
+
+#: app.core.platform.platform_name:3 of
+msgid "Human-readable platform name (e.g., \"Windows\", \"Linux\", \"macOS\")"
+msgstr ""
+
+#: ../../api-reference.md:456
+msgid "Logging Service"
+msgstr ""
+
+#: ../../api-reference.md:458
+msgid "Structured logging configuration and utilities."
+msgstr ""
+
+#: app.core.logging_service:1 of
+msgid ""
+"Logging service for pyMediaManager. Provides rich console logging and "
+"rotating file logs."
+msgstr ""
+
+#: app.core.logging_service.LoggingService:1 of
+msgid "Service for configuring application logging with console and file outputs."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:1 of
+msgid "Initialize logging service."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:3 of
+msgid "Application name for logger"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:4 of
+msgid ""
+"Directory for log files (if None, uses portable folder from "
+"file_system_service)"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:5 of
+msgid "Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:6 of
+msgid "Enable console logging with rich formatting"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:7 of
+msgid "Enable file logging with rotation"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:8 of
+msgid "Maximum log file size in bytes before rotation"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:9 of
+msgid "Number of backup log files to keep"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.__init__:10 of
+msgid "FileSystemService instance for portable folder detection"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.setup:1 of
+msgid "Setup logging configuration with console and file handlers."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.setup:3 of
+msgid "Configured logger instance"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_logger:1 of
+msgid "Get a logger instance."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_logger:3 of
+msgid "Logger name (defaults to app_name)"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_logger:5 of
+msgid "Logger instance"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.set_level:1 of
+msgid "Change logging level dynamically."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.set_level:3 of
+msgid "New logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_log_file_path:1 of
+msgid "Get the current log file path."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_log_file_path:3 of
+msgid "Path to log file or None if file logging disabled"
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_all_log_files:1 of
+msgid "Get all log files (current and rotated)."
+msgstr ""
+
+#: app.core.logging_service.LoggingService.get_all_log_files:3 of
+msgid "List of log file paths"
+msgstr ""
+
+#: ../../api-reference.md:470
+msgid "Data Models"
+msgstr ""
+
+#: ../../api-reference.md:472
+msgid "Pydantic models for data validation and serialization."
+msgstr ""
+
+#: ../../api-reference.md:474
+msgid "Project Model"
+msgstr ""
+
+#: app.models.project.Project:1 of
+msgid "Represents a media management project."
+msgstr ""
+
+#: app.models.project.Project:6 of
+msgid "Display name of the project"
+msgstr ""
+
+#: app.models.project.Project:8 of
+msgid "str"
+msgstr ""
+
+#: app.models.project.Project:13 of
+msgid "Absolute path to the project directory"
+msgstr ""
+
+#: app.models.project.Project:15 of
+msgid "pathlib.Path"
+msgstr ""
+
+#: app.models.project.Project:20 of
+msgid "Creation timestamp"
+msgstr ""
+
+#: app.models.project.Project:22 app.models.project.Project:29 of
+msgid "datetime.datetime"
+msgstr ""
+
+#: app.models.project.Project:27 of
+msgid "Last modification timestamp"
+msgstr ""
+
+#: app.models.project.Project:36 app.models.project.Project:50
+#: app.models.project.Project:57 of
+msgid "str | None"
+msgstr ""
+
+#: app.models.project.Project:41 of
+msgid "Project-specific settings dictionary"
+msgstr ""
+
+#: app.models.project.Project:43 of
+msgid "dict[str, Any]"
+msgstr ""
+
+#: app.models.project.Project:48 of
+msgid "Name of template used to create project"
+msgstr ""
+
+#: app.models.project.Project:55 of
+msgid "Version of template when project was created"
+msgstr ""
+
+#: app.models.project.Project:62 of
+msgid "Deferred migration information (target_version, scheduled_at, reason)"
+msgstr ""
+
+#: app.models.project.Project:64 of
+msgid "dict[str, Any] | None"
+msgstr ""
+
+#: app.models.project.Project:69 of
+msgid "Audit trail of template migrations applied to this project"
+msgstr ""
+
+#: app.models.project.Project:71 of
+msgid "list[dict[str, Any]]"
+msgstr ""
+
+#: ../../api-reference.md:484
+msgid "Project Structure"
+msgstr ""
+
+#: ../../api-reference.md:485
+msgid "Projects are stored as directories with a ``.pymm`` metadata file:"
+msgstr ""
+
+#: app.models.project.Project.__post_init__:1 of
+msgid "Validate and normalize project data."
+msgstr ""
+
+#: app.models.project.Project.exists:1 of
+msgid "Check if the project directory exists."
+msgstr ""
+
+#: app.models.project.Project.to_dict:1 of
+msgid "Convert project to dictionary for serialization."
+msgstr ""
+
+#: app.models.project.Project.from_dict:1 of
+msgid "Create project from dictionary."
+msgstr ""
+
+#: ../../api-reference.md:498
+msgid "Configuration Models"
+msgstr ""
+
+#: ../../api-reference.md:508
+msgid "Configuration models are managed by ConfigService."
+msgstr ""
+
+#: ../../api-reference.md:513
+msgid "Platform-Specific Modules"
+msgstr ""
+
+#: ../../api-reference.md:515
+msgid "Platform-specific implementations for Windows, Linux, and macOS."
+msgstr ""
+
+#: ../../api-reference.md:519
+msgid ""
+"These modules are imported conditionally based on the current platform. "
+"Most users should use the high-level services instead of these modules "
+"directly."
+msgstr ""
+
+#: ../../api-reference.md:523
+msgid "Windows Platform"
+msgstr ""
+
+#: app.platform.windows:1 of
+msgid "Windows-specific platform utilities for pyMediaManager."
+msgstr ""
+
+#: app.platform.windows:3 of
+msgid ""
+"This module provides Windows-specific functionality that cannot be "
+"abstracted in a cross-platform way. Currently serves as a placeholder for"
+" future utilities."
+msgstr ""
+
+#: app.platform.windows:6 of
+msgid ""
+"Implemented functionality: - (Future) Windows Registry helpers - (Future)"
+" Windows-specific file association handling - (Future) Windows "
+"notification system integration"
+msgstr ""
+
+#: app.platform.windows:11 of
+msgid ""
+"For storage detection, see "
+"app.core.services.storage_service.WindowsStorage which is kept co-located"
+" with other storage implementations for discoverability."
+msgstr ""
+
+#: app.platform.macos:17 app.platform.windows:16 of
+msgid ""
+"All platform detection should use app.core.platform.Platform enum instead"
+" of direct sys.platform checks."
+msgstr ""
+
+#: app.platform.macos:20 app.platform.windows:19 of
+msgid "Example"
+msgstr ""
+
+#: app.platform.windows:21 of
+msgid "from app.core.platform import is_windows, Platform"
+msgstr ""
+
+#: app.platform.windows:24 of
+msgid ""
+"from app.platform.windows import some_windows_utility "
+"some_windows_utility()"
+msgstr ""
+
+#: ../../api-reference.md:533
+msgid "Linux Platform"
+msgstr ""
+
+#: app.platform.linux:1 of
+msgid "Linux-specific platform utilities for pyMediaManager."
+msgstr ""
+
+#: ../../api-reference.md:543
+msgid "macOS Platform"
+msgstr ""
+
+#: app.platform.macos:1 of
+msgid "macOS-specific platform utilities for pyMediaManager."
+msgstr ""
+
+#: app.platform.macos:3 of
+msgid ""
+"This module provides macOS-specific functionality that cannot be "
+"abstracted in a cross-platform way. Currently serves as a placeholder for"
+" future utilities."
+msgstr ""
+
+#: app.platform.macos:6 of
+msgid ""
+"Implemented functionality: - (Future) macOS plist handling - (Future) "
+"macOS Keychain integration - (Future) macOS notification center "
+"integration - (Future) macOS sandbox/entitlements handling"
+msgstr ""
+
+#: app.platform.macos:12 of
+msgid ""
+"For storage detection, see app.core.services.storage_service.MacOSStorage"
+" which is kept co-located with other storage implementations for "
+"discoverability."
+msgstr ""
+
+#: app.platform.macos:22 of
+msgid "from app.core.platform import is_macos, Platform"
+msgstr ""
+
+#: app.platform.macos:24 of
+msgid "if is_macos():"
+msgstr ""
+
+#: app.platform.macos:25 of
+msgid "from app.platform.macos import some_macos_utility some_macos_utility()"
+msgstr ""
+
+#: ../../api-reference.md:556
+msgid "User Interface"
+msgstr ""
+
+#: ../../api-reference.md:558
+msgid "PySide6-based GUI components with QFluentWidgets for Fluent Design."
+msgstr ""
+
+#: ../../api-reference.md:562
+msgid ""
+"UI components require PySide6 6.6+ and QFluentWidgets 1.5+. These "
+"dependencies are automatically installed with pyMM."
+msgstr ""
+
+#: ../../api-reference.md:566
+msgid "Main Window"
+msgstr ""
+
+#: app.ui.main_window.MainWindow:1 of
+msgid "Bases: :py:class:`~qfluentwidgets.FluentWindow`"
+msgstr ""
+
+#: app.ui.main_window.MainWindow:1 of
+msgid "Main application window with Fluent Design interface."
+msgstr ""
+
+#: ../../api-reference.md:575
+msgid "Window Structure"
+msgstr ""
+
+#: ../../api-reference.md:576
+msgid "The main window uses FluentWindow as the base class (when available):"
+msgstr ""
+
+#: ../../api-reference.md:578
+msgid ""
+"**Navigation**: Side navigation panel with Home, Projects, Storage, "
+"Plugins"
+msgstr ""
+
+#: ../../api-reference.md:579
+msgid "**Views**: Stacked view container for different sections"
+msgstr ""
+
+#: ../../api-reference.md:580
+msgid "**Status Bar**: Shows portable mode status and notifications"
+msgstr ""
+
+#: ../../api-reference.md:581
+msgid "**Theme Support**: Automatic light/dark mode switching"
+msgstr ""
+
+#: ../../api-reference.md:583
+msgid "Migration notification system for project template updates"
+msgstr ""
+
+#: app.ui.main_window.MainWindow.__init__:1 of
+msgid "Initialize main application window."
+msgstr ""
+
+#: app.ui.dialogs.settings_dialog.SettingsDialog.__init__:3
+#: app.ui.main_window.MainWindow.__init__:3 of
+msgid "Configuration service instance."
+msgstr ""
+
+#: app.ui.main_window.MainWindow.__init__:4 of
+msgid "Storage and drive detection service."
+msgstr ""
+
+#: app.ui.main_window.MainWindow.__init__:5 of
+msgid "Plugin management instance."
+msgstr ""
+
+#: app.ui.main_window.MainWindow.__init__:6 of
+msgid "Project management service."
+msgstr ""
+
+#: app.ui.main_window.MainWindow.__init__:7 of
+msgid "Portable mode configuration (optional)."
+msgstr ""
+
+#: ../../api-reference.md:587
+msgid "Components"
+msgstr ""
+
+#: ../../api-reference.md:589
+msgid "Reusable UI components and widgets."
+msgstr ""
+
+#: ../../api-reference.md:591
+msgid "First Run Wizard"
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard:1
+#: app.ui.components.migration_banner.MigrationBanner:1
+#: app.ui.views.plugin_view.PluginView:1
+#: app.ui.views.project_view.ProjectView:1
+#: app.ui.views.storage_view.StorageView:1 of
+msgid "Bases: :py:class:`~PySide6.QtWidgets.QWidget`"
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard:1 of
+msgid "Multi-step first-run wizard."
+msgstr ""
+
+#: ../../api-reference.md:599
+msgid "Multi-step wizard for initial application setup:"
+msgstr ""
+
+#: ../../api-reference.md:601
+msgid "Welcome page with app introduction"
+msgstr ""
+
+#: ../../api-reference.md:602
+msgid "Storage selection for project location"
+msgstr ""
+
+#: ../../api-reference.md:603
+msgid "Optional plugin selection"
+msgstr ""
+
+#: ../../api-reference.md:604
+msgid "Completion summary"
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard.__init__:1 of
+msgid "Initialize first-run wizard."
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard.__init__:3 of
+msgid "Storage service for drive detection."
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard.__init__:4 of
+msgid "List of optional plugin names."
+msgstr ""
+
+#: app.ui.components.first_run_wizard.FirstRunWizard.__init__:5
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog.__init__:4
+#: app.ui.dialogs.project_wizard.ProjectWizard.__init__:4
+#: app.ui.dialogs.settings_dialog.SettingsDialog.__init__:4
+#: app.ui.views.plugin_view.PluginView.__init__:4
+#: app.ui.views.project_view.ProjectView.__init__:4
+#: app.ui.views.storage_view.StorageView.__init__:4 of
+msgid "Parent widget (optional)."
+msgstr ""
+
+#: ../../api-reference.md:607
+msgid "Migration Banner"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner:1 of
+msgid "Warning banner that appears when a project has template updates available."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner:3 of
+msgid ""
+"Displays migration information and provides quick actions for "
+"preview/apply/defer."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.__init__:1 of
+msgid "Initialize migration banner."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.__init__:3 of
+msgid "Project that needs migration"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.__init__:4
+#: app.ui.dialogs.migration_dialog.MigrationDialog.__init__:4 of
+msgid "Details about template changes"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.__init__:5
+#: app.ui.dialogs.migration_dialog.MigrationDialog.__init__:6
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog.__init__:4
+#: app.ui.dialogs.rollback_dialog.RollbackDialog.__init__:5 of
+msgid "Parent widget"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_info_bar:1 of
+msgid "Show a temporary info bar notification."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_info_bar:3 of
+msgid "Message to display"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_info_bar:4 of
+msgid "Notification level (INFO, SUCCESS, WARNING, ERROR)"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_info_bar:5 of
+msgid "Display duration in milliseconds"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_info_bar:6 of
+msgid "Parent widget for positioning"
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_migration_success:1
+#: of
+msgid "Show success notification after migration."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_migration_error:1 of
+msgid "Show error notification after failed migration."
+msgstr ""
+
+#: app.ui.components.migration_banner.MigrationBanner.show_rollback_success:1
+#: of
+msgid "Show success notification after rollback."
+msgstr ""
+
+#: ../../api-reference.md:616
+msgid "Dialogs"
+msgstr ""
+
+#: ../../api-reference.md:618
+msgid "Modal dialogs for user interactions."
+msgstr ""
+
+#: app.ui.dialogs:1 of
+msgid "UI dialogs for pyMM."
+msgstr ""
+
+#: ../../api-reference.md:628
+msgid "Available dialogs:"
+msgstr ""
+
+#: ../../api-reference.md:630
+msgid "**ProjectBrowserDialog**: Browse and open existing projects"
+msgstr ""
+
+#: ../../api-reference.md:631
+msgid "**ProjectWizard**: Create new projects with templates"
+msgstr ""
+
+#: ../../api-reference.md:632
+msgid "**SettingsDialog**: Application settings and preferences"
+msgstr ""
+
+#: ../../api-reference.md:633
+msgid "**MigrationDialog**: Project migration confirmation"
+msgstr ""
+
+#: ../../api-reference.md:634
+msgid "**ToolVersionDialog**: System tool version display"
+msgstr ""
+
+#: ../../api-reference.md:635
+msgid "**PrivilegeDialog**: Administrative privilege requests (Linux)"
+msgstr ""
+
+#: ../../api-reference.md:636
+msgid "**RollbackDialog**: Migration rollback interface"
+msgstr ""
+
+#: app.ui.dialogs.migration_dialog.MigrationDialog:1
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog:1
+#: app.ui.dialogs.rollback_dialog.RollbackDialog:1 of
+msgid "Bases: :py:class:`~qfluentwidgets.MessageBoxBase`"
+msgstr ""
+
+#: app.ui.dialogs.migration_dialog.MigrationDialog:1 of
+msgid "Dialog for previewing and applying template migrations."
+msgstr ""
+
+#: app.ui.dialogs.migration_dialog.MigrationDialog:3 of
+msgid ""
+"Shows detailed information about what will change, including: - Folders "
+"to be added/removed - Conflicts with user files - Migration notes from "
+"template - Preview mode option"
+msgstr ""
+
+#: app.ui.dialogs.migration_dialog.MigrationDialog.__init__:1 of
+msgid "Initialize migration dialog."
+msgstr ""
+
+#: app.ui.dialogs.migration_dialog.MigrationDialog.__init__:5 of
+msgid "Service for executing migration"
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog:1 of
+msgid "Dialog for viewing detailed migration history of a project."
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog:3 of
+msgid ""
+"Shows chronological list of all migrations with: - Version transitions - "
+"Timestamps - Folders added/removed - Backup availability"
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog.__init__:1 of
+msgid "Initialize migration history dialog."
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.MigrationHistoryDialog.__init__:3 of
+msgid "Project to show history for"
+msgstr ""
+
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog:1
+#: app.ui.dialogs.project_wizard.ProjectWizard:1
+#: app.ui.dialogs.settings_dialog.SettingsDialog:1 of
+msgid "Bases: :py:class:`~PySide6.QtWidgets.QDialog`"
+msgstr ""
+
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog:1 of
+msgid "Dialog for browsing and managing projects."
+msgstr ""
+
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog:3 of
+msgid ""
+"Allows users to: - View list of existing projects - Create new projects -"
+" Open selected project - Delete projects"
+msgstr ""
+
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog.__init__:1 of
+msgid "Initialize project browser dialog."
+msgstr ""
+
+#: app.ui.dialogs.project_browser.ProjectBrowserDialog.__init__:3 of
+msgid "Project service for project operations."
+msgstr ""
+
+#: app.ui.dialogs.project_wizard.ProjectWizard:1 of
+msgid "Wizard for creating new projects."
+msgstr ""
+
+#: app.ui.dialogs.project_wizard.ProjectWizard:3 of
+msgid ""
+"Collects project information: - Project name - Project location - "
+"Description - Project structure options"
+msgstr ""
+
+#: app.ui.dialogs.project_wizard.ProjectWizard.__init__:1 of
+msgid "Initialize project creation wizard."
+msgstr ""
+
+#: app.ui.dialogs.project_wizard.ProjectWizard.__init__:3 of
+msgid "Project service for creating projects."
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.RollbackDialog:1 of
+msgid "Dialog for rolling back template migrations."
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.RollbackDialog:3 of
+msgid ""
+"Allows users to: - View migration history - Select projects to rollback -"
+" Preview rollback effects - Execute batch rollback"
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.RollbackDialog.__init__:1 of
+msgid "Initialize rollback dialog."
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.RollbackDialog.__init__:3 of
+msgid "Projects eligible for rollback (have migration backups)"
+msgstr ""
+
+#: app.ui.dialogs.rollback_dialog.RollbackDialog.__init__:4 of
+msgid "Service for executing rollback"
+msgstr ""
+
+#: app.ui.dialogs.settings_dialog.SettingsDialog:1 of
+msgid "Main settings dialog with tabbed interface."
+msgstr ""
+
+#: app.ui.dialogs.settings_dialog.SettingsDialog:3 of
+msgid ""
+"Allows users to configure: - Application appearance and behavior - Plugin"
+" management settings - Storage and path preferences - Git integration "
+"settings"
+msgstr ""
+
+#: app.ui.dialogs.settings_dialog.SettingsDialog.__init__:1 of
+msgid "Initialize settings dialog."
+msgstr ""
+
+#: ../../api-reference.md:639
+msgid "Views"
+msgstr ""
+
+#: ../../api-reference.md:641
+msgid "Main content views for different sections."
+msgstr ""
+
+#: ../../api-reference.md:643
+msgid "PluginView"
+msgstr ""
+
+#: app.ui.views.plugin_view.PluginView:1 of
+msgid "View for managing plugins."
+msgstr ""
+
+#: ../../api-reference.md:651
+msgid ""
+"Displays available and installed plugins with install/update/uninstall "
+"actions."
+msgstr ""
+
+#: app.ui.views.plugin_view.PluginView.__init__:1 of
+msgid "Initialize plugin management view."
+msgstr ""
+
+#: app.ui.views.plugin_view.PluginView.__init__:3 of
+msgid "Plugin manager instance."
+msgstr ""
+
+#: app.ui.views.plugin_view.PluginView.refresh_plugins:1 of
+msgid "Refresh the plugins table."
+msgstr ""
+
+#: ../../api-reference.md:654
+msgid "ProjectView"
+msgstr ""
+
+#: app.ui.views.project_view.ProjectView:1 of
+msgid "View for managing media projects."
+msgstr ""
+
+#: ../../api-reference.md:662
+msgid "Lists projects with migration status and quick actions."
+msgstr ""
+
+#: app.ui.views.project_view.ProjectView.__init__:1 of
+msgid "Initialize project management view."
+msgstr ""
+
+#: app.ui.views.project_view.ProjectView.__init__:3 of
+msgid "Project service instance."
+msgstr ""
+
+#: app.ui.views.project_view.ProjectView.refresh_projects:1 of
+msgid "Public method to refresh projects list (called from MainWindow)."
+msgstr ""
+
+#: ../../api-reference.md:665
+msgid "StorageView"
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView:1 of
+msgid "View for displaying and managing storage drives."
+msgstr ""
+
+#: ../../api-reference.md:673
+msgid "Shows available drives with capacity and portable mode indicators."
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView.__init__:1 of
+msgid "Initialize storage management view."
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView.__init__:3 of
+msgid "Storage service for drive operations."
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView.refresh_drives:1 of
+msgid "Refresh the drives table."
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView.get_selected_drive:1 of
+msgid "Get the currently selected drive."
+msgstr ""
+
+#: app.ui.views.storage_view.StorageView.get_selected_drive:3 of
+msgid "Path to selected drive or None"
+msgstr ""
+
+#: ../../api-reference.md:678
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../api-reference.md:680
+msgid "Working Examples"
+msgstr ""
+
+#: ../../api-reference.md:682
+msgid ""
+"Explore working code examples in the [examples "
+"directory](examples/README.md):"
+msgstr ""
+
+#: ../../api-reference.md:684
+msgid ""
+"**Plugins**: List, check status, read manifests → "
+"[examples/plugins/](examples/plugins/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:685
+msgid ""
+"**Projects**: Create, list, migrate → "
+"[examples/projects/](examples/projects/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:686
+msgid ""
+"**Storage**: Detect drives, monitor changes → "
+"[examples/storage/](examples/storage/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:687
+msgid ""
+"**Config**: Read, update, validate → "
+"[examples/config/](examples/config/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:688
+msgid ""
+"**Platform**: Detect OS, platform paths → "
+"[examples/platform/](examples/platform/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:689
+msgid ""
+"**UI**: Notifications, dialogs, widgets → "
+"[examples/ui/](examples/ui/README.md)"
+msgstr ""
+
+#: ../../api-reference.md:691
+msgid "Documentation Guidelines"
+msgstr ""
+
+#: ../../api-reference.md:693
+msgid "Docstring Format"
+msgstr ""
+
+#: ../../api-reference.md:695
+msgid ""
+"pyMediaManager uses **Google-style docstrings** with Sphinx napoleon "
+"extension:"
+msgstr ""
+
+#: ../../api-reference.md:731
+msgid "Type Annotations"
+msgstr ""
+
+#: ../../api-reference.md:733
+msgid "All public APIs require complete type annotations:"
+msgstr ""
+
+#: ../../api-reference.md:761
+msgid "Module Documentation"
+msgstr ""
+
+#: ../../api-reference.md:763
+msgid "Every module must have a module-level docstring:"
+msgstr ""
+
+#: ../../api-reference.md:793
+msgid "Building Documentation"
+msgstr ""
+
+#: ../../api-reference.md:795
+msgid "Generate API documentation locally:"
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Using justfile"
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Using Sphinx directly"
+msgstr ""
+
+#: ../../api-reference.md
+msgid "Development Mode"
+msgstr ""
+
+#: ../../api-reference.md:846
+msgid "Index and Module Search"
+msgstr ""
+
+#: ../../api-reference.md:849
+msgid ":ref:`genindex`"
+msgstr ""
+
+#: ../../api-reference.md:850
+msgid ":ref:`modindex`"
+msgstr ""
+
+#: ../../api-reference.md:851
+msgid ":ref:`search`"
+msgstr ""
+
+#: ../../api-reference.md:856
+msgid ""
+"**Coverage:** 100% (477/477 functions documented) **Last Updated:** "
+"January 10, 2026 **Built with:** Sphinx 7.2+ with Furo theme"
+msgstr ""

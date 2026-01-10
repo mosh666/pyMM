@@ -1,0 +1,2136 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../user-guide.md:1
+msgid "pyMediaManager User Guide"
+msgstr ""
+
+#: ../../user-guide.md:7
+msgid "📖 Table of Contents"
+msgstr ""
+
+#: ../../user-guide.md:9
+msgid "[Introduction](#introduction)"
+msgstr ""
+
+#: ../../user-guide.md:10
+msgid "[System Requirements](#system-requirements)"
+msgstr ""
+
+#: ../../user-guide.md:11
+msgid "[Installation](#installation)"
+msgstr ""
+
+#: ../../user-guide.md:12
+msgid "[First Run Setup](#first-run-setup)"
+msgstr ""
+
+#: ../../user-guide.md:13
+msgid "[Core Features](#core-features)"
+msgstr ""
+
+#: ../../user-guide.md:14
+msgid "[Project Management](#project-management)"
+msgstr ""
+
+#: ../../user-guide.md:15
+msgid "[Plugin System](#plugin-system)"
+msgstr ""
+
+#: ../../user-guide.md:16
+msgid "[Storage Management](#storage-management)"
+msgstr ""
+
+#: ../../user-guide.md:17
+msgid "[Configuration](#configuration)"
+msgstr ""
+
+#: ../../user-guide.md:18
+msgid "[Command Line Interface](#command-line-interface)"
+msgstr ""
+
+#: ../../user-guide.md:19
+msgid "[Troubleshooting](#troubleshooting)"
+msgstr ""
+
+#: ../../user-guide.md:20
+msgid "[FAQ](#faq)"
+msgstr ""
+
+#: ../../user-guide.md:21
+msgid "[Getting Help](#getting-help)"
+msgstr ""
+
+#: ../../user-guide.md:25
+msgid "🎯 Introduction"
+msgstr ""
+
+#: ../../user-guide.md:27
+msgid ""
+"**pyMediaManager (pyMM)** is a portable, Python-based media management "
+"application designed for photographers, videographers, and digital "
+"content creators who need a flexible, portable solution for managing "
+"media projects across multiple storage devices."
+msgstr ""
+
+#: ../../user-guide.md:29
+msgid "Key Benefits"
+msgstr ""
+
+#: ../../user-guide.md:31
+msgid ""
+"**✨ Truly Portable**: Run from any drive (USB, external HDD, network) "
+"without installation"
+msgstr ""
+
+#: ../../user-guide.md:32
+msgid ""
+"**🎨 Modern UI**: Beautiful Fluent Design interface powered by PySide6 and"
+" QFluentWidgets"
+msgstr ""
+
+#: ../../user-guide.md:33
+msgid ""
+"**🔌 Plugin System**: Extensible architecture supporting DigiKam, "
+"ExifTool, FFmpeg, and more"
+msgstr ""
+
+#: ../../user-guide.md:34
+msgid "**📦 Project-Based**: Organize media into self-contained portable projects"
+msgstr ""
+
+#: ../../user-guide.md:35
+msgid ""
+"**🔒 Secure**: No system modifications, registry changes, or "
+"administrative privileges required"
+msgstr ""
+
+#: ../../user-guide.md:36
+msgid "**🚀 Fast**: Native Python 3.13 performance with async operations"
+msgstr ""
+
+#: ../../user-guide.md:38
+msgid "Use Cases"
+msgstr ""
+
+#: ../../user-guide.md:40
+msgid "**Photographers**: Manage photo collections with DigiKam integration"
+msgstr ""
+
+#: ../../user-guide.md:41
+msgid "**Videographers**: Organize video projects with FFmpeg processing"
+msgstr ""
+
+#: ../../user-guide.md:42
+msgid "**Backup Solutions**: Maintain portable media archives across devices"
+msgstr ""
+
+#: ../../user-guide.md:43
+msgid ""
+"**Multi-Site Workflows**: Sync projects between office, home, and field "
+"locations"
+msgstr ""
+
+#: ../../user-guide.md:44
+msgid "**Education**: Portable labs for teaching media management workflows"
+msgstr ""
+
+#: ../../user-guide.md:48
+msgid "💻 System Requirements"
+msgstr ""
+
+#: ../../user-guide.md:50
+msgid "Minimum Requirements"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "Component"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "Requirement"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**Operating System**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid ""
+"Windows 10 (Version 1809+), Windows 11, Ubuntu 20.04+, Debian 11+, macOS "
+"11+"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**Python Version**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "3.12+ (**3.13 recommended** for best performance)"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**RAM**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "4 GB (8 GB recommended for large projects)"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**Storage**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "200 MB for application + space for projects/plugins"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**Display**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "1280×720 minimum (1920×1080 recommended)"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "**Graphics**"
+msgstr ""
+
+#: ../../user-guide.md
+msgid "OpenGL 2.0+ capable GPU"
+msgstr ""
+
+#: ../../user-guide.md:61
+msgid "Recommended Configuration"
+msgstr ""
+
+#: ../../user-guide.md:63
+msgid "**OS**: Windows 11 with latest updates"
+msgstr ""
+
+#: ../../user-guide.md:64
+msgid "**Python**: 3.13.x (latest stable release)"
+msgstr ""
+
+#: ../../user-guide.md:65
+msgid "**RAM**: 16 GB or more"
+msgstr ""
+
+#: ../../user-guide.md:66
+msgid "**Storage**: SSD for application, HDD for media storage"
+msgstr ""
+
+#: ../../user-guide.md:67
+msgid "**Display**: 1920×1080 or higher resolution"
+msgstr ""
+
+#: ../../user-guide.md:68
+msgid "**GPU**: Dedicated GPU for video processing"
+msgstr ""
+
+#: ../../user-guide.md:70
+msgid "Python Version Notes"
+msgstr ""
+
+#: ../../user-guide.md:79
+msgid "**Why Python 3.13?**"
+msgstr ""
+
+#: ../../user-guide.md:81
+msgid "15-20% performance improvements over 3.12"
+msgstr ""
+
+#: ../../user-guide.md:82
+msgid "Native support for modern type hints (`list[T]`, `dict[K, V]`)"
+msgstr ""
+
+#: ../../user-guide.md:83
+msgid "Better async/await performance for plugin operations"
+msgstr ""
+
+#: ../../user-guide.md:84
+msgid "Improved Windows-specific optimizations"
+msgstr ""
+
+#: ../../user-guide.md:88
+msgid "📦 Installation"
+msgstr ""
+
+#: ../../user-guide.md:90
+msgid "Method 1: Standard Installation (Recommended)"
+msgstr ""
+
+#: ../../user-guide.md:92
+msgid "Step 1: Install Python"
+msgstr ""
+
+#: ../../user-guide.md:95 ../../user-guide.md:148 ../../user-guide.md:194
+#: ../../user-guide.md:237 ../../user-guide.md:285 ../../user-guide.md:400
+#: ../../user-guide.md:776 ../../user-guide.md:864 ../../user-guide.md:1480
+#: ../../user-guide.md:1505 ../../user-guide.md:1530 ../../user-guide.md:1552
+#: ../../user-guide.md:1592 ../../user-guide.md:1614 ../../user-guide.md:1648
+#: ../../user-guide.md:1676 ../../user-guide.md:1719 ../../user-guide.md:1765
+#: ../../user-guide.md:1799 ../../user-guide.md:1830 ../../user-guide.md:1867
+#: ../../user-guide.md:1915
+msgid ".. tab:: Windows"
+msgstr ""
+
+#: ../../user-guide.md:97
+msgid ""
+"Download Python 3.13 from `python.org "
+"<https://www.python.org/downloads/>`_"
+msgstr ""
+
+#: ../../user-guide.md:98
+msgid "Run installer with these options:"
+msgstr ""
+
+#: ../../user-guide.md:100
+msgid "✅ \"Add Python to PATH\""
+msgstr ""
+
+#: ../../user-guide.md:101
+msgid "✅ \"Install for all users\" (optional)"
+msgstr ""
+
+#: ../../user-guide.md:102
+msgid "✅ \"Install py launcher\""
+msgstr ""
+
+#: ../../user-guide.md:104
+msgid "Verify installation:"
+msgstr ""
+
+#: ../../user-guide.md:106 ../../user-guide.md:150 ../../user-guide.md:196
+#: ../../user-guide.md:239 ../../user-guide.md:295 ../../user-guide.md:308
+#: ../../user-guide.md:402 ../../user-guide.md:778 ../../user-guide.md:866
+#: ../../user-guide.md:1482 ../../user-guide.md:1507 ../../user-guide.md:1532
+#: ../../user-guide.md:1554 ../../user-guide.md:1594 ../../user-guide.md:1616
+#: ../../user-guide.md:1650 ../../user-guide.md:1678 ../../user-guide.md:1721
+#: ../../user-guide.md:1767 ../../user-guide.md:1801 ../../user-guide.md:1832
+#: ../../user-guide.md:1869 ../../user-guide.md:1917
+msgid ".. code-block:: powershell"
+msgstr ""
+
+#: ../../user-guide.md:108
+msgid "python --version"
+msgstr ""
+
+#: ../../user-guide.md:109
+msgid "Output: Python 3.13.x"
+msgstr ""
+
+#: ../../user-guide.md:111
+msgid ".. tab:: Linux (Ubuntu/Debian)"
+msgstr ""
+
+#: ../../user-guide.md:113 ../../user-guide.md:130 ../../user-guide.md:161
+#: ../../user-guide.md:172 ../../user-guide.md:209 ../../user-guide.md:222
+#: ../../user-guide.md:252 ../../user-guide.md:265 ../../user-guide.md:336
+#: ../../user-guide.md:367 ../../user-guide.md:422 ../../user-guide.md:442
+#: ../../user-guide.md:788 ../../user-guide.md:798 ../../user-guide.md:879
+#: ../../user-guide.md:892 ../../user-guide.md:1489 ../../user-guide.md:1496
+#: ../../user-guide.md:1514 ../../user-guide.md:1521 ../../user-guide.md:1538
+#: ../../user-guide.md:1544 ../../user-guide.md:1564 ../../user-guide.md:1574
+#: ../../user-guide.md:1600 ../../user-guide.md:1606 ../../user-guide.md:1626
+#: ../../user-guide.md:1636 ../../user-guide.md:1656 ../../user-guide.md:1662
+#: ../../user-guide.md:1687 ../../user-guide.md:1697 ../../user-guide.md:1727
+#: ../../user-guide.md:1733 ../../user-guide.md:1777 ../../user-guide.md:1787
+#: ../../user-guide.md:1810 ../../user-guide.md:1819 ../../user-guide.md:1839
+#: ../../user-guide.md:1846 ../../user-guide.md:1883 ../../user-guide.md:1897
+#: ../../user-guide.md:1935 ../../user-guide.md:1954
+msgid ".. code-block:: bash"
+msgstr ""
+
+#: ../../user-guide.md:128 ../../user-guide.md:170 ../../user-guide.md:220
+#: ../../user-guide.md:263 ../../user-guide.md:363 ../../user-guide.md:440
+#: ../../user-guide.md:796 ../../user-guide.md:890 ../../user-guide.md:1494
+#: ../../user-guide.md:1519 ../../user-guide.md:1542 ../../user-guide.md:1572
+#: ../../user-guide.md:1604 ../../user-guide.md:1634 ../../user-guide.md:1660
+#: ../../user-guide.md:1695 ../../user-guide.md:1731 ../../user-guide.md:1785
+#: ../../user-guide.md:1817 ../../user-guide.md:1844 ../../user-guide.md:1895
+#: ../../user-guide.md:1952
+msgid ".. tab:: macOS"
+msgstr ""
+
+#: ../../user-guide.md:143
+msgid "Step 2: Clone or Download Repository"
+msgstr ""
+
+#: ../../user-guide.md:145
+msgid "**Option A: Git Clone (Recommended)**"
+msgstr ""
+
+#: ../../user-guide.md:159 ../../user-guide.md:207 ../../user-guide.md:250
+#: ../../user-guide.md:332 ../../user-guide.md:420 ../../user-guide.md:786
+#: ../../user-guide.md:877 ../../user-guide.md:1487 ../../user-guide.md:1512
+#: ../../user-guide.md:1536 ../../user-guide.md:1562 ../../user-guide.md:1598
+#: ../../user-guide.md:1624 ../../user-guide.md:1654 ../../user-guide.md:1685
+#: ../../user-guide.md:1725 ../../user-guide.md:1775 ../../user-guide.md:1808
+#: ../../user-guide.md:1837 ../../user-guide.md:1881 ../../user-guide.md:1933
+msgid ".. tab:: Linux"
+msgstr ""
+
+#: ../../user-guide.md:182
+msgid "**Option B: Download ZIP**"
+msgstr ""
+
+#: ../../user-guide.md:184
+msgid "Visit `github.com/mosh666/pyMM <https://github.com/mosh666/pyMM>`_"
+msgstr ""
+
+#: ../../user-guide.md:185
+msgid "Click \"Code\" → \"Download ZIP\""
+msgstr ""
+
+#: ../../user-guide.md:186
+msgid "Extract to desired location:"
+msgstr ""
+
+#: ../../user-guide.md:187
+msgid "Windows: ``D:\\pyMM``"
+msgstr ""
+
+#: ../../user-guide.md:188
+msgid "Linux: ``~/pyMM``"
+msgstr ""
+
+#: ../../user-guide.md:189
+msgid "macOS: ``~/Documents/pyMM``"
+msgstr ""
+
+#: ../../user-guide.md:191
+msgid "Step 3: Install Dependencies"
+msgstr ""
+
+#: ../../user-guide.md:234
+msgid "Step 4: Run Application"
+msgstr ""
+
+#: ../../user-guide.md:277
+msgid "Method 2: Portable Installation"
+msgstr ""
+
+#: ../../user-guide.md:279
+msgid "For use on USB drives or external storage:"
+msgstr ""
+
+#: ../../user-guide.md:281
+msgid ""
+".. note::    Portable installation is primarily designed for Windows with"
+" Python Embeddable Package. Linux/macOS users should use Method 1 or 3 "
+"for full functionality."
+msgstr ""
+
+#: ../../user-guide.md:287
+msgid "**Step 1: Portable Python**"
+msgstr ""
+
+#: ../../user-guide.md:289
+msgid ""
+"Download `Python Embeddable Package "
+"<https://www.python.org/downloads/windows/>`_"
+msgstr ""
+
+#: ../../user-guide.md:290
+msgid "Choose \"Windows embeddable package (64-bit)\""
+msgstr ""
+
+#: ../../user-guide.md:291
+msgid "Extract to your portable drive (e.g., ``E:\\PortablePython``)"
+msgstr ""
+
+#: ../../user-guide.md:293
+msgid "**Step 2: Setup pip for Embeddable Python**"
+msgstr ""
+
+#: ../../user-guide.md:306
+msgid "**Step 3: Install pyMM**"
+msgstr ""
+
+#: ../../user-guide.md:319
+msgid "**Step 4: Create Launch Script**"
+msgstr ""
+
+#: ../../user-guide.md:321
+msgid "Create ``E:\\LaunchPyMM.bat``:"
+msgstr ""
+
+#: ../../user-guide.md:323
+msgid ".. code-block:: batch"
+msgstr ""
+
+#: ../../user-guide.md:330
+msgid "Double-click ``LaunchPyMM.bat`` to run."
+msgstr ""
+
+#: ../../user-guide.md:334 ../../user-guide.md:365
+msgid "**Portable Mode with Virtual Environment**"
+msgstr ""
+
+#: ../../user-guide.md:354
+#, python-brace-format
+msgid ""
+"#!/bin/bash DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\" "
+"source \"$DIR/pyMM/.venv/bin/activate\" python -m app EOF       chmod +x "
+"../launch-pymm.sh"
+msgstr ""
+
+#: ../../user-guide.md:361
+msgid "Run with: ``./launch-pymm.sh``"
+msgstr ""
+
+#: ../../user-guide.md:385
+msgid ""
+"#!/bin/bash DIR=\"$(cd \"$(dirname \"$0\")\" && pwd)\" source "
+"\"$DIR/pyMM/.venv/bin/activate\" python -m app EOF       chmod +x "
+"../launch-pymm.command"
+msgstr ""
+
+#: ../../user-guide.md:392
+msgid "Double-click ``launch-pymm.command`` to run."
+msgstr ""
+
+#: ../../user-guide.md:395
+msgid "Method 3: Development Installation"
+msgstr ""
+
+#: ../../user-guide.md:397
+msgid "For contributors and developers:"
+msgstr ""
+
+#: ../../user-guide.md:461
+msgid ""
+".. seealso::    For detailed developer setup including VS Code "
+"configuration, debugging, and testing workflows, see :doc:`getting-"
+"started-dev`."
+msgstr ""
+
+#: ../../user-guide.md:466
+msgid "🚀 First Run Setup"
+msgstr ""
+
+#: ../../user-guide.md:468
+msgid "Initial Launch"
+msgstr ""
+
+#: ../../user-guide.md:470
+msgid ""
+"When you first run pyMM, the **First Run Wizard** guides you through "
+"essential configuration:"
+msgstr ""
+
+#: ../../user-guide.md:472
+msgid "Step 1: Welcome Screen"
+msgstr ""
+
+#: ../../user-guide.md:474
+msgid "Introduction to pyMM features"
+msgstr ""
+
+#: ../../user-guide.md:475
+msgid "Links to documentation and tutorials"
+msgstr ""
+
+#: ../../user-guide.md:476
+msgid "Privacy and data handling information"
+msgstr ""
+
+#: ../../user-guide.md:478
+msgid "Step 2: Drive Selection"
+msgstr ""
+
+#: ../../user-guide.md:496
+msgid "**Drive Selection Tips:**"
+msgstr ""
+
+#: ../../user-guide.md:498
+msgid "✅ Choose drives with sufficient free space (≥10 GB recommended)"
+msgstr ""
+
+#: ../../user-guide.md:499
+msgid "✅ NTFS preferred for Windows (supports large files, permissions)"
+msgstr ""
+
+#: ../../user-guide.md:500
+msgid "⚠️ exFAT works but may have performance limitations"
+msgstr ""
+
+#: ../../user-guide.md:501
+msgid "⚠️ Network drives supported but may be slower"
+msgstr ""
+
+#: ../../user-guide.md:503
+msgid "Step 3: Folder Structure Creation"
+msgstr ""
+
+#: ../../user-guide.md:505
+msgid "pyMM creates portable folder structure:"
+msgstr ""
+
+#: ../../user-guide.md:514
+msgid ""
+"**Portability Note**: If you move pyMM to another drive, these folders "
+"automatically relocate."
+msgstr ""
+
+#: ../../user-guide.md:516
+msgid "Step 4: Plugin Configuration"
+msgstr ""
+
+#: ../../user-guide.md:518
+msgid "Select plugins to download and configure:"
+msgstr ""
+
+#: ../../user-guide.md:540
+msgid "Step 5: Initial Configuration"
+msgstr ""
+
+#: ../../user-guide.md:542
+msgid "Configure basic settings:"
+msgstr ""
+
+#: ../../user-guide.md:544
+msgid "**Language**: English (more languages planned)"
+msgstr ""
+
+#: ../../user-guide.md:545
+msgid "**Theme**: Light, Dark, Auto (follows system)"
+msgstr ""
+
+#: ../../user-guide.md:546
+msgid "**Default Project Location**: `D:\\pyMM.Projects`"
+msgstr ""
+
+#: ../../user-guide.md:547
+msgid "**Auto-Update Plugins**: Enabled (recommended)"
+msgstr ""
+
+#: ../../user-guide.md:548
+msgid "**Telemetry**: Disabled by default (respects privacy)"
+msgstr ""
+
+#: ../../user-guide.md:550
+msgid "Step 6: Complete Setup"
+msgstr ""
+
+#: ../../user-guide.md:552 ../../user-guide.md:770
+msgid "Summary of configuration"
+msgstr ""
+
+#: ../../user-guide.md:553
+msgid "Launch application button"
+msgstr ""
+
+#: ../../user-guide.md:554
+msgid "Quick start tutorial link"
+msgstr ""
+
+#: ../../user-guide.md:556
+msgid "Linux-Specific Setup: USB Device Detection"
+msgstr ""
+
+#: ../../user-guide.md:558
+msgid ""
+"**Linux users only:** pyMM can automatically detect USB storage devices "
+"using udev rules."
+msgstr ""
+
+#: ../../user-guide.md:560
+msgid "What are udev rules?"
+msgstr ""
+
+#: ../../user-guide.md:562
+msgid ""
+"udev rules enable automatic detection of USB devices without requiring "
+"the application to run as root. This provides better security and "
+"integration with your Linux desktop."
+msgstr ""
+
+#: ../../user-guide.md:564
+msgid "Installing udev Rules"
+msgstr ""
+
+#: ../../user-guide.md:566
+msgid "**Option 1: Using the GUI (Recommended)**"
+msgstr ""
+
+#: ../../user-guide.md:568 ../../user-guide.md:640
+msgid "Go to **⚙️ Settings** → **Linux udev Rules**"
+msgstr ""
+
+#: ../../user-guide.md:569
+msgid "Click **\"Install udev Rules\"**"
+msgstr ""
+
+#: ../../user-guide.md:570
+msgid "Enter your password when prompted (pkexec authentication)"
+msgstr ""
+
+#: ../../user-guide.md:571
+msgid "Wait for confirmation: \"udev rules installed successfully\""
+msgstr ""
+
+#: ../../user-guide.md:572
+msgid "Rules take effect immediately (no reboot required)"
+msgstr ""
+
+#: ../../user-guide.md:574
+msgid "**Option 2: Using Command Line**"
+msgstr ""
+
+#: ../../user-guide.md:587
+msgid "What Gets Installed"
+msgstr ""
+
+#: ../../user-guide.md:589
+msgid "The installer creates `/etc/udev/rules.d/99-pymm-usb.rules` with:"
+msgstr ""
+
+#: ../../user-guide.md:605
+msgid "**Security Notes:**"
+msgstr ""
+
+#: ../../user-guide.md:607
+msgid "Rules run as root but only execute predefined safe commands"
+msgstr ""
+
+#: ../../user-guide.md:608
+msgid "pyMM itself does NOT run as root"
+msgstr ""
+
+#: ../../user-guide.md:609
+msgid "Uses `pkexec` for privilege escalation (same as system settings)"
+msgstr ""
+
+#: ../../user-guide.md:610
+msgid "Rules are read-only after installation"
+msgstr ""
+
+#: ../../user-guide.md:612
+msgid "Checking Installation Status"
+msgstr ""
+
+#: ../../user-guide.md:614
+msgid "From the GUI, go to **⚙️ Settings** → **Linux udev Rules**:"
+msgstr ""
+
+#: ../../user-guide.md:636
+msgid "Uninstalling"
+msgstr ""
+
+#: ../../user-guide.md:638
+msgid "If you no longer need USB device detection:"
+msgstr ""
+
+#: ../../user-guide.md:641
+msgid "Click **\"Uninstall\"**"
+msgstr ""
+
+#: ../../user-guide.md:642
+msgid "Enter your password when prompted"
+msgstr ""
+
+#: ../../user-guide.md:643
+msgid "Rules are removed immediately"
+msgstr ""
+
+#: ../../user-guide.md:645
+msgid ""
+"**Note:** pyMM continues to work without udev rules, but you'll need to "
+"manually refresh storage devices."
+msgstr ""
+
+#: ../../user-guide.md:647
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../user-guide.md:649
+msgid "**Rules not working after installation:**"
+msgstr ""
+
+#: ../../user-guide.md:663
+msgid "**Permission denied during installation:**"
+msgstr ""
+
+#: ../../user-guide.md:665
+msgid "Ensure you're in the `wheel` or `sudo` group"
+msgstr ""
+
+#: ../../user-guide.md:666
+msgid "Check pkexec is installed: `which pkexec`"
+msgstr ""
+
+#: ../../user-guide.md:667
+msgid "Try manual installation:"
+msgstr ""
+
+#: ../../user-guide.md:675
+msgid ""
+"For more details, see [Linux udev Rules Documentation](linux-udev-"
+"installer.md)."
+msgstr ""
+
+#: ../../user-guide.md:679
+msgid "✨ Core Features"
+msgstr ""
+
+#: ../../user-guide.md:681
+msgid "Modern Fluent UI"
+msgstr ""
+
+#: ../../user-guide.md:683
+msgid ""
+"pyMM features a beautiful, modern interface inspired by Windows 11 Fluent"
+" Design:"
+msgstr ""
+
+#: ../../user-guide.md:685
+msgid "**Acrylic Effects**: Translucent backgrounds with blur"
+msgstr ""
+
+#: ../../user-guide.md:686
+msgid "**Smooth Animations**: Fluid transitions and interactions"
+msgstr ""
+
+#: ../../user-guide.md:687
+msgid "**Dark/Light Themes**: Automatic or manual theme switching"
+msgstr ""
+
+#: ../../user-guide.md:688
+msgid "**Responsive Design**: Adapts to different screen sizes"
+msgstr ""
+
+#: ../../user-guide.md:689
+msgid "**Keyboard Shortcuts**: Efficient navigation and actions"
+msgstr ""
+
+#: ../../user-guide.md:691
+msgid "Dashboard Overview"
+msgstr ""
+
+#: ../../user-guide.md:715
+msgid "Navigation"
+msgstr ""
+
+#: ../../user-guide.md:717
+msgid "**Sidebar**: Primary navigation (Projects, Plugins, Storage, Settings)"
+msgstr ""
+
+#: ../../user-guide.md:718
+msgid "**Top Bar**: Search, notifications, user profile, quick actions"
+msgstr ""
+
+#: ../../user-guide.md:719
+msgid "**Breadcrumbs**: Current location and navigation history"
+msgstr ""
+
+#: ../../user-guide.md:720
+msgid "**Tab System**: Multiple projects/views open simultaneously"
+msgstr ""
+
+#: ../../user-guide.md:724
+msgid "📁 Project Management"
+msgstr ""
+
+#: ../../user-guide.md:726
+msgid "Creating Projects"
+msgstr ""
+
+#: ../../user-guide.md:728
+msgid "Method 1: Project Wizard (Recommended)"
+msgstr ""
+
+#: ../../user-guide.md:730
+msgid "Click **\"+ New Project\"** or press `Ctrl+N`"
+msgstr ""
+
+#: ../../user-guide.md:731
+msgid "**Project Wizard** opens:"
+msgstr ""
+
+#: ../../user-guide.md:750
+msgid "**Step 2: Project Details**"
+msgstr ""
+
+#: ../../user-guide.md:752
+msgid "**Name**: `Client_Wedding_2026`"
+msgstr ""
+
+#: ../../user-guide.md:753
+msgid "**Location**: `D:\\pyMM.Projects\\Client_Wedding_2026`"
+msgstr ""
+
+#: ../../user-guide.md:754
+msgid "**Description**: \"Wedding photography for Smith family\""
+msgstr ""
+
+#: ../../user-guide.md:755
+msgid "**Tags**: `wedding`, `2026`, `client`, `photography`"
+msgstr ""
+
+#: ../../user-guide.md:757
+msgid "**Step 3: Plugin Selection**"
+msgstr ""
+
+#: ../../user-guide.md:759
+msgid "Select plugins for this project (DigiKam, ExifTool, etc.)"
+msgstr ""
+
+#: ../../user-guide.md:760
+msgid "Configure plugin-specific settings"
+msgstr ""
+
+#: ../../user-guide.md:762
+msgid "**Step 4: Git Integration** (Optional)"
+msgstr ""
+
+#: ../../user-guide.md:764
+msgid "Initialize Git repository"
+msgstr ""
+
+#: ../../user-guide.md:765
+msgid "Configure remote repository"
+msgstr ""
+
+#: ../../user-guide.md:766
+msgid "Set up `.gitignore` for media files"
+msgstr ""
+
+#: ../../user-guide.md:768
+msgid "**Step 5: Review & Create**"
+msgstr ""
+
+#: ../../user-guide.md:771
+msgid "Click **\"Create Project\"**"
+msgstr ""
+
+#: ../../user-guide.md:773
+msgid "Method 2: Quick Create"
+msgstr ""
+
+#: ../../user-guide.md:807
+msgid "Project Structure"
+msgstr ""
+
+#: ../../user-guide.md:809
+msgid "Each project maintains this structure:"
+msgstr ""
+
+#: ../../user-guide.md:832
+msgid "Opening Projects"
+msgstr ""
+
+#: ../../user-guide.md:834
+msgid "Method 1: Recent Projects"
+msgstr ""
+
+#: ../../user-guide.md:836
+msgid "Dashboard shows 10 most recent projects"
+msgstr ""
+
+#: ../../user-guide.md:837
+msgid "Click project name to open"
+msgstr ""
+
+#: ../../user-guide.md:839
+msgid "Method 2: Project Browser"
+msgstr ""
+
+#: ../../user-guide.md:841
+msgid "Click **\"📁 Projects\"** in sidebar"
+msgstr ""
+
+#: ../../user-guide.md:842
+msgid "Browse project list:"
+msgstr ""
+
+#: ../../user-guide.md:861
+msgid "Method 3: Command Line"
+msgstr ""
+
+#: ../../user-guide.md:904
+msgid "Project Operations"
+msgstr ""
+
+#: ../../user-guide.md:906
+msgid "Rename Project"
+msgstr ""
+
+#: ../../user-guide.md:908
+msgid "Right-click project → **\"Rename\"**"
+msgstr ""
+
+#: ../../user-guide.md:909
+msgid "Enter new name"
+msgstr ""
+
+#: ../../user-guide.md:910
+msgid "pyMM updates all references automatically"
+msgstr ""
+
+#: ../../user-guide.md:912
+msgid "Move Project"
+msgstr ""
+
+#: ../../user-guide.md:914
+msgid "Right-click project → **\"Move\"**"
+msgstr ""
+
+#: ../../user-guide.md:915
+msgid "Select new location"
+msgstr ""
+
+#: ../../user-guide.md:916
+msgid "pyMM moves files and updates configuration"
+msgstr ""
+
+#: ../../user-guide.md:918
+msgid ""
+"**Warning**: Moving large projects may take time. Ensure sufficient space"
+" at destination."
+msgstr ""
+
+#: ../../user-guide.md:920
+msgid "Archive Project"
+msgstr ""
+
+#: ../../user-guide.md:922
+msgid "Right-click project → **\"Archive\"**"
+msgstr ""
+
+#: ../../user-guide.md:923
+msgid "Choose compression level:"
+msgstr ""
+
+#: ../../user-guide.md:924
+msgid "**Fast** (ZIP, faster)"
+msgstr ""
+
+#: ../../user-guide.md:925
+msgid "**Best** (7z, smaller)"
+msgstr ""
+
+#: ../../user-guide.md:926
+msgid "Select archive location"
+msgstr ""
+
+#: ../../user-guide.md:927
+msgid "pyMM creates archive and optionally removes original"
+msgstr ""
+
+#: ../../user-guide.md:929
+msgid "Delete Project"
+msgstr ""
+
+#: ../../user-guide.md:931
+msgid "Right-click project → **\"Delete\"**"
+msgstr ""
+
+#: ../../user-guide.md:932
+msgid "Confirm deletion (irreversible)"
+msgstr ""
+
+#: ../../user-guide.md:933
+msgid "Options:"
+msgstr ""
+
+#: ../../user-guide.md:934
+msgid "Delete project folder only (keeps media)"
+msgstr ""
+
+#: ../../user-guide.md:935
+msgid "Delete everything (complete removal)"
+msgstr ""
+
+#: ../../user-guide.md:936
+msgid "Move to recycle bin (recoverable)"
+msgstr ""
+
+#: ../../user-guide.md:938
+msgid "Project Properties"
+msgstr ""
+
+#: ../../user-guide.md:940
+msgid "View and edit project details:"
+msgstr ""
+
+#: ../../user-guide.md:977
+msgid "🔌 Plugin System"
+msgstr ""
+
+#: ../../user-guide.md:979
+msgid "Available Plugins"
+msgstr ""
+
+#: ../../user-guide.md:981
+msgid "pyMM supports various media management tools through its plugin system:"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Plugin"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Description"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Size"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Latest Version"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**DigiKam**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Professional photo management"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "450 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "8.2.0"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**ExifTool**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Read/write metadata"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "12 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "12.70"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**FFmpeg**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Video/audio processing"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "120 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "6.1"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**Git**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Version control system"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "85 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "2.43.0"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**Git LFS**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Large file storage for Git"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "15 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "3.4.1"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**GitVersion**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Semantic versioning"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "8 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "5.12.0"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**ImageMagick**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Image manipulation"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "65 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "7.1.1"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**MariaDB**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Database server"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "180 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "11.2.2"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "**MKVToolNix**"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "MKV file tools"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "45 MB"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "81.0"
+msgstr ""
+
+#: ../../user-guide.md:995
+msgid "Installing Plugins"
+msgstr ""
+
+#: ../../user-guide.md:997
+msgid "Method 1: Plugin Manager UI"
+msgstr ""
+
+#: ../../user-guide.md:999
+msgid "Click **\"🔌 Plugins\"** in sidebar"
+msgstr ""
+
+#: ../../user-guide.md:1000
+msgid "Click **\"+ Install Plugin\"**"
+msgstr ""
+
+#: ../../user-guide.md:1001 ../../user-guide.md:1067
+msgid "Select plugin from list"
+msgstr ""
+
+#: ../../user-guide.md:1002
+msgid "Click **\"Download & Install\"**"
+msgstr ""
+
+#: ../../user-guide.md:1003
+msgid "Monitor progress:"
+msgstr ""
+
+#: ../../user-guide.md:1016
+msgid "Method 2: Command Line"
+msgstr ""
+
+#: ../../user-guide.md:1029
+msgid "Managing Plugins"
+msgstr ""
+
+#: ../../user-guide.md:1031
+msgid "Update Plugins"
+msgstr ""
+
+#: ../../user-guide.md:1033
+msgid "Click **\"🔌 Plugins\"** → **\"Check for Updates\"**"
+msgstr ""
+
+#: ../../user-guide.md:1034
+msgid "Select plugins to update"
+msgstr ""
+
+#: ../../user-guide.md:1035
+msgid "Click **\"Update Selected\"**"
+msgstr ""
+
+#: ../../user-guide.md:1037
+msgid "Configure Plugins"
+msgstr ""
+
+#: ../../user-guide.md:1039
+msgid "Right-click plugin → **\"Configure\"**"
+msgstr ""
+
+#: ../../user-guide.md:1040
+msgid "Modify settings:"
+msgstr ""
+
+#: ../../user-guide.md:1062
+msgid "Plugin Execution Preferences"
+msgstr ""
+
+#: ../../user-guide.md:1064
+msgid ""
+"**New in v2:** Choose between system-installed tools and portable "
+"versions."
+msgstr ""
+
+#: ../../user-guide.md:1066
+msgid "Click **\"⚙️ Settings\"** → **\"Plugin Preferences\"**"
+msgstr ""
+
+#: ../../user-guide.md:1068
+msgid "Configure execution preference:"
+msgstr ""
+
+#: ../../user-guide.md:1093
+msgid "**Execution Modes:**"
+msgstr ""
+
+#: ../../user-guide.md:1095
+msgid ""
+"**Auto (Default)**: Tries system-installed tool first, falls back to "
+"portable if:"
+msgstr ""
+
+#: ../../user-guide.md:1096
+msgid "System tool not found"
+msgstr ""
+
+#: ../../user-guide.md:1097
+msgid "System version doesn't meet minimum requirements"
+msgstr ""
+
+#: ../../user-guide.md:1098
+msgid "System tool fails to execute"
+msgstr ""
+
+#: ../../user-guide.md:1099
+msgid ""
+"**System Only**: Only uses system-installed tool. Shows error if "
+"unavailable."
+msgstr ""
+
+#: ../../user-guide.md:1100
+msgid ""
+"**Portable Only**: Only uses pyMM's portable version. Always downloads if"
+" missing."
+msgstr ""
+
+#: ../../user-guide.md:1102
+msgid "**Version Validation:**"
+msgstr ""
+
+#: ../../user-guide.md:1104
+msgid ""
+"When using **Auto** or **System Only**, pyMM validates the system tool "
+"version:"
+msgstr ""
+
+#: ../../user-guide.md:1127
+msgid "**Platform Support:**"
+msgstr ""
+
+#: ../../user-guide.md:1129
+msgid "Different plugins have different platform configurations:"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Windows"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Linux"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "macOS"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Portable + System"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "System only"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "Portable"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "System (APT/Flatpak)"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "System (Homebrew)"
+msgstr ""
+
+#: ../../user-guide.md:863
+msgid "System (APT)"
+msgstr ""
+
+#: ../../user-guide.md:1139
+msgid ""
+"See [Plugin Development Guide](plugin-development.md) for technical "
+"details."
+msgstr ""
+
+#: ../../user-guide.md:1141
+msgid "Remove Plugins"
+msgstr ""
+
+#: ../../user-guide.md:1143
+msgid "Right-click plugin → **\"Uninstall\"**"
+msgstr ""
+
+#: ../../user-guide.md:1144
+msgid "Choose removal option:"
+msgstr ""
+
+#: ../../user-guide.md:1145
+msgid "**Remove Plugin Only**: Keep configuration and data"
+msgstr ""
+
+#: ../../user-guide.md:1146
+msgid "**Complete Removal**: Delete everything"
+msgstr ""
+
+#: ../../user-guide.md:1147
+msgid "Confirm uninstallation"
+msgstr ""
+
+#: ../../user-guide.md:1149
+msgid "Plugin Development"
+msgstr ""
+
+#: ../../user-guide.md:1151
+msgid ""
+"Want to create custom plugins? See [Plugin Development Guide](plugin-"
+"development.md)."
+msgstr ""
+
+#: ../../user-guide.md:1155
+msgid "💾 Storage Management"
+msgstr ""
+
+#: ../../user-guide.md:1157
+msgid "Storage Overview"
+msgstr ""
+
+#: ../../user-guide.md:1159
+msgid "Monitor storage across all drives:"
+msgstr ""
+
+#: ../../user-guide.md:1188
+msgid "Storage Optimization"
+msgstr ""
+
+#: ../../user-guide.md:1190
+msgid "Clean Up Temporary Files"
+msgstr ""
+
+#: ../../user-guide.md:1192
+msgid "Click **\"Optimize Storage\"**"
+msgstr ""
+
+#: ../../user-guide.md:1193
+msgid "Select cleanup targets:"
+msgstr ""
+
+#: ../../user-guide.md:1194
+msgid "☑ Temporary project files"
+msgstr ""
+
+#: ../../user-guide.md:1195
+msgid "☑ Old plugin versions"
+msgstr ""
+
+#: ../../user-guide.md:1196
+msgid "☑ Log files older than 30 days"
+msgstr ""
+
+#: ../../user-guide.md:1197
+msgid "☑ Thumbnail cache"
+msgstr ""
+
+#: ../../user-guide.md:1198
+msgid "Review space to recover: **~2.5 GB**"
+msgstr ""
+
+#: ../../user-guide.md:1199
+msgid "Click **\"Clean Up\"**"
+msgstr ""
+
+#: ../../user-guide.md:1201
+msgid "Move Projects Between Drives"
+msgstr ""
+
+#: ../../user-guide.md:1203
+msgid "Select project(s)"
+msgstr ""
+
+#: ../../user-guide.md:1204
+msgid "Click **\"Move\"**"
+msgstr ""
+
+#: ../../user-guide.md:1205
+msgid "Select destination drive"
+msgstr ""
+
+#: ../../user-guide.md:1206
+msgid "pyMM handles the move with progress tracking"
+msgstr ""
+
+#: ../../user-guide.md:1210
+msgid "⚙️ Configuration"
+msgstr ""
+
+#: ../../user-guide.md:1212
+msgid "Application Settings"
+msgstr ""
+
+#: ../../user-guide.md:1214
+msgid "Access via **⚙️ Settings** button or `Ctrl+,`:"
+msgstr ""
+
+#: ../../user-guide.md:1216
+msgid "General Settings"
+msgstr ""
+
+#: ../../user-guide.md:1239
+msgid "Performance Settings"
+msgstr ""
+
+#: ../../user-guide.md:1259
+msgid "Privacy Settings"
+msgstr ""
+
+#: ../../user-guide.md:1279
+msgid "Configuration Files"
+msgstr ""
+
+#: ../../user-guide.md:1281
+msgid "pyMM stores configuration in platform-specific standard directories:"
+msgstr ""
+
+#: ../../user-guide.md:1283
+msgid "Platform-Specific Locations"
+msgstr ""
+
+#: ../../user-guide.md:1285
+msgid "**Windows:**"
+msgstr ""
+
+#: ../../user-guide.md:1296
+msgid "**Linux (XDG Base Directory):**"
+msgstr ""
+
+#: ../../user-guide.md:1307
+msgid "**macOS:**"
+msgstr ""
+
+#: ../../user-guide.md:1318
+msgid "Application Config (`app.yaml`)"
+msgstr ""
+
+#: ../../user-guide.md:1320
+#, python-brace-format
+msgid "**Location:** `{config_dir}/app.yaml`"
+msgstr ""
+
+#: ../../user-guide.md:1352
+msgid "User Config (`D:\\pyMM.Config\\user.yaml`)"
+msgstr ""
+
+#: ../../user-guide.md:1378
+msgid "💻 Command Line Interface"
+msgstr ""
+
+#: ../../user-guide.md:1380
+msgid "pyMM provides a powerful CLI for automation and scripting:"
+msgstr ""
+
+#: ../../user-guide.md:1382
+msgid "Basic Commands"
+msgstr ""
+
+#: ../../user-guide.md:1398
+msgid "Project Commands"
+msgstr ""
+
+#: ../../user-guide.md:1417
+msgid "Plugin Commands"
+msgstr ""
+
+#: ../../user-guide.md:1436
+msgid "Storage Commands"
+msgstr ""
+
+#: ../../user-guide.md:1449
+msgid "Advanced Commands"
+msgstr ""
+
+#: ../../user-guide.md:1467
+msgid "🔧 Troubleshooting"
+msgstr ""
+
+#: ../../user-guide.md:1469
+msgid "Common Issues"
+msgstr ""
+
+#: ../../user-guide.md:1471
+msgid "Application Won't Start"
+msgstr ""
+
+#: ../../user-guide.md:1473
+msgid "**Symptoms**: Double-clicking launcher does nothing or shows error."
+msgstr ""
+
+#: ../../user-guide.md:1475 ../../user-guide.md:1587 ../../user-guide.md:1671
+#: ../../user-guide.md:1742 ../../user-guide.md:1760
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../user-guide.md:1477
+msgid "**Verify Python installation**:"
+msgstr ""
+
+#: ../../user-guide.md:1502
+msgid "**Check dependencies**:"
+msgstr ""
+
+#: ../../user-guide.md:1527
+msgid "**Reinstall dependencies**:"
+msgstr ""
+
+#: ../../user-guide.md:1549
+msgid "**Check logs**:"
+msgstr ""
+
+#: ../../user-guide.md:1583
+msgid "Projects Not Loading"
+msgstr ""
+
+#: ../../user-guide.md:1585
+msgid "**Symptoms**: Projects appear in list but won't open."
+msgstr ""
+
+#: ../../user-guide.md:1589
+msgid "**Verify project integrity**:"
+msgstr ""
+
+#: ../../user-guide.md:1611
+msgid "**Check permissions**:"
+msgstr ""
+
+#: ../../user-guide.md:1645
+msgid "**Repair project**:"
+msgstr ""
+
+#: ../../user-guide.md:1667
+msgid "Plugin Download Fails"
+msgstr ""
+
+#: ../../user-guide.md:1669
+msgid "**Symptoms**: Plugin download stalls or shows error."
+msgstr ""
+
+#: ../../user-guide.md:1673
+msgid "**Check internet connection**:"
+msgstr ""
+
+#: ../../user-guide.md:1706
+msgid "**Try manual download**:"
+msgstr ""
+
+#: ../../user-guide.md:1708
+msgid "Visit plugin's GitHub releases page"
+msgstr ""
+
+#: ../../user-guide.md:1709
+msgid "Download manually"
+msgstr ""
+
+#: ../../user-guide.md:1710
+msgid "Extract to platform-specific location:"
+msgstr ""
+
+#: ../../user-guide.md:1712
+msgid "Windows: ``D:\\pyMM.Plugins\\<plugin_name>``"
+msgstr ""
+
+#: ../../user-guide.md:1713
+msgid "Linux: ``~/pyMM.Plugins/<plugin_name>``"
+msgstr ""
+
+#: ../../user-guide.md:1714
+msgid "macOS: ``~/Library/Application Support/pyMM/Plugins/<plugin_name>``"
+msgstr ""
+
+#: ../../user-guide.md:1716
+msgid "**Clear download cache**:"
+msgstr ""
+
+#: ../../user-guide.md:1738
+msgid "Performance Issues"
+msgstr ""
+
+#: ../../user-guide.md:1740
+msgid "**Symptoms**: Application is slow or unresponsive."
+msgstr ""
+
+#: ../../user-guide.md:1744
+msgid "**Increase memory limit**:"
+msgstr ""
+
+#: ../../user-guide.md:1745
+msgid "Settings → Performance → Max Memory: 8192 MB"
+msgstr ""
+
+#: ../../user-guide.md:1747
+msgid "**Disable thumbnail preloading**:"
+msgstr ""
+
+#: ../../user-guide.md:1748
+msgid "Settings → Performance → ☐ Preload thumbnails"
+msgstr ""
+
+#: ../../user-guide.md:1750
+msgid "**Reduce thread count**:"
+msgstr ""
+
+#: ../../user-guide.md:1751
+msgid "Settings → Performance → Thread Pool: 4 threads"
+msgstr ""
+
+#: ../../user-guide.md:1753
+msgid "**Move to faster storage**:"
+msgstr ""
+
+#: ../../user-guide.md:1754
+msgid "Use SSD instead of HDD for application and projects"
+msgstr ""
+
+#: ../../user-guide.md:1756
+msgid "Git Integration Issues"
+msgstr ""
+
+#: ../../user-guide.md:1758
+msgid "**Symptoms**: Git operations fail or show errors."
+msgstr ""
+
+#: ../../user-guide.md:1762
+msgid "**Verify Git installation**:"
+msgstr ""
+
+#: ../../user-guide.md:1796
+msgid "**Initialize repository manually**:"
+msgstr ""
+
+#: ../../user-guide.md:1827
+msgid "**Check Git status**:"
+msgstr ""
+
+#: ../../user-guide.md:1852
+msgid "Error Messages"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Error"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Cause"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Solution"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "`PermissionError: [Errno 13]`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Insufficient permissions"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Run as administrator or check folder permissions"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "`ModuleNotFoundError: 'PySide6'`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Dependencies not installed"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Run `pip install -e .`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "`FileNotFoundError: config.yaml`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Missing configuration"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Run first-time setup wizard"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "`OSError: [WinError 145]`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "File in use"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Close all applications using the file"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "`ConnectionError: github.com`"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "No internet connection"
+msgstr ""
+
+#: ../../user-guide.md:1829
+msgid "Check network connection and firewall"
+msgstr ""
+
+#: ../../user-guide.md:1862
+msgid "Debug Mode"
+msgstr ""
+
+#: ../../user-guide.md:1864
+msgid "Enable detailed logging for troubleshooting:"
+msgstr ""
+
+#: ../../user-guide.md:1910
+msgid "Collecting Diagnostic Information"
+msgstr ""
+
+#: ../../user-guide.md:1912
+msgid "When reporting issues, collect this information:"
+msgstr ""
+
+#: ../../user-guide.md:1974
+msgid "❓ FAQ"
+msgstr ""
+
+#: ../../user-guide.md:1976
+msgid "General"
+msgstr ""
+
+#: ../../user-guide.md:1978
+msgid ""
+"**Q: Is pyMM free?** A: Yes! pyMM is open-source software licensed under "
+"MIT. Free to use, modify, and distribute."
+msgstr ""
+
+#: ../../user-guide.md:1981
+msgid ""
+"**Q: Does pyMM require internet connection?** A: Only for initial plugin "
+"downloads and updates. Once installed, pyMM works completely offline."
+msgstr ""
+
+#: ../../user-guide.md:1984
+#, python-format
+msgid ""
+"**Q: Can I run pyMM on macOS or Linux?** A: Yes! pyMM runs on Windows "
+"10+, Windows 11, Ubuntu 20.04+, Debian 11+, and macOS 11+. Configuration "
+"directories follow platform standards (XDG Base Directory on Linux, "
+"~/Library on macOS, %APPDATA% on Windows)."
+msgstr ""
+
+#: ../../user-guide.md:1987
+msgid ""
+"**Q: How much storage does pyMM need?** A: ~200 MB for application. "
+"Plugins vary (12 MB - 450 MB each). Projects depend on your media."
+msgstr ""
+
+#: ../../user-guide.md:1990
+msgid "Projects"
+msgstr ""
+
+#: ../../user-guide.md:1992
+msgid ""
+"**Q: Can I share projects with others?** A: Yes! Archive projects and "
+"share the archive file. Recipients extract and open in their pyMM."
+msgstr ""
+
+#: ../../user-guide.md:1995
+msgid ""
+"**Q: What happens if I move pyMM to another drive?** A: pyMM is fully "
+"portable. Move the entire `D:\\pyMM` folder to any drive and run."
+msgstr ""
+
+#: ../../user-guide.md:1998
+msgid ""
+"**Q: Can I have projects on multiple drives?** A: Yes! Configure project "
+"location per-project. Mix local, external, and network drives."
+msgstr ""
+
+#: ../../user-guide.md:2001
+msgid ""
+"**Q: How do I backup projects?** A: Use built-in archive feature or copy "
+"project folders manually. Git integration provides version history."
+msgstr ""
+
+#: ../../user-guide.md:2004
+msgid "Plugins"
+msgstr ""
+
+#: ../../user-guide.md:2006
+msgid ""
+"**Q: Are plugins safe?** A: All official plugins are verified and "
+"downloaded from trusted sources (GitHub, official websites)."
+msgstr ""
+
+#: ../../user-guide.md:2009
+msgid ""
+"**Q: Can I use my existing DigiKam database?** A: Yes! Configure DigiKam "
+"plugin to point to your existing database location."
+msgstr ""
+
+#: ../../user-guide.md:2012
+msgid ""
+"**Q: Why are some plugins so large?** A: Plugins include full "
+"applications (DigiKam, FFmpeg) for portability. No system installation "
+"needed."
+msgstr ""
+
+#: ../../user-guide.md:2015
+msgid ""
+"**Q: Can I create custom plugins?** A: Yes! See [Plugin Development Guide"
+"](plugin-development.md) for instructions."
+msgstr ""
+
+#: ../../user-guide.md:2018
+msgid "Performance"
+msgstr ""
+
+#: ../../user-guide.md:2020
+msgid ""
+"**Q: Why is pyMM slow on my USB drive?** A: USB 2.0 drives are slow. Use "
+"USB 3.0+ or move application to faster storage."
+msgstr ""
+
+#: ../../user-guide.md:2023
+msgid ""
+"**Q: Can I use SSD for application and HDD for media?** A: Yes! Install "
+"pyMM on SSD (`C:\\pyMM`), configure project location on HDD "
+"(`D:\\pyMM.Projects`)."
+msgstr ""
+
+#: ../../user-guide.md:2026
+msgid ""
+"**Q: How much RAM does pyMM use?** A: Typically 200-500 MB idle, up to "
+"2-4 GB when processing large projects."
+msgstr ""
+
+#: ../../user-guide.md:2031
+msgid "🆘 Getting Help"
+msgstr ""
+
+#: ../../user-guide.md:2033
+msgid "Documentation"
+msgstr ""
+
+#: ../../user-guide.md:2035
+msgid "**README**: [README.md](../README.md) - Quick start and overview"
+msgstr ""
+
+#: ../../user-guide.md:2036
+msgid ""
+"**Contributing**: [CONTRIBUTING.md](../CONTRIBUTING.md) - Development "
+"guide"
+msgstr ""
+
+#: ../../user-guide.md:2037
+msgid ""
+"**Architecture**: [docs/architecture.md](architecture.md) - Technical "
+"details"
+msgstr ""
+
+#: ../../user-guide.md:2038
+msgid ""
+"**Plugin Development**: [docs/plugin-development.md](plugin-"
+"development.md) - Create plugins"
+msgstr ""
+
+#: ../../user-guide.md:2039
+msgid "**Changelog**: [CHANGELOG.md](../CHANGELOG.md) - Version history"
+msgstr ""
+
+#: ../../user-guide.md:2041
+msgid "Community & Support"
+msgstr ""
+
+#: ../../user-guide.md:2043
+msgid "**GitHub Issues**: <https://github.com/mosh666/pyMM/issues>"
+msgstr ""
+
+#: ../../user-guide.md:2044
+msgid "Report bugs"
+msgstr ""
+
+#: ../../user-guide.md:2045
+msgid "Request features"
+msgstr ""
+
+#: ../../user-guide.md:2046
+msgid "Ask technical questions"
+msgstr ""
+
+#: ../../user-guide.md:2048
+msgid "**GitHub Discussions**: <https://github.com/mosh666/pyMM/discussions>"
+msgstr ""
+
+#: ../../user-guide.md:2049
+msgid "General questions"
+msgstr ""
+
+#: ../../user-guide.md:2050
+msgid "Share tips and workflows"
+msgstr ""
+
+#: ../../user-guide.md:2051
+msgid "Community support"
+msgstr ""
+
+#: ../../user-guide.md:2053
+msgid "**Email Support**: <24556349+mosh666@users.noreply.github.com>"
+msgstr ""
+
+#: ../../user-guide.md:2054
+msgid "Security issues (private)"
+msgstr ""
+
+#: ../../user-guide.md:2055
+msgid "Commercial inquiries"
+msgstr ""
+
+#: ../../user-guide.md:2056
+msgid "Partnership opportunities"
+msgstr ""
+
+#: ../../user-guide.md:2058
+msgid "Contributing"
+msgstr ""
+
+#: ../../user-guide.md:2060
+msgid "Want to help improve pyMM? We welcome contributions!"
+msgstr ""
+
+#: ../../user-guide.md:2062
+msgid "Fork the repository"
+msgstr ""
+
+#: ../../user-guide.md:2063
+msgid "Create a feature branch"
+msgstr ""
+
+#: ../../user-guide.md:2064
+msgid "Make your changes"
+msgstr ""
+
+#: ../../user-guide.md:2065
+msgid "Submit a pull request"
+msgstr ""
+
+#: ../../user-guide.md:2067
+msgid "See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines."
+msgstr ""
+
+#: ../../user-guide.md:2069
+msgid "Security"
+msgstr ""
+
+#: ../../user-guide.md:2071
+msgid "Found a security vulnerability?"
+msgstr ""
+
+#: ../../user-guide.md:2073
+msgid ""
+"**Do not create a public issue.** Report privately to: "
+"<24556349+mosh666@users.noreply.github.com>"
+msgstr ""
+
+#: ../../user-guide.md:2076
+msgid "See [SECURITY.md](../.github/SECURITY.md) for our security policy."
+msgstr ""
+
+#: ../../user-guide.md:2082
+msgid ""
+"**pyMediaManager** | **Version**: 0.0.0-dev | **Python**: 3.12+ (3.13 "
+"recommended) | **License**: MIT"
+msgstr ""
+
+#: ../../user-guide.md:2084
+msgid ""
+"[GitHub](https://github.com/mosh666/pyMM) · "
+"[Issues](https://github.com/mosh666/pyMM/issues) · "
+"[Discussions](https://github.com/mosh666/pyMM/discussions)"
+msgstr ""
+
+#: ../../user-guide.md:2086
+msgid "**Made with ❤️ for media professionals**"
+msgstr ""

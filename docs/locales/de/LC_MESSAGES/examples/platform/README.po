@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../examples/platform/README.md:1
+msgid "Platform Abstraction Examples"
+msgstr ""
+
+#: ../../examples/platform/README.md:3
+msgid "Examples for writing cross-platform code in pyMediaManager."
+msgstr ""
+
+#: ../../examples/platform/README.md:5
+msgid "Overview"
+msgstr ""
+
+#: ../../examples/platform/README.md:7
+msgid ""
+"pyMM provides platform abstraction utilities to handle Windows, Linux, "
+"and macOS differences elegantly."
+msgstr ""
+
+#: ../../examples/platform/README.md:9
+msgid "Basic Examples"
+msgstr ""
+
+#: ../../examples/platform/README.md:11
+msgid ""
+"**`detect_platform.py`** - Detect current platform "
+"**`platform_paths.py`** - Use platform-specific paths "
+"**`check_platform_features.py`** - Check platform capabilities"
+msgstr ""
+
+#: ../../examples/platform/README.md:15
+msgid "Intermediate Examples"
+msgstr ""
+
+#: ../../examples/platform/README.md:17
+msgid ""
+"**`platform_config.py`** - Platform-specific configuration "
+"**`conditional_imports.py`** - Import platform-specific modules "
+"**`platform_testing.py`** - Test code on different platforms"
+msgstr ""
+
+#: ../../examples/platform/README.md:21
+msgid "Advanced Examples"
+msgstr ""
+
+#: ../../examples/platform/README.md:23
+msgid ""
+"**`compatibility_checks.py`** - Validate cross-platform compatibility "
+"**`custom_platform_handler.py`** - Extend platform abstraction "
+"**`ast_validation.py`** - Ensure no direct platform checks"
+msgstr ""
+
+#: ../../examples/platform/README.md:27
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../examples/platform/README.md:29
+msgid "**Platform Detection**: Identify OS at runtime"
+msgstr ""
+
+#: ../../examples/platform/README.md:30
+msgid "**Path Handling**: XDG directories, Windows AppData, macOS ~/Library"
+msgstr ""
+
+#: ../../examples/platform/README.md:31
+msgid "**AST Validation**: Prevent direct `sys.platform` usage"
+msgstr ""
+
+#: ../../examples/platform/README.md:32
+msgid "**Plugin Compatibility**: Declare supported platforms in manifests"
+msgstr ""
+
+#: ../../examples/platform/README.md:34
+msgid "See Also"
+msgstr ""
+
+#: ../../examples/platform/README.md:36
+msgid ""
+"[Architecture - Platform Abstraction](../../architecture.md#platform-"
+"abstraction)"
+msgstr ""
+
+#: ../../examples/platform/README.md:37
+msgid "[API Reference - Platform Module](../../api-reference.md#platform)"
+msgstr ""
+
+#: ../../examples/platform/README.md:38
+msgid "[Platform Directories](../../platform-directories.md)"
+msgstr ""

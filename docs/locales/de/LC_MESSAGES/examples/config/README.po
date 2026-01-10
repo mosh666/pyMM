@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../examples/config/README.md:1
+msgid "Configuration Management Examples"
+msgstr ""
+
+#: ../../examples/config/README.md:3
+msgid "Examples for working with pyMediaManager's configuration system."
+msgstr ""
+
+#: ../../examples/config/README.md:5
+msgid "Overview"
+msgstr ""
+
+#: ../../examples/config/README.md:7
+msgid ""
+"pyMM uses a layered configuration system with YAML files, supporting "
+"defaults, user settings, and portable mode."
+msgstr ""
+
+#: ../../examples/config/README.md:9
+msgid "Basic Examples"
+msgstr ""
+
+#: ../../examples/config/README.md:11
+msgid ""
+"**`read_config.py`** - Read configuration values **`update_config.py`** -"
+" Modify and save configuration **`config_locations.py`** - Show where "
+"config files are stored"
+msgstr ""
+
+#: ../../examples/config/README.md:15
+msgid "Intermediate Examples"
+msgstr ""
+
+#: ../../examples/config/README.md:17
+msgid ""
+"**`config_layering.py`** - Understand config layer priority "
+"**`environment_variables.py`** - Use environment variable overrides "
+"**`portable_mode.py`** - Configure portable mode settings"
+msgstr ""
+
+#: ../../examples/config/README.md:21
+msgid "Advanced Examples"
+msgstr ""
+
+#: ../../examples/config/README.md:23
+msgid ""
+"**`custom_validators.py`** - Add configuration validators "
+"**`config_migration.py`** - Migrate old config to new format "
+"**`schema_evolution.py`** - Handle config schema changes"
+msgstr ""
+
+#: ../../examples/config/README.md:27
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../examples/config/README.md:29
+msgid "**Config Layers**: Default → User → Portable (highest priority)"
+msgstr ""
+
+#: ../../examples/config/README.md:30
+msgid "**Validation**: Pydantic models ensure config correctness"
+msgstr ""
+
+#: ../../examples/config/README.md:31
+msgid "**Portable Mode**: Self-contained config for USB drives"
+msgstr ""
+
+#: ../../examples/config/README.md:32
+msgid "**Platform Directories**: XDG-compliant config locations"
+msgstr ""
+
+#: ../../examples/config/README.md:34
+msgid "See Also"
+msgstr ""
+
+#: ../../examples/config/README.md:36
+msgid "[User Guide - Configuration](../../user-guide.md#configuration)"
+msgstr ""
+
+#: ../../examples/config/README.md:37
+msgid "[API Reference - ConfigService](../../api-reference.md#configservice)"
+msgstr ""
+
+#: ../../examples/config/README.md:38
+msgid "[Platform Directories](../../platform-directories.md)"
+msgstr ""

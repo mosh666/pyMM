@@ -1,0 +1,1857 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../plugin-development.md:3
+msgid "🔌 Plugin Development Guide"
+msgstr ""
+
+#: ../../plugin-development.md:5
+msgid ""
+"**Python Support:** 3.12, 3.13, 3.14 (Python 3.13 recommended) **Plugin "
+"System:** Manifest-driven (YAML-based) with automatic validation "
+"**Security:** SHA-256 checksum verification, retry logic, progress "
+"tracking **Last Updated:** January 7, 2026"
+msgstr ""
+
+#: ../../plugin-development.md:10
+msgid "📚 Table of Contents"
+msgstr ""
+
+#: ../../plugin-development.md:12
+msgid "[Overview](#overview)"
+msgstr ""
+
+#: ../../plugin-development.md:13
+msgid "[Quick Start](#quick-start)"
+msgstr ""
+
+#: ../../plugin-development.md:14
+msgid "[Plugin Architecture](#plugin-architecture)"
+msgstr ""
+
+#: ../../plugin-development.md:15
+msgid "[YAML Manifest Schema](#yaml-manifest-schema)"
+msgstr ""
+
+#: ../../plugin-development.md:16
+msgid "[Plugin Types](#plugin-types)"
+msgstr ""
+
+#: ../../plugin-development.md:17
+msgid "[Creating Your First Plugin](#creating-your-first-plugin)"
+msgstr ""
+
+#: ../../plugin-development.md:18
+msgid "[Advanced Configuration](#advanced-configuration)"
+msgstr ""
+
+#: ../../plugin-development.md:19
+msgid "[Testing Plugins](#testing-plugins)"
+msgstr ""
+
+#: ../../plugin-development.md:20
+msgid "[Publishing Plugins](#publishing-plugins)"
+msgstr ""
+
+#: ../../plugin-development.md:21
+msgid "[Best Practices](#best-practices)"
+msgstr ""
+
+#: ../../plugin-development.md:22
+msgid "[Troubleshooting](#troubleshooting)"
+msgstr ""
+
+#: ../../plugin-development.md:23
+msgid "[API Reference](#api-reference)"
+msgstr ""
+
+#: ../../plugin-development.md:27
+msgid "🎯 Overview"
+msgstr ""
+
+#: ../../plugin-development.md:29
+msgid ""
+"pyMediaManager (pyMM) uses a **manifest-driven plugin system** that "
+"allows external tools to be managed without writing Python code. Plugins "
+"are defined entirely through YAML manifests that describe:"
+msgstr ""
+
+#: ../../plugin-development.md:31
+msgid "📦 **Download Sources**: Direct URLs or GitHub releases"
+msgstr ""
+
+#: ../../plugin-development.md:32
+msgid "🔐 **Security**: SHA-256 checksums for integrity verification"
+msgstr ""
+
+#: ../../plugin-development.md:33
+msgid "📂 **Installation**: Extraction paths and directory structure"
+msgstr ""
+
+#: ../../plugin-development.md:34
+msgid "⚙️ **Configuration**: Command paths, executables, PATH registration"
+msgstr ""
+
+#: ../../plugin-development.md:35
+msgid "🔗 **Dependencies**: Optional plugin dependencies"
+msgstr ""
+
+#: ../../plugin-development.md:37
+msgid "Key Benefits"
+msgstr ""
+
+#: ../../plugin-development.md:39
+msgid ""
+"✅ **No Code Required**: Pure data-driven configuration ✅ **Security**: No"
+" arbitrary code execution, sandboxed downloads ✅ **Portability**: Plugins"
+" install to external drives ✅ **Automatic Updates**: Version tracking and"
+" update checks ✅ **Validation**: Strict Pydantic schema validation"
+msgstr ""
+
+#: ../../plugin-development.md:47
+msgid "🚀 Quick Start"
+msgstr ""
+
+#: ../../plugin-development.md:49
+msgid "5-Minute Plugin Creation"
+msgstr ""
+
+#: ../../plugin-development.md:51
+msgid "**Create plugin directory**:"
+msgstr ""
+
+#: ../../plugin-development.md:57
+msgid "**Create `plugin.yaml`**:"
+msgstr ""
+
+#: ../../plugin-development.md:80
+msgid "**Test plugin**:"
+msgstr ""
+
+#: ../../plugin-development.md:85
+msgid "**Install in pyMM**:"
+msgstr ""
+
+#: ../../plugin-development.md:86
+msgid "Launch pyMM"
+msgstr ""
+
+#: ../../plugin-development.md:87
+msgid "Navigate to Plugin View"
+msgstr ""
+
+#: ../../plugin-development.md:88
+msgid "Click \"Refresh Plugins\""
+msgstr ""
+
+#: ../../plugin-development.md:89
+msgid "Select \"MyTool\" and click \"Install\""
+msgstr ""
+
+#: ../../plugin-development.md:93
+msgid "🏗️ Plugin Architecture"
+msgstr ""
+
+#: ../../plugin-development.md:95
+msgid "Manifest-Driven Approach"
+msgstr ""
+
+#: ../../plugin-development.md:97
+msgid ""
+"pyMM uses a **strictly manifest-driven** plugin system. External tools "
+"are managed entirely by the core application based on YAML "
+"declarations—**no custom Python code is executed during plugin loading or"
+" installation**."
+msgstr ""
+
+#: ../../plugin-development.md:110
+msgid "Component Overview"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Component"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Purpose"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Technology"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "**Plugin Manifest**"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Declarative configuration"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "YAML"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "**PluginManifestSchema**"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Validation and type safety"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Pydantic 2.5+"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "**PluginManager**"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Discovery, installation, lifecycle"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Python 3.13"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "**SimplePluginImplementation**"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Download, extract, validate"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "aiohttp, shutil"
+msgstr ""
+
+#: ../../plugin-development.md:119
+msgid "Security Model"
+msgstr ""
+
+#: ../../plugin-development.md:121
+msgid "**No Code Execution**: Plugins cannot run arbitrary Python code"
+msgstr ""
+
+#: ../../plugin-development.md:122
+msgid "**Sandboxed Downloads**: Isolated temp directory, HTTPS only"
+msgstr ""
+
+#: ../../plugin-development.md:123
+msgid "**Integrity Verification**: SHA-256 checksum validation"
+msgstr ""
+
+#: ../../plugin-development.md:124
+msgid "**Fail-Fast Validation**: Strict schema enforcement"
+msgstr ""
+
+#: ../../plugin-development.md:128
+msgid "📋 YAML Manifest Schema"
+msgstr ""
+
+#: ../../plugin-development.md:130
+msgid "Complete Schema Reference"
+msgstr ""
+
+#: ../../plugin-development.md:160
+msgid "Field Validation Rules"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Field"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Type"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Required"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Validation"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`name`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`str`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "✅"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "1-100 chars, alphanumeric + spaces/hyphens"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`version`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Semantic versioning (1.0.0, 2.1.3-beta)"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`description`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "1-500 chars"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`homepage`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Valid HTTP/HTTPS URL"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`mandatory`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`bool`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`true` or `false`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`enabled`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`source.type`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`\"url\"` or `\"github\"`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`source.uri`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "URL or `owner/repo` format"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`source.checksum_sha256`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "64-char hex string"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`source.file_size`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`int`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "❌"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Positive integer (bytes)"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`command.path`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Relative path (no `..`)"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`command.executable`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "Filename with extension"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`command.register_to_path`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`dependencies`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "`list[str]`"
+msgstr ""
+
+#: ../../plugin-development.md:99
+msgid "List of plugin names"
+msgstr ""
+
+#: ../../plugin-development.md:181
+msgid "🎨 Plugin Types"
+msgstr ""
+
+#: ../../plugin-development.md:183
+msgid "1. URL-Based Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:185
+msgid "Direct download from a static URL."
+msgstr ""
+
+#: ../../plugin-development.md:187
+msgid "**Use Case**: Self-hosted binaries, stable tool versions"
+msgstr ""
+
+#: ../../plugin-development.md:211
+msgid "**Checksum Generation**:"
+msgstr ""
+
+#: ../../plugin-development.md:224
+msgid "2. GitHub Release Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:226
+msgid "Download from GitHub Releases with asset pattern matching."
+msgstr ""
+
+#: ../../plugin-development.md:228
+msgid "**Use Case**: Open-source tools with regular releases"
+msgstr ""
+
+#: ../../plugin-development.md:252
+msgid "**Asset Pattern Matching**:"
+msgstr ""
+
+#: ../../plugin-development.md:253
+msgid "Uses Python regex syntax"
+msgstr ""
+
+#: ../../plugin-development.md:254
+msgid "Matches against release asset filenames"
+msgstr ""
+
+#: ../../plugin-development.md:255
+msgid "Must escape special characters (`\\.`, `\\$`, etc.)"
+msgstr ""
+
+#: ../../plugin-development.md:256
+msgid "Pattern is case-sensitive"
+msgstr ""
+
+#: ../../plugin-development.md:258
+msgid "**Example Patterns**:"
+msgstr ""
+
+#: ../../plugin-development.md:272
+msgid "3. Plugins with Dependencies"
+msgstr ""
+
+#: ../../plugin-development.md:274
+msgid "Plugins that require other plugins to function."
+msgstr ""
+
+#: ../../plugin-development.md:276
+msgid "**Use Case**: Tools that depend on runtime libraries"
+msgstr ""
+
+#: ../../plugin-development.md:301
+msgid "**Dependency Resolution**:"
+msgstr ""
+
+#: ../../plugin-development.md:302
+msgid "Plugin Manager installs dependencies recursively"
+msgstr ""
+
+#: ../../plugin-development.md:303
+msgid "Circular dependencies are detected and rejected"
+msgstr ""
+
+#: ../../plugin-development.md:304
+msgid "Installation order: dependencies → dependent plugin"
+msgstr ""
+
+#: ../../plugin-development.md:308
+msgid "🛠️ Creating Your First Plugin"
+msgstr ""
+
+#: ../../plugin-development.md:310
+msgid "Example: FFmpeg Plugin"
+msgstr ""
+
+#: ../../plugin-development.md:312
+msgid "Let's create a complete plugin for FFmpeg, a multimedia framework."
+msgstr ""
+
+#: ../../plugin-development.md:314
+msgid "Step 1: Research the Tool"
+msgstr ""
+
+#: ../../plugin-development.md:316
+msgid "**Find official source**: https://ffmpeg.org/download.html"
+msgstr ""
+
+#: ../../plugin-development.md:317
+msgid "**Locate Windows builds**: https://github.com/BtbN/FFmpeg-Builds/releases"
+msgstr ""
+
+#: ../../plugin-development.md:318
+msgid "**Choose version**: 7.1 (latest stable)"
+msgstr ""
+
+#: ../../plugin-development.md:319
+msgid "**Download and verify**:"
+msgstr ""
+
+#: ../../plugin-development.md:331
+msgid "Step 2: Test Extraction"
+msgstr ""
+
+#: ../../plugin-development.md:344
+msgid "Expected output:"
+msgstr ""
+
+#: ../../plugin-development.md:356
+msgid "Step 3: Create Manifest"
+msgstr ""
+
+#: ../../plugin-development.md:383
+msgid "Step 4: Validate Schema"
+msgstr ""
+
+#: ../../plugin-development.md:407
+msgid "Run validation:"
+msgstr ""
+
+#: ../../plugin-development.md:412
+msgid "Step 5: Test Installation"
+msgstr ""
+
+#: ../../plugin-development.md:450
+msgid "⚙️ Advanced Configuration"
+msgstr ""
+
+#: ../../plugin-development.md:452
+msgid "Multi-Executable Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:454
+msgid ""
+"Some tools provide multiple executables (e.g., FFmpeg has `ffmpeg`, "
+"`ffplay`, `ffprobe`)."
+msgstr ""
+
+#: ../../plugin-development.md:456
+msgid ""
+"**Solution**: Use the primary executable in `command.executable`, access "
+"others programmatically."
+msgstr ""
+
+#: ../../plugin-development.md:465
+msgid "**Accessing secondary executables**:"
+msgstr ""
+
+#: ../../plugin-development.md:474
+msgid "Versioned Command Paths"
+msgstr ""
+
+#: ../../plugin-development.md:476
+msgid "Tools that include version in directory name:"
+msgstr ""
+
+#: ../../plugin-development.md:486
+msgid "**Challenge**: Version changes require manifest update."
+msgstr ""
+
+#: ../../plugin-development.md:488
+msgid "**Solution**: Use regex replacement (planned feature):"
+msgstr ""
+
+#: ../../plugin-development.md:500
+msgid "Self-Extracting Archives"
+msgstr ""
+
+#: ../../plugin-development.md:502
+msgid "Some Windows tools use `.exe` self-extractors:"
+msgstr ""
+
+#: ../../plugin-development.md:511
+msgid ""
+"**Current Behavior**: PluginManager treats `.exe` files as executables, "
+"not archives."
+msgstr ""
+
+#: ../../plugin-development.md:513
+msgid "**Workaround**: Use 7-Zip command-line extraction:"
+msgstr ""
+
+#: ../../plugin-development.md:521
+msgid "Plugin Manager automatically detects `.7z.exe` and extracts with 7-Zip."
+msgstr ""
+
+#: ../../plugin-development.md:525
+msgid "Large File Downloads"
+msgstr ""
+
+#: ../../plugin-development.md:527
+msgid "For files >100MB, consider:"
+msgstr ""
+
+#: ../../plugin-development.md:529
+msgid "**Progress Callbacks**: Show download progress in UI"
+msgstr ""
+
+#: ../../plugin-development.md:530
+msgid "**Resume Support**: Plugin Manager supports HTTP range requests"
+msgstr ""
+
+#: ../../plugin-development.md:531
+msgid "**Timeout Configuration**: Adjust `config.plugins.download_timeout`"
+msgstr ""
+
+#: ../../plugin-development.md:542
+msgid "🎓 Your First Plugin: Complete Step-by-Step Tutorial"
+msgstr ""
+
+#: ../../plugin-development.md:544
+msgid ""
+"This comprehensive tutorial walks you through creating a complete plugin "
+"from scratch, covering every step from tool selection to submission."
+msgstr ""
+
+#: ../../plugin-development.md:546
+msgid "Tutorial Overview"
+msgstr ""
+
+#: ../../plugin-development.md:548
+msgid ""
+"**What You'll Build:** A plugin for 7-Zip portable **Time Required:** "
+"45-60 minutes **Difficulty:** Beginner-friendly"
+msgstr ""
+
+#: ../../plugin-development.md:552
+msgid "**Learning Objectives:**"
+msgstr ""
+
+#: ../../plugin-development.md:553
+msgid "✅ Research and validate tool sources"
+msgstr ""
+
+#: ../../plugin-development.md:554
+msgid "✅ Generate SHA-256 checksums (Windows/Linux/macOS)"
+msgstr ""
+
+#: ../../plugin-development.md:555
+msgid "✅ Create YAML manifest with proper schema"
+msgstr ""
+
+#: ../../plugin-development.md:556
+msgid "✅ Test plugin installation locally"
+msgstr ""
+
+#: ../../plugin-development.md:557
+msgid "✅ Handle platform-specific considerations"
+msgstr ""
+
+#: ../../plugin-development.md:558
+msgid "✅ Submit plugin to repository"
+msgstr ""
+
+#: ../../plugin-development.md:562
+msgid "Step 1: Choose Your Tool"
+msgstr ""
+
+#: ../../plugin-development.md:564
+msgid "**Good candidates for first plugin:**"
+msgstr ""
+
+#: ../../plugin-development.md:565
+msgid "✅ Single executable or simple structure"
+msgstr ""
+
+#: ../../plugin-development.md:566
+msgid "✅ Portable/standalone distribution available"
+msgstr ""
+
+#: ../../plugin-development.md:567
+msgid "✅ Clear version numbering"
+msgstr ""
+
+#: ../../plugin-development.md:568
+msgid "✅ Stable download URLs"
+msgstr ""
+
+#: ../../plugin-development.md:569
+msgid "✅ Active maintenance"
+msgstr ""
+
+#: ../../plugin-development.md:571
+msgid "**Example choices:**"
+msgstr ""
+
+#: ../../plugin-development.md:572
+msgid "7-Zip portable"
+msgstr ""
+
+#: ../../plugin-development.md:573
+msgid "Git portable"
+msgstr ""
+
+#: ../../plugin-development.md:574
+msgid "ExifTool"
+msgstr ""
+
+#: ../../plugin-development.md:575
+msgid "ImageMagick portable"
+msgstr ""
+
+#: ../../plugin-development.md:576
+msgid "Node.js portable"
+msgstr ""
+
+#: ../../plugin-development.md:578
+msgid "**For this tutorial:** 7-Zip Portable (simple, widely used, stable)"
+msgstr ""
+
+#: ../../plugin-development.md:582
+msgid "Step 2: Research Tool Distribution"
+msgstr ""
+
+#: ../../plugin-development.md:584
+msgid "Find Official Source"
+msgstr ""
+
+#: ../../plugin-development.md:586
+msgid "Visit [7-Zip official website](https://www.7-zip.org/)"
+msgstr ""
+
+#: ../../plugin-development.md:587
+msgid "Navigate to download section"
+msgstr ""
+
+#: ../../plugin-development.md:588
+msgid "Look for \"portable\" or \"standalone\" version"
+msgstr ""
+
+#: ../../plugin-development.md:589
+msgid "Note the download URL structure"
+msgstr ""
+
+#: ../../plugin-development.md:591
+msgid "**Key information to gather:**"
+msgstr ""
+
+#: ../../plugin-development.md:592
+msgid "Official website URL"
+msgstr ""
+
+#: ../../plugin-development.md:593
+msgid "Latest version number"
+msgstr ""
+
+#: ../../plugin-development.md:594
+msgid "Download URL (prefer HTTPS)"
+msgstr ""
+
+#: ../../plugin-development.md:595
+msgid "Archive format (.zip, .7z, .tar.gz)"
+msgstr ""
+
+#: ../../plugin-development.md:596
+msgid "Expected file size"
+msgstr ""
+
+#: ../../plugin-development.md:597
+msgid "License information"
+msgstr ""
+
+#: ../../plugin-development.md:599
+msgid "Verify URL Stability"
+msgstr ""
+
+#: ../../plugin-development.md:602 ../../plugin-development.md:630
+#: ../../plugin-development.md:658
+msgid ".. tab:: Windows PowerShell"
+msgstr ""
+
+#: ../../plugin-development.md:604 ../../plugin-development.md:632
+#: ../../plugin-development.md:660 ../../plugin-development.md:715
+msgid ".. code-block:: powershell"
+msgstr ""
+
+#: ../../plugin-development.md:613 ../../plugin-development.md:642
+#: ../../plugin-development.md:672
+msgid ".. tab:: Linux/macOS"
+msgstr ""
+
+#: ../../plugin-development.md:615 ../../plugin-development.md:644
+#: ../../plugin-development.md:674 ../../plugin-development.md:737
+#: ../../plugin-development.md:749
+msgid ".. code-block:: bash"
+msgstr ""
+
+#: ../../plugin-development.md:625
+msgid "Step 3: Download and Analyze"
+msgstr ""
+
+#: ../../plugin-development.md:627
+msgid "Download Tool"
+msgstr ""
+
+#: ../../plugin-development.md:655
+msgid "Test Extraction"
+msgstr ""
+
+#: ../../plugin-development.md:687
+msgid "Document Structure"
+msgstr ""
+
+#: ../../plugin-development.md:689
+msgid "**Example 7-Zip structure:**"
+msgstr ""
+
+#: ../../plugin-development.md:700
+msgid "**Key observations:**"
+msgstr ""
+
+#: ../../plugin-development.md:701
+msgid "Main executable: `7z.exe` (command-line)"
+msgstr ""
+
+#: ../../plugin-development.md:702
+msgid "Alternative: `7zFM.exe` (GUI)"
+msgstr ""
+
+#: ../../plugin-development.md:703
+msgid "No subdirectories (flat structure)"
+msgstr ""
+
+#: ../../plugin-development.md:704
+msgid "License included"
+msgstr ""
+
+#: ../../plugin-development.md:708
+msgid "Step 4: Generate SHA-256 Checksum"
+msgstr ""
+
+#: ../../plugin-development.md:710
+msgid "**Critical for security:** Always verify file integrity with SHA-256."
+msgstr ""
+
+#: ../../plugin-development.md:713
+msgid ".. tab:: Windows (PowerShell)"
+msgstr ""
+
+#: ../../plugin-development.md:728
+msgid ".. tab:: Windows (certutil)"
+msgstr ""
+
+#: ../../plugin-development.md:730
+msgid ".. code-block:: cmd"
+msgstr ""
+
+#: ../../plugin-development.md:735
+msgid ".. tab:: Linux"
+msgstr ""
+
+#: ../../plugin-development.md:747
+msgid ".. tab:: macOS"
+msgstr ""
+
+#: ../../plugin-development.md:760
+msgid "**Example output:**"
+msgstr ""
+
+#: ../../plugin-development.md:765
+msgid "**Save this checksum** - you'll need it for the manifest!"
+msgstr ""
+
+#: ../../plugin-development.md:769
+msgid "Step 5: Create Plugin Manifest"
+msgstr ""
+
+#: ../../plugin-development.md:771
+msgid "Create Directory Structure"
+msgstr ""
+
+#: ../../plugin-development.md:779
+msgid "Write plugin.yaml"
+msgstr ""
+
+#: ../../plugin-development.md:781
+msgid "Create `plugins/7zip/plugin.yaml`:"
+msgstr ""
+
+#: ../../plugin-development.md:813
+msgid "Validate YAML Syntax"
+msgstr ""
+
+#: ../../plugin-development.md:816
+msgid ".. tab:: Python"
+msgstr ""
+
+#: ../../plugin-development.md:818
+msgid ".. code-block:: python"
+msgstr ""
+
+#: ../../plugin-development.md:834
+msgid ".. tab:: Online Validator"
+msgstr ""
+
+#: ../../plugin-development.md:836
+msgid "Visit https://www.yamllint.com/ and paste your YAML content"
+msgstr ""
+
+#: ../../plugin-development.md:841
+msgid "Step 6: Test Plugin Locally"
+msgstr ""
+
+#: ../../plugin-development.md:843
+msgid "Option A: Unit Test (Recommended)"
+msgstr ""
+
+#: ../../plugin-development.md:845
+msgid "Create `tests/test_7zip_plugin.py`:"
+msgstr ""
+
+#: ../../plugin-development.md:904
+msgid "Run tests:"
+msgstr ""
+
+#: ../../plugin-development.md:909
+msgid "Option B: Manual Installation Test"
+msgstr ""
+
+#: ../../plugin-development.md:965
+msgid "Run manual test:"
+msgstr ""
+
+#: ../../plugin-development.md:972
+msgid "Step 7: Platform Testing Matrix"
+msgstr ""
+
+#: ../../plugin-development.md:974
+msgid "Test your plugin across different platforms to ensure compatibility."
+msgstr ""
+
+#: ../../plugin-development.md:976
+msgid "Testing Checklist"
+msgstr ""
+
+#: ../../plugin-development.md:983
+msgid "Test Case"
+msgstr ""
+
+#: ../../plugin-development.md:984
+msgid "Windows"
+msgstr ""
+
+#: ../../plugin-development.md:985
+msgid "Linux"
+msgstr ""
+
+#: ../../plugin-development.md:986
+msgid "macOS"
+msgstr ""
+
+#: ../../plugin-development.md:987
+msgid "**YAML Syntax**"
+msgstr ""
+
+#: ../../plugin-development.md:988 ../../plugin-development.md:989
+#: ../../plugin-development.md:990 ../../plugin-development.md:992
+#: ../../plugin-development.md:993 ../../plugin-development.md:994
+msgid "✅ Required"
+msgstr ""
+
+#: ../../plugin-development.md:991
+msgid "**Schema Validation**"
+msgstr ""
+
+#: ../../plugin-development.md:995
+msgid "**Download URL**"
+msgstr ""
+
+#: ../../plugin-development.md:996
+msgid "✅ Test actual download"
+msgstr ""
+
+#: ../../plugin-development.md:997 ../../plugin-development.md:998
+msgid "⚠️ Not applicable*"
+msgstr ""
+
+#: ../../plugin-development.md:999
+msgid "**SHA-256 Verification**"
+msgstr ""
+
+#: ../../plugin-development.md:1000
+msgid "✅ Must match"
+msgstr ""
+
+#: ../../plugin-development.md:1001 ../../plugin-development.md:1002
+#: ../../plugin-development.md:1005 ../../plugin-development.md:1006
+#: ../../plugin-development.md:1009 ../../plugin-development.md:1010
+#: ../../plugin-development.md:1013 ../../plugin-development.md:1014
+#: ../../plugin-development.md:1017 ../../plugin-development.md:1018
+msgid "N/A"
+msgstr ""
+
+#: ../../plugin-development.md:1003
+msgid "**Extraction**"
+msgstr ""
+
+#: ../../plugin-development.md:1004
+msgid "✅ Test extraction"
+msgstr ""
+
+#: ../../plugin-development.md:1007
+msgid "**Executable Detection**"
+msgstr ""
+
+#: ../../plugin-development.md:1008
+msgid "✅ 7z.exe found"
+msgstr ""
+
+#: ../../plugin-development.md:1011
+msgid "**Version Command**"
+msgstr ""
+
+#: ../../plugin-development.md:1012
+msgid "✅ ``7z --version``"
+msgstr ""
+
+#: ../../plugin-development.md:1015
+msgid "**PATH Registration**"
+msgstr ""
+
+#: ../../plugin-development.md:1016
+msgid "✅ Verify in PATH"
+msgstr ""
+
+#: ../../plugin-development.md:1021
+msgid ""
+"**Note:** For cross-platform tools, create separate manifests for each OS"
+" (e.g., `plugin-windows.yaml`, `plugin-linux.yaml`)."
+msgstr ""
+
+#: ../../plugin-development.md:1025
+msgid "Step 8: Submit Plugin to Repository"
+msgstr ""
+
+#: ../../plugin-development.md:1027
+msgid "Pre-Submission Checklist"
+msgstr ""
+
+#: ../../plugin-development.md:1029
+msgid "[ ] YAML syntax validated"
+msgstr ""
+
+#: ../../plugin-development.md:1030
+msgid "[ ] Pydantic schema validation passes"
+msgstr ""
+
+#: ../../plugin-development.md:1031
+msgid "[ ] SHA-256 checksum verified"
+msgstr ""
+
+#: ../../plugin-development.md:1032
+msgid "[ ] Plugin installs successfully"
+msgstr ""
+
+#: ../../plugin-development.md:1033
+msgid "[ ] Version detection works"
+msgstr ""
+
+#: ../../plugin-development.md:1034
+msgid "[ ] All tests pass (`pytest tests/test_7zip_plugin.py`)"
+msgstr ""
+
+#: ../../plugin-development.md:1035
+msgid "[ ] No hardcoded paths"
+msgstr ""
+
+#: ../../plugin-development.md:1036
+msgid "[ ] LICENSE.txt exists (if required)"
+msgstr ""
+
+#: ../../plugin-development.md:1037
+msgid "[ ] README.md added (optional but recommended)"
+msgstr ""
+
+#: ../../plugin-development.md:1039
+msgid "Create Plugin README (Optional)"
+msgstr ""
+
+#: ../../plugin-development.md:1041
+msgid "Create `plugins/7zip/README.md`:"
+msgstr ""
+
+#: ../../plugin-development.md:1089
+msgid "Submit via Pull Request"
+msgstr ""
+
+#: ../../plugin-development.md:1140
+msgid "Step 9: Address Review Feedback"
+msgstr ""
+
+#: ../../plugin-development.md:1142
+msgid "Your PR will be reviewed by maintainers. Common feedback includes:"
+msgstr ""
+
+#: ../../plugin-development.md:1144
+msgid "**Checksum Issues:**"
+msgstr ""
+
+#: ../../plugin-development.md:1153
+msgid "**File Size Issues:**"
+msgstr ""
+
+#: ../../plugin-development.md:1162
+msgid "**URL Stability:**"
+msgstr ""
+
+#: ../../plugin-development.md:1173
+msgid "Step 10: Celebrate! 🎉"
+msgstr ""
+
+#: ../../plugin-development.md:1175
+msgid ""
+"Congratulations! You've successfully created and submitted your first "
+"plugin!"
+msgstr ""
+
+#: ../../plugin-development.md:1177
+msgid "**What you learned:**"
+msgstr ""
+
+#: ../../plugin-development.md:1178
+msgid "✅ Plugin manifest structure"
+msgstr ""
+
+#: ../../plugin-development.md:1179
+msgid "✅ SHA-256 checksum generation"
+msgstr ""
+
+#: ../../plugin-development.md:1180
+msgid "✅ YAML validation"
+msgstr ""
+
+#: ../../plugin-development.md:1181
+msgid "✅ Testing methodologies"
+msgstr ""
+
+#: ../../plugin-development.md:1182
+msgid "✅ Git workflow for contributions"
+msgstr ""
+
+#: ../../plugin-development.md:1183
+msgid "✅ Pull request best practices"
+msgstr ""
+
+#: ../../plugin-development.md:1185
+msgid "**Next steps:**"
+msgstr ""
+
+#: ../../plugin-development.md:1186
+msgid "Create more complex plugins (GitHub releases, dependencies)"
+msgstr ""
+
+#: ../../plugin-development.md:1187
+msgid "Contribute to plugin documentation"
+msgstr ""
+
+#: ../../plugin-development.md:1188
+msgid "Help review other plugin submissions"
+msgstr ""
+
+#: ../../plugin-development.md:1189
+msgid "Explore advanced plugin features"
+msgstr ""
+
+#: ../../plugin-development.md:1193
+msgid "🧪 Testing Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:1195
+msgid "Unit Testing"
+msgstr ""
+
+#: ../../plugin-development.md:1291
+msgid "Integration Testing"
+msgstr ""
+
+#: ../../plugin-development.md:1337
+msgid "📤 Publishing Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:1339
+msgid "Official Plugin Repository"
+msgstr ""
+
+#: ../../plugin-development.md:1341
+msgid "pyMM maintains official plugins in `plugins/` directory:"
+msgstr ""
+
+#: ../../plugin-development.md:1352
+msgid "**Contribution Process**:"
+msgstr ""
+
+#: ../../plugin-development.md:1354
+msgid "**Fork Repository**:"
+msgstr ""
+
+#: ../../plugin-development.md:1361
+msgid "**Create Plugin**:"
+msgstr ""
+
+#: ../../plugin-development.md:1367
+msgid "**Test Plugin**:"
+msgstr ""
+
+#: ../../plugin-development.md:1373
+msgid "**Validate Quality**:"
+msgstr ""
+
+#: ../../plugin-development.md:1385
+msgid "**Submit Pull Request**:"
+msgstr ""
+
+#: ../../plugin-development.md:1392
+msgid "Open PR at: https://github.com/mosh666/pyMM/compare"
+msgstr ""
+
+#: ../../plugin-development.md:1396
+msgid "Community Plugin Distribution"
+msgstr ""
+
+#: ../../plugin-development.md:1398
+msgid "For unofficial/experimental plugins:"
+msgstr ""
+
+#: ../../plugin-development.md:1400
+msgid "**Create Repository**:"
+msgstr ""
+
+#: ../../plugin-development.md:1410
+msgid "**Document Usage**:"
+msgstr ""
+
+#: ../../plugin-development.md:1422
+msgid "**Version Management**:"
+msgstr ""
+
+#: ../../plugin-development.md:1423
+msgid "Use semantic versioning in `version` field"
+msgstr ""
+
+#: ../../plugin-development.md:1424
+msgid "Update `checksum_sha256` for each release"
+msgstr ""
+
+#: ../../plugin-development.md:1425
+msgid "Maintain CHANGELOG.md"
+msgstr ""
+
+#: ../../plugin-development.md:1429
+msgid "✅ Best Practices"
+msgstr ""
+
+#: ../../plugin-development.md:1431
+msgid "1. Platform Detection (Python 3.12+)"
+msgstr ""
+
+#: ../../plugin-development.md:1433
+msgid ""
+"**⚠️ Deprecation Notice**: Direct usage of `sys.platform`, `os.name`, or "
+"`platform.system()` in plugin code is deprecated and will emit "
+"`DeprecationWarning` during plugin discovery. This behavior can be made "
+"strict (raising errors) by setting `strict_platform_checks: true` in "
+"`config/app.yaml`."
+msgstr ""
+
+#: ../../plugin-development.md:1438
+msgid "**✅ DO**: Use the centralized Platform module"
+msgstr ""
+
+#: ../../plugin-development.md:1466
+msgid "**❌ DON'T**: Use direct platform checks"
+msgstr ""
+
+#: ../../plugin-development.md:1486
+msgid "**Deprecation Timeline**:"
+msgstr ""
+
+#: ../../plugin-development.md:1488
+msgid ""
+"**v2.5.0** (January 2026): DeprecationWarning emitted during plugin "
+"discovery"
+msgstr ""
+
+#: ../../plugin-development.md:1489
+msgid ""
+"**v3.0.0** (July 2026): Strict mode becomes default "
+"(`strict_platform_checks: true`)"
+msgstr ""
+
+#: ../../plugin-development.md:1490
+msgid "**v4.0.0** (2027): Direct platform checks will fail plugin validation"
+msgstr ""
+
+#: ../../plugin-development.md:1492
+msgid "**Configuration** (`config/app.yaml`):"
+msgstr ""
+
+#: ../../plugin-development.md:1503
+msgid "2. Naming Conventions"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Element"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Convention"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Example"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Plugin Name"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "TitleCase, official spelling"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "`Git`, `FFmpeg`, `DigiKam`"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Directory"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Lowercase, no spaces"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "`git/`, `ffmpeg/`, `digikam/`"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Executable"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "Exact case, with extension"
+msgstr ""
+
+#: ../../plugin-development.md:815
+msgid "`git.exe`, `ffmpeg.exe`"
+msgstr ""
+
+#: ../../plugin-development.md:1511
+msgid "2. Version Pinning"
+msgstr ""
+
+#: ../../plugin-development.md:1513
+msgid "**✅ DO**: Pin exact versions"
+msgstr ""
+
+#: ../../plugin-development.md:1520
+msgid "**❌ DON'T**: Use \"latest\" or floating versions"
+msgstr ""
+
+#: ../../plugin-development.md:1527
+msgid "**Reason**: Ensures reproducible installations, prevents breaking changes."
+msgstr ""
+
+#: ../../plugin-development.md:1531
+msgid "3. Checksum Verification"
+msgstr ""
+
+#: ../../plugin-development.md:1533
+msgid "**Always include SHA-256 checksums**:"
+msgstr ""
+
+#: ../../plugin-development.md:1543
+msgid "**Handling Checksum Changes**:"
+msgstr ""
+
+#: ../../plugin-development.md:1544
+msgid "If upstream updates file without version change, verify legitimacy"
+msgstr ""
+
+#: ../../plugin-development.md:1545
+msgid "Contact tool maintainer if suspicious"
+msgstr ""
+
+#: ../../plugin-development.md:1546
+msgid "Update checksum only after manual verification"
+msgstr ""
+
+#: ../../plugin-development.md:1550
+msgid "4. File Size Hints"
+msgstr ""
+
+#: ../../plugin-development.md:1552
+msgid "**Include `file_size` for large downloads**:"
+msgstr ""
+
+#: ../../plugin-development.md:1561
+msgid "**Benefits**:"
+msgstr ""
+
+#: ../../plugin-development.md:1562
+msgid "Progress bar accuracy"
+msgstr ""
+
+#: ../../plugin-development.md:1563
+msgid "Early disk space validation"
+msgstr ""
+
+#: ../../plugin-development.md:1564
+msgid "Download completion verification"
+msgstr ""
+
+#: ../../plugin-development.md:1568
+msgid "5. Path Registration"
+msgstr ""
+
+#: ../../plugin-development.md:1570
+msgid "**Use `register_to_path: true` for command-line tools**:"
+msgstr ""
+
+#: ../../plugin-development.md:1578
+msgid "**Use `register_to_path: false` for GUI applications**:"
+msgstr ""
+
+#: ../../plugin-development.md:1588
+msgid "6. Dependency Management"
+msgstr ""
+
+#: ../../plugin-development.md:1590
+msgid "**Minimize dependencies**:"
+msgstr ""
+
+#: ../../plugin-development.md:1603
+msgid "**Circular dependency detection**:"
+msgstr ""
+
+#: ../../plugin-development.md:1615
+msgid "Plugin Manager will detect and reject circular dependencies."
+msgstr ""
+
+#: ../../plugin-development.md:1619
+msgid "7. Documentation"
+msgstr ""
+
+#: ../../plugin-development.md:1621
+msgid "**Include comprehensive metadata**:"
+msgstr ""
+
+#: ../../plugin-development.md:1634
+msgid "**Link to documentation**:"
+msgstr ""
+
+#: ../../plugin-development.md:1645
+msgid "🐛 Troubleshooting"
+msgstr ""
+
+#: ../../plugin-development.md:1647
+msgid "Common Issues"
+msgstr ""
+
+#: ../../plugin-development.md:1649
+msgid "1. \"Schema Validation Failed\""
+msgstr ""
+
+#: ../../plugin-development.md:1651 ../../plugin-development.md:1674
+#: ../../plugin-development.md:1700 ../../plugin-development.md:1723
+#: ../../plugin-development.md:1745
+msgid "**Symptom**:"
+msgstr ""
+
+#: ../../plugin-development.md:1659
+msgid ""
+"**Solution**: Verify checksum is 64-character hex string (no spaces, "
+"lowercase)."
+msgstr ""
+
+#: ../../plugin-development.md:1672
+msgid "2. \"Checksum Mismatch\""
+msgstr ""
+
+#: ../../plugin-development.md:1681 ../../plugin-development.md:1705
+#: ../../plugin-development.md:1728
+msgid "**Causes**:"
+msgstr ""
+
+#: ../../plugin-development.md:1682
+msgid "Downloaded file corrupted"
+msgstr ""
+
+#: ../../plugin-development.md:1683
+msgid "Wrong checksum in manifest"
+msgstr ""
+
+#: ../../plugin-development.md:1684
+msgid "Upstream file changed without version bump"
+msgstr ""
+
+#: ../../plugin-development.md:1686 ../../plugin-development.md:1710
+#: ../../plugin-development.md:1732
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../plugin-development.md:1698
+msgid "3. \"Extraction Failed\""
+msgstr ""
+
+#: ../../plugin-development.md:1706
+msgid "Archive corrupted"
+msgstr ""
+
+#: ../../plugin-development.md:1707
+msgid "Insufficient disk space"
+msgstr ""
+
+#: ../../plugin-development.md:1708
+msgid "File in use by another process"
+msgstr ""
+
+#: ../../plugin-development.md:1721
+msgid "4. \"Executable Not Found\""
+msgstr ""
+
+#: ../../plugin-development.md:1729
+msgid "Wrong `command.path` in manifest"
+msgstr ""
+
+#: ../../plugin-development.md:1730
+msgid "Archive structure differs from expected"
+msgstr ""
+
+#: ../../plugin-development.md:1743
+msgid "5. \"GitHub Asset Not Found\""
+msgstr ""
+
+#: ../../plugin-development.md:1753
+msgid "**Solution**: Adjust `asset_pattern` to match available assets."
+msgstr ""
+
+#: ../../plugin-development.md:1765
+msgid "� Plugin System v2: Hybrid Executable Resolution"
+msgstr ""
+
+#: ../../plugin-development.md:1767
+msgid "Overview"
+msgstr ""
+
+#: ../../plugin-development.md:1769
+msgid ""
+"Plugin System v2 introduces **hybrid executable resolution** that "
+"supports both system-installed tools and portable versions, giving users "
+"flexibility in how they configure their environment."
+msgstr ""
+
+#: ../../plugin-development.md:1771
+msgid "Key Features"
+msgstr ""
+
+#: ../../plugin-development.md:1773
+msgid ""
+"✅ **System Tool Detection**: Automatically finds tools in PATH ✅ "
+"**Version Validation**: Ensures system tools meet minimum version "
+"requirements ✅ **User Preferences**: Configure per-plugin execution "
+"preferences ✅ **Fallback Logic**: Graceful fallback from system to "
+"portable ✅ **Plugin Migration**: Automated v1→v2 migration with rollback "
+"support"
+msgstr ""
+
+#: ../../plugin-development.md:1779
+msgid "Platform Configuration"
+msgstr ""
+
+#: ../../plugin-development.md:1781
+msgid "Plugin manifests now support platform-specific configurations:"
+msgstr ""
+
+#: ../../plugin-development.md:1830
+msgid "System Tool Detection"
+msgstr ""
+
+#: ../../plugin-development.md:1832
+msgid "The `SystemToolDetector` discovers system-installed tools:"
+msgstr ""
+
+#: ../../plugin-development.md:1853
+msgid "ExecutableSource Enum"
+msgstr ""
+
+#: ../../plugin-development.md:1855
+msgid "Plugins now support explicit source selection:"
+msgstr ""
+
+#: ../../plugin-development.md:1865
+msgid "User Preferences"
+msgstr ""
+
+#: ../../plugin-development.md:1867
+msgid "Users can configure per-plugin execution preferences:"
+msgstr ""
+
+#: ../../plugin-development.md:1888
+msgid "**Configuration via UI:**"
+msgstr ""
+
+#: ../../plugin-development.md:1890
+msgid "Open **Settings** → **Plugin Preferences**"
+msgstr ""
+
+#: ../../plugin-development.md:1891
+msgid "Select plugin from list"
+msgstr ""
+
+#: ../../plugin-development.md:1892
+msgid "Choose execution preference:"
+msgstr ""
+
+#: ../../plugin-development.md:1893
+msgid "**Auto**: Try system first, fallback to portable"
+msgstr ""
+
+#: ../../plugin-development.md:1894
+msgid "**System Only**: Only use system-installed tool"
+msgstr ""
+
+#: ../../plugin-development.md:1895
+msgid "**Portable Only**: Only use portable version"
+msgstr ""
+
+#: ../../plugin-development.md:1896
+msgid "Click **Save**"
+msgstr ""
+
+#: ../../plugin-development.md:1898
+msgid "Version Validation Dialog"
+msgstr ""
+
+#: ../../plugin-development.md:1900
+msgid "When a system tool doesn't meet version requirements, users see:"
+msgstr ""
+
+#: ../../plugin-development.md:1923
+msgid "Migration from v1 to v2"
+msgstr ""
+
+#: ../../plugin-development.md:1925
+msgid "The plugin migrator automatically upgrades v1 manifests:"
+msgstr ""
+
+#: ../../plugin-development.md:1927
+msgid "**Using justfile:**"
+msgstr ""
+
+#: ../../plugin-development.md:1939
+msgid "**Using Python:**"
+msgstr ""
+
+#: ../../plugin-development.md:1963
+msgid "Migration Example"
+msgstr ""
+
+#: ../../plugin-development.md:1965
+msgid "**Before (v1):**"
+msgstr ""
+
+#: ../../plugin-development.md:1988
+msgid "**After (v2):**"
+msgstr ""
+
+#: ../../plugin-development.md:2021
+msgid "Backward Compatibility"
+msgstr ""
+
+#: ../../plugin-development.md:2023
+msgid "v2 plugins are **backward compatible** with v1 behavior:"
+msgstr ""
+
+#: ../../plugin-development.md:2025
+msgid "If `schema_version: 2` is omitted, manifest is treated as v1"
+msgstr ""
+
+#: ../../plugin-development.md:2026
+msgid "v1 manifests continue to work without migration"
+msgstr ""
+
+#: ../../plugin-development.md:2027
+msgid "Migration is optional but recommended"
+msgstr ""
+
+#: ../../plugin-development.md:2029
+msgid "Testing v2 Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:2077
+msgid "�📚 API Reference"
+msgstr ""
+
+#: ../../plugin-development.md:2079
+msgid "PluginManifest Dataclass"
+msgstr ""
+
+#: ../../plugin-development.md:2103
+msgid "PluginBase Abstract Class"
+msgstr ""
+
+#: ../../plugin-development.md:2172
+msgid "PluginManager Class"
+msgstr ""
+
+#: ../../plugin-development.md:2237
+msgid "📖 Additional Resources"
+msgstr ""
+
+#: ../../plugin-development.md:2239
+msgid "Official Documentation"
+msgstr ""
+
+#: ../../plugin-development.md:2241
+msgid "[Architecture Documentation](architecture.md)"
+msgstr ""
+
+#: ../../plugin-development.md:2242
+msgid "[User Guide](user-guide.md)"
+msgstr ""
+
+#: ../../plugin-development.md:2243
+msgid "[Contributing Guidelines](../CONTRIBUTING.md)"
+msgstr ""
+
+#: ../../plugin-development.md:2245
+msgid "External References"
+msgstr ""
+
+#: ../../plugin-development.md:2247
+msgid "[Pydantic Documentation](https://docs.pydantic.dev/)"
+msgstr ""
+
+#: ../../plugin-development.md:2248
+msgid "[Semantic Versioning](https://semver.org/)"
+msgstr ""
+
+#: ../../plugin-development.md:2249
+msgid "[YAML Specification](https://yaml.org/spec/1.2.2/)"
+msgstr ""
+
+#: ../../plugin-development.md:2251
+msgid "Example Plugins"
+msgstr ""
+
+#: ../../plugin-development.md:2253
+msgid "Study official plugin manifests:"
+msgstr ""
+
+#: ../../plugin-development.md:2255
+msgid "[Git Plugin](../plugins/git/plugin.yaml)"
+msgstr ""
+
+#: ../../plugin-development.md:2256
+msgid "[FFmpeg Plugin](../plugins/ffmpeg/plugin.yaml)"
+msgstr ""
+
+#: ../../plugin-development.md:2257
+msgid "[ExifTool Plugin](../plugins/exiftool/plugin.yaml)"
+msgstr ""
+
+#: ../../plugin-development.md:2261
+msgid "🤝 Community"
+msgstr ""
+
+#: ../../plugin-development.md:2263
+msgid "Getting Help"
+msgstr ""
+
+#: ../../plugin-development.md:2265
+msgid "**GitHub Issues**: https://github.com/mosh666/pyMM/issues"
+msgstr ""
+
+#: ../../plugin-development.md:2266
+msgid "**Discussions**: https://github.com/mosh666/pyMM/discussions"
+msgstr ""
+
+#: ../../plugin-development.md:2267
+msgid "**Email**: 24556349+mosh666@users.noreply.github.com"
+msgstr ""
+
+#: ../../plugin-development.md:2269
+msgid "Contributing"
+msgstr ""
+
+#: ../../plugin-development.md:2271
+msgid ""
+"We welcome plugin contributions! See "
+"[CONTRIBUTING.md](../CONTRIBUTING.md) for:"
+msgstr ""
+
+#: ../../plugin-development.md:2273
+msgid "Code of Conduct"
+msgstr ""
+
+#: ../../plugin-development.md:2274
+msgid "Development setup"
+msgstr ""
+
+#: ../../plugin-development.md:2275
+msgid "Testing requirements"
+msgstr ""
+
+#: ../../plugin-development.md:2276
+msgid "PR submission process"
+msgstr ""
+
+#: ../../plugin-development.md:2280
+msgid ""
+"**Document Version:** 1.0.0 **Last Updated:** January 7, 2026 "
+"**Maintainer:** @mosh666 **Status:** ✅ Current"
+msgstr ""

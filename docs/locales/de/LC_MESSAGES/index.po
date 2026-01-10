@@ -1,0 +1,221 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../index.md:8 ../../index.md:113
+msgid "User Documentation"
+msgstr ""
+
+#: ../../index.md:19 ../../index.md:120
+msgid "Developer Documentation"
+msgstr ""
+
+#: ../../index.md:30
+msgid "Platform-Specific"
+msgstr ""
+
+#: ../../index.md:40
+msgid "Examples & Resources"
+msgstr ""
+
+#: ../../index.md:48
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../index.md:1
+msgid "pyMediaManager Documentation"
+msgstr ""
+
+#: ../../index.md:4
+msgid ""
+"**Version Selector**: Use the sidebar menu to switch between "
+"documentation versions (Main/Dev). You can also visit the [documentation "
+"home](https://mosh666.github.io/pyMM/) to select your version."
+msgstr ""
+
+#: ../../index.md:64
+msgid "Welcome to pyMediaManager"
+msgstr ""
+
+#: ../../index.md:66
+msgid ""
+"pyMediaManager (pyMM) is a Python-based media management application "
+"designed to organize and manage large media collections with integrated "
+"version control and plugin support."
+msgstr ""
+
+#: ../../index.md:69
+msgid "Features"
+msgstr ""
+
+#: ../../index.md:71
+msgid "**100% Portable**: Run from USB/external drives with no installation"
+msgstr ""
+
+#: ../../index.md:72
+msgid ""
+"**Project Management**: Organize media files into structured projects "
+"with templates"
+msgstr ""
+
+#: ../../index.md:73
+msgid ""
+"**Plugin System**: YAML manifest-based extensible architecture for "
+"integrating external tools"
+msgstr ""
+
+#: ../../index.md:74
+msgid "**Git Integration**: Built-in version control with Git LFS support"
+msgstr ""
+
+#: ../../index.md:75
+msgid ""
+"**Cross-Platform**: Windows 10+, Linux, macOS with native USB drive "
+"detection"
+msgstr ""
+
+#: ../../index.md:76
+msgid "**Modern UI**: Fluent Design with QFluentWidgets and PySide6"
+msgstr ""
+
+#: ../../index.md:77
+msgid "**Type-Safe**: Python 3.12+ with strict type hints and Pydantic validation"
+msgstr ""
+
+#: ../../index.md:78
+#, python-format
+msgid "**Well-Tested**: 193 tests with 73% code coverage"
+msgstr ""
+
+#: ../../index.md:80
+msgid "Quick Start"
+msgstr ""
+
+#: ../../index.md:82
+msgid "Installation"
+msgstr ""
+
+#: ../../index.md:84
+msgid "**Requirements:**"
+msgstr ""
+
+#: ../../index.md:86
+msgid "Python 3.12, 3.13, or 3.14"
+msgstr ""
+
+#: ../../index.md:87
+msgid "Windows 10/11, Linux (Ubuntu 20.04+), or macOS 11+"
+msgstr ""
+
+#: ../../index.md:89
+msgid "**Install from source:**"
+msgstr ""
+
+#: ../../index.md:99
+msgid "Running the Application"
+msgstr ""
+
+#: ../../index.md:105
+msgid "Or use the installed entry point:"
+msgstr ""
+
+#: ../../index.md:111
+msgid "Documentation Sections"
+msgstr ""
+
+#: ../../index.md:115
+msgid ""
+"**[User Guide](user-guide.md)** - Installation, features, and usage "
+"instructions"
+msgstr ""
+
+#: ../../index.md:116
+msgid ""
+"**[Troubleshooting Guide](troubleshooting.md)** - Common issues, error "
+"messages, and solutions"
+msgstr ""
+
+#: ../../index.md:117
+msgid ""
+"**[Migration Guide](migration-guide.md)** - Version upgrades and template"
+" migrations"
+msgstr ""
+
+#: ../../index.md:118
+msgid ""
+"**[Plugin Catalog](plugin-catalog.md)** - Complete catalog of official "
+"plugins"
+msgstr ""
+
+#: ../../index.md:122
+msgid ""
+"**[Architecture](architecture.md)** - Technical architecture and design "
+"decisions"
+msgstr ""
+
+#: ../../index.md:123
+msgid "**[Plugin Development](plugin-development.md)** - Creating custom plugins"
+msgstr ""
+
+#: ../../index.md:124
+msgid "**[API Reference](api-reference.md)** - Auto-generated API documentation"
+msgstr ""
+
+#: ../../index.md:126
+msgid "Platform-Specific Guides"
+msgstr ""
+
+#: ../../index.md:128
+msgid ""
+"**[Platform Directories](platform-directories.md)** - Platform-specific "
+"directory structures"
+msgstr ""
+
+#: ../../index.md:129
+msgid ""
+"**[Linux udev Installer](linux-udev-installer.md)** - Linux USB drive "
+"detection setup"
+msgstr ""
+
+#: ../../index.md:130
+msgid ""
+"**[Docker CI Testing](docker-ci-testing.md)** - Docker-based testing "
+"environment"
+msgstr ""
+
+#: ../../index.md:132
+msgid "Indices and tables"
+msgstr ""
+
+#: ../../index.md:134
+#, python-brace-format
+msgid "{ref}`genindex`"
+msgstr ""
+
+#: ../../index.md:135
+#, python-brace-format
+msgid "{ref}`modindex`"
+msgstr ""
+
+#: ../../index.md:136
+#, python-brace-format
+msgid "{ref}`search`"
+msgstr ""

@@ -1,0 +1,801 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024-2026, mosh666
+# This file is distributed under the same license as the pyMediaManager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pyMediaManager 0.0.post261\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 03:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../getting-started-dev.md:1
+msgid "🚀 Getting Started - Developer Guide"
+msgstr ""
+
+#: ../../getting-started-dev.md:5
+msgid ""
+"**Target Audience:** Developers contributing to pyMediaManager "
+"**Estimated Time:** 30-45 minutes for complete setup **Last Updated:** "
+"January 10, 2026"
+msgstr ""
+
+#: ../../getting-started-dev.md:11
+msgid "📚 Table of Contents"
+msgstr ""
+
+#: ../../getting-started-dev.md:13
+msgid "[Introduction](#introduction)"
+msgstr ""
+
+#: ../../getting-started-dev.md:14
+msgid "[Prerequisites](#prerequisites)"
+msgstr ""
+
+#: ../../getting-started-dev.md:15
+msgid "[Environment Setup](#environment-setup)"
+msgstr ""
+
+#: ../../getting-started-dev.md:16
+msgid "[Development Workflow](#development-workflow)"
+msgstr ""
+
+#: ../../getting-started-dev.md:17
+msgid "[First Contribution](#first-contribution)"
+msgstr ""
+
+#: ../../getting-started-dev.md:18
+msgid "[Debugging Guide](#debugging-guide)"
+msgstr ""
+
+#: ../../getting-started-dev.md:19
+msgid "[Testing Guide](#testing-guide)"
+msgstr ""
+
+#: ../../getting-started-dev.md:20
+msgid "[Code Style Guide](#code-style-guide)"
+msgstr ""
+
+#: ../../getting-started-dev.md:21
+msgid "[Documentation](#documentation)"
+msgstr ""
+
+#: ../../getting-started-dev.md:22
+msgid "[Common Tasks](#common-tasks)"
+msgstr ""
+
+#: ../../getting-started-dev.md:23
+msgid "[Troubleshooting](#troubleshooting)"
+msgstr ""
+
+#: ../../getting-started-dev.md:27
+msgid "🎯 Introduction"
+msgstr ""
+
+#: ../../getting-started-dev.md:29
+msgid ""
+"Welcome to the pyMediaManager development team! This guide will help you "
+"set up your development environment and make your first contribution."
+msgstr ""
+
+#: ../../getting-started-dev.md:31
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../getting-started-dev.md:33
+msgid "✅ Setting up Python 3.13 development environment"
+msgstr ""
+
+#: ../../getting-started-dev.md:34
+msgid "✅ Installing dependencies with uv (fast) or pip (traditional)"
+msgstr ""
+
+#: ../../getting-started-dev.md:35
+msgid "✅ Configuring pre-commit hooks for code quality"
+msgstr ""
+
+#: ../../getting-started-dev.md:36
+msgid "✅ Running tests and type checking"
+msgstr ""
+
+#: ../../getting-started-dev.md:37
+msgid "✅ Creating your first pull request"
+msgstr ""
+
+#: ../../getting-started-dev.md:38
+msgid "✅ Debugging with VS Code"
+msgstr ""
+
+#: ../../getting-started-dev.md:39
+msgid "✅ Working with the plugin system"
+msgstr ""
+
+#: ../../getting-started-dev.md:41
+msgid "Development Philosophy"
+msgstr ""
+
+#: ../../getting-started-dev.md:43
+#, python-format
+msgid "🎯 **Quality First**: 100% docstring coverage, strict type checking"
+msgstr ""
+
+#: ../../getting-started-dev.md:44
+msgid ""
+"🔒 **Security Conscious**: No arbitrary code execution, SHA-256 "
+"verification"
+msgstr ""
+
+#: ../../getting-started-dev.md:45
+msgid "📝 **Documentation-Driven**: Code without docs doesn't exist"
+msgstr ""
+
+#: ../../getting-started-dev.md:46
+msgid "🧪 **Test-Driven**: All features must have tests"
+msgstr ""
+
+#: ../../getting-started-dev.md:47
+msgid "🌍 **Cross-Platform**: Windows, Linux, macOS support required"
+msgstr ""
+
+#: ../../getting-started-dev.md:51
+msgid "📋 Prerequisites"
+msgstr ""
+
+#: ../../getting-started-dev.md:53
+msgid "Required Software"
+msgstr ""
+
+#: ../../getting-started-dev.md:60
+msgid "Software"
+msgstr ""
+
+#: ../../getting-started-dev.md:61
+msgid "Version"
+msgstr ""
+
+#: ../../getting-started-dev.md:62
+msgid "Purpose"
+msgstr ""
+
+#: ../../getting-started-dev.md:63
+msgid "**Python**"
+msgstr ""
+
+#: ../../getting-started-dev.md:64
+msgid "3.13.x recommended"
+msgstr ""
+
+#: ../../getting-started-dev.md:65
+msgid "Primary runtime (3.12, 3.14 also supported)"
+msgstr ""
+
+#: ../../getting-started-dev.md:66
+msgid "**Git**"
+msgstr ""
+
+#: ../../getting-started-dev.md:67
+msgid "2.40+"
+msgstr ""
+
+#: ../../getting-started-dev.md:68
+msgid "Version control and collaboration"
+msgstr ""
+
+#: ../../getting-started-dev.md:69
+msgid "**VS Code**"
+msgstr ""
+
+#: ../../getting-started-dev.md:70
+msgid "Latest"
+msgstr ""
+
+#: ../../getting-started-dev.md:71
+msgid "Recommended IDE (or PyCharm)"
+msgstr ""
+
+#: ../../getting-started-dev.md:72
+msgid "**Node.js**"
+msgstr ""
+
+#: ../../getting-started-dev.md:73
+msgid "18+ (optional)"
+msgstr ""
+
+#: ../../getting-started-dev.md:74
+msgid "For pre-commit hooks (markdownlint)"
+msgstr ""
+
+#: ../../getting-started-dev.md:77
+msgid "Recommended Tools"
+msgstr ""
+
+#: ../../getting-started-dev.md:79
+msgid "**uv**: Ultra-fast Python package installer (alternative to pip)"
+msgstr ""
+
+#: ../../getting-started-dev.md:80
+msgid "**just**: Command runner for common tasks (alternative to make)"
+msgstr ""
+
+#: ../../getting-started-dev.md:81
+msgid "**GitHub CLI**: For creating PRs from command line"
+msgstr ""
+
+#: ../../getting-started-dev.md:82
+msgid "**Windows Terminal**: Better terminal experience on Windows"
+msgstr ""
+
+#: ../../getting-started-dev.md:84
+msgid "Knowledge Requirements"
+msgstr ""
+
+#: ../../getting-started-dev.md:86
+msgid "✅ Python 3.10+ syntax (type hints, dataclasses, async/await)"
+msgstr ""
+
+#: ../../getting-started-dev.md:87
+msgid "✅ Git basics (clone, branch, commit, push, PR)"
+msgstr ""
+
+#: ../../getting-started-dev.md:88
+msgid "✅ PySide6 fundamentals (signals/slots, QWidget hierarchy)"
+msgstr ""
+
+#: ../../getting-started-dev.md:89
+msgid "⚠️ Qt/QML knowledge helpful but not required"
+msgstr ""
+
+#: ../../getting-started-dev.md:93
+msgid "🛠️ Environment Setup"
+msgstr ""
+
+#: ../../getting-started-dev.md:95
+msgid "Step 1: Fork and Clone Repository"
+msgstr ""
+
+#: ../../getting-started-dev.md:98
+msgid ".. tab:: GitHub CLI (Recommended)"
+msgstr ""
+
+#: ../../getting-started-dev.md:100 ../../getting-started-dev.md:113
+#: ../../getting-started-dev.md:126 ../../getting-started-dev.md:158
+#: ../../getting-started-dev.md:173 ../../getting-started-dev.md:201
+#: ../../getting-started-dev.md:218 ../../getting-started-dev.md:230
+#: ../../getting-started-dev.md:246 ../../getting-started-dev.md:428
+#: ../../getting-started-dev.md:440 ../../getting-started-dev.md:1025
+msgid ".. code-block:: bash"
+msgstr ""
+
+#: ../../getting-started-dev.md:111
+msgid ".. tab:: Git Manual"
+msgstr ""
+
+#: ../../getting-started-dev.md:124
+msgid ".. tab:: SSH (Advanced)"
+msgstr ""
+
+#: ../../getting-started-dev.md:136
+msgid "Step 2: Install Python 3.13"
+msgstr ""
+
+#: ../../getting-started-dev.md:139 ../../getting-started-dev.md:188
+msgid ".. tab:: Windows"
+msgstr ""
+
+#: ../../getting-started-dev.md:141 ../../getting-started-dev.md:190
+#: ../../getting-started-dev.md:1018
+msgid ".. code-block:: powershell"
+msgstr ""
+
+#: ../../getting-started-dev.md:156
+msgid ".. tab:: Linux (Ubuntu/Debian)"
+msgstr ""
+
+#: ../../getting-started-dev.md:171
+msgid ".. tab:: macOS"
+msgstr ""
+
+#: ../../getting-started-dev.md:185
+msgid "Step 3: Install uv (Fast Package Manager)"
+msgstr ""
+
+#: ../../getting-started-dev.md:199 ../../getting-started-dev.md:1023
+msgid ".. tab:: Linux/macOS"
+msgstr ""
+
+#: ../../getting-started-dev.md:213
+msgid "Step 4: Install Dependencies"
+msgstr ""
+
+#: ../../getting-started-dev.md:216
+msgid ".. tab:: uv (Fast - Recommended)"
+msgstr ""
+
+#: ../../getting-started-dev.md:228
+msgid ".. tab:: pip (Traditional)"
+msgstr ""
+
+#: ../../getting-started-dev.md:244
+msgid ".. tab:: just (Automated)"
+msgstr ""
+
+#: ../../getting-started-dev.md:257
+msgid "Step 5: Install Pre-commit Hooks"
+msgstr ""
+
+#: ../../getting-started-dev.md:274
+msgid "**What pre-commit hooks do:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:275
+msgid "🔍 **Ruff**: Lint and format Python code"
+msgstr ""
+
+#: ../../getting-started-dev.md:276
+msgid "📝 **doc8**: Validate markdown/RST documentation"
+msgstr ""
+
+#: ../../getting-started-dev.md:277
+#, python-format
+msgid "🎯 **interrogate**: Enforce 100% docstring coverage"
+msgstr ""
+
+#: ../../getting-started-dev.md:278
+msgid "🔬 **mypy**: Static type checking"
+msgstr ""
+
+#: ../../getting-started-dev.md:279
+msgid "🧪 **pytest**: Run unit tests (pre-push only)"
+msgstr ""
+
+#: ../../getting-started-dev.md:281
+msgid "Step 6: Verify Installation"
+msgstr ""
+
+#: ../../getting-started-dev.md:305
+msgid "🔄 Development Workflow"
+msgstr ""
+
+#: ../../getting-started-dev.md:307
+msgid "Daily Development Cycle"
+msgstr ""
+
+#: ../../getting-started-dev.md:321
+msgid "1. Sync with Upstream"
+msgstr ""
+
+#: ../../getting-started-dev.md:335
+msgid "2. Create Feature Branch"
+msgstr ""
+
+#: ../../getting-started-dev.md:347
+msgid "**Branch Naming Convention:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:348
+msgid "`feature/` - New features"
+msgstr ""
+
+#: ../../getting-started-dev.md:349
+msgid "`fix/` - Bug fixes"
+msgstr ""
+
+#: ../../getting-started-dev.md:350
+msgid "`docs/` - Documentation updates"
+msgstr ""
+
+#: ../../getting-started-dev.md:351
+msgid "`refactor/` - Code refactoring"
+msgstr ""
+
+#: ../../getting-started-dev.md:352
+msgid "`test/` - Test additions"
+msgstr ""
+
+#: ../../getting-started-dev.md:353
+msgid "`chore/` - Maintenance tasks"
+msgstr ""
+
+#: ../../getting-started-dev.md:355
+msgid "3. Make Changes"
+msgstr ""
+
+#: ../../getting-started-dev.md:366
+msgid "4. Test Your Changes"
+msgstr ""
+
+#: ../../getting-started-dev.md:388
+msgid "5. Commit Changes"
+msgstr ""
+
+#: ../../getting-started-dev.md:404
+msgid "**Conventional Commit Format:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:413
+msgid "**Types:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:414
+msgid "`feat`: New feature"
+msgstr ""
+
+#: ../../getting-started-dev.md:415
+msgid "`fix`: Bug fix"
+msgstr ""
+
+#: ../../getting-started-dev.md:416
+msgid "`docs`: Documentation only"
+msgstr ""
+
+#: ../../getting-started-dev.md:417
+msgid "`style`: Code style (formatting, missing semicolons, etc.)"
+msgstr ""
+
+#: ../../getting-started-dev.md:418
+msgid "`refactor`: Code change that neither fixes a bug nor adds a feature"
+msgstr ""
+
+#: ../../getting-started-dev.md:419
+msgid "`perf`: Performance improvement"
+msgstr ""
+
+#: ../../getting-started-dev.md:420
+msgid "`test`: Adding missing tests"
+msgstr ""
+
+#: ../../getting-started-dev.md:421
+msgid "`chore`: Maintenance tasks"
+msgstr ""
+
+#: ../../getting-started-dev.md:423
+msgid "6. Push and Create PR"
+msgstr ""
+
+#: ../../getting-started-dev.md:426
+msgid ".. tab:: GitHub CLI"
+msgstr ""
+
+#: ../../getting-started-dev.md:438
+msgid ".. tab:: Manual"
+msgstr ""
+
+#: ../../getting-started-dev.md:452
+msgid "🎯 First Contribution"
+msgstr ""
+
+#: ../../getting-started-dev.md:454
+msgid "Choose a Good First Issue"
+msgstr ""
+
+#: ../../getting-started-dev.md:456
+msgid "Visit [GitHub Issues](https://github.com/mosh666/pyMM/issues)"
+msgstr ""
+
+#: ../../getting-started-dev.md:457
+msgid "Filter by label: `good-first-issue`"
+msgstr ""
+
+#: ../../getting-started-dev.md:458
+msgid "Read issue description and requirements"
+msgstr ""
+
+#: ../../getting-started-dev.md:459
+msgid "Comment: \"I'd like to work on this issue\""
+msgstr ""
+
+#: ../../getting-started-dev.md:460
+msgid "Wait for assignment (usually < 24 hours)"
+msgstr ""
+
+#: ../../getting-started-dev.md:462
+msgid "Example: Add Plugin Validation"
+msgstr ""
+
+#: ../../getting-started-dev.md:464
+msgid "Let's walk through a complete contribution:"
+msgstr ""
+
+#: ../../getting-started-dev.md:466
+msgid "1. Create Branch"
+msgstr ""
+
+#: ../../getting-started-dev.md:474
+msgid "2. Write Code"
+msgstr ""
+
+#: ../../getting-started-dev.md:512
+msgid "3. Write Tests"
+msgstr ""
+
+#: ../../getting-started-dev.md:553
+msgid "4. Update Documentation"
+msgstr ""
+
+#: ../../getting-started-dev.md:571
+msgid "5. Run Quality Checks"
+msgstr ""
+
+#: ../../getting-started-dev.md:590
+msgid "6. Commit and Push"
+msgstr ""
+
+#: ../../getting-started-dev.md:605
+msgid "7. Create Pull Request"
+msgstr ""
+
+#: ../../getting-started-dev.md:627
+msgid "🐛 Debugging Guide"
+msgstr ""
+
+#: ../../getting-started-dev.md:629
+msgid "VS Code Configuration"
+msgstr ""
+
+#: ../../getting-started-dev.md:631
+msgid "Create `.vscode/launch.json`:"
+msgstr ""
+
+#: ../../getting-started-dev.md:689
+msgid "Logging Levels"
+msgstr ""
+
+#: ../../getting-started-dev.md:691
+msgid "Configure logging in your development environment:"
+msgstr ""
+
+#: ../../getting-started-dev.md:702
+msgid "**Log Levels Usage:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:703
+msgid "`DEBUG`: Detailed diagnostic information"
+msgstr ""
+
+#: ../../getting-started-dev.md:704
+msgid "`INFO`: General informational messages"
+msgstr ""
+
+#: ../../getting-started-dev.md:705
+msgid "`WARNING`: Warning messages for potentially problematic situations"
+msgstr ""
+
+#: ../../getting-started-dev.md:706
+msgid "`ERROR`: Error messages for serious problems"
+msgstr ""
+
+#: ../../getting-started-dev.md:707
+msgid "`CRITICAL`: Critical error messages for program-stopping issues"
+msgstr ""
+
+#: ../../getting-started-dev.md:709
+msgid "Breakpoint Best Practices"
+msgstr ""
+
+#: ../../getting-started-dev.md:727
+msgid "Common Debugging Scenarios"
+msgstr ""
+
+#: ../../getting-started-dev.md:729
+msgid "Debugging Async Code"
+msgstr ""
+
+#: ../../getting-started-dev.md:745
+msgid "Debugging Qt Signals"
+msgstr ""
+
+#: ../../getting-started-dev.md:765
+msgid "Debugging Plugin Installation"
+msgstr ""
+
+#: ../../getting-started-dev.md:782
+msgid "🧪 Testing Guide"
+msgstr ""
+
+#: ../../getting-started-dev.md:784
+msgid "Running Tests"
+msgstr ""
+
+#: ../../getting-started-dev.md:812
+msgid "Writing Tests"
+msgstr ""
+
+#: ../../getting-started-dev.md:847
+msgid "Test Coverage Goals"
+msgstr ""
+
+#: ../../getting-started-dev.md:849
+msgid "✅ **Minimum Coverage**: 70% (enforced in CI)"
+msgstr ""
+
+#: ../../getting-started-dev.md:850
+msgid "🎯 **Target Coverage**: 80%+ for new code"
+msgstr ""
+
+#: ../../getting-started-dev.md:851
+msgid "📊 **Current Coverage**: 73% (193 tests)"
+msgstr ""
+
+#: ../../getting-started-dev.md:855
+msgid "📝 Code Style Guide"
+msgstr ""
+
+#: ../../getting-started-dev.md:857
+msgid "Python Style"
+msgstr ""
+
+#: ../../getting-started-dev.md:859
+msgid "We follow **PEP 8** with some modifications enforced by Ruff:"
+msgstr ""
+
+#: ../../getting-started-dev.md:888
+msgid "Type Hints"
+msgstr ""
+
+#: ../../getting-started-dev.md:913
+msgid "Docstrings"
+msgstr ""
+
+#: ../../getting-started-dev.md:915
+#, python-format
+msgid "We use **Google-style** docstrings with 100% coverage requirement:"
+msgstr ""
+
+#: ../../getting-started-dev.md:957
+msgid "📚 Documentation"
+msgstr ""
+
+#: ../../getting-started-dev.md:959
+msgid "Building Documentation Locally"
+msgstr ""
+
+#: ../../getting-started-dev.md:978
+msgid "Writing Documentation"
+msgstr ""
+
+#: ../../getting-started-dev.md:980
+msgid "Use **Markdown** for most documentation"
+msgstr ""
+
+#: ../../getting-started-dev.md:981
+msgid "Use **RST** only when Sphinx directives are needed"
+msgstr ""
+
+#: ../../getting-started-dev.md:982
+msgid "Add **Mermaid diagrams** for complex flows"
+msgstr ""
+
+#: ../../getting-started-dev.md:983
+msgid "Include **code examples** with copy buttons"
+msgstr ""
+
+#: ../../getting-started-dev.md:984
+msgid "Use **sphinx-tabs** for platform-specific content"
+msgstr ""
+
+#: ../../getting-started-dev.md:988
+msgid "🛠️ Common Tasks"
+msgstr ""
+
+#: ../../getting-started-dev.md:990
+msgid "Update Dependencies"
+msgstr ""
+
+#: ../../getting-started-dev.md:1003
+msgid "Run Code Formatters"
+msgstr ""
+
+#: ../../getting-started-dev.md:1013
+msgid "Generate Plugin Checksum"
+msgstr ""
+
+#: ../../getting-started-dev.md:1016
+msgid ".. tab:: Windows (PowerShell)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1036
+msgid "🔧 Troubleshooting"
+msgstr ""
+
+#: ../../getting-started-dev.md:1038
+msgid "Common Issues"
+msgstr ""
+
+#: ../../getting-started-dev.md:1040
+msgid "Import Errors"
+msgstr ""
+
+#: ../../getting-started-dev.md:1050
+msgid "Pre-commit Failures"
+msgstr ""
+
+#: ../../getting-started-dev.md:1063
+msgid "Qt/PySide6 Issues"
+msgstr ""
+
+#: ../../getting-started-dev.md:1074
+msgid "Getting Help"
+msgstr ""
+
+#: ../../getting-started-dev.md:1076
+msgid "💬 **GitHub Discussions**: Ask questions, share ideas"
+msgstr ""
+
+#: ../../getting-started-dev.md:1077
+msgid "🐛 **GitHub Issues**: Report bugs, request features"
+msgstr ""
+
+#: ../../getting-started-dev.md:1078
+msgid "📧 **Email**: mosh666@github.com"
+msgstr ""
+
+#: ../../getting-started-dev.md:1079
+msgid "📖 **Documentation**: https://mosh666.github.io/pyMM"
+msgstr ""
+
+#: ../../getting-started-dev.md:1083
+msgid "🎉 Next Steps"
+msgstr ""
+
+#: ../../getting-started-dev.md:1085
+msgid "Congratulations! You're now ready to contribute to pyMediaManager."
+msgstr ""
+
+#: ../../getting-started-dev.md:1087
+msgid "**Recommended Learning Path:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:1089
+msgid "✅ Complete environment setup (you are here!)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1090
+msgid "📖 Read [Architecture Documentation](architecture.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1091
+msgid "🔌 Explore [Plugin Development Guide](plugin-development.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1092
+msgid "🧪 Review [Testing Strategy](architecture.md#testing-strategy)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1093
+msgid "🎯 Pick your first issue and start coding!"
+msgstr ""
+
+#: ../../getting-started-dev.md:1095
+msgid "**Resources:**"
+msgstr ""
+
+#: ../../getting-started-dev.md:1097
+msgid "[API Reference](api-reference.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1098
+msgid "[User Guide](user-guide.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1099
+msgid "[Contributing Guidelines](../CONTRIBUTING.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1100
+msgid "[Code of Conduct](../CODE_OF_CONDUCT.md)"
+msgstr ""
+
+#: ../../getting-started-dev.md:1102
+msgid "Happy coding! 🚀"
+msgstr ""
