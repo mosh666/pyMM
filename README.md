@@ -50,10 +50,10 @@
 |--------|-------|
 | **Python Versions** | 3.12, 3.13, 3.14 |
 | **Plugins Available** | 9 |
-| **Test Cases** | 193+ |
-| **Test Coverage** | 73% |
-| **Lines of Code** | ~15,000 Python |
-| **Documentation** | ~5,000 lines |
+| **Test Cases** | 23+ |
+| **Test Coverage** | 61% |
+| **Lines of Code** | ~19,177 Python |
+| **Documentation** | ~16,821 lines |
 <!-- AUTO-GENERATED:STATS:END -->
 
 ---
