@@ -65,7 +65,7 @@ lint-fix:
 
 # Lint markdown files
 lint-md:
-    npx --yes markdownlint-cli2 --config .markdownlint.json "**/*.md"
+    npx --yes markdownlint-cli2 --config .markdownlint.json "**/*.md" "#.venv" "#node_modules" "#htmlcov"
 
 # Run type checker (MyPy)
 type-check:
