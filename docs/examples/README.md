@@ -6,7 +6,7 @@ This directory contains working Python examples demonstrating pyMediaManager's A
 
 Examples are organized by **feature area** and **complexity level**:
 
-```
+```text
 examples/
 ├── plugins/        # Plugin system examples
 ├── projects/       # Project management examples

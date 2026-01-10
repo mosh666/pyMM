@@ -272,6 +272,7 @@ pre-commit run --all-files
 ```
 
 **What pre-commit hooks do:**
+
 - 🔍 **Ruff**: Lint and format Python code
 - 📝 **doc8**: Validate markdown/RST documentation
 - 🎯 **interrogate**: Enforce 100% docstring coverage
@@ -345,6 +346,7 @@ git branch
 ```
 
 **Branch Naming Convention:**
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -402,6 +404,7 @@ Closes #123"
 ```
 
 **Conventional Commit Format:**
+
 ```
 <type>(<scope>): <subject>
 
@@ -411,6 +414,7 @@ Closes #123"
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -700,6 +704,7 @@ logging:
 ```
 
 **Log Levels Usage:**
+
 - `DEBUG`: Detailed diagnostic information
 - `INFO`: General informational messages
 - `WARNING`: Warning messages for potentially problematic situations
@@ -1075,8 +1080,8 @@ export QT_DEBUG_PLUGINS=1
 
 - 💬 **GitHub Discussions**: Ask questions, share ideas
 - 🐛 **GitHub Issues**: Report bugs, request features
-- 📧 **Email**: mosh666@github.com
-- 📖 **Documentation**: https://mosh666.github.io/pyMM
+- 📧 **Email**: <mosh666@github.com>
+- 📖 **Documentation**: <https://mosh666.github.io/pyMM>
 
 ---
 

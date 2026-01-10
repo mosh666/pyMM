@@ -4,7 +4,8 @@ Examples demonstrating pyMediaManager's plugin architecture, installation, and m
 
 ## Overview
 
-pyMM uses a manifest-based plugin system with SHA-256 verification. Plugins extend functionality for different media management tools (Git, digiKam, etc.).
+pyMM uses a manifest-based plugin system with SHA-256 verification. Plugins extend
+functionality for different media management tools (Git, digiKam, etc.).
 
 ## Basic Examples
 

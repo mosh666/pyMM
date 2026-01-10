@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document outlines the internationalization strategy for pyMediaManager documentation, designed to support multi-language documentation with a focus on community-driven translations.
+This document outlines the internationalization strategy for pyMediaManager
+documentation, designed to support multi-language documentation with a focus on
+community-driven translations.
 
 ## Primary Target Language
 
@@ -24,7 +26,7 @@ This document outlines the internationalization strategy for pyMediaManager docu
 
 ### Directory Structure
 
-```
+```text
 docs/
 ├── locales/          # Translation files
 │   ├── de/           # German translations
@@ -120,22 +122,26 @@ sphinx-build -b html -D language=de docs docs/_build/html-de
 ### Translation Priorities
 
 **Priority 1 - High Impact** (Translate First):
+
 - README.md
 - docs/index.md
 - docs/user-guide.md
 - docs/troubleshooting.md
 
 **Priority 2 - User-Facing**:
+
 - docs/plugin-catalog.md
 - docs/migration-guide.md
 - docs/platform-directories.md
 
 **Priority 3 - Developer Documentation**:
+
 - docs/plugin-development.md
 - docs/architecture.md
 - docs/api-reference.md
 
 **Priority 4 - Advanced Topics**:
+
 - docs/docker-ci-testing.md
 - docs/linux-udev-installer.md
 
@@ -144,7 +150,7 @@ sphinx-build -b html -D language=de docs docs/_build/html-de
 Maintain a **glossary** for consistent technical term translation:
 
 | English | Deutsch | Notes |
-|---------|---------|-------|
+| ------- | ------- | ----- |
 | Project | Projekt | |
 | Plugin | Plugin | Keep as-is (common in German) |
 | Portable Mode | Portabler Modus | |
@@ -183,17 +189,20 @@ Maintain a **glossary** for consistent technical term translation:
 ### Future: Web Platform Integration
 
 **Option 1: Weblate** (Open Source)
+
 - Self-hosted or cloud-hosted
 - Git integration
 - Translation memory
 - Community features
 
 **Option 2: Transifex** (Commercial/Free for OSS)
+
 - Popular in open-source
 - Good tooling
 - Active community
 
 **Option 3: Crowdin** (Commercial/Free for OSS)
+
 - Strong GitHub integration
 - Real-time collaboration
 - In-context translation

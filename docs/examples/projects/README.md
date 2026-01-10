@@ -4,7 +4,8 @@ Examples for creating, managing, and migrating media projects in pyMediaManager.
 
 ## Overview
 
-Projects in pyMM organize media files with version control integration. Each project has a name, path, template, and associated plugins.
+Projects in pyMM organize media files with version control integration. Each project
+has a name, path, template, and associated plugins.
 
 ## Basic Examples
 
