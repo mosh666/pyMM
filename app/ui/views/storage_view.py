@@ -23,6 +23,15 @@ class StorageView(QWidget):
     """View for displaying and managing storage drives."""
 
     def __init__(self, storage_service: StorageService, parent: QWidget | None = None) -> None:
+        """Initialize storage management view.
+
+        Args:
+            storage_service: Storage service for drive operations.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> view = StorageView(storage_service)
+        """
         super().__init__(parent)
         self.setObjectName("storageView")
 
@@ -32,7 +41,15 @@ class StorageView(QWidget):
         self.refresh_drives()
 
     def _init_ui(self) -> None:
-        """Initialize UI components."""
+        """Initialize UI components for storage view.
+
+        Creates table for drive information including drive letter,
+        label, type, sizes, and status.
+
+        Examples:
+            >>> storage_view._init_ui()
+            # Creates storage management UI with drives table
+        """
         layout = QVBoxLayout(self)
         layout.setContentsMargins(40, 40, 40, 40)
         layout.setSpacing(20)

@@ -12,13 +12,15 @@
 [![PySide6](https://img.shields.io/badge/GUI-PySide6-41CD52?style=flat&logo=qt)](https://wiki.qt.io/Qt_for_Python)
 
 [![CI](https://github.com/mosh666/pyMM/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/mosh666/pyMM/actions/workflows/ci.yml)
+[![Documentation](https://github.com/mosh666/pyMM/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/mosh666/pyMM/actions/workflows/docs.yml)
 [![codecov](https://codecov.io/gh/mosh666/pyMM/branch/main/graph/badge.svg)](https://codecov.io/gh/mosh666/pyMM)
+[![Docstring Coverage](https://img.shields.io/badge/docstring--coverage-100%25-brightgreen)](https://github.com/mosh666/pyMM/actions/workflows/docs.yml)
 [![Stable Release](https://img.shields.io/github/v/release/mosh666/pyMM?label=stable&color=success)](https://github.com/mosh666/pyMM/releases/latest)
 [![Beta Release](https://img.shields.io/github/v/release/mosh666/pyMM?include_prereleases&label=beta&color=orange)](https://github.com/mosh666/pyMM/releases)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mosh666/pyMM/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mosh666/pyMM)
 [![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](https://mosh666.github.io/pyMM) • [Contributing](#-contributing)
 
 </div>
 

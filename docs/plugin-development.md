@@ -9,18 +9,18 @@
 
 ## 📚 Table of Contents
 
-- [Overview](#-overview)
-- [Quick Start](#-quick-start)
-- [Plugin Architecture](#-plugin-architecture)
-- [YAML Manifest Schema](#-yaml-manifest-schema)
-- [Plugin Types](#-plugin-types)
-- [Creating Your First Plugin](#-creating-your-first-plugin)
-- [Advanced Configuration](#️-advanced-configuration)
-- [Testing Plugins](#-testing-plugins)
-- [Publishing Plugins](#-publishing-plugins)
-- [Best Practices](#-best-practices)
-- [Troubleshooting](#-troubleshooting)
-- [API Reference](#-api-reference)
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Plugin Architecture](#plugin-architecture)
+- [YAML Manifest Schema](#yaml-manifest-schema)
+- [Plugin Types](#plugin-types)
+- [Creating Your First Plugin](#creating-your-first-plugin)
+- [Advanced Configuration](#advanced-configuration)
+- [Testing Plugins](#testing-plugins)
+- [Publishing Plugins](#publishing-plugins)
+- [Best Practices](#best-practices)
+- [Troubleshooting](#troubleshooting)
+- [API Reference](#api-reference)
 
 ---
 
@@ -96,7 +96,7 @@ pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows exter
 
 pyMM uses a **strictly manifest-driven** plugin system. External tools are managed entirely by the core application based on YAML declarations—**no custom Python code is executed during plugin loading or installation**.
 
-```mermaid
+```{mermaid}
 graph LR
     YAML[plugin.yaml] -->|Pydantic| Validation[Schema Validation]
     Validation -->|Pass| Manager[Plugin Manager]
@@ -536,6 +536,657 @@ plugins:
   download_timeout: 600  # 10 minutes for large files
   parallel_downloads: 1  # Sequential for slow connections
 ```
+
+---
+
+## 🎓 Your First Plugin: Complete Step-by-Step Tutorial
+
+This comprehensive tutorial walks you through creating a complete plugin from scratch, covering every step from tool selection to submission.
+
+### Tutorial Overview
+
+**What You'll Build:** A plugin for 7-Zip portable
+**Time Required:** 45-60 minutes
+**Difficulty:** Beginner-friendly
+
+**Learning Objectives:**
+- ✅ Research and validate tool sources
+- ✅ Generate SHA-256 checksums (Windows/Linux/macOS)
+- ✅ Create YAML manifest with proper schema
+- ✅ Test plugin installation locally
+- ✅ Handle platform-specific considerations
+- ✅ Submit plugin to repository
+
+---
+
+### Step 1: Choose Your Tool
+
+**Good candidates for first plugin:**
+- ✅ Single executable or simple structure
+- ✅ Portable/standalone distribution available
+- ✅ Clear version numbering
+- ✅ Stable download URLs
+- ✅ Active maintenance
+
+**Example choices:**
+- 7-Zip portable
+- Git portable
+- ExifTool
+- ImageMagick portable
+- Node.js portable
+
+**For this tutorial:** 7-Zip Portable (simple, widely used, stable)
+
+---
+
+### Step 2: Research Tool Distribution
+
+#### Find Official Source
+
+1. Visit [7-Zip official website](https://www.7-zip.org/)
+2. Navigate to download section
+3. Look for "portable" or "standalone" version
+4. Note the download URL structure
+
+**Key information to gather:**
+- Official website URL
+- Latest version number
+- Download URL (prefer HTTPS)
+- Archive format (.zip, .7z, .tar.gz)
+- Expected file size
+- License information
+
+#### Verify URL Stability
+
+```{tabs}
+.. tab:: Windows PowerShell
+
+   .. code-block:: powershell
+
+      # Test download URL
+      $url = "https://www.7-zip.org/a/7z2408-x64.exe"
+      $response = Invoke-WebRequest -Uri $url -Method Head
+      Write-Host "Status: $($response.StatusCode)"
+      Write-Host "Content-Length: $($response.Headers.'Content-Length')"
+      Write-Host "Content-Type: $($response.Headers.'Content-Type')"
+
+.. tab:: Linux/macOS
+
+   .. code-block:: bash
+
+      # Test download URL
+      url="https://www.7-zip.org/a/7z2408-x64.exe"
+      curl -I "$url"
+      # Check Status: 200 OK
+```
+
+---
+
+### Step 3: Download and Analyze
+
+#### Download Tool
+
+```{tabs}
+.. tab:: Windows PowerShell
+
+   .. code-block:: powershell
+
+      # Download to temp directory
+      $url = "https://www.7-zip.org/a/7z2408-x64.exe"
+      $output = "$env:TEMP\7z-portable.exe"
+      Invoke-WebRequest -Uri $url -OutFile $output
+
+      Write-Host "Downloaded to: $output"
+      Write-Host "File size: $((Get-Item $output).Length) bytes"
+
+.. tab:: Linux/macOS
+
+   .. code-block:: bash
+
+      # Download to temp directory
+      url="https://www.7-zip.org/a/7z2408-x64.exe"
+      output="/tmp/7z-portable.exe"
+      curl -L "$url" -o "$output"
+
+      echo "Downloaded to: $output"
+      ls -lh "$output"
+```
+
+#### Test Extraction
+
+```{tabs}
+.. tab:: Windows PowerShell
+
+   .. code-block:: powershell
+
+      # Extract to test directory
+      $testDir = "$env:TEMP\7z-test"
+      New-Item -ItemType Directory -Force -Path $testDir
+
+      # 7-Zip SFX archives extract themselves
+      Start-Process -FilePath $output -ArgumentList "/S /D=$testDir" -Wait
+
+      # View structure
+      tree /F $testDir | Select-Object -First 20
+
+.. tab:: Linux/macOS
+
+   .. code-block:: bash
+
+      # Extract to test directory
+      testDir="/tmp/7z-test"
+      mkdir -p "$testDir"
+
+      # Use 7z or unzip to extract
+      7z x "$output" -o"$testDir"
+
+      # View structure
+      tree "$testDir" | head -20
+```
+
+#### Document Structure
+
+**Example 7-Zip structure:**
+```
+7z-test/
+├── 7z.exe          ← Main executable
+├── 7z.dll
+├── 7zG.exe
+├── 7zFM.exe        ← GUI file manager
+├── License.txt
+└── readme.txt
+```
+
+**Key observations:**
+- Main executable: `7z.exe` (command-line)
+- Alternative: `7zFM.exe` (GUI)
+- No subdirectories (flat structure)
+- License included
+
+---
+
+### Step 4: Generate SHA-256 Checksum
+
+**Critical for security:** Always verify file integrity with SHA-256.
+
+```{tabs}
+.. tab:: Windows (PowerShell)
+
+   .. code-block:: powershell
+
+      # Generate SHA-256 checksum
+      $hash = Get-FileHash -Algorithm SHA256 -Path $output
+      $checksum = $hash.Hash.ToLower()
+
+      Write-Host "SHA-256 Checksum:"
+      Write-Host $checksum
+
+      # Copy to clipboard (optional)
+      $checksum | Set-Clipboard
+      Write-Host "`nChecksum copied to clipboard!"
+
+.. tab:: Windows (certutil)
+
+   .. code-block:: cmd
+
+      :: Alternative using certutil
+      certutil -hashfile "C:\path\to\7z-portable.exe" SHA256
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Generate SHA-256 checksum
+      checksum=$(sha256sum "$output" | awk '{print $1}')
+      echo "SHA-256 Checksum:"
+      echo "$checksum"
+
+      # Copy to clipboard (requires xclip)
+      echo "$checksum" | xclip -selection clipboard
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Generate SHA-256 checksum
+      checksum=$(shasum -a 256 "$output" | awk '{print $1}')
+      echo "SHA-256 Checksum:"
+      echo "$checksum"
+
+      # Copy to clipboard
+      echo "$checksum" | pbcopy
+```
+
+**Example output:**
+```
+1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+```
+
+**Save this checksum** - you'll need it for the manifest!
+
+---
+
+### Step 5: Create Plugin Manifest
+
+#### Create Directory Structure
+
+```bash
+# Create plugin directory
+mkdir -p plugins/7zip
+cd plugins/7zip
+```
+
+#### Write plugin.yaml
+
+Create `plugins/7zip/plugin.yaml`:
+
+```yaml
+# 7-Zip Portable Plugin Manifest
+name: 7-Zip
+version: 24.08
+description: File archiver with high compression ratio
+homepage: https://www.7-zip.org/
+mandatory: false
+enabled: false
+
+source:
+  type: url
+  uri: https://www.7-zip.org/a/7z2408-x64.exe
+  # IMPORTANT: Replace with YOUR actual checksum from Step 4
+  checksum_sha256: "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+  file_size: 1612800  # ~1.5 MB (update with actual size)
+
+command:
+  path: ""  # Flat structure - executables in root
+  executable: 7z.exe  # Command-line version
+  register_to_path: true  # Add to PATH for easy access
+  args: []  # No default arguments
+
+dependencies: []  # 7-Zip has no dependencies
+
+# Platform-specific notes (comments only)
+# - Windows: Native executable (this manifest)
+# - Linux: Install via package manager (sudo apt install p7zip-full)
+# - macOS: Install via Homebrew (brew install p7zip)
+```
+
+#### Validate YAML Syntax
+
+```{tabs}
+.. tab:: Python
+
+   .. code-block:: python
+
+      import yaml
+      from pathlib import Path
+
+      manifest_file = Path("plugins/7zip/plugin.yaml")
+
+      try:
+          with open(manifest_file) as f:
+              data = yaml.safe_load(f)
+          print("✅ YAML syntax is valid")
+          print(f"Plugin name: {data['name']}")
+          print(f"Version: {data['version']}")
+      except yaml.YAMLError as e:
+          print(f"❌ YAML syntax error: {e}")
+
+.. tab:: Online Validator
+
+   Visit https://www.yamllint.com/ and paste your YAML content
+```
+
+---
+
+### Step 6: Test Plugin Locally
+
+#### Option A: Unit Test (Recommended)
+
+Create `tests/test_7zip_plugin.py`:
+
+```python
+"""Unit tests for 7-Zip plugin."""
+
+import pytest
+from pathlib import Path
+import yaml
+from pydantic import ValidationError
+
+from app.plugins.models import PluginManifest
+
+
+def test_7zip_manifest_syntax():
+    """Test 7-Zip manifest has valid YAML syntax."""
+    manifest_file = Path("plugins/7zip/plugin.yaml")
+
+    with open(manifest_file) as f:
+        data = yaml.safe_load(f)
+
+    assert data is not None
+    assert "name" in data
+    assert data["name"] == "7-Zip"
+
+
+def test_7zip_manifest_schema():
+    """Test 7-Zip manifest passes Pydantic validation."""
+    manifest_file = Path("plugins/7zip/plugin.yaml")
+
+    try:
+        manifest = PluginManifest.from_yaml(manifest_file)
+        assert manifest.name == "7-Zip"
+        assert manifest.version == "24.08"
+        assert manifest.source.type == "url"
+        assert len(manifest.source.checksum_sha256) == 64
+        print("✅ Manifest validation passed!")
+    except ValidationError as e:
+        pytest.fail(f"❌ Validation failed: {e}")
+
+
+def test_7zip_checksum_format():
+    """Test SHA-256 checksum is valid hex format."""
+    manifest_file = Path("plugins/7zip/plugin.yaml")
+    manifest = PluginManifest.from_yaml(manifest_file)
+
+    checksum = manifest.source.checksum_sha256
+
+    # Check length (64 hex characters)
+    assert len(checksum) == 64, "SHA-256 must be 64 characters"
+
+    # Check hex format
+    try:
+        int(checksum, 16)
+    except ValueError:
+        pytest.fail("Checksum must be valid hexadecimal")
+
+    print(f"✅ Checksum format valid: {checksum[:16]}...")
+```
+
+Run tests:
+```bash
+pytest tests/test_7zip_plugin.py -v
+```
+
+#### Option B: Manual Installation Test
+
+```python
+"""Manual installation test script."""
+
+import asyncio
+from pathlib import Path
+from app.plugins.plugin_manager import PluginManager
+
+
+async def test_7zip_installation():
+    """Test 7-Zip plugin installation."""
+    # Configure paths
+    plugins_dir = Path("D:/pyMM.Plugins")  # Adjust for your system
+    manifests_dir = Path("plugins")
+
+    # Create PluginManager
+    manager = PluginManager(plugins_dir, manifests_dir)
+
+    # Discover plugins
+    count = manager.discover_plugins()
+    print(f"📦 Discovered {count} plugins")
+
+    if "7-Zip" not in manager.plugins:
+        print("❌ 7-Zip plugin not found!")
+        return
+
+    # Install plugin
+    print("\n🔽 Installing 7-Zip...")
+
+    def progress_callback(current: int, total: int):
+        percent = (current / total) * 100
+        print(f"Progress: {percent:5.1f}% ({current:,} / {total:,} bytes)", end="\r")
+
+    success = await manager.install_plugin("7-Zip", progress_callback)
+
+    if success:
+        print("\n✅ 7-Zip installed successfully!")
+
+        # Test version detection
+        plugin = manager.plugins["7-Zip"]
+        version = plugin.get_version()
+        print(f"Version detected: {version}")
+
+        # Test executable path
+        exe_path = plugin.get_executable_path()
+        print(f"Executable: {exe_path}")
+        print(f"Exists: {exe_path.exists()}")
+    else:
+        print("\n❌ Installation failed!")
+
+
+if __name__ == "__main__":
+    asyncio.run(test_7zip_installation())
+```
+
+Run manual test:
+```bash
+python test_7zip_manual.py
+```
+
+---
+
+### Step 7: Platform Testing Matrix
+
+Test your plugin across different platforms to ensure compatibility.
+
+#### Testing Checklist
+
+```{eval-rst}
+.. list-table::
+   :header-rows: 1
+   :widths: 30 20 20 30
+
+   * - Test Case
+     - Windows
+     - Linux
+     - macOS
+   * - **YAML Syntax**
+     - ✅ Required
+     - ✅ Required
+     - ✅ Required
+   * - **Schema Validation**
+     - ✅ Required
+     - ✅ Required
+     - ✅ Required
+   * - **Download URL**
+     - ✅ Test actual download
+     - ⚠️ Not applicable*
+     - ⚠️ Not applicable*
+   * - **SHA-256 Verification**
+     - ✅ Must match
+     - N/A
+     - N/A
+   * - **Extraction**
+     - ✅ Test extraction
+     - N/A
+     - N/A
+   * - **Executable Detection**
+     - ✅ 7z.exe found
+     - N/A
+     - N/A
+   * - **Version Command**
+     - ✅ ``7z --version``
+     - N/A
+     - N/A
+   * - **PATH Registration**
+     - ✅ Verify in PATH
+     - N/A
+     - N/A
+```
+
+**Note:** For cross-platform tools, create separate manifests for each OS (e.g., `plugin-windows.yaml`, `plugin-linux.yaml`).
+
+---
+
+### Step 8: Submit Plugin to Repository
+
+#### Pre-Submission Checklist
+
+- [ ] YAML syntax validated
+- [ ] Pydantic schema validation passes
+- [ ] SHA-256 checksum verified
+- [ ] Plugin installs successfully
+- [ ] Version detection works
+- [ ] All tests pass (`pytest tests/test_7zip_plugin.py`)
+- [ ] No hardcoded paths
+- [ ] LICENSE.txt exists (if required)
+- [ ] README.md added (optional but recommended)
+
+#### Create Plugin README (Optional)
+
+Create `plugins/7zip/README.md`:
+
+```markdown
+# 7-Zip Plugin
+
+File archiver with high compression ratio.
+
+## Features
+
+- High compression ratio in 7z format
+- Supports multiple archive formats (ZIP, RAR, TAR, etc.)
+- Command-line and GUI interfaces included
+- Open-source and free
+
+## Installation
+
+Install via pyMM Plugin Manager:
+1. Open pyMM
+2. Navigate to Plugins tab
+3. Find "7-Zip" in list
+4. Click "Install"
+
+## Usage
+
+### Command Line
+
+\```bash
+# Compress files
+7z a archive.7z file1.txt file2.txt
+
+# Extract archive
+7z x archive.7z
+
+# List contents
+7z l archive.7z
+\```
+
+### GUI Mode
+
+Launch `7zFM.exe` from plugin directory for graphical interface.
+
+## Links
+
+- **Homepage**: https://www.7-zip.org/
+- **Documentation**: https://www.7-zip.org/faq.html
+- **License**: GNU LGPL
+```
+
+#### Submit via Pull Request
+
+```bash
+# Create feature branch
+git checkout -b plugin/add-7zip
+
+# Add plugin files
+git add plugins/7zip/plugin.yaml
+git add plugins/7zip/README.md
+git add tests/test_7zip_plugin.py
+
+# Commit with conventional commit format
+git commit -m "feat(plugins): add 7-Zip portable plugin
+
+- Add 7-Zip 24.08 plugin manifest
+- Include SHA-256 checksum verification
+- Add comprehensive unit tests
+- Add plugin README
+
+Tested on Windows 10/11 with Python 3.13"
+
+# Push to your fork
+git push origin plugin/add-7zip
+
+# Create pull request
+gh pr create --title "feat(plugins): add 7-Zip portable plugin" \
+             --body "Adds 7-Zip file archiver plugin.
+
+## Plugin Details
+- **Name**: 7-Zip
+- **Version**: 24.08
+- **Type**: File archiver
+- **Size**: ~1.5 MB
+
+## Testing
+- ✅ YAML syntax validated
+- ✅ Schema validation passes
+- ✅ SHA-256 verified
+- ✅ Installation tested on Windows 11
+- ✅ Version detection works
+- ✅ Unit tests pass
+
+## Documentation
+- Plugin README included
+- Usage examples provided
+" \
+             --base dev
+```
+
+---
+
+### Step 9: Address Review Feedback
+
+Your PR will be reviewed by maintainers. Common feedback includes:
+
+**Checksum Issues:**
+```yaml
+# ❌ Wrong - partial hash
+checksum_sha256: "1234567890abcdef"
+
+# ✅ Correct - full 64 characters
+checksum_sha256: "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+```
+
+**File Size Issues:**
+```yaml
+# ❌ Wrong - human-readable format
+file_size: "1.5 MB"
+
+# ✅ Correct - bytes as integer
+file_size: 1612800
+```
+
+**URL Stability:**
+```yaml
+# ⚠️ Warning - version-specific URL may break
+uri: https://example.com/tool-v1.2.3.zip
+
+# ✅ Better - use "latest" or stable URL
+uri: https://example.com/tool-latest.zip
+```
+
+---
+
+### Step 10: Celebrate! 🎉
+
+Congratulations! You've successfully created and submitted your first plugin!
+
+**What you learned:**
+- ✅ Plugin manifest structure
+- ✅ SHA-256 checksum generation
+- ✅ YAML validation
+- ✅ Testing methodologies
+- ✅ Git workflow for contributions
+- ✅ Pull request best practices
+
+**Next steps:**
+- Create more complex plugins (GitHub releases, dependencies)
+- Contribute to plugin documentation
+- Help review other plugin submissions
+- Explore advanced plugin features
 
 ---
 

@@ -6,16 +6,16 @@ This guide covers common issues, error messages, and solutions for pyMediaManage
 
 ## Table of Contents
 
-- [Installation Issues](#installation-issues)
-- [Startup Problems](#startup-problems)
-- [Plugin Issues](#plugin-issues)
-- [Project Management](#project-management)
-- [Git Integration](#git-integration)
-- [UI and Display Issues](#ui-and-display-issues)
-- [Performance Problems](#performance-problems)
-- [Platform-Specific Issues](#platform-specific-issues)
-- [Log File Analysis](#log-file-analysis)
-- [Getting Additional Help](#getting-additional-help)
+- [Installation Issues](installation-issues)
+- [Startup Problems](startup-problems)
+- [Plugin Issues](plugin-issues)
+- [Project Management](project-management)
+- [Git Integration](git-integration)
+- [UI and Display Issues](ui-and-display-issues)
+- [Performance Problems](performance-problems)
+- [Platform-Specific Issues](platform-specific-issues)
+- [Log File Analysis](log-file-analysis)
+- [Getting Additional Help](getting-additional-help)
 
 ---
 

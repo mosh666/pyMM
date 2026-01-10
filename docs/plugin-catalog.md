@@ -7,10 +7,10 @@ verification for security.
 
 ## Table of Contents
 
-- [Official Plugins](#official-plugins)
-- [Plugin Installation](#plugin-installation)
-- [Plugin Management](#plugin-management)
-- [Creating Custom Plugins](#creating-custom-plugins)
+- [Official Plugins](official-plugins)
+- [Plugin Installation](plugin-installation)
+- [Plugin Management](plugin-management)
+- [Creating Custom Plugins](creating-custom-plugins)
 
 ---
 

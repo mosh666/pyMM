@@ -21,6 +21,7 @@ plugin-catalog
 maxdepth: 2
 caption: Developer Documentation
 ---
+getting-started-dev
 architecture
 plugin-development
 api-reference
@@ -34,6 +35,30 @@ caption: Platform-Specific
 platform-directories
 linux-udev-installer
 docker-ci-testing
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Examples & Resources
+---
+examples/README
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Additional Resources
+hidden: true
+---
+i18n-strategy
+plugin-preferences
+examples/config/README
+examples/platform/README
+examples/plugins/README
+examples/projects/README
+examples/storage/README
+examples/ui/README
 ```
 
 ## Welcome to pyMediaManager

@@ -6,12 +6,12 @@ This guide helps you migrate between different versions of pyMediaManager and up
 
 ## Table of Contents
 
-- [Version Migrations](#version-migrations)
-- [Template Migrations](#template-migrations)
-- [Configuration Changes](#configuration-changes)
-- [Plugin Updates](#plugin-updates)
-- [Platform Migrations](#platform-migrations)
-- [Rollback Procedures](#rollback-procedures)
+- [Version Migrations](version-migrations)
+- [Template Migrations](template-migrations)
+- [Configuration Changes](configuration-changes)
+- [Plugin Updates](plugin-updates)
+- [Platform Migrations](platform-migrations)
+- [Rollback Procedures](rollback-procedures)
 
 ---
 

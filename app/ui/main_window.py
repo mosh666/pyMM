@@ -10,13 +10,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 
 try:
-    from qfluentwidgets import (
-        FluentIcon,
-        FluentWindow,
-        NavigationItemPosition,
-        Theme,
-        setTheme,
-    )
+    from qfluentwidgets import FluentIcon, FluentWindow, NavigationItemPosition, Theme, setTheme
 
     FLUENT_AVAILABLE = True
 except ImportError:
@@ -44,6 +38,21 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
         project_service: ProjectService,
         portable_config: PortableConfig | None = None,
     ):
+        """Initialize main application window.
+
+        Args:
+            config_service: Configuration service instance.
+            storage_service: Storage and drive detection service.
+            plugin_manager: Plugin management instance.
+            project_service: Project management service.
+            portable_config: Portable mode configuration (optional).
+
+        Examples:
+            >>> main_window = MainWindow(
+            ...     config_service, storage_service,
+            ...     plugin_manager, project_service
+            ... )
+        """
         super().__init__()
 
         self.logger = logging.getLogger(__name__)
@@ -390,7 +399,17 @@ class MainWindow(FluentWindow if FLUENT_AVAILABLE else QWidget):
             self.logger.exception("Failed to check pending migrations")
 
     def _check_migrations(self) -> None:
-        """Check all projects for available template updates."""
+        """Check all projects for available template updates.
+
+        Scans all projects to identify those with pending migrations,
+        displaying appropriate UI notifications and migration dialogs.
+
+        Examples:
+            >>> main_window._check_migrations()
+            # Shows info bar if migrations available or all up to date
+
+        .. versionadded:: dev
+        """
         try:
             migratable_projects = self.project_service.list_migratable_projects()
 

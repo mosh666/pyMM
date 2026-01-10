@@ -49,6 +49,15 @@ class SettingsDialog(QDialog):
     """
 
     def __init__(self, config_service: ConfigService, parent: QWidget | None = None) -> None:
+        """Initialize settings dialog.
+
+        Args:
+            config_service: Configuration service instance.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> dialog = SettingsDialog(config_service)
+        """
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -629,7 +638,17 @@ class SettingsDialog(QDialog):
             )
 
     def _update_git_config(self) -> None:
-        """Update global Git configuration."""
+        """Update global Git configuration with user identity.
+
+        Saves user name and email to Git global config for use in
+        project initialization and commits.
+
+        Examples:
+            >>> settings_dialog._update_git_config()
+            # Updates ~/.gitconfig with user identity
+
+        .. versionadded:: dev
+        """
         try:
             import git
 

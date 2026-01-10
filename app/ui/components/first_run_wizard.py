@@ -27,6 +27,15 @@ class WizardPage(QWidget):
     """Base class for wizard pages."""
 
     def __init__(self, title: str, description: str) -> None:
+        """Initialize wizard page base class.
+
+        Args:
+            title: Page title text.
+            description: Page description text.
+
+        Examples:
+            >>> page = WizardPage('Welcome', 'Welcome to the app')
+        """
         super().__init__()
         self.title = title
         self.description = description
@@ -80,6 +89,11 @@ class WelcomePage(WizardPage):
     """Welcome page introducing the application."""
 
     def __init__(self) -> None:
+        """Initialize welcome page with application introduction.
+
+        Examples:
+            >>> welcome_page = WelcomePage()
+        """
         super().__init__(
             "Welcome to pyMediaManager",
             "Thank you for choosing pyMediaManager, your portable media management solution.<br>"
@@ -110,6 +124,14 @@ class StoragePage(WizardPage):
     drive_selected = Signal(Path)
 
     def __init__(self, storage_service: StorageService) -> None:
+        """Initialize storage selection page.
+
+        Args:
+            storage_service: Storage service for drive detection.
+
+        Examples:
+            >>> storage_page = StoragePage(storage_service)
+        """
         self.storage_service = storage_service
         self.selected_drive: Path | None = None
 
@@ -166,7 +188,15 @@ class StoragePage(WizardPage):
             self.drive_list.setCurrentRow(0)
 
     def _on_drive_selected(self) -> None:
-        """Handle drive selection."""
+        """Handle drive selection and emit signal.
+
+        Updates selected_drive attribute and emits drive_selected signal
+        when user selects a drive from the list.
+
+        Examples:
+            >>> storage_page._on_drive_selected()
+            # Emits drive_selected signal with Path object
+        """
         items = self.drive_list.selectedItems()
         if items:
             drive_letter = items[0].data(Qt.UserRole)
@@ -187,6 +217,14 @@ class PluginPage(WizardPage):
     """Plugin selection page."""
 
     def __init__(self, plugin_names: list[str]) -> None:
+        """Initialize plugin selection page.
+
+        Args:
+            plugin_names: List of available plugin names.
+
+        Examples:
+            >>> plugin_page = PluginPage(['git', 'digikam'])
+        """
         self.plugin_names = plugin_names
         self.selected_plugins: list[str] = []
 
@@ -227,6 +265,11 @@ class CompletePage(WizardPage):
     """Completion page with summary and settings."""
 
     def __init__(self) -> None:
+        """Initialize completion page with summary.
+
+        Examples:
+            >>> complete_page = CompletePage()
+        """
         super().__init__(
             "Setup Complete!",
             "pyMediaManager is ready to use. You can now start managing your media projects.",
@@ -265,6 +308,16 @@ class FirstRunWizard(QWidget):
         optional_plugin_names: list[str],
         parent: QWidget | None = None,
     ) -> None:
+        """Initialize first-run wizard.
+
+        Args:
+            storage_service: Storage service for drive detection.
+            optional_plugin_names: List of optional plugin names.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> wizard = FirstRunWizard(storage_service, ['git', 'digikam'])
+        """
         super().__init__(parent)
         self.storage_service = storage_service
         self.optional_plugin_names = optional_plugin_names

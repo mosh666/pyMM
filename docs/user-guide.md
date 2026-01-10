@@ -6,19 +6,19 @@
 
 ## 📖 Table of Contents
 
-- [Introduction](#-introduction)
-- [System Requirements](#-system-requirements)
-- [Installation](#-installation)
-- [First Run Setup](#-first-run-setup)
-- [Core Features](#-core-features)
-- [Project Management](#-project-management)
-- [Plugin System](#-plugin-system)
-- [Storage Management](#-storage-management)
-- [Configuration](#-configuration)
-- [Command Line Interface](#-command-line-interface)
-- [Troubleshooting](#-troubleshooting)
-- [FAQ](#-faq)
-- [Getting Help](#-getting-help)
+- [Introduction](#introduction)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+- [First Run Setup](#first-run-setup)
+- [Core Features](#core-features)
+- [Project Management](#project-management)
+- [Plugin System](#plugin-system)
+- [Storage Management](#storage-management)
+- [Configuration](#configuration)
+- [Command Line Interface](#command-line-interface)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [Getting Help](#getting-help)
 
 ---
 
@@ -91,134 +91,375 @@
 
 #### Step 1: Install Python
 
-1. Download Python 3.13 from [python.org](https://www.python.org/downloads/)
-2. Run installer with these options:
-   - ✅ "Add Python to PATH"
-   - ✅ "Install for all users" (optional)
-   - ✅ "Install py launcher"
+```{tabs}
+.. tab:: Windows
 
-3. Verify installation:
+   1. Download Python 3.13 from `python.org <https://www.python.org/downloads/>`_
+   2. Run installer with these options:
 
-   ```powershell
-   python --version
-   # Output: Python 3.13.x
-   ```
+      - ✅ "Add Python to PATH"
+      - ✅ "Install for all users" (optional)
+      - ✅ "Install py launcher"
+
+   3. Verify installation:
+
+      .. code-block:: powershell
+
+         python --version
+         # Output: Python 3.13.x
+
+.. tab:: Linux (Ubuntu/Debian)
+
+   .. code-block:: bash
+
+      # Update package list
+      sudo apt update
+
+      # Install Python 3.13
+      sudo apt install python3.13 python3.13-venv python3.13-dev
+
+      # Verify installation
+      python3.13 --version
+      # Output: Python 3.13.x
+
+      # Create symlink (optional)
+      sudo ln -sf /usr/bin/python3.13 /usr/bin/python
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Using Homebrew (install from https://brew.sh if needed)
+      brew install python@3.13
+
+      # Verify installation
+      python3.13 --version
+      # Output: Python 3.13.x
+
+      # Create symlink (optional)
+      ln -sf /opt/homebrew/bin/python3.13 /usr/local/bin/python
+```
 
 #### Step 2: Clone or Download Repository
 
 **Option A: Git Clone (Recommended)**
 
-```powershell
-# Navigate to desired location
-cd D:\
+```{tabs}
+.. tab:: Windows
 
-# Clone repository
-git clone https://github.com/mosh666/pyMM.git
-cd pyMM
+   .. code-block:: powershell
+
+      # Navigate to desired location
+      cd D:\
+
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Navigate to desired location
+      cd ~/
+
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Navigate to desired location
+      cd ~/Documents
+
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
 ```
 
 **Option B: Download ZIP**
 
-1. Visit <https://github.com/mosh666/pyMM>
+1. Visit `github.com/mosh666/pyMM <https://github.com/mosh666/pyMM>`_
 2. Click "Code" → "Download ZIP"
-3. Extract to desired location (e.g., `D:\pyMM`)
+3. Extract to desired location:
+   - Windows: ``D:\pyMM``
+   - Linux: ``~/pyMM``
+   - macOS: ``~/Documents/pyMM``
 
 #### Step 3: Install Dependencies
 
-```powershell
-# Navigate to pyMM directory
-cd D:\pyMM
+```{tabs}
+.. tab:: Windows
 
-# Install application
-pip install -e .
+   .. code-block:: powershell
 
-# Or install with development tools (optional)
-pip install -e ".[dev]"
+      # Navigate to pyMM directory
+      cd D:\pyMM
+
+      # Install application
+      pip install -e .
+
+      # Or install with development tools (optional)
+      pip install -e ".[dev]"
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Navigate to pyMM directory
+      cd ~/pyMM
+
+      # Install application
+      pip3 install -e .
+
+      # Or install with development tools (optional)
+      pip3 install -e ".[dev]"
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Navigate to pyMM directory
+      cd ~/Documents/pyMM
+
+      # Install application
+      pip3 install -e .
+
+      # Or install with development tools (optional)
+      pip3 install -e ".[dev]"
 ```
 
 #### Step 4: Run Application
 
-```powershell
-# Launch with Python module
-python -m app
+```{tabs}
+.. tab:: Windows
 
-# Or use the launcher script
-python launcher.py
+   .. code-block:: powershell
 
-# Or use installed command (if PATH configured)
-pymm
+      # Launch with Python module
+      python -m app
+
+      # Or use the launcher script
+      python launcher.py
+
+      # Or use installed command (if PATH configured)
+      pymm
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Launch with Python module
+      python3 -m app
+
+      # Or use the launcher script
+      python3 launcher.py
+
+      # Or use installed command (if in PATH)
+      pymm
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Launch with Python module
+      python3 -m app
+
+      # Or use the launcher script
+      python3 launcher.py
+
+      # Or use installed command (if in PATH)
+      pymm
 ```
 
 ### Method 2: Portable Installation
 
 For use on USB drives or external storage:
 
-#### Step 1: Portable Python
+.. note::
+   Portable installation is primarily designed for Windows with Python Embeddable Package. Linux/macOS users should use Method 1 or 3 for full functionality.
 
-1. Download [Python Embeddable Package](https://www.python.org/downloads/windows/)
-   - Choose "Windows embeddable package (64-bit)"
-2. Extract to your portable drive (e.g., `E:\PortablePython`)
+```{tabs}
+.. tab:: Windows
 
-#### Step 2: Setup pip for Embeddable Python
+   **Step 1: Portable Python**
 
-```powershell
-# Navigate to portable Python directory
-cd E:\PortablePython
+   1. Download `Python Embeddable Package <https://www.python.org/downloads/windows/>`_
+      - Choose "Windows embeddable package (64-bit)"
+   2. Extract to your portable drive (e.g., ``E:\PortablePython``)
 
-# Download get-pip.py
-Invoke-WebRequest -Uri https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
+   **Step 2: Setup pip for Embeddable Python**
 
-# Install pip
-python get-pip.py
+   .. code-block:: powershell
+
+      # Navigate to portable Python directory
+      cd E:\PortablePython
+
+      # Download get-pip.py
+      Invoke-WebRequest -Uri https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
+
+      # Install pip
+      .\python.exe get-pip.py
+
+   **Step 3: Install pyMM**
+
+   .. code-block:: powershell
+
+      # Navigate to portable drive
+      cd E:\
+
+      # Clone or copy pyMM
+      git clone https://github.com/mosh666/pyMM.git
+
+      # Install dependencies
+      .\PortablePython\python.exe -m pip install -e .\pyMM
+
+   **Step 4: Create Launch Script**
+
+   Create ``E:\LaunchPyMM.bat``:
+
+   .. code-block:: batch
+
+      @echo off
+      set PYTHONPATH=E:\PortablePython
+      E:\PortablePython\python.exe E:\pyMM\launcher.py
+      pause
+
+   Double-click ``LaunchPyMM.bat`` to run.
+
+.. tab:: Linux
+
+   **Portable Mode with Virtual Environment**
+
+   .. code-block:: bash
+
+      # Navigate to USB drive
+      cd /media/$USER/USBDrive
+
+      # Clone pyMM
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+      # Create portable virtual environment
+      python3 -m venv --copies .venv
+
+      # Activate and install
+      source .venv/bin/activate
+      pip install -e .
+
+      # Create launch script
+      cat > ../launch-pymm.sh << 'EOF'
+#!/bin/bash
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$DIR/pyMM/.venv/bin/activate"
+python -m app
+EOF
+      chmod +x ../launch-pymm.sh
+
+   Run with: ``./launch-pymm.sh``
+
+.. tab:: macOS
+
+   **Portable Mode with Virtual Environment**
+
+   .. code-block:: bash
+
+      # Navigate to USB drive
+      cd /Volumes/USBDrive
+
+      # Clone pyMM
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+      # Create portable virtual environment
+      python3 -m venv --copies .venv
+
+      # Activate and install
+      source .venv/bin/activate
+      pip install -e .
+
+      # Create launch script
+      cat > ../launch-pymm.command << 'EOF'
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$DIR/pyMM/.venv/bin/activate"
+python -m app
+EOF
+      chmod +x ../launch-pymm.command
+
+   Double-click ``launch-pymm.command`` to run.
 ```
-
-#### Step 3: Install pyMM
-
-```powershell
-# Navigate to portable drive
-cd E:\
-
-# Clone or copy pyMM
-git clone https://github.com/mosh666/pyMM.git
-
-# Install dependencies
-E:\PortablePython\python.exe -m pip install -e E:\pyMM
-```
-
-#### Step 4: Create Launch Script
-
-Create `E:\LaunchPyMM.bat`:
-
-```batch
-@echo off
-set PYTHONPATH=E:\PortablePython
-E:\PortablePython\python.exe E:\pyMM\launcher.py
-pause
-```
-
-Double-click `LaunchPyMM.bat` to run.
 
 ### Method 3: Development Installation
 
 For contributors and developers:
 
-```powershell
-# Clone repository
-git clone https://github.com/mosh666/pyMM.git
-cd pyMM
+```{tabs}
+.. tab:: Windows
 
-# Install in development mode with all tools
-pip install -e ".[dev]"
+   .. code-block:: powershell
 
-# Install pre-commit hooks
-pre-commit install
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
 
-# Run tests to verify setup
-pytest
+      # Install in development mode with all tools
+      pip install -e ".[dev]"
 
-# Start development server
-python launcher.py
+      # Install pre-commit hooks
+      pre-commit install
+
+      # Run tests to verify setup
+      pytest
+
+      # Start application
+      python launcher.py
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+      # Install in development mode with all tools
+      pip3 install -e ".[dev]"
+
+      # Install pre-commit hooks
+      pre-commit install
+
+      # Run tests to verify setup
+      pytest
+
+      # Start application
+      python3 launcher.py
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Clone repository
+      git clone https://github.com/mosh666/pyMM.git
+      cd pyMM
+
+      # Install in development mode with all tools
+      pip3 install -e ".[dev]"
+
+      # Install pre-commit hooks
+      pre-commit install
+
+      # Run tests to verify setup
+      pytest
+
+      # Start application
+      python3 launcher.py
 ```
+
+.. seealso::
+   For detailed developer setup including VS Code configuration, debugging, and testing workflows, see :doc:`getting-started-dev`.
 
 ---
 
@@ -531,9 +772,36 @@ pyMM features a beautiful, modern interface inspired by Windows 11 Fluent Design
 
 #### Method 2: Quick Create
 
-```powershell
-# Command line project creation
-pymm create-project "NewProject" --type photo --location "D:\pyMM.Projects"
+```{tabs}
+.. tab:: Windows
+
+   .. code-block:: powershell
+
+      # Command line project creation
+      pymm create-project "NewProject" --type photo --location "D:\pyMM.Projects"
+
+      # Or with Python module
+      python -m app create-project "NewProject" --type photo
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Command line project creation
+      pymm create-project "NewProject" --type photo --location "~/pyMM.Projects"
+
+      # Or with Python module
+      python3 -m app create-project "NewProject" --type photo
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Command line project creation
+      pymm create-project "NewProject" --type photo --location "~/Documents/pyMM.Projects"
+
+      # Or with Python module
+      python3 -m app create-project "NewProject" --type photo
 ```
 
 ### Project Structure
@@ -592,12 +860,45 @@ Client_Wedding_2026/
 
 #### Method 3: Command Line
 
-```powershell
-# Open specific project
-pymm open-project "D:\pyMM.Projects\Client_Wedding_2026"
+```{tabs}
+.. tab:: Windows
 
-# Open last used project
-pymm open-project --last
+   .. code-block:: powershell
+
+      # Open specific project
+      pymm open-project "D:\pyMM.Projects\Client_Wedding_2026"
+
+      # Open last used project
+      pymm open-project --last
+
+      # List all projects
+      pymm list-projects
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Open specific project
+      pymm open-project "~/pyMM.Projects/Client_Wedding_2026"
+
+      # Open last used project
+      pymm open-project --last
+
+      # List all projects
+      pymm list-projects
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Open specific project
+      pymm open-project "~/Documents/pyMM.Projects/Client_Wedding_2026"
+
+      # Open last used project
+      pymm open-project --last
+
+      # List all projects
+      pymm list-projects
 ```
 
 ### Project Operations
@@ -1175,29 +1476,108 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 
 1. **Verify Python installation**:
 
-   ```powershell
-   python --version
-   # Should show Python 3.12+ or 3.13+
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         python --version
+         # Should show Python 3.12+ or 3.13+
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         python3 --version
+         # Should show Python 3.12+ or 3.13+
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         python3 --version
+         # Should show Python 3.12+ or 3.13+
    ```
 
 2. **Check dependencies**:
 
-   ```powershell
-   pip list | Select-String PySide6
-   # Should show PySide6 6.6.0 or higher
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         pip list | Select-String PySide6
+         # Should show PySide6 6.6.0 or higher
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         pip3 list | grep PySide6
+         # Should show PySide6 6.6.0 or higher
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         pip3 list | grep PySide6
+         # Should show PySide6 6.6.0 or higher
    ```
 
 3. **Reinstall dependencies**:
 
-   ```powershell
-   pip install --force-reinstall -e .
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         pip install --force-reinstall -e .
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         pip3 install --force-reinstall -e .
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         pip3 install --force-reinstall -e .
    ```
 
 4. **Check logs**:
 
-   ```powershell
-   # View latest log file
-   Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 50
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         # View latest log file
+         Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 50
+
+         # Or view in Notepad
+         notepad "D:\pyMM.Logs\pymm_$(Get-Date -Format 'yyyy-MM-dd').log"
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         # View latest log file
+         tail -n 50 ~/pyMM.Logs/pymm_*.log
+
+         # Or follow live
+         tail -f ~/pyMM.Logs/pymm_$(date +%Y-%m-%d).log
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         # View latest log file
+         tail -n 50 ~/Library/Logs/pyMM/pymm_*.log
+
+         # Or follow live
+         tail -f ~/Library/Logs/pyMM/pymm_$(date +%Y-%m-%d).log
    ```
 
 #### Projects Not Loading
@@ -1208,21 +1588,80 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 
 1. **Verify project integrity**:
 
-   ```powershell
-   pymm verify-project "D:\pyMM.Projects\MyProject"
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         pymm verify-project "D:\pyMM.Projects\MyProject"
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         pymm verify-project "~/pyMM.Projects/MyProject"
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         pymm verify-project "~/Documents/pyMM.Projects/MyProject"
    ```
 
 2. **Check permissions**:
 
-   ```powershell
-   # Ensure you have read/write access
-   Test-Path -Path "D:\pyMM.Projects\MyProject" -PathType Container
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         # Ensure you have read/write access
+         Test-Path -Path "D:\pyMM.Projects\MyProject" -PathType Container
+
+         # Check file permissions
+         icacls "D:\pyMM.Projects\MyProject"
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         # Check if directory exists and is writable
+         test -w ~/pyMM.Projects/MyProject && echo "Writable" || echo "Not writable"
+
+         # Check permissions
+         ls -ld ~/pyMM.Projects/MyProject
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         # Check if directory exists and is writable
+         test -w ~/Documents/pyMM.Projects/MyProject && echo "Writable" || echo "Not writable"
+
+         # Check permissions
+         ls -ld ~/Documents/pyMM.Projects/MyProject
    ```
 
 3. **Repair project**:
 
-   ```powershell
-   pymm repair-project "MyProject"
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         pymm repair-project "MyProject"
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         pymm repair-project "MyProject"
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         pymm repair-project "MyProject"
    ```
 
 #### Plugin Download Fails
@@ -1233,20 +1672,67 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 
 1. **Check internet connection**:
 
-   ```powershell
-   Test-Connection -ComputerName github.com -Count 4
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         Test-Connection -ComputerName github.com -Count 4
+
+         # Alternative with curl
+         curl -I https://github.com
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         # Ping GitHub
+         ping -c 4 github.com
+
+         # Check HTTP connectivity
+         curl -I https://github.com
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         # Ping GitHub
+         ping -c 4 github.com
+
+         # Check HTTP connectivity
+         curl -I https://github.com
    ```
 
 2. **Try manual download**:
 
    - Visit plugin's GitHub releases page
    - Download manually
-   - Extract to `D:\pyMM.Plugins\<plugin_name>`
+   - Extract to platform-specific location:
+
+     - Windows: ``D:\pyMM.Plugins\<plugin_name>``
+     - Linux: ``~/pyMM.Plugins/<plugin_name>``
+     - macOS: ``~/Library/Application Support/pyMM/Plugins/<plugin_name>``
 
 3. **Clear download cache**:
 
-   ```powershell
-   pymm cleanup --download-cache
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         pymm cleanup --download-cache
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         pymm cleanup --download-cache
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         pymm cleanup --download-cache
    ```
 
 #### Performance Issues
@@ -1275,24 +1761,92 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 
 1. **Verify Git installation**:
 
-   ```powershell
-   git --version
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         git --version
+         # Should show Git 2.40+ or higher
+
+         # Check Git path
+         where.exe git
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         git --version
+         # Should show Git 2.40+ or higher
+
+         # Check Git path
+         which git
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         git --version
+         # Should show Git 2.40+ or higher
+
+         # Check Git path
+         which git
    ```
 
 2. **Initialize repository manually**:
 
-   ```powershell
-   cd "D:\pyMM.Projects\MyProject"
-   git init
-   git config user.name "Your Name"
-   git config user.email "your@email.com"
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         cd "D:\pyMM.Projects\MyProject"
+         git init
+         git config user.name "Your Name"
+         git config user.email "your@email.com"
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         cd ~/pyMM.Projects/MyProject
+         git init
+         git config user.name "Your Name"
+         git config user.email "your@email.com"
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         cd ~/Documents/pyMM.Projects/MyProject
+         git init
+         git config user.name "Your Name"
+         git config user.email "your@email.com"
    ```
 
 3. **Check Git status**:
 
-   ```powershell
-   cd "D:\pyMM.Projects\MyProject"
-   git status
+   ```{tabs}
+   .. tab:: Windows
+
+      .. code-block:: powershell
+
+         cd "D:\pyMM.Projects\MyProject"
+         git status
+
+   .. tab:: Linux
+
+      .. code-block:: bash
+
+         cd ~/pyMM.Projects/MyProject
+         git status
+
+   .. tab:: macOS
+
+      .. code-block:: bash
+
+         cd ~/Documents/pyMM.Projects/MyProject
+         git status
    ```
 
 ### Error Messages
@@ -1309,31 +1863,110 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 
 Enable detailed logging for troubleshooting:
 
-```powershell
-# Launch with debug logging
-pymm --debug
+```{tabs}
+.. tab:: Windows
 
-# Or set in config
-# D:\pyMM.Config\app.yaml
-# privacy:
-#   log_level: "DEBUG"
+   .. code-block:: powershell
+
+      # Launch with debug logging
+      pymm --debug
+
+      # Or set in config (D:\pyMM.Config\app.yaml)
+      # privacy:
+      #   log_level: "DEBUG"
+
+      # Launch with specific log level
+      $env:PYMM_LOG_LEVEL="DEBUG"; pymm
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # Launch with debug logging
+      pymm --debug
+
+      # Or set in config (~/.config/pyMM/app.yaml)
+      # privacy:
+      #   log_level: "DEBUG"
+
+      # Launch with specific log level
+      PYMM_LOG_LEVEL=DEBUG pymm
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # Launch with debug logging
+      pymm --debug
+
+      # Or set in config (~/Library/Application Support/pyMM/app.yaml)
+      # privacy:
+      #   log_level: "DEBUG"
+
+      # Launch with specific log level
+      PYMM_LOG_LEVEL=DEBUG pymm
 ```
 
 ### Collecting Diagnostic Information
 
 When reporting issues, collect this information:
 
-```powershell
-# System information
-python --version
-pip list | Select-String "PySide6|pydantic|GitPython"
+```{tabs}
+.. tab:: Windows
 
-# Application information
-pymm --version
-pymm storage-info
+   .. code-block:: powershell
 
-# Recent logs
-Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 100 | Out-File "diagnostic.txt"
+      # System information
+      python --version
+      pip list | Select-String "PySide6|pydantic|GitPython"
+
+      # Application information
+      pymm --version
+      pymm storage-info
+
+      # Recent logs
+      Get-Content "D:\pyMM.Logs\pymm_*.log" -Tail 100 | Out-File "diagnostic.txt"
+
+      # System details
+      systeminfo | Select-String "OS Name|OS Version|System Type"
+
+.. tab:: Linux
+
+   .. code-block:: bash
+
+      # System information
+      python3 --version
+      pip3 list | grep -E "PySide6|pydantic|GitPython"
+
+      # Application information
+      pymm --version
+      pymm storage-info
+
+      # Recent logs
+      tail -n 100 ~/.local/share/pyMM/Logs/pymm_*.log > diagnostic.txt
+
+      # System details
+      uname -a
+      lsb_release -a
+
+.. tab:: macOS
+
+   .. code-block:: bash
+
+      # System information
+      python3 --version
+      pip3 list | grep -E "PySide6|pydantic|GitPython"
+
+      # Application information
+      pymm --version
+      pymm storage-info
+
+      # Recent logs
+      tail -n 100 ~/Library/Logs/pyMM/pymm_*.log > diagnostic.txt
+
+      # System details
+      uname -a
+      sw_vers
 ```
 
 ---

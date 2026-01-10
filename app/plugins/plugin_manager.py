@@ -109,6 +109,11 @@ class PluginManager:
                 data = yaml.safe_load(f)
 
             def raise_empty_manifest() -> None:
+                """Raise error for empty manifest file.
+
+                Raises:
+                    ValueError: Always raised with descriptive message.
+                """
                 msg = f"Empty manifest file: {manifest_file}"
                 self.logger.error(msg)
                 raise ValueError(msg)

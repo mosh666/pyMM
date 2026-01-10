@@ -207,6 +207,18 @@ class PlatformCheckError(Exception):
     """
 
     def __init__(self, plugin_path: Path, violations: list[tuple[int, str]]) -> None:
+        """Initialize platform check error with violation details.
+
+        Args:
+            plugin_path: Path to the plugin with violations.
+            violations: List of (line_number, code_snippet) tuples.
+
+        Examples:
+            >>> error = PlatformCheckError(
+            ...     Path('plugins/myplugin'),
+            ...     [(10, 'sys.platform'), (25, 'os.name')]
+            ... )
+        """
         self.plugin_path = plugin_path
         self.violations = violations
         lines = ", ".join(f"line {line}" for line, _ in violations)
@@ -220,6 +232,16 @@ class _PlatformUsageVisitor(ast.NodeVisitor):
     """AST visitor to find direct platform access patterns."""
 
     def __init__(self, source: str) -> None:
+        """Initialize AST visitor for platform usage detection.
+
+        Args:
+            source: Python source code to analyze.
+
+        Examples:
+            >>> visitor = _PlatformUsageVisitor('import sys\nif sys.platform == "win32": pass')
+            >>> visitor.violations
+            []
+        """
         self.source = source
         self.violations: list[tuple[int, str]] = []
 

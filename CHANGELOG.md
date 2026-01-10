@@ -9,6 +9,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Documentation System Refactor (2026-01-15)
+
+- **Comprehensive Sphinx Documentation Overhaul**
+  - Migrated from sphinx_rtd_theme to modern Furo theme with light/dark mode support
+  - Deployed dual-branch GitHub Pages: main (stable) + dev (latest) with sphinx-multiversion
+  - Added 17 Sphinx extensions: autodoc, napoleon, mermaid, sphinx-design, sphinx-tabs, sphinx-copybutton, etc.
+  - Implemented i18n readiness with sphinx.ext.intl and locale_dirs configuration
+  - Added version selector sidebar widget and landing page with branch/tag navigation
+  - Configured Edit on GitHub links for all documentation pages
+
+- **Enhanced Documentation Content**
+  - **Architecture Diagrams:** Added 11 comprehensive Mermaid diagrams to `docs/architecture.md` (1796 → 2491 lines, 5 → 16 diagrams)
+    - System Architecture (C4 context), Component Interaction (sequence), Plugin Lifecycle (state)
+    - Data Flow (flowchart), Storage Management (class), Project Structure (graph)
+    - Migration Process, First Run Wizard, Configuration System (class), Event System (sequence)
+    - Deployment Architecture (C4 deployment)
+  - **Developer Documentation:** Created comprehensive `docs/getting-started-dev.md` (800+ lines)
+    - Environment setup with platform-specific tabs (Windows/Linux/macOS)
+    - Fork/clone workflows with GitHub CLI/Git/SSH alternatives
+    - Development workflow with Mermaid diagram
+    - First contribution walkthrough with complete plugin validation example
+    - VS Code debugging guide with 4 launch configurations (Launch App, Run Tests, Debug Current Test, Type Check)
+    - Testing guide with pytest, fixtures, async test examples, and coverage goals (70% min, 80% target, 73% current)
+    - Code style guide with PEP 8, modern type hints (Python 3.10+ syntax), Google-style docstrings
+  - **Plugin Development:** Enhanced `docs/plugin-development.md` with 600+ line "Your First Plugin" tutorial
+    - Complete 10-step guide for creating 7-Zip plugin (45-60 minutes, beginner-friendly)
+    - Platform-specific checksum generation examples (Windows PowerShell/certutil, Linux sha256sum, macOS shasum)
+    - SHA-256 verification procedures with clipboard copy commands
+    - YAML manifest creation with detailed comments and validation
+    - Unit testing examples and platform testing matrix (Windows/Linux/macOS)
+    - PR submission workflow with pre-submission checklist
+  - **User Guide:** Enhanced `docs/user-guide.md` with platform-specific examples (1456 → 1900+ lines)
+    - Installation sections converted to sphinx-tabs for Windows/Linux/macOS
+    - Standard, portable, and development installation methods with cross-platform commands
+    - Platform-specific troubleshooting commands (Python verification, dependency checks, log locations)
+    - Project management CLI examples for all platforms
+    - Debug mode and diagnostic information gathering for Windows/Linux/macOS
+  - **Examples Directory:** Created `docs/examples/` with 10-15 standalone Python examples
+    - 5 subdirectories: basic_usage/, advanced_workflows/, plugin_development/, api_integration/, troubleshooting/
+    - Inline documentation and examples/README.md with index and usage instructions
+
+- **Documentation Quality Enforcement**
+  - Achieved 100% docstring coverage with interrogate across app/ and plugins/
+  - Added Google-style docstrings to all public modules, classes, methods, functions
+  - Implemented CI quality checks in `.github/workflows/docs.yml`:
+    - sphinx-build -W (warnings as errors)
+    - sphinx-build -b linkcheck (verify all URLs)
+    - doc8 for markdown linting (max-line-length=100)
+    - interrogate for 100% docstring coverage requirement
+  - Added pre-commit hooks for doc8 and interrogate to prevent documentation regressions
+  - Configured pyproject.toml with interrogate threshold=100, doc8 max-line-length=100
+
+- **API Reference Documentation**
+  - Created comprehensive `docs/api-reference.md` with automodapi
+  - Documented all public APIs: app.core (config, logging, platform), app.models (Project, Plugin, Storage)
+  - app.services (ProjectService, PluginManager, GitService), app.ui components
+  - Added type hints and return value documentation with autodoc_typehints='description'
+
 #### Documentation Expansion (2026-01-08)
 
 - New comprehensive documentation files (2,000+ lines total)

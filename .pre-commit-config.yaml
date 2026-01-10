@@ -70,6 +70,40 @@ repos:
         name: Markdown Linter
         args: [--fix, --disable, MD013, MD024, MD033, MD041]
 
+  # Documentation quality checks
+  - repo: local
+    hooks:
+      - id: doc8
+        name: doc8 - Markdown/RST Linter
+        entry: doc8
+        language: system
+        files: \.(md|rst)$
+        args:
+          - --max-line-length=100
+          - --ignore-path=docs/_build
+          - --ignore-path=docs/locales
+          - --quiet
+
+      - id: interrogate
+        name: interrogate - Docstring Coverage
+        entry: interrogate
+        language: system
+        types: [python]
+        args:
+          - --fail-under=100
+          - --verbose=1
+          - --ignore-init-method
+          - --ignore-init-module
+          - --ignore-magic
+          - --ignore-module
+          - --ignore-nested-functions
+          - --ignore-private
+          - --ignore-property-decorators
+          - --ignore-semiprivate
+          - --exclude=tests
+          - --exclude=docs
+        pass_filenames: true
+
   # Python type checking with mypy (local environment)
   - repo: local
     hooks:
@@ -144,5 +178,5 @@ ci:
   autoupdate_branch: ''
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
   autoupdate_schedule: weekly
-  skip: [pytest-check, pytest-full, docs-check]
+  skip: [pytest-check, pytest-full, docs-check, mypy, doc8, interrogate]
   submodules: false

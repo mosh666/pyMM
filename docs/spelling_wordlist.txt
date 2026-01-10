@@ -1,0 +1,5 @@
+# Custom dictionary for sphinxcontrib-spelling
+# Add project-specific technical terms here as CI failures identify them
+# Format: one word per line, case-sensitive
+
+# Framework and library names will be added organically as spelling checks fail

@@ -29,6 +29,15 @@ class PluginInstallThread(QThread):
     finished = Signal(bool, str)  # success, message
 
     def __init__(self, plugin_manager: PluginManager, plugin_name: str) -> None:
+        """Initialize plugin installation thread.
+
+        Args:
+            plugin_manager: Plugin manager instance.
+            plugin_name: Name of plugin to install.
+
+        Examples:
+            >>> thread = PluginInstallThread(plugin_manager, 'git')
+        """
         super().__init__()
         self.plugin_manager = plugin_manager
         self.plugin_name = plugin_name
@@ -64,6 +73,15 @@ class PluginView(QWidget):
     """View for managing plugins."""
 
     def __init__(self, plugin_manager: PluginManager, parent: QWidget | None = None) -> None:
+        """Initialize plugin management view.
+
+        Args:
+            plugin_manager: Plugin manager instance.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> view = PluginView(plugin_manager)
+        """
         super().__init__(parent)
         self.setObjectName("pluginView")
 
@@ -193,7 +211,17 @@ class PluginView(QWidget):
         self.install_thread.start()
 
     def _on_install_finished(self, success: bool, message: str, progress: QProgressDialog) -> None:
-        """Handle installation completion."""
+        """Handle installation completion and show results.
+
+        Args:
+            success: Whether installation succeeded.
+            message: Result message to display.
+            progress: Progress dialog to close.
+
+        Examples:
+            >>> view._on_install_finished(True, 'Installed successfully', progress_dlg)
+            # Closes dialog and shows success message
+        """
         progress.close()
 
         if success:

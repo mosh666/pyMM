@@ -116,7 +116,7 @@ validate-config:
 docs: _docs-build _docs-redirect
 
 _docs-build:
-    {{python}} -m pip install -q sphinx sphinx-multiversion sphinx-rtd-theme myst-parser
+    {{python}} -m pip install -q sphinx furo sphinx-multiversion myst-parser sphinx-copybutton sphinx-tabs sphinx-design sphinx-notfound-page sphinxcontrib-mermaid sphinxcontrib-spelling sphinxcontrib-redirects
     {{python}} -m sphinx_multiversion docs docs/_build/html
 
 _docs-redirect:
@@ -135,6 +135,38 @@ _docs-redirect:
     except Exception as e:
         print(f"✗ Failed to create redirect: {e}", file=sys.stderr)
         sys.exit(1)
+
+# Extract translatable strings from documentation for i18n
+docs-gettext:
+    {{python}} -m sphinx.cmd.build -b gettext docs docs/_build/gettext
+    @echo "✓ Translatable strings extracted to docs/_build/gettext"
+
+# Update translation files for German locale
+docs-translate:
+    {{python}} -m pip install -q sphinx-intl
+    {{python}} -m sphinx_intl update -p docs/_build/gettext -l de
+    @echo "✓ German translation files updated in docs/locales/de/LC_MESSAGES/"
+
+# Build German documentation
+docs-build-de:
+    {{python}} -m pip install -q sphinx furo sphinx-multiversion myst-parser sphinx-copybutton sphinx-tabs sphinx-design sphinx-notfound-page sphinxcontrib-mermaid sphinxcontrib-spelling sphinxcontrib-redirects sphinx-intl
+    {{python}} -m sphinx.cmd.build -b html -D language=de docs docs/_build/html-de
+    @echo "✓ German documentation built to docs/_build/html-de"
+
+# Build all language versions of documentation
+docs-build-all: docs docs-build-de
+    @echo "✓ All documentation versions built"
+
+# Check documentation for broken links
+docs-linkcheck:
+    {{python}} -m sphinx.cmd.build -b linkcheck docs docs/_build/linkcheck
+    @echo "✓ Link check complete - see docs/_build/linkcheck/output.txt"
+
+# Check documentation spelling
+docs-spelling:
+    {{python}} -m pip install -q sphinxcontrib-spelling
+    {{python}} -m sphinx.cmd.build -b spelling docs docs/_build/spelling
+    @echo "✓ Spelling check complete - see docs/_build/spelling/output.txt"
 
 # Serve documentation locally (requires Python http.server)
 docs-serve:

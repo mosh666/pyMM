@@ -41,18 +41,30 @@ extensions = [
     "sphinx.ext.todo",  # Support for TODO items
     "sphinx.ext.coverage",  # Coverage checker for documentation
     "sphinx.ext.githubpages",  # Generate .nojekyll file for GitHub Pages
+    "sphinx.ext.inheritance_diagram",  # Generate inheritance diagrams
     "myst_parser",  # Support for Markdown files
     "sphinx_multiversion",  # Support for multiple versions
+    "sphinx_copybutton",  # Add copy button to code blocks
+    "sphinx_tabs.tabs",  # Support for tabbed content
+    "sphinx_design",  # Modern design components (cards, grids, badges)
+    "notfound.extension",  # Custom 404 page
+    "sphinxcontrib.mermaid",  # Mermaid diagram support
+    "sphinxcontrib.spelling",  # Spell checking
+    "sphinxcontrib.redirects",  # URL redirects from old structure
 ]
 
 # Add any paths that contain templates here
 templates_path = ["_templates"]
 
-# Whitelist pattern for branches (set to None to ignore all branches)
+# Whitelist pattern for branches - build docs for main and dev
 smv_branch_whitelist = r"^(main|dev)$"
 smv_remote_whitelist = r"^origin$"
 # Include beta versions in documentation (v0.1.0, v0.1.0-beta.1, v1.0.0, etc.)
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+(-beta\.\d+)?$"
+# Latest version displayed in version selector
+smv_latest_version = "main"
+# Prefer remote branches over local
+smv_prefer_remote_refs = True
 
 # List of patterns, relative to source directory, to ignore when looking for source files
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -67,40 +79,83 @@ source_suffix = {
 myst_enable_extensions = [
     "colon_fence",
     "deflist",
+    "fieldlist",
+    "attrs_inline",
+    "attrs_block",
 ]
 
 # The master toctree document
 master_doc = "index"
 
+# -- i18n configuration ------------------------------------------------------
+
+locale_dirs = ["locales/"]
+gettext_compact = False
+language = "en"
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 
-# Theme options
+# Theme options for Furo
 html_theme_options = {
-    "display_version": True,
-    "prev_next_buttons_location": "bottom",
-    "style_external_links": False,
-    "collapse_navigation": False,
-    "sticky_navigation": True,
-    "navigation_depth": 4,
-    "includehidden": True,
-    "titles_only": False,
+    "light_css_variables": {
+        "color-brand-primary": "#4CAF50",
+        "color-brand-content": "#212121",
+        "font-stack": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        "font-stack--monospace": "'Consolas', 'Monaco', 'Courier New', monospace",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#66BB6A",
+        "color-brand-content": "#E0E0E0",
+    },
+    "sidebar_hide_name": False,
+    "navigation_with_keys": True,
+    "top_of_page_button": "edit",
+    # Source repository for "Edit on GitHub" links
+    "source_repository": "https://github.com/mosh666/pyMM",
+    "source_branch": "main",
+    "source_directory": "docs/",
+    # Announcement for dev branch warning (will be conditionally set)
+    "announcement": None,  # Set dynamically for dev branch
 }
 
 # Add any paths that contain custom static files (such as style sheets)
 html_static_path = ["_static"]
 
+# Custom CSS files
+html_css_files = [
+    "custom.css",
+]
+
 # Custom sidebar templates, maps document names to template names
 html_sidebars = {
     "**": [
-        "globaltoc.html",
-        "relations.html",
-        "sourcelink.html",
-        "searchbox.html",
-        "versioning.html",
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "versioning.html",  # Version selector
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/scroll-end.html",
+        "sidebar/variant-selector.html",
     ]
+}
+
+# SEO and metadata
+html_meta = {
+    "description": "Comprehensive documentation for pyMediaManager - Portable Python-based media management application with PySide6 Fluent UI, cross-platform drive detection, and extensible plugin system for Windows, Linux, and macOS.",
+    "keywords": "media management, portable, digikam, pyside6, fluent ui, plugin system, documentation, cross-platform, windows, linux, macos",
+    "author": "mosh666",
+    "og:site_name": "pyMediaManager Documentation",
+    "og:type": "website",
+    "og:url": "https://mosh666.github.io/pyMM/",
+    "og:title": "pyMediaManager - Portable Cross-Platform Media Management",
+    "og:description": "Professional-grade media management application with modern Fluent UI, extensible plugin system, and unified drive detection across Windows, Linux, and macOS. 100% portable, runs from USB drives with zero system footprint.",
+    "twitter:card": "summary_large_image",
+    "twitter:title": "pyMediaManager - Portable Media Management",
+    "twitter:description": "Cross-platform media management with PySide6 Fluent UI, plugin system, and professional tools for Windows, Linux, and macOS.",
 }
 
 # Output file base name for HTML help builder
@@ -160,3 +215,114 @@ intersphinx_mapping = {
 
 # If true, `todo` and `todoList` produce output, else they produce nothing
 todo_include_todos = True
+
+# -- Options for sphinx-copybutton -------------------------------------------
+
+# Button text and behavior
+copybutton_prompt_text = r">>> |\.\.\. |\$ |PS> "
+copybutton_prompt_is_regexp = True
+copybutton_only_copy_prompt_lines = True
+copybutton_remove_prompts = True
+
+# -- Options for sphinx-tabs -------------------------------------------------
+
+# Synchronize tab selections across pages
+sphinx_tabs_valid_builders = ["html", "linkcheck"]
+sphinx_tabs_disable_tab_closing = True
+
+# -- Options for sphinxcontrib-mermaid ---------------------------------------
+
+# Mermaid diagram configuration
+mermaid_version = "10.6.1"
+mermaid_init_js = """
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+});
+"""
+
+# -- Options for sphinxcontrib-spelling --------------------------------------
+
+# Spell checking configuration
+spelling_lang = "en_US"
+spelling_word_list_filename = "spelling_wordlist.txt"
+spelling_show_suggestions = True
+spelling_exclude_patterns = ["api-reference.md", "_build/*"]
+
+# -- Options for sphinx-notfound-page ----------------------------------------
+
+# Custom 404 page configuration
+notfound_context = {
+    "title": "Page Not Found",
+    "body": """
+    <h1>404 - Page Not Found</h1>
+    <p>The page you're looking for doesn't exist. This might be because:</p>
+    <ul>
+        <li>The URL has changed after the documentation redesign</li>
+        <li>The page has been moved or removed</li>
+        <li>You followed an outdated link</li>
+    </ul>
+    <p>Try using the search function or browse the navigation menu.</p>
+    """,
+}
+notfound_urls_prefix = "/pyMM/"
+
+# -- Options for sphinxcontrib-redirects -------------------------------------
+
+# URL redirects from old sphinx_rtd_theme structure to new Furo structure
+# Format: {old_url: new_url}
+redirects = {
+    # Redirect old RTD-style URLs to new Furo structure
+    "getting-started.html": "user-guide.html",
+    "installation.html": "user-guide.html#installation",
+    "configuration.html": "user-guide.html#configuration",
+    "api.html": "api-reference.html",
+    "plugins.html": "plugin-development.html",
+    "contributing.html": "../CONTRIBUTING.md",
+    # Add more redirects as needed
+}
+
+# -- Options for sphinx-multiversion compatibility ---------------------------
+
+# Check if building with sphinx-multiversion and set dev branch warning
+try:
+    import os
+
+    smv_current = os.environ.get("SPHINX_MULTIVERSION_NAME", "")
+
+    if smv_current == "dev":
+        html_theme_options["announcement"] = (
+            "⚠️ <strong>Development Branch</strong> — "
+            "You are viewing documentation for the development version. "
+            "Features may be incomplete or subject to change. "
+            'For stable documentation, view the <a href="../main/index.html" style="color: #4CAF50; font-weight: bold;">main branch</a>.'
+        )
+    elif smv_current.startswith("v") and "-beta" in smv_current:
+        html_theme_options["announcement"] = (
+            "🧪 <strong>Beta Version</strong> — "
+            f"You are viewing documentation for {smv_current}. "
+            'For stable documentation, view the <a href="../main/index.html" style="color: #4CAF50; font-weight: bold;">main branch</a>.'
+        )
+except Exception:  # noqa: BLE001
+    pass
+
+# -- Options for inheritance diagrams ----------------------------------------
+
+# Inheritance diagram configuration
+inheritance_graph_attrs = {
+    "rankdir": "LR",
+    "size": '"8.0, 10.0"',
+    "fontsize": 14,
+    "ratio": "compress",
+}
+
+inheritance_node_attrs = {
+    "shape": "box",
+    "fontsize": 14,
+    "height": 0.75,
+    "color": '"#4CAF50"',
+    "style": '"rounded,filled"',
+    "fillcolor": '"#E8F5E9"',
+}

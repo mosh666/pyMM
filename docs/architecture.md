@@ -9,18 +9,18 @@
 
 ## 📚 Table of Contents
 
-- [Overview](#-overview)
-- [High-Level Architecture](#-high-level-architecture)
-- [Core Components](#-core-components)
-- [Data Flow](#-data-flow)
-- [Design Patterns](#-design-patterns)
-- [Technology Stack](#-technology-stack)
-- [Directory Structure](#-directory-structure)
-- [Module Dependencies](#-module-dependencies)
-- [Security Architecture](#-security-architecture)
-- [Testing Strategy](#-testing-strategy)
-- [Performance Considerations](#-performance-considerations)
-- [Extension Points](#-extension-points)
+- [Overview](#overview)
+- [High-Level Architecture](#high-level-architecture)
+- [Core Components](#core-components)
+- [Data Flow](#data-flow)
+- [Design Patterns](#design-patterns)
+- [Technology Stack](#technology-stack)
+- [Directory Structure](#directory-structure)
+- [Module Dependencies](#module-dependencies)
+- [Security Architecture](#security-architecture)
+- [Testing Strategy](#testing-strategy)
+- [Performance Considerations](#performance-considerations)
+- [Extension Points](#extension-points)
 
 ---
 
@@ -48,7 +48,7 @@ pyMediaManager (pyMM) is a **portable, Python-based media management application
 
 ## 🏛️ High-Level Architecture
 
-```mermaid
+```{mermaid}
 graph TB
     subgraph "Presentation Layer"
         UI[PySide6 UI Components]
@@ -115,6 +115,105 @@ graph TB
 | **Domain** | Business entities, validation rules | Dataclasses, Pydantic |
 | **Infrastructure** | External integrations, I/O operations | aiohttp, GitPython, WMI |
 
+### Detailed Component Dependencies
+
+```{mermaid}
+graph TB
+    subgraph "UI Layer - PySide6 + QFluentWidgets"
+        MW[MainWindow]
+        PV[ProjectView]
+        PluginV[PluginView]
+        StorageV[StorageView]
+        SettingsD[SettingsDialog]
+        ProjectW[ProjectWizard]
+    end
+
+    subgraph "Application Services"
+        PS[ProjectService]
+        CS[ConfigService]
+        LS[LoggingService]
+    end
+
+    subgraph "Plugin System"
+        PM[PluginManager]
+        PB[PluginBase]
+        STD[SystemToolDetector]
+    end
+
+    subgraph "Storage & Git"
+        SS[StorageService]
+        GS[GitService]
+        FSS[FileSystemService]
+    end
+
+    subgraph "Domain Models"
+        Project[Project Model]
+        PluginManifest[PluginManifest Model]
+        AppConfig[AppConfig Model]
+        DriveInfo[DriveInfo Model]
+    end
+
+    subgraph "External Systems"
+        WMI[WMI - Windows]
+        UDisks[UDisks2 - Linux]
+        DiskUtil[diskutil - macOS]
+        GitHub[GitHub API]
+        FileIO[File System I/O]
+        Network[HTTP Client - aiohttp]
+    end
+
+    subgraph "Configuration Files"
+        AppYAML[config/app.yaml]
+        UserYAML[storage/config/user.yaml]
+        PluginYAML[plugins/*/plugin.yaml]
+    end
+
+    MW --> PS
+    MW --> CS
+    MW --> PM
+    MW --> SS
+    MW --> LS
+
+    PV --> PS
+    PluginV --> PM
+    StorageV --> SS
+    SettingsD --> CS
+    ProjectW --> PS
+
+    PS --> GS
+    PS --> FSS
+    PS --> Project
+
+    PM --> PB
+    PM --> STD
+    PM --> PluginManifest
+    PM --> Network
+
+    CS --> AppConfig
+    CS --> AppYAML
+    CS --> UserYAML
+
+    SS --> DriveInfo
+    SS --> WMI
+    SS --> UDisks
+    SS --> DiskUtil
+
+    PB --> PluginYAML
+    PB --> Network
+    PB --> FileIO
+    PB --> GitHub
+
+    GS --> FileIO
+    FSS --> FileIO
+    LS --> FileIO
+
+    style MW fill:#4CAF50,color:#fff
+    style PS fill:#2196F3,color:#fff
+    style PM fill:#FF9800,color:#fff
+    style SS fill:#9C27B0,color:#fff
+    style CS fill:#F44336,color:#fff
+```
+
 ---
 
 ## 🧩 Core Components
@@ -161,6 +260,44 @@ class ConfigService:
 - ✅ Hierarchical config merging
 - ✅ Sensitive field redaction in logs
 - ✅ Runtime config updates with validation
+
+**Configuration Resolution Flowchart**:
+
+```{mermaid}
+flowchart TD
+    Start([Load Configuration]) --> Init[Initialize with Pydantic Defaults]
+    Init --> CheckEnv{config/app.yaml<br/>exists?}
+
+    CheckEnv -->|Yes| LoadEnv[Load Environment Config]
+    CheckEnv -->|No| CheckUser
+    LoadEnv --> MergeEnv[Deep Merge with Defaults]
+    MergeEnv --> CheckUser
+
+    CheckUser{storage_dir/<br/>config/user.yaml<br/>exists?}
+    CheckUser -->|Yes| LoadUser[Load User Config]
+    CheckUser -->|No| Validate
+    LoadUser --> MergeUser[Deep Merge with Current]
+    MergeUser --> Validate
+
+    Validate[Pydantic Validation] --> ValidCheck{Valid?}
+    ValidCheck -->|Yes| ApplyEnv[Apply Environment Variables]
+    ValidCheck -->|No| Error[Raise ValidationError]
+
+    ApplyEnv --> Redact[Redact Sensitive Fields in Logs]
+    Redact --> Done([Configuration Ready])
+
+    style Start fill:#4CAF50,color:#fff
+    style Done fill:#4CAF50,color:#fff
+    style Error fill:#f44336,color:#fff
+    style MergeEnv fill:#2196F3,color:#fff
+    style MergeUser fill:#2196F3,color:#fff
+```
+
+**Configuration Precedence** (highest to lowest):
+1. 🔴 **User config** (`storage_dir/config/user.yaml`) - Highest priority
+2. 🟡 **Environment config** (`config/app.yaml`) - Application defaults
+3. 🟢 **Pydantic defaults** - Hardcoded fallbacks
+4. 🔵 **Environment variables** - Override any value (applied after merging)
 
 ---
 
@@ -235,6 +372,146 @@ class PluginManager:
 - ✅ Async downloads with progress tracking
 - ✅ Retry logic with exponential backoff
 - ✅ GitHub release asset support
+
+**Plugin System Class Diagram**:
+
+```{mermaid}
+classDiagram
+    class PluginManager {
+        -dict~str,PluginBase~ plugins
+        -dict~str,PluginManifest~ manifests
+        -Path plugins_dir
+        -Path manifests_dir
+        +discover_plugins() int
+        +install_plugin(name, callback) bool
+        +uninstall_plugin(name) bool
+        +get_plugin(name) PluginBase
+        +list_plugins() list~PluginBase~
+        -_load_manifest(path) PluginManifest
+        -_validate_manifest(manifest) bool
+    }
+
+    class PluginBase {
+        <<abstract>>
+        +PluginManifest manifest
+        +Path install_dir
+        +download(callback) bool*
+        +extract() bool*
+        +validate_installation() bool*
+        +get_version() str*
+        +is_installed() bool
+        +get_executable_path() Path
+    }
+
+    class SimplePluginImplementation {
+        -aiohttp.ClientSession _session
+        -Path _temp_file
+        +download(callback) bool
+        +extract() bool
+        +validate_installation() bool
+        +get_version() str
+        -_verify_checksum(file) bool
+        -_retry_download(url, retries) bool
+    }
+
+    class GitHubReleasePlugin {
+        -str _repo_uri
+        -str _asset_pattern
+        +download(callback) bool
+        +_fetch_latest_release() dict
+        +_match_asset(assets) dict
+    }
+
+    class PluginManifest {
+        +str name
+        +str version
+        +str description
+        +str homepage
+        +bool mandatory
+        +bool enabled
+        +SourceConfig source
+        +CommandConfig command
+        +list~str~ dependencies
+        +validate() bool
+    }
+
+    class SourceConfig {
+        +str type
+        +str uri
+        +str asset_pattern
+        +str checksum_sha256
+        +int file_size
+    }
+
+    class CommandConfig {
+        +str path
+        +str executable
+        +bool register_to_path
+        +list~str~ args
+    }
+
+    class SystemToolDetector {
+        +detect_installed_tools() dict~str,str~
+        +is_tool_available(name) bool
+        +get_tool_version(name) str
+        -_check_path(executable) bool
+        -_parse_version(output) str
+    }
+
+    PluginManager "1" --> "*" PluginBase : manages
+    PluginManager "1" --> "*" PluginManifest : loads
+    PluginBase <|-- SimplePluginImplementation : implements
+    PluginBase <|-- GitHubReleasePlugin : implements
+    PluginBase "1" --> "1" PluginManifest : has
+    PluginManifest "1" --> "1" SourceConfig : contains
+    PluginManifest "1" --> "1" CommandConfig : contains
+    PluginManager ..> SystemToolDetector : uses
+
+    style PluginManager fill:#4CAF50,color:#fff
+    style PluginBase fill:#2196F3,color:#fff
+    style PluginManifest fill:#FF9800,color:#fff
+```
+
+**Plugin Lifecycle State Machine**:
+
+```{mermaid}
+stateDiagram-v2
+    [*] --> Discovered : discover_plugins()
+
+    Discovered --> Downloading : install_plugin()
+    Downloading --> VerifyingChecksum : download complete
+    Downloading --> Failed : network error
+
+    VerifyingChecksum --> Extracting : SHA-256 match
+    VerifyingChecksum --> Failed : checksum mismatch
+
+    Extracting --> Validating : extract complete
+    Extracting --> Failed : extraction error
+
+    Validating --> Installed : executable found + version ok
+    Validating --> Failed : validation failed
+
+    Installed --> Updating : new version available
+    Installed --> Uninstalling : uninstall_plugin()
+
+    Updating --> Downloading : fetch update
+
+    Uninstalling --> Removed : directory deleted
+    Removed --> [*]
+
+    Failed --> Discovered : retry / clear error
+    Failed --> [*] : manual intervention
+
+    note right of Installed
+        Plugin registered in PATH
+        Ready for use
+    end note
+
+    note right of Failed
+        Error logged with details
+        Cleanup performed
+    end note
+```
 
 **Plugin Manifest Schema** (`plugin.yaml`):
 
@@ -316,6 +593,131 @@ class StorageService:
 - ✅ USB vs internal drive discrimination
 - ✅ Drive health monitoring
 - ✅ Real-time removal detection
+
+**Storage Service Component Architecture**:
+
+```{mermaid}
+graph TB
+    subgraph "Client Layer"
+        UI[UI Components]
+        ProjectService[Project Service]
+    end
+
+    subgraph "Storage Service"
+        API[StorageService API]
+        Cache[Drive Cache]
+        Monitor[Change Monitor]
+    end
+
+    subgraph "Platform Abstraction"
+        Detector{Platform Detector}
+        WinImpl[Windows Implementation]
+        LinuxImpl[Linux Implementation]
+        MacImpl[macOS Implementation]
+    end
+
+    subgraph "Windows Platform - WMI Based"
+        WMI[WMI Queries]
+        LogicalDisk[Win32_LogicalDisk]
+        DiskDrive[Win32_DiskDrive]
+        DiskPartition[Win32_DiskDriveToDiskPartition]
+        USBController[Win32_USBController]
+    end
+
+    subgraph "Linux Platform - sysfs/udisks2"
+        UDisks[UDisks2 DBus]
+        Sysfs[/sys/block/]
+        Lsblk[lsblk command]
+    end
+
+    subgraph "macOS Platform - diskutil"
+        DiskUtil[diskutil command]
+        IOKit[IOKit framework]
+    end
+
+    subgraph "Data Models"
+        DriveInfo[DriveInfo]
+        DriveType[DriveType enum]
+    end
+
+    UI --> API
+    ProjectService --> API
+    API --> Cache
+    API --> Monitor
+    API --> Detector
+
+    Detector -->|Windows| WinImpl
+    Detector -->|Linux| LinuxImpl
+    Detector -->|macOS| MacImpl
+
+    WinImpl --> WMI
+    WMI --> LogicalDisk
+    WMI --> DiskDrive
+    WMI --> DiskPartition
+    WMI --> USBController
+
+    LinuxImpl --> UDisks
+    LinuxImpl --> Sysfs
+    LinuxImpl --> Lsblk
+
+    MacImpl --> DiskUtil
+    MacImpl --> IOKit
+
+    WinImpl --> DriveInfo
+    LinuxImpl --> DriveInfo
+    MacImpl --> DriveInfo
+    DriveInfo --> DriveType
+
+    style API fill:#4CAF50,color:#fff
+    style Detector fill:#2196F3,color:#fff
+    style WinImpl fill:#FF9800,color:#fff
+    style LinuxImpl fill:#FF9800,color:#fff
+    style MacImpl fill:#FF9800,color:#fff
+    style DriveInfo fill:#9C27B0,color:#fff
+```
+
+**Drive Detection Sequence (Windows)**:
+
+```{mermaid}
+sequenceDiagram
+    participant Client
+    participant SS as StorageService
+    participant WMI as WMI Interface
+    participant OS as Windows OS
+
+    Client->>SS: get_external_drives()
+    SS->>SS: Check cache (5s TTL)
+
+    alt Cache Valid
+        SS-->>Client: Return cached drives
+    else Cache Expired
+        SS->>WMI: Query Win32_LogicalDisk
+        WMI->>OS: WQL: SELECT * WHERE DriveType=2 OR DriveType=3
+        OS-->>WMI: Disk metadata
+        WMI-->>SS: Logical disk objects
+
+        loop For each disk
+            SS->>WMI: Query Win32_DiskDriveToDiskPartition
+            WMI->>OS: Get physical disk association
+            OS-->>WMI: Physical disk info
+            WMI-->>SS: Bus type (USB/SATA/NVMe)
+
+            alt USB Bus Type
+                SS->>SS: Mark as External
+            else SATA/NVMe
+                SS->>WMI: Query Win32_USBController
+                WMI->>OS: Check USB connection
+                OS-->>WMI: USB status
+                WMI-->>SS: External status
+            end
+
+            SS->>SS: Create DriveInfo object
+        end
+
+        SS->>SS: Update cache
+        SS-->>Client: Return drive list
+    end
+```
 
 ---
 
@@ -407,6 +809,130 @@ class ProjectService:
 | `video` | `raw/`, `edited/`, `exports/`, `scripts/` | FFmpeg presets |
 | `photo` | `raw/`, `processed/`, `exports/`, `archives/` | DigiKam integration |
 | `audio` | `recordings/`, `mixed/`, `masters/` | Audio plugin configs |
+
+**Project Lifecycle State Machine**:
+
+```{mermaid}
+stateDiagram-v2
+    [*] --> Creating : create_project()
+
+    Creating --> DirectorySetup : validate name
+    DirectorySetup --> TemplateApplication : mkdir success
+    TemplateApplication --> GitInit : template applied
+
+    GitInit --> MetadataCreation : Git enabled
+    DirectorySetup --> MetadataCreation : Git disabled
+
+    MetadataCreation --> Created : project.yaml saved
+    Created --> Active : first file added
+
+    Active --> Migrating : migration requested
+    Active --> GitEnabled : enable Git
+    Active --> Archived : archive()
+
+    Migrating --> Active : migration complete
+    GitEnabled --> Active : repo initialized
+
+    Archived --> Active : restore()
+    Archived --> Deleted : delete_project()
+
+    Active --> Deleted : delete_project()
+    Deleted --> [*]
+
+    note right of Created
+        Empty project
+        Metadata only
+    end note
+
+    note right of Active
+        Files exist
+        Ready for work
+    end note
+
+    note right of Archived
+        Read-only
+        Timestamp preserved
+    end note
+```
+
+**Project Service Class Relationships**:
+
+```{mermaid}
+classDiagram
+    class ProjectService {
+        -Path projects_dir
+        -GitService git_service
+        -FileSystemService fs_service
+        -dict~str,Project~ _cache
+        +create_project(name, desc, template, git) Project
+        +load_project(name) Project
+        +list_projects() list~Project~
+        +update_project(project) bool
+        +delete_project(name) bool
+        +archive_project(name) bool
+        +restore_project(name) bool
+        -_validate_project_name(name) bool
+        -_apply_template(path, template) None
+        -_save_metadata(project) None
+    }
+
+    class Project {
+        +str name
+        +str path
+        +str description
+        +datetime created_at
+        +datetime modified_at
+        +bool git_enabled
+        +bool archived
+        +dict~str,Any~ metadata
+        +validate() bool
+        +to_dict() dict
+        +from_dict(data) Project
+    }
+
+    class GitService {
+        +Logger logger
+        +init_repository(path) bool
+        +get_status(path) GitStatus
+        +commit(path, message) bool
+        +create_branch(path, name) bool
+        +is_repository(path) bool
+    }
+
+    class FileSystemService {
+        +create_directory(path) bool
+        +copy_directory(src, dst) bool
+        +delete_directory(path) bool
+        +list_directory(path) list~Path~
+        +get_directory_size(path) int
+        +watch_directory(path, callback) None
+    }
+
+    class TemplateManager {
+        -dict~str,Template~ templates
+        +get_template(name) Template
+        +apply_template(path, template) None
+        +list_templates() list~str~
+    }
+
+    class Template {
+        +str name
+        +list~str~ directories
+        +list~FileTemplate~ files
+        +dict~str,Any~ settings
+    }
+
+    ProjectService "1" --> "*" Project : manages
+    ProjectService --> GitService : uses
+    ProjectService --> FileSystemService : uses
+    ProjectService ..> TemplateManager : uses
+    TemplateManager "1" --> "*" Template : contains
+
+    style ProjectService fill:#4CAF50,color:#fff
+    style Project fill:#2196F3,color:#fff
+    style GitService fill:#FF9800,color:#fff
+    style FileSystemService fill:#FF9800,color:#fff
+```
 
 ---
 
@@ -517,7 +1043,7 @@ class LoggingService:
 
 ### Plugin Installation Flow
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant User
     participant UI as Plugin View
@@ -551,7 +1077,7 @@ sequenceDiagram
 
 ### Project Creation Flow
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant User
     participant Wizard as Project Wizard
@@ -576,6 +1102,139 @@ sequenceDiagram
     PS->>FS: Save project.yaml
     PS-->>Wizard: Project object
     Wizard-->>User: Show success + open project
+```
+
+### Application Startup Flow
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Launcher as launcher.py
+    participant MW as MainWindow
+    participant CS as ConfigService
+    participant SS as StorageService
+    participant PM as PluginManager
+    participant LS as LoggingService
+    participant PS as ProjectService
+
+    User->>Launcher: Launch application
+    Launcher->>Launcher: Detect platform (Windows/Linux/macOS)
+    Launcher->>Launcher: Resolve app_dir (portable vs installed)
+
+    Launcher->>LS: setup_logging(config, logs_dir)
+    LS->>LS: Configure Rich console handler
+    LS->>LS: Configure rotating file handler
+    LS-->>Launcher: Logging ready
+
+    Launcher->>SS: Detect external drives
+    SS->>SS: Query WMI/UDisks2/diskutil
+    SS-->>Launcher: List of external drives
+
+    alt External drive detected
+        Launcher->>CS: ConfigService(app_dir, storage_dir)
+        CS->>CS: Load config layers (default → app.yaml → user.yaml)
+        CS-->>Launcher: Merged configuration
+    else No external drive
+        Launcher->>CS: ConfigService(app_dir, None)
+        CS->>CS: Load config layers (default → app.yaml)
+        CS-->>Launcher: Configuration (non-portable mode)
+    end
+
+    Launcher->>PM: PluginManager(plugins_dir, manifests_dir)
+    PM->>PM: discover_plugins()
+    PM->>PM: Load YAML manifests
+    PM-->>Launcher: Plugins discovered
+
+    Launcher->>PS: ProjectService(projects_dir, git_service, fs_service)
+    PS->>PS: Load project cache
+    PS-->>Launcher: Projects loaded
+
+    Launcher->>MW: MainWindow(config, services)
+    MW->>MW: Initialize UI components
+    MW->>CS: subscribe(on_config_changed)
+    MW->>MW: Apply theme from config
+    MW->>MW: Restore window geometry
+    MW-->>User: Application ready
+
+    Note over User,MW: User can now:<br/>- Create projects<br/>- Install plugins<br/>- Change settings<br/>- Browse storage
+```
+
+### Complete System Interaction Flow
+
+```{mermaid}
+graph LR
+    subgraph "User Actions"
+        A1[Create Project]
+        A2[Install Plugin]
+        A3[Change Settings]
+        A4[Browse Storage]
+    end
+
+    subgraph "UI Layer"
+        MW[MainWindow]
+        ProjectW[Project Wizard]
+        PluginV[Plugin View]
+        SettingsD[Settings Dialog]
+        StorageV[Storage View]
+    end
+
+    subgraph "Service Layer"
+        PS[Project Service]
+        PM[Plugin Manager]
+        CS[Config Service]
+        SS[Storage Service]
+    end
+
+    subgraph "Infrastructure"
+        FS[File System]
+        Net[Network]
+        Git[Git]
+        Platform[Platform APIs]
+    end
+
+    subgraph "Data"
+        Config[Configuration Files]
+        Projects[Project Directories]
+        Plugins[Plugin Installations]
+        Logs[Log Files]
+    end
+
+    A1 --> ProjectW
+    A2 --> PluginV
+    A3 --> SettingsD
+    A4 --> StorageV
+
+    ProjectW --> PS
+    PluginV --> PM
+    SettingsD --> CS
+    StorageV --> SS
+
+    PS --> FS
+    PS --> Git
+    PS --> Projects
+
+    PM --> Net
+    PM --> FS
+    PM --> Plugins
+
+    CS --> FS
+    CS --> Config
+
+    SS --> Platform
+    SS --> FS
+
+    MW -.-> PS
+    MW -.-> PM
+    MW -.-> CS
+    MW -.-> SS
+
+    FS --> Logs
+
+    style MW fill:#4CAF50,color:#fff
+    style PS fill:#2196F3,color:#fff
+    style PM fill:#FF9800,color:#fff
+    style CS fill:#F44336,color:#fff
+    style SS fill:#9C27B0,color:#fff
 ```
 
 ---
@@ -641,6 +1300,43 @@ class ConfigService:
             observer(new_config)
 ```
 
+**Observer Pattern Sequence**:
+
+```{mermaid}
+sequenceDiagram
+    participant UI as Settings Dialog
+    participant CS as ConfigService
+    participant O1 as Observer: MainWindow
+    participant O2 as Observer: PluginManager
+    participant O3 as Observer: LoggingService
+
+    UI->>CS: subscribe(on_config_changed)
+    Note over UI,CS: Register callback
+
+    O1->>CS: subscribe(update_theme)
+    O2->>CS: subscribe(reload_plugins)
+    O3->>CS: subscribe(update_log_level)
+
+    Note over CS: _observers = [<br/>  on_config_changed,<br/>  update_theme,<br/>  reload_plugins,<br/>  update_log_level<br/>]
+
+    UI->>UI: User changes log level
+    UI->>CS: update_config(new_config)
+
+    CS->>CS: Validate new_config
+    CS->>CS: self.config = new_config
+
+    Note over CS: Notify all observers
+    CS->>UI: on_config_changed(new_config)
+    CS->>O1: update_theme(new_config)
+    CS->>O2: reload_plugins(new_config)
+    CS->>O3: update_log_level(new_config)
+
+    O3->>O3: Set logger level to new value
+    O3-->>CS: Acknowledged
+
+    CS-->>UI: Update complete
+```
+
 ### 4. Repository Pattern
 
 Storage service abstracts drive access:
@@ -703,7 +1399,7 @@ pyMediaManager uses a fully automated release system built on GitHub Actions and
 
 ### Release Workflow Architecture
 
-```mermaid
+```{mermaid}
 graph TD
     A[Dev Branch Push/Schedule] --> B{Check Changes}
     B -->|No Changes| C[Skip - Summary Note]
@@ -1019,7 +1715,7 @@ pyMM/
 
 ### Dependency Graph
 
-```mermaid
+```{mermaid}
 graph TD
     UI[app.ui]
     Services[app.services]

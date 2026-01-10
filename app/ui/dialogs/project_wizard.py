@@ -40,6 +40,15 @@ class ProjectWizard(QDialog):
     """
 
     def __init__(self, project_service: ProjectService, parent: "QWidget | None" = None) -> None:
+        """Initialize project creation wizard.
+
+        Args:
+            project_service: Project service for creating projects.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> wizard = ProjectWizard(project_service)
+        """
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -130,7 +139,15 @@ class ProjectWizard(QDialog):
         self.location_edit.setText(str(default_location))
 
     def _on_name_changed(self, text: str) -> None:
-        """Handle project name change."""
+        """Handle project name change and update path label.
+
+        Args:
+            text: New project name text.
+
+        Examples:
+            >>> wizard._on_name_changed('My New Project')
+            # Updates path label and validates form
+        """
         self._update_path_label()
         self._validate_form()
 

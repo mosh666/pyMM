@@ -27,6 +27,15 @@ class ProjectView(QWidget):
     project_opened = Signal(Project)  # Emitted when a project is opened
 
     def __init__(self, project_service: ProjectService, parent: QWidget | None = None) -> None:
+        """Initialize project management view.
+
+        Args:
+            project_service: Project service instance.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> view = ProjectView(project_service)
+        """
         super().__init__(parent)
         self.setObjectName("projectView")
 
@@ -166,7 +175,15 @@ class ProjectView(QWidget):
         self._refresh_projects()
 
     def _on_selection_changed(self) -> None:
-        """Handle project selection change to show/hide migration banner."""
+        """Handle project selection change and check for migrations.
+
+        Updates UI and checks if selected project has pending migrations,
+        offering to apply them if available.
+
+        Examples:
+            >>> project_view._on_selection_changed()
+            # Checks selected project for migration availability
+        """
         # Clear existing banner
         while self.migration_banner_layout.count():
             child = self.migration_banner_layout.takeAt(0)

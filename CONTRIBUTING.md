@@ -5,7 +5,8 @@ instructions for setting up your development environment, writing code, testing,
 contributions.
 
 > **See also:** [CHANGELOG.md](CHANGELOG.md) | [Architecture Guide](docs/architecture.md) |
-> [User Guide](docs/user-guide.md)
+> [User Guide](docs/user-guide.md) | [Developer Getting Started](docs/getting-started-dev.md) |
+> [Plugin Development Guide](docs/plugin-development.md)
 
 ---
 
@@ -18,11 +19,19 @@ contributions.
 5. [Release Process](#release-process)
 6. [Adding New Features](#adding-new-features)
 7. [Documentation](#documentation)
-8. [Issue Reporting](#issue-reporting)
+8. [Internationalization (i18n)](#internationalization-i18n)
+9. [Issue Reporting](#issue-reporting)
 
 ---
 
 ## Development Setup
+
+> **New Contributors:** For a comprehensive developer onboarding guide with platform-specific
+> instructions, VS Code debugging configurations, and your first contribution walkthrough,
+> see [Getting Started for Developers](docs/getting-started-dev.md).
+>
+> **Plugin Developers:** For detailed plugin development workflow including "Your First Plugin"
+> tutorial with step-by-step instructions, see [Plugin Development Guide](docs/plugin-development.md).
 
 ### Fast Track with just (Recommended)
 
@@ -1041,6 +1050,135 @@ def my_function(param1: str, param2: int) -> bool:
 - Update relevant docs with code changes
 - Add examples for new features
 - Keep docs in sync with code
+- Follow 100% docstring coverage requirement for all public APIs
+- Include detailed code examples in docstring Examples sections
+- Use `.. versionadded:: dev` or `.. versionchanged:: dev` directives for unreleased features
+
+## Internationalization (i18n)
+
+### Overview
+
+pyMediaManager documentation supports internationalization with German as the primary translation target. We welcome community-driven translations.
+
+For detailed information, see [docs/i18n-strategy.md](docs/i18n-strategy.md).
+
+### Translation Workflow
+
+#### 1. Extract Translatable Strings
+
+After updating English documentation:
+
+```bash
+just docs-gettext
+```
+
+This generates `.pot` (Portable Object Template) files in `docs/_build/gettext/`.
+
+#### 2. Update Translation Files
+
+To update German translation files:
+
+```bash
+just docs-translate
+```
+
+This updates `.po` files in `docs/locales/de/LC_MESSAGES/` with new translatable strings.
+
+#### 3. Translate Content
+
+Edit `.po` files with your favorite editor:
+
+- **Command line**: Any text editor (nano, vim, emacs)
+- **GUI**: [Poedit](https://poedit.net/) - Free cross-platform translation editor
+- **VS Code**: [Gettext extension](https://marketplace.visualstudio.com/items?itemName=mrorz.language-gettext)
+
+Example translation entry:
+
+```po
+#: ../../user-guide.md:25
+msgid "Installation"
+msgstr "Installation"
+
+#: ../../user-guide.md:27
+msgid "To install pyMediaManager, follow these steps:"
+msgstr "Um pyMediaManager zu installieren, folgen Sie diesen Schritten:"
+```
+
+#### 4. Build and Test Translations
+
+Build German documentation locally:
+
+```bash
+just docs-build-de
+```
+
+Preview at `docs/_build/html-de/index.html`.
+
+### Translation Guidelines
+
+**DO:**
+
+✅ Keep technical terms consistent (use glossary in [docs/i18n-strategy.md](docs/i18n-strategy.md))
+✅ Preserve markup and formatting (e.g., `**bold**`, `[links](url)`)
+✅ Maintain code examples exactly as-is (don't translate code)
+✅ Translate user-facing strings, keep product names (PySide6, QFluentWidgets)
+✅ Ask for clarification if meaning is unclear
+
+**DON'T:**
+
+❌ Translate URLs or file paths
+❌ Modify Markdown/reStructuredText syntax
+❌ Translate code snippets or variable names
+❌ Change formatting or indentation
+❌ Skip fuzzy entries (review and update them)
+
+### Translation Priority
+
+Focus on high-impact user-facing documentation first:
+
+1. **High Priority**: README.md, docs/index.md, docs/user-guide.md, docs/troubleshooting.md
+2. **Medium Priority**: docs/plugin-catalog.md, docs/migration-guide.md
+3. **Low Priority**: docs/architecture.md, docs/api-reference.md (developer docs)
+
+### Submitting Translations
+
+1. **Create feature branch**:
+
+   ```bash
+   git checkout -b i18n/german-update
+   ```
+
+2. **Commit translations**:
+
+   ```bash
+   git add docs/locales/de/
+   git commit -m "docs(i18n): update German translations for user guide"
+   ```
+
+3. **Push and create PR**:
+
+   ```bash
+   git push origin i18n/german-update
+   ```
+
+4. **PR description should include**:
+   - Which files were translated
+   - Translation completion percentage (if partial)
+   - Any questions or unclear terms
+   - Native speaker verification (if available)
+
+### Translation Review
+
+- PRs reviewed by native speakers when possible
+- Automated checks verify `.po` file syntax
+- CI builds translated documentation to verify rendering
+- Community feedback welcome via comments
+
+### Getting Help
+
+- **Questions**: [GitHub Discussions - i18n](https://github.com/mosh666/pyMM/discussions)
+- **Issues**: Report translation bugs or suggest improvements
+- **Strategy**: Read [docs/i18n-strategy.md](docs/i18n-strategy.md) for complete details
 
 ## Issue Reporting
 

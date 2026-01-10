@@ -256,6 +256,15 @@ def run_application(args: argparse.Namespace | None = None) -> int:
         wizard = FirstRunWizard(storage_service, optional_plugins)
 
         def on_wizard_finished(data: dict[str, Any]) -> None:
+            """Handle wizard completion and update configuration.
+
+            Args:
+                data: Wizard data including dont_show_again flag.
+
+            Examples:
+                >>> on_wizard_finished({'dont_show_again': True})
+                # Updates config and shows main window
+            """
             logger.info("First-run wizard completed: %s", data)
             # Update config to not show wizard again
             if data.get("dont_show_again"):
@@ -265,6 +274,12 @@ def run_application(args: argparse.Namespace | None = None) -> int:
             show_main_window()
 
         def on_wizard_cancelled() -> None:
+            """Handle wizard cancellation and proceed to main window.
+
+            Examples:
+                >>> on_wizard_cancelled()
+                # Shows main window even when wizard is cancelled
+            """
             logger.info("First-run wizard cancelled")
             # Still show main window
             show_main_window()

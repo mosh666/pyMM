@@ -38,6 +38,15 @@ class ProjectBrowserDialog(QDialog):
     project_selected = Signal(Project)  # Emitted when user selects to open a project
 
     def __init__(self, project_service: ProjectService, parent: "QWidget | None" = None) -> None:
+        """Initialize project browser dialog.
+
+        Args:
+            project_service: Project service for project operations.
+            parent: Parent widget (optional).
+
+        Examples:
+            >>> browser = ProjectBrowserDialog(project_service)
+        """
         super().__init__(parent)
 
         self.logger = logging.getLogger(__name__)
@@ -145,7 +154,15 @@ class ProjectBrowserDialog(QDialog):
             self.selected_project = project
 
     def _on_project_double_clicked(self, item: QListWidgetItem) -> None:
-        """Handle double-click on a project."""
+        """Handle double-click on a project item to open it.
+
+        Args:
+            item: List widget item that was double-clicked.
+
+        Examples:
+            >>> browser._on_project_double_clicked(project_item)
+            # Opens the selected project if it exists
+        """
         project = item.data(Qt.ItemDataRole.UserRole)
         if project and project.exists:
             self._open_project(project)
