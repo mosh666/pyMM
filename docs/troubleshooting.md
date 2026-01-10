@@ -228,7 +228,7 @@ pip install -e .
 
 ---
 
-(project-management)=
+(troubleshooting-project-management)=
 
 ## Project Management
 
@@ -611,7 +611,7 @@ xattr -d com.apple.quarantine /path/to/launcher.py
 
 ### Understanding Log Levels
 
-```log
+```text
 DEBUG - Detailed diagnostic information (verbose)
 INFO - Normal application events
 WARNING - Something unexpected but not critical

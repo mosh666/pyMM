@@ -85,12 +85,12 @@ repos:
 
       - id: interrogate
         name: interrogate - Docstring Coverage
-        entry: interrogate
+        entry: python -m interrogate
         language: system
         types: [python]
         args:
           - --fail-under=100
-          - --verbose=1
+          - -v
           - --ignore-init-method
           - --ignore-init-module
           - --ignore-magic

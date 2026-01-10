@@ -2360,7 +2360,7 @@ class LinuxUdevInstaller:
 ```
 
 **udev Rules Content:**
-```udev
+```ini
 # pyMediaManager USB Storage Detection Rules
 ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{DEVTYPE}=="disk", \
     TAG+="systemd", ENV{SYSTEMD_WANTS}+="pymm-usb-notify@%k.service"

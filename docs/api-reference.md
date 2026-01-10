@@ -694,8 +694,6 @@ Main content views for different sections.
    Shows available drives with capacity and portable mode indicators.
 ```
 
----
-
 ## Additional Resources
 
 ### Working Examples

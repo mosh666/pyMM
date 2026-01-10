@@ -60,7 +60,7 @@ Status codes for installation operations:
 
 **Content**:
 
-```udev
+```ini
 # pyMediaManager USB Storage Detection Rules
 # Automatically trigger pyMediaManager notifications for USB storage devices
 

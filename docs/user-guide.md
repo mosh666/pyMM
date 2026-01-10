@@ -596,7 +596,7 @@ pymm uninstall-udev-rules
 
 The installer creates `/etc/udev/rules.d/99-pymm-usb.rules` with:
 
-```udev
+```ini
 # pyMediaManager USB Storage Detection Rules
 # Detects USB storage devices and notifies pyMM
 
@@ -986,7 +986,7 @@ Project Properties: Client_Wedding_2026
 
 ---
 
-(plugin-system)=
+(user-plugin-system)=
 
 ## 🔌 Plugin System
 

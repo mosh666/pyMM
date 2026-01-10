@@ -8,8 +8,10 @@ Provides a tabbed interface for configuring:
 - Git settings (user name, email)
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -33,8 +35,10 @@ from PySide6.QtWidgets import (
 )
 
 from app.core.services.config_service import ConfigService, ExecutionPreference
-from app.plugins.plugin_base import PluginManifest
 from app.plugins.system_tool_detector import SystemToolDetector
+
+if TYPE_CHECKING:
+    from app.plugins.plugin_base import PluginManifest
 
 
 class SettingsDialog(QDialog):

@@ -3,8 +3,10 @@ First-run wizard for pyMediaManager initial setup.
 Multi-step wizard for storage detection and plugin configuration.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
@@ -20,7 +22,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.core.services.storage_service import StorageService
+if TYPE_CHECKING:
+    from app.core.services.storage_service import StorageService
 
 
 class WizardPage(QWidget):
