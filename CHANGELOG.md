@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Documentation Quality Improvements (2026-01-10)
 
+- **CI/CD Documentation Build Fixes**
+  - Fixed Sphinx build errors causing GitHub Actions failures
+  - Removed transition marker (`---`) causing ERROR in api-reference.md
+  - Fixed duplicate label warnings by renaming labels across documentation
+  - Added Python 3.12 compatibility with `from __future__ import annotations`
+  - Moved application imports to TYPE_CHECKING blocks for proper linting
+  - Replaced invalid Pygments lexers (`udev` → `ini`, `log` → `text`)
+  - Fixed pre-commit hooks for doc8 and interrogate
+  - Suppressed PySide6 autodoc warnings with proper configuration
+  - Set `QT_QPA_PLATFORM=offscreen` for headless Qt rendering
+  - Added autodoc-skip-member hook for problematic UI modules
+
 - **Documentation Build System Enhancements**
   - Resolved all 93 Sphinx documentation warnings (100% clean build)
   - Added 50+ MyST anchor labels across all major documentation files for proper cross-referencing
@@ -41,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Docstring coverage: Maintained 100% coverage (476/476 documented)
   - RST validation: 0 errors
   - Test coverage: 338 passed, 5 skipped, 61.42% coverage
+  - GitHub Actions: Documentation build passing with exit code 0
 
 #### Documentation System Refactor (2026-01-09)
 
