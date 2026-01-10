@@ -9,6 +9,7 @@ All three requested features have been successfully implemented:
 **File:** [scripts/update_readme_stats.py](update_readme_stats.py)
 
 **Features:**
+
 - Updates dynamic sections in README.md with current project statistics
 - Extracts data from:
   - `pyproject.toml` → Python versions
@@ -21,6 +22,7 @@ All three requested features have been successfully implemented:
 - Verbose logging option
 
 **Usage:**
+
 ```bash
 # Update README.md
 python scripts/update_readme_stats.py
@@ -41,16 +43,19 @@ just update-docs-dry  # Preview
 **File:** [.github/workflows/update-docs.yml](../.github/workflows/update-docs.yml)
 
 **Triggers:**
+
 1. **After semantic-release completes** (main or dev branch)
 2. **Weekly schedule** (Sundays at 3 AM UTC)
 3. **Manual workflow dispatch** (on-demand)
 
 **Jobs:**
+
 - `update-readme` → Updates README statistics and commits changes
 - `sync-changelog` → Verifies CHANGELOG.md is properly managed by semantic-release
 - `update-docs-site` → Triggers documentation site rebuild
 
 **Safety Features:**
+
 - Only runs if semantic-release succeeded
 - Uses `[skip ci]` in commit messages to prevent loops
 - Adds workflow summary with change details
@@ -63,6 +68,7 @@ just update-docs-dry  # Preview
 **Added Sections:**
 
 #### Project Statistics (Line ~48)
+
 ```markdown
 <!-- AUTO-GENERATED:STATS:START -->
 ### 📊 Project Statistics
@@ -79,6 +85,7 @@ just update-docs-dry  # Preview
 ```
 
 #### Plugin List (Line ~242)
+
 ```markdown
 <!-- AUTO-GENERATED:PLUGIN_LIST:START -->
 | Plugin | Status |
@@ -114,6 +121,7 @@ update-docs-dry:
 ### For Developers (Local)
 
 **Before committing documentation changes:**
+
 ```bash
 just update-docs-dry  # Preview what would change
 just update-docs      # Apply changes
@@ -122,6 +130,7 @@ git commit -m "docs: update project statistics"
 ```
 
 **During development:**
+
 ```bash
 # Check current stats at any time
 just update-docs-dry
@@ -130,6 +139,7 @@ just update-docs-dry
 ### For CI/CD (Automated)
 
 **The GitHub Action runs automatically:**
+
 1. After every successful release (main/dev branches)
 2. Weekly on Sundays to keep stats fresh
 3. Manual trigger via Actions tab → Update Documentation
@@ -139,16 +149,19 @@ just update-docs-dry
 ## 🔒 Safety Mechanisms
 
 ### Prevents Commit Loops
+
 - Workflow uses `[skip ci]` in commit messages
 - Pre-commit hooks NOT added by default (would cause loops)
 - Dry-run mode available for testing
 
 ### Preserves Manual Content
+
 - Only updates content between HTML markers
 - Manual prose/marketing copy remains untouched
 - CHANGELOG.md left to semantic-release
 
 ### Version Control Friendly
+
 - Clear commit messages with change details
 - Attributed to `github-actions[bot]`
 - No merge conflict risk (targets specific sections)
@@ -156,7 +169,7 @@ just update-docs-dry
 ## 📊 What Gets Auto-Updated
 
 | Section | Data Source | Update Frequency |
-|---------|-------------|------------------|
+| ------- | ----------- | ---------------- |
 | Python Versions | `pyproject.toml` classifiers | When versions change |
 | Plugin Count | `plugins/` directories | When plugins added/removed |
 | Plugin List | `plugins/` with manifest detection | When plugins change |
@@ -167,7 +180,9 @@ just update-docs-dry
 ## 🚀 Next Steps
 
 ### Immediate
+
 1. **Test the script locally:**
+
    ```bash
    just update-docs-dry
    ```
@@ -175,6 +190,7 @@ just update-docs-dry
 2. **Review the changes** in README.md
 
 3. **Commit when ready:**
+
    ```bash
    git add .
    git commit -m "feat: add documentation auto-update system"
@@ -204,6 +220,7 @@ just update-docs-dry
 ## 🎉 Summary
 
 You now have a complete documentation auto-update system that:
+
 - ✅ Updates README.md statistics automatically
 - ✅ Runs after releases via GitHub Actions
 - ✅ Provides manual control via `just update-docs`

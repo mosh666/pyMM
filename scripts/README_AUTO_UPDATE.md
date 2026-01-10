@@ -4,7 +4,9 @@ This directory contains scripts for automatically updating documentation with cu
 
 ## Overview
 
-The documentation auto-update system keeps README.md and other documentation files synchronized with the current state of the codebase. It uses HTML comment markers to identify sections that can be safely auto-generated.
+The documentation auto-update system keeps README.md and other documentation files synchronized with the
+current state of the codebase. It uses HTML comment markers to identify sections that can be safely
+auto-generated.
 
 ## Components
 
@@ -17,6 +19,7 @@ Python script that updates dynamic sections in README.md:
 - **Lines of code** metrics
 
 **Usage:**
+
 ```bash
 # Update README.md
 python scripts/update_readme_stats.py
@@ -29,6 +32,7 @@ python scripts/update_readme_stats.py --verbose
 ```
 
 **Just commands:**
+
 ```bash
 # Update documentation
 just update-docs
@@ -46,6 +50,7 @@ Automated workflow that runs in three scenarios:
 3. **Manual Trigger** - Via workflow dispatch
 
 The workflow:
+
 - Updates README.md statistics
 - Verifies CHANGELOG.md is synced (handled by semantic-release)
 - Triggers documentation site rebuild
@@ -70,6 +75,7 @@ Sections in README.md are wrapped with markers for safe auto-updates:
 To add a new auto-generated section:
 
 1. **Add marker to README.md:**
+
    ```markdown
    <!-- AUTO-GENERATED:MY_SECTION:START -->
    (initial content - will be replaced)
@@ -77,6 +83,7 @@ To add a new auto-generated section:
    ```
 
 2. **Update `scripts/update_readme_stats.py`:**
+
    ```python
    def generate_my_section() -> str:
        """Generate content for my section."""
@@ -91,6 +98,7 @@ To add a new auto-generated section:
    ```
 
 3. **Test locally:**
+
    ```bash
    just update-docs-dry
    ```
@@ -151,6 +159,7 @@ For validation before pushing, add to `.pre-commit-config.yaml`:
 ### Updating Statistics Sources
 
 The script reads from:
+
 - `pyproject.toml` - Python versions, dependencies
 - `plugins/` - Plugin directories and manifests
 - `tests/` - Test files
@@ -161,11 +170,13 @@ If these locations change, update the corresponding functions in `update_readme_
 ### Debugging
 
 Enable verbose mode to see what's being updated:
+
 ```bash
 python scripts/update_readme_stats.py --verbose
 ```
 
 Check GitHub Actions logs:
+
 - Go to Actions → Update Documentation
 - View run details for commit messages and summaries
 

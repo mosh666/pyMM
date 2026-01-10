@@ -3,6 +3,7 @@
 ## 🎯 What Was Implemented
 
 ✅ **3 Solutions Complete:**
+
 1. Python script for manual README updates
 2. GitHub Action for automated post-release updates
 3. Dynamic sections in README.md with HTML markers
@@ -48,7 +49,7 @@ git commit -m "feat: add documentation auto-update system
 ## 📋 New Files Created
 
 | File | Purpose |
-|------|---------|
+| ---- | ------- |
 | `scripts/update_readme_stats.py` | Main update script |
 | `.github/workflows/update-docs.yml` | Automated workflow |
 | `scripts/README_AUTO_UPDATE.md` | Detailed documentation |
@@ -60,7 +61,7 @@ git commit -m "feat: add documentation auto-update system
 ## 🔄 Modified Files
 
 | File | Changes |
-|------|---------|
+| ---- | ------- |
 | `README.md` | Added 2 auto-generated sections with HTML markers |
 | `justfile` | Added `update-docs` and `update-docs-dry` commands |
 
@@ -71,11 +72,13 @@ git commit -m "feat: add documentation auto-update system
 **Workflow:** `.github/workflows/update-docs.yml`
 
 **Triggers:**
+
 - ✅ After semantic-release (main/dev)
 - ✅ Weekly (Sundays 3 AM UTC)
 - ✅ Manual dispatch
 
 **What It Does:**
+
 1. Updates README statistics
 2. Commits with `[skip ci]` to prevent loops
 3. Verifies CHANGELOG.md sync
@@ -127,16 +130,19 @@ python scripts/update_readme_stats.py --help
 ## 🛡️ Safety Features
 
 ✅ **No Commit Loops**
+
 - Workflow uses `[skip ci]`
 - Only updates between HTML markers
 - No pre-commit hook (you control when to run)
 
 ✅ **Preserves Manual Content**
+
 - Only touches marked sections
 - Marketing copy untouched
 - CHANGELOG.md left to semantic-release
 
 ✅ **Safe Testing**
+
 - Dry-run mode previews changes
 - No writes without confirmation
 - Git-friendly output
@@ -175,7 +181,7 @@ git commit -m "feat: add new feature with updated docs"
 
 ### CI/CD (Automated)
 
-```
+```text
 Push to dev → Semantic Release → Update-Docs Workflow
                 ↓                        ↓
         Creates v0.5.0-beta.1    Updates README stats
@@ -196,28 +202,33 @@ Push to dev → Semantic Release → Update-Docs Workflow
 ## 🐛 Troubleshooting
 
 **Script fails to find files:**
+
 - Ensure you're running from project root (`D:\pyMM`)
 - Check `PROJECT_ROOT` in script points to correct location
 
 **Workflow doesn't trigger:**
+
 - Check semantic-release completed successfully
 - Verify workflow file is on correct branch
 - Look at Actions tab for error messages
 
 **Wrong statistics shown:**
+
 - Run tests first: `just test-cov` (generates coverage data)
 - Ensure htmlcov/index.html exists
 - Check pyproject.toml classifiers are current
 
 **Git commit loop:**
+
 - Verify `[skip ci]` is in commit message
 - Check workflow only triggers on main/dev branches
 - Don't add pre-commit hook without careful testing
 
 ---
 
-## 🎉 You're All Set!
+## 🎉 You're All Set
 
-The documentation auto-update system is now fully operational. Test it locally, review the changes, and commit when ready. The GitHub Action will take care of future updates automatically after releases.
+The documentation auto-update system is now fully operational. Test it locally, review the changes, and commit
+when ready. The GitHub Action will take care of future updates automatically after releases.
 
 **Questions?** See the detailed documentation in `scripts/README_AUTO_UPDATE.md`
