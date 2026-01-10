@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Migrated from sphinx_rtd_theme to modern Furo theme with light/dark mode support
   - Deployed dual-branch GitHub Pages: main (stable) + dev (latest) with sphinx-multiversion
   - Added 17 Sphinx extensions: autodoc, napoleon, mermaid, sphinx-design, sphinx-tabs, sphinx-copybutton, etc.
-  - Implemented i18n readiness with sphinx.ext.intl and locale_dirs configuration
   - Added version selector sidebar widget and landing page with branch/tag navigation
   - Configured Edit on GitHub links for all documentation pages
 

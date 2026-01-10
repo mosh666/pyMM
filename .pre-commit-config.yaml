@@ -81,7 +81,6 @@ repos:
         args:
           - --max-line-length=100
           - --ignore-path=docs/_build
-          - --ignore-path=docs/locales
           - --quiet
 
       - id: interrogate

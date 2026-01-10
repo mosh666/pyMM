@@ -60,7 +60,7 @@ jobs:
       - name: Lint markdown files
         run: |
           echo "📝 Linting markdown files..."
-          doc8 docs/ --max-line-length 100 --ignore-path docs/_build --ignore-path docs/locales
+          doc8 docs/ --max-line-length 100 --ignore-path docs/_build
 
       - name: Build docs with warnings as errors
         run: |

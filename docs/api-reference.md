@@ -818,9 +818,6 @@ Generate API documentation locally:
 # Build all documentation
 just docs
 
-# Build with specific language
-just docs-build-de
-
 # Check for broken links
 just docs-linkcheck
 

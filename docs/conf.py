@@ -87,12 +87,6 @@ myst_enable_extensions = [
 # The master toctree document
 master_doc = "index"
 
-# -- i18n configuration ------------------------------------------------------
-
-locale_dirs = ["locales/"]
-gettext_compact = False
-language = "en"
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages

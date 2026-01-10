@@ -235,16 +235,6 @@ mypy app/ --strict
 
 ---
 
-## 🌍 Internationalization
-
-<!-- If applicable, address i18n concerns -->
-
-- [ ] No user-facing strings added
-- [ ] User-facing strings added to translation files
-- [ ] UI text follows Microsoft Fluent Design guidelines
-
----
-
 ## ♿ Accessibility
 
 <!-- If UI changes, address accessibility -->

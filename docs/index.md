@@ -51,7 +51,6 @@ maxdepth: 1
 caption: Additional Resources
 hidden: true
 ---
-i18n-strategy
 plugin-preferences
 examples/config/README
 examples/platform/README
