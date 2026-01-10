@@ -1,11 +1,15 @@
 """Sphinx configuration file for pyMediaManager documentation."""
 
 from datetime import UTC, datetime
+import os
 from pathlib import Path
 import sys
 
 # Add project root to Python path for autodoc
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+# Set environment variable to prevent PySide6 import issues during doc build
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 # -- Project information -----------------------------------------------------
 project = "pyMediaManager"
@@ -68,6 +72,12 @@ smv_prefer_remote_refs = True
 
 # List of patterns, relative to source directory, to ignore when looking for source files
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+# Suppress warnings for autodoc import failures (PySide6 introspection issues)
+suppress_warnings = [
+    "autodoc",
+    "autodoc.import_object",
+]
 
 # The suffix(es) of source filenames
 source_suffix = {
@@ -320,3 +330,28 @@ inheritance_node_attrs = {
     "style": '"rounded,filled"',
     "fillcolor": '"#E8F5E9"',
 }
+
+
+# Setup function to configure autodoc behavior
+def setup(app):
+    """Configure Sphinx application."""
+
+    # Skip autodoc for modules that have PySide6 import issues
+    def skip_pyside_imports(_app, what, _name, obj, skip, _options):
+        """Skip autodoc for classes/modules with PySide6 import issues."""
+        # Skip UI components that fail to import
+        if what in ("class", "module"):
+            problematic_modules = [
+                "app.ui.components.first_run_wizard",
+                "app.ui.views.plugin_view",
+                "app.ui.views.project_view",
+                "app.ui.views.storage_view",
+                "app.ui.main_window",
+                "app.ui.dialogs",
+            ]
+            module_name = getattr(obj, "__module__", "")
+            if any(mod in module_name for mod in problematic_modules):
+                return True
+        return skip
+
+    app.connect("autodoc-skip-member", skip_pyside_imports)
