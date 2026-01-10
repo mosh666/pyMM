@@ -312,8 +312,6 @@ major_on_zero = false
 tag_format = "v{version}"
 build_command = "pip install build && python -m build"
 # Disable version stamping - rely on setuptools_scm for dynamic versioning from git tags
-version_toml = []
-version_variables = []
 
 [tool.semantic_release.branches.main]
 match = "main"
