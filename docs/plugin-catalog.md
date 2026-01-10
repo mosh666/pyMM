@@ -7,12 +7,14 @@ verification for security.
 
 ## Table of Contents
 
-- [Official Plugins](official-plugins)
-- [Plugin Installation](plugin-installation)
-- [Plugin Management](plugin-management)
-- [Creating Custom Plugins](creating-custom-plugins)
+- [Official Plugins](#official-plugins)
+- [Plugin Installation](#plugin-installation)
+- [Plugin Management](#plugin-management)
+- [Creating Custom Plugins](#creating-custom-plugins)
 
 ---
+
+(official-plugins)=
 
 ## Official Plugins
 
@@ -290,6 +292,8 @@ verification for security.
 
 ---
 
+(plugin-installation)=
+
 ## Plugin Installation
 
 ### Automatic Installation
@@ -325,6 +329,8 @@ Some plugins can download portable versions:
 **Security:** All downloads verified with SHA-256 checksums defined in plugin manifests.
 
 ---
+
+(plugin-management)=
 
 ## Plugin Management
 
@@ -389,6 +395,8 @@ Change priority in Settings → Plugins → [Plugin Name] → Preferences
 
 ---
 
+(creating-custom-plugins)=
+
 ## Creating Custom Plugins
 
 Want to add your own tools? See [Plugin Development Guide](plugin-development.md) for:
@@ -418,7 +426,7 @@ All official plugins support **Windows 10+, Linux (Ubuntu 20.04+), macOS 11+**
 
 ## Troubleshooting Plugins
 
-Common issues and solutions in [Troubleshooting Guide](troubleshooting.md#plugin-issues):
+Common issues and solutions:
 
 - Plugin not detected
 - Download failures

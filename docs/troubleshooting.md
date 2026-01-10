@@ -6,18 +6,20 @@ This guide covers common issues, error messages, and solutions for pyMediaManage
 
 ## Table of Contents
 
-- [Installation Issues](installation-issues)
-- [Startup Problems](startup-problems)
-- [Plugin Issues](plugin-issues)
-- [Project Management](project-management)
-- [Git Integration](git-integration)
-- [UI and Display Issues](ui-and-display-issues)
-- [Performance Problems](performance-problems)
-- [Platform-Specific Issues](platform-specific-issues)
-- [Log File Analysis](log-file-analysis)
-- [Getting Additional Help](getting-additional-help)
+- [Installation Issues](#installation-issues)
+- [Startup Problems](#startup-problems)
+- [Plugin Issues](#plugin-issues)
+- [Project Management](#project-management)
+- [Git Integration](#git-integration)
+- [UI and Display Issues](#ui-and-display-issues)
+- [Performance Problems](#performance-problems)
+- [Platform-Specific Issues](#platform-specific-issues)
+- [Log File Analysis](#log-file-analysis)
+- [Getting Additional Help](#getting-additional-help)
 
 ---
+
+(installation-issues)=
 
 ## Installation Issues
 
@@ -82,6 +84,8 @@ pip install -e .
 ```
 
 ---
+
+(startup-problems)=
 
 ## Startup Problems
 
@@ -155,6 +159,8 @@ pip install -e .
 
 ---
 
+(plugin-issues)=
+
 ## Plugin Issues
 
 ### Plugin Not Detected
@@ -222,6 +228,8 @@ pip install -e .
 
 ---
 
+(project-management)=
+
 ## Project Management
 
 ### Cannot Create Project
@@ -286,6 +294,8 @@ pip install -e .
    - Apply migration
 
 ---
+
+(git-integration)=
 
 ## Git Integration
 
@@ -360,6 +370,8 @@ pip install -e .
 
 ---
 
+(ui-and-display-issues)=
+
 ## UI and Display Issues
 
 ### Blurry Text (Windows)
@@ -412,6 +424,8 @@ pip install -e .
    - Reset window position: Settings → Reset Window Layout
 
 ---
+
+(performance-problems)=
 
 ## Performance Problems
 
@@ -482,6 +496,8 @@ pip install -e .
    ```
 
 ---
+
+(platform-specific-issues)=
 
 ## Platform-Specific Issues
 
@@ -579,6 +595,8 @@ xattr -d com.apple.quarantine /path/to/launcher.py
 
 ---
 
+(log-file-analysis)=
+
 ## Log File Analysis
 
 ### Finding Logs
@@ -641,15 +659,16 @@ python -m app --log-level DEBUG
 
 ---
 
+(getting-additional-help)=
+
 ## Getting Additional Help
 
 ### Before Asking for Help
 
 1. ✅ Check this troubleshooting guide
 2. ✅ Search [existing issues](https://github.com/mosh666/pyMM/issues)
-3. ✅ Search [discussions](https://github.com/mosh666/pyMM/discussions)
-4. ✅ Review [user guide](user-guide.md) and [documentation](../README.md)
-5. ✅ Collect diagnostic information (see below)
+3. ✅ Review [user guide](user-guide.md) and [documentation](https://github.com/mosh666/pyMM/blob/main/README.md)
+4. ✅ Collect diagnostic information (see below)
 
 ### Diagnostic Information to Provide
 
@@ -874,9 +893,8 @@ Repository settings must allow GitHub Actions to:
 
 - **🐛 Bug Reports:** [GitHub Issues](https://github.com/mosh666/pyMM/issues/new?template=bug_report.yml)
 - **💡 Feature Requests:** [GitHub Issues](https://github.com/mosh666/pyMM/issues/new?template=feature_request.yml)
-- **❓ Questions:** [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
 - **📖 Documentation:** [User Guide](user-guide.md), [Architecture](architecture.md)
-- **🔒 Security Issues:** See [Security Policy](../SECURITY.md)
+- **🔒 Security Issues:** See [Security Policy](https://github.com/mosh666/pyMM/blob/main/.github/SECURITY.md)
 
 ---
 

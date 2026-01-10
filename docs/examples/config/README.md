@@ -33,6 +33,6 @@ pyMM uses a layered configuration system with YAML files, supporting defaults, u
 
 ## See Also
 
-- [User Guide - Configuration](../../user-guide.md#configuration)
-- [API Reference - ConfigService](../../api-reference.md#configservice)
-- [Platform Directories](../../platform-directories.md)
+- {ref}`configuration` - User Guide Configuration Section
+- {ref}`configservice` - API Reference ConfigService
+- {doc}`../../platform-directories`

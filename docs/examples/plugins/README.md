@@ -34,6 +34,6 @@ functionality for different media management tools (Git, digiKam, etc.).
 
 ## See Also
 
-- [Plugin Development Guide](../../plugin-development.md)
-- [Plugin Catalog](../../plugin-catalog.md)
-- [API Reference - PluginManager](../../api-reference.md#pluginmanager)
+- {doc}`../../plugin-development`
+- {doc}`../../plugin-catalog`
+- {ref}`pluginmanager` - API Reference PluginManager

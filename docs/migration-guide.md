@@ -6,14 +6,16 @@ This guide helps you migrate between different versions of pyMediaManager and up
 
 ## Table of Contents
 
-- [Version Migrations](version-migrations)
-- [Template Migrations](template-migrations)
-- [Configuration Changes](configuration-changes)
-- [Plugin Updates](plugin-updates)
-- [Platform Migrations](platform-migrations)
-- [Rollback Procedures](rollback-procedures)
+- [Version Migrations](#version-migrations)
+- [Template Migrations](#template-migrations)
+- [Configuration Changes](#configuration-changes)
+- [Plugin Updates](#plugin-updates)
+- [Platform Migrations](#platform-migrations)
+- [Rollback Procedures](#rollback-procedures)
 
 ---
+
+(version-migrations)=
 
 ## Version Migrations
 
@@ -90,6 +92,8 @@ This guide helps you migrate between different versions of pyMediaManager and up
 - Automated GitHub workflows
 
 ---
+
+(template-migrations)=
 
 ## Template Migrations
 
@@ -168,6 +172,8 @@ If the migration tool doesn't support your scenario:
    - Check that files are accessible
 
 ---
+
+(configuration-changes)=
 
 ## Configuration Changes
 
@@ -251,6 +257,8 @@ with open('config/user.yaml', 'w') as f:
 
 ---
 
+(plugin-updates)=
+
 ## Plugin Updates
 
 ### Plugin System Changes (v1.0)
@@ -311,6 +319,8 @@ All bundled plugins have been converted:
 - ✅ MKVToolNix → `plugins/mkvtoolnix/plugin.yaml`
 
 ---
+
+(platform-migrations)=
 
 ## Platform Migrations
 
@@ -420,6 +430,8 @@ All bundled plugins have been converted:
 
 ---
 
+(rollback-procedures)=
+
 ## Rollback Procedures
 
 ### Rolling Back to Previous Version
@@ -516,7 +528,6 @@ After any migration:
 
 ## Getting Help with Migrations
 
-- **Questions:** [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
 - **Issues:** [GitHub Issues](https://github.com/mosh666/pyMM/issues)
 - **Documentation:** [User Guide](user-guide.md), [Troubleshooting](troubleshooting.md)
 

@@ -33,6 +33,6 @@ pyMM provides platform abstraction utilities to handle Windows, Linux, and macOS
 
 ## See Also
 
-- [Architecture - Platform Abstraction](../../architecture.md#platform-abstraction)
-- [API Reference - Platform Module](../../api-reference.md#platform)
-- [Platform Directories](../../platform-directories.md)
+- {doc}`../../architecture` - Platform Abstraction Section
+- {ref}`platform-abstraction` - API Reference Platform Module
+- {doc}`../../platform-directories`

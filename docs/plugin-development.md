@@ -19,10 +19,12 @@
 - [Testing Plugins](#testing-plugins)
 - [Publishing Plugins](#publishing-plugins)
 - [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+- [Troubleshooting](troubleshooting.md)
 - [API Reference](#api-reference)
 
 ---
+
+(overview)=
 
 ## 🎯 Overview
 
@@ -43,6 +45,8 @@ pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows exter
 ✅ **Validation**: Strict Pydantic schema validation
 
 ---
+
+(quick-start)=
 
 ## 🚀 Quick Start
 
@@ -90,6 +94,8 @@ pyMediaManager (pyMM) uses a **manifest-driven plugin system** that allows exter
 
 ---
 
+(plugin-architecture)=
+
 ## 🏗️ Plugin Architecture
 
 ### Manifest-Driven Approach
@@ -124,6 +130,8 @@ graph LR
 4. **Fail-Fast Validation**: Strict schema enforcement
 
 ---
+
+(yaml-manifest-schema)=
 
 ## 📋 YAML Manifest Schema
 
@@ -177,6 +185,8 @@ dependencies:
 | `dependencies` | `list[str]` | ❌ | List of plugin names |
 
 ---
+
+(plugin-types)=
 
 ## 🎨 Plugin Types
 
@@ -304,6 +314,8 @@ dependencies:
 - Installation order: dependencies → dependent plugin
 
 ---
+
+(creating-your-first-plugin)=
 
 ## 🛠️ Creating Your First Plugin
 
@@ -446,6 +458,8 @@ if __name__ == "__main__":
 ```
 
 ---
+
+(advanced-configuration)=
 
 ## ⚙️ Advanced Configuration
 
@@ -1190,6 +1204,8 @@ Congratulations! You've successfully created and submitted your first plugin!
 
 ---
 
+(testing-plugins)=
+
 ## 🧪 Testing Plugins
 
 ### Unit Testing
@@ -1334,6 +1350,8 @@ async def test_full_plugin_lifecycle(tmp_path: Path):
 
 ---
 
+(publishing-plugins)=
+
 ## 📤 Publishing Plugins
 
 ### Official Plugin Repository
@@ -1425,6 +1443,8 @@ For unofficial/experimental plugins:
    - Maintain CHANGELOG.md
 
 ---
+
+(best-practices)=
 
 ## ✅ Best Practices
 
@@ -2240,7 +2260,7 @@ class PluginManager:
 
 - [Architecture Documentation](architecture.md)
 - [User Guide](user-guide.md)
-- [Contributing Guidelines](../CONTRIBUTING.md)
+- [Contributing Guidelines](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md)
 
 ### External References
 
@@ -2263,12 +2283,11 @@ Study official plugin manifests:
 ### Getting Help
 
 - **GitHub Issues**: https://github.com/mosh666/pyMM/issues
-- **Discussions**: https://github.com/mosh666/pyMM/discussions
 - **Email**: 24556349+mosh666@users.noreply.github.com
 
 ### Contributing
 
-We welcome plugin contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
+We welcome plugin contributions! See [CONTRIBUTING.md](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md) for:
 
 - Code of Conduct
 - Development setup

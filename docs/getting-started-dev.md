@@ -20,7 +20,7 @@
 - [Code Style Guide](#code-style-guide)
 - [Documentation](#documentation)
 - [Common Tasks](#common-tasks)
-- [Troubleshooting](#troubleshooting)
+- [Troubleshooting](#dev-troubleshooting)
 
 ---
 
@@ -47,6 +47,8 @@ Welcome to the pyMediaManager development team! This guide will help you set up 
 - 🌍 **Cross-Platform**: Windows, Linux, macOS support required
 
 ---
+
+(prerequisites)=
 
 ## 📋 Prerequisites
 
@@ -89,6 +91,8 @@ Welcome to the pyMediaManager development team! This guide will help you set up 
 - ⚠️ Qt/QML knowledge helpful but not required
 
 ---
+
+(environment-setup)=
 
 ## 🛠️ Environment Setup
 
@@ -303,6 +307,8 @@ just type-check
 
 ---
 
+(development-workflow)=
+
 ## 🔄 Development Workflow
 
 ### Daily Development Cycle
@@ -452,6 +458,8 @@ Closes #123"
 ```
 
 ---
+
+(first-contribution)=
 
 ## 🎯 First Contribution
 
@@ -628,6 +636,8 @@ Closes #45" \
 
 ---
 
+(debugging-guide)=
+
 ## 🐛 Debugging Guide
 
 ### VS Code Configuration
@@ -784,6 +794,8 @@ await pm.install_plugin("Git")
 
 ---
 
+(testing-guide)=
+
 ## 🧪 Testing Guide
 
 ### Running Tests
@@ -856,6 +868,8 @@ async def test_async_method(example_service: ExampleService) -> None:
 - 📊 **Current Coverage**: 73% (193 tests)
 
 ---
+
+(code-style-guide)=
 
 ## 📝 Code Style Guide
 
@@ -959,6 +973,8 @@ def example_function(param1: str, param2: int = 0) -> bool:
 
 ---
 
+(documentation)=
+
 ## 📚 Documentation
 
 ### Building Documentation Locally
@@ -989,6 +1005,8 @@ sphinx-build -b spelling docs docs/_build/spelling
 - Use **sphinx-tabs** for platform-specific content
 
 ---
+
+(common-tasks)=
 
 ## 🛠️ Common Tasks
 
@@ -1038,6 +1056,8 @@ just format
 
 ---
 
+(dev-troubleshooting)=
+
 ## 🔧 Troubleshooting
 
 ### Common Issues
@@ -1078,7 +1098,6 @@ export QT_DEBUG_PLUGINS=1
 
 ### Getting Help
 
-- 💬 **GitHub Discussions**: Ask questions, share ideas
 - 🐛 **GitHub Issues**: Report bugs, request features
 - 📧 **Email**: <mosh666@github.com>
 - 📖 **Documentation**: <https://mosh666.github.io/pyMM>
@@ -1094,14 +1113,14 @@ Congratulations! You're now ready to contribute to pyMediaManager.
 1. ✅ Complete environment setup (you are here!)
 2. 📖 Read [Architecture Documentation](architecture.md)
 3. 🔌 Explore [Plugin Development Guide](plugin-development.md)
-4. 🧪 Review [Testing Strategy](architecture.md#testing-strategy)
+4. 🧪 Review {ref}`testing-strategy`
 5. 🎯 Pick your first issue and start coding!
 
 **Resources:**
 
 - [API Reference](api-reference.md)
 - [User Guide](user-guide.md)
-- [Contributing Guidelines](../CONTRIBUTING.md)
-- [Code of Conduct](../CODE_OF_CONDUCT.md)
+- [Contributing Guidelines](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/mosh666/pyMM/blob/main/.github/CODE_OF_CONDUCT.md)
 
 Happy coding! 🚀

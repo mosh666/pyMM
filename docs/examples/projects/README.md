@@ -34,5 +34,5 @@ has a name, path, template, and associated plugins.
 
 ## See Also
 
-- [User Guide - Projects](../../user-guide.md#projects)
-- [API Reference - ProjectService](../../api-reference.md#projectservice)
+- {ref}`project-management` - User Guide Project Management
+- {ref}`projectservice` - API Reference ProjectService

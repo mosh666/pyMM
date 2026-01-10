@@ -20,7 +20,7 @@ install:
     {{python}} -m pip install -e ".[dev]"
 
 # Run full quality check (lint, type-check, test)
-check: format-all lint lint-md type-check check-docstrings check-docs test
+check: format-all lint lint-md type-check docs-linkcheck docs-spelling check-docstrings check-docs test
 
 # =============================================================================
 # Testing Recipes

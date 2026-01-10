@@ -122,6 +122,7 @@ The plugin system provides extensible functionality through manifest-based plugi
 ::::
 
 (plugin-manager-api)=
+(pluginmanager)=
 
 ### PluginManager
 
@@ -248,6 +249,7 @@ Cross-platform system tool detection and validation.
 Business logic services providing core application functionality.
 
 (project-service-api)=
+(projectservice)=
 
 ### ProjectService
 
@@ -301,6 +303,7 @@ Manages project creation, discovery, and template migrations.
 ```
 
 (configuration-service-api)=
+(configservice)=
 
 ### ConfigService
 
@@ -353,6 +356,7 @@ Layered configuration management with Pydantic validation.
 ```
 
 (storage-service-api)=
+(storageservice)=
 
 ### StorageService
 
@@ -524,6 +528,7 @@ Pydantic models for data validation and serialization.
 ```
 
 (platform-specific-modules)=
+(platform-abstraction)=
 
 ## Platform-Specific Modules
 

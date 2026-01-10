@@ -104,7 +104,7 @@ For detailed API documentation, see:
 
 ## Contributing Examples
 
-We welcome contributions! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md) for guidelines.
 
 Good examples are:
 

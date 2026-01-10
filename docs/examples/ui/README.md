@@ -33,7 +33,7 @@ pyMM uses PySide6 with QFluentWidgets for a modern Fluent Design interface.
 
 ## See Also
 
-- [API Reference - UI Components](../../api-reference.md#ui)
+- {ref}`user-interface` - API Reference UI Components
 - [QFluentWidgets Documentation](https://qfluentwidgets.com)
 
 **Note**: UI examples require a display environment and cannot run headless.

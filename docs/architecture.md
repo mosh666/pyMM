@@ -24,6 +24,8 @@
 
 ---
 
+(overview)=
+
 ## 🎯 Overview
 
 pyMediaManager (pyMM) is a **portable, Python-based media management application** designed to run entirely from external drives (USB, portable HDDs) without requiring system installation. The architecture emphasizes:
@@ -45,6 +47,8 @@ pyMediaManager (pyMM) is a **portable, Python-based media management application
 6. **Fail-Fast**: Early validation with Pydantic models
 
 ---
+
+(high-level-architecture)=
 
 ## 🏛️ High-Level Architecture
 
@@ -215,6 +219,8 @@ graph TB
 ```
 
 ---
+
+(core-components)=
 
 ## 🧩 Core Components
 
@@ -1039,6 +1045,8 @@ class LoggingService:
 
 ---
 
+(data-flow)=
+
 ## 🌊 Data Flow
 
 ### Plugin Installation Flow
@@ -1239,6 +1247,8 @@ graph LR
 
 ---
 
+(design-patterns)=
+
 ## 🎨 Design Patterns
 
 ### 1. Dependency Injection
@@ -1359,6 +1369,8 @@ class StorageService:
 ```
 
 ---
+
+(technology-stack)=
 
 ## 🛠️ Technology Stack
 
@@ -1590,7 +1602,7 @@ just release-preview
 3. Enable "force" checkbox
 4. Click "Run workflow"
 
-**Troubleshooting:** See [Troubleshooting Guide](troubleshooting.md#release-automation-issues)
+**Troubleshooting:** See [Troubleshooting Guide](troubleshooting.md)
 
 ---
 
@@ -1623,6 +1635,8 @@ class DriveInfo:
 ```
 
 ---
+
+(directory-structure)=
 
 ## 📁 Directory Structure
 
@@ -1711,6 +1725,8 @@ pyMM/
 
 ---
 
+(module-dependencies)=
+
 ## 🔗 Module Dependencies
 
 ### Dependency Graph
@@ -1778,6 +1794,8 @@ def main():
 ```
 
 ---
+
+(security-architecture)=
 
 ## 🔒 Security Architecture
 
@@ -1850,6 +1868,8 @@ def main():
    - Badge: [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/mosh666/pyMM/badge)](https://securityscorecards.dev/viewer/?uri=github.com/mosh666/pyMM)
 
 ---
+
+(testing-strategy)=
 
 ## 🧪 Testing Strategy
 
@@ -2018,6 +2038,8 @@ jobs:
 
 ---
 
+(performance-considerations)=
+
 ## ⚡ Performance Considerations
 
 ### Optimization Strategies
@@ -2068,6 +2090,8 @@ jobs:
 | Plugin Download | ~10s | 50MB over 10Mbps |
 
 ---
+
+(extension-points)=
 
 ## 🔌 Extension Points
 

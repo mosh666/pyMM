@@ -22,6 +22,8 @@
 
 ---
 
+(introduction)=
+
 ## 🎯 Introduction
 
 **pyMediaManager (pyMM)** is a portable, Python-based media management application designed for photographers, videographers, and digital content creators who need a flexible, portable solution for managing media projects across multiple storage devices.
@@ -44,6 +46,8 @@
 - **Education**: Portable labs for teaching media management workflows
 
 ---
+
+(system-requirements)=
 
 ## 💻 System Requirements
 
@@ -84,6 +88,8 @@
 - Improved Windows-specific optimizations
 
 ---
+
+(installation)=
 
 ## 📦 Installation
 
@@ -463,6 +469,8 @@ For contributors and developers:
 
 ---
 
+(first-run-setup)=
+
 ## 🚀 First Run Setup
 
 ### Initial Launch
@@ -676,6 +684,8 @@ For more details, see [Linux udev Rules Documentation](linux-udev-installer.md).
 
 ---
 
+(core-features)=
+
 ## ✨ Core Features
 
 ### Modern Fluent UI
@@ -720,6 +730,8 @@ pyMM features a beautiful, modern interface inspired by Windows 11 Fluent Design
 - **Tab System**: Multiple projects/views open simultaneously
 
 ---
+
+(project-management)=
 
 ## 📁 Project Management
 
@@ -974,6 +986,8 @@ Project Properties: Client_Wedding_2026
 
 ---
 
+(plugin-system)=
+
 ## 🔌 Plugin System
 
 ### Available Plugins
@@ -1152,6 +1166,8 @@ Want to create custom plugins? See [Plugin Development Guide](plugin-development
 
 ---
 
+(storage-management)=
+
 ## 💾 Storage Management
 
 ### Storage Overview
@@ -1206,6 +1222,8 @@ Storage Management
 4. pyMM handles the move with progress tracking
 
 ---
+
+(configuration)=
 
 ## ⚙️ Configuration
 
@@ -1375,6 +1393,8 @@ privacy:
 
 ---
 
+(command-line-interface)=
+
 ## 💻 Command Line Interface
 
 pyMM provides a powerful CLI for automation and scripting:
@@ -1463,6 +1483,8 @@ pymm generate-report "MyProject" --format pdf --output "report.pdf"
 ```
 
 ---
+
+(troubleshooting)=
 
 ## 🔧 Troubleshooting
 
@@ -1971,6 +1993,8 @@ When reporting issues, collect this information:
 
 ---
 
+(faq)=
+
 ## ❓ FAQ
 
 ### General
@@ -2028,15 +2052,17 @@ A: Typically 200-500 MB idle, up to 2-4 GB when processing large projects.
 
 ---
 
+(getting-help)=
+
 ## 🆘 Getting Help
 
 ### Documentation
 
-- **README**: [README.md](../README.md) - Quick start and overview
-- **Contributing**: [CONTRIBUTING.md](../CONTRIBUTING.md) - Development guide
+- **README**: [README.md](https://github.com/mosh666/pyMM/blob/main/README.md) - Quick start and overview
+- **Contributing**: [CONTRIBUTING.md](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md) - Development guide
 - **Architecture**: [docs/architecture.md](architecture.md) - Technical details
 - **Plugin Development**: [docs/plugin-development.md](plugin-development.md) - Create plugins
-- **Changelog**: [CHANGELOG.md](../CHANGELOG.md) - Version history
+- **Changelog**: [CHANGELOG.md](https://github.com/mosh666/pyMM/blob/main/CHANGELOG.md) - Version history
 
 ### Community & Support
 
@@ -2044,11 +2070,6 @@ A: Typically 200-500 MB idle, up to 2-4 GB when processing large projects.
   - Report bugs
   - Request features
   - Ask technical questions
-
-- **GitHub Discussions**: <https://github.com/mosh666/pyMM/discussions>
-  - General questions
-  - Share tips and workflows
-  - Community support
 
 - **Email Support**: <24556349+mosh666@users.noreply.github.com>
   - Security issues (private)
@@ -2064,7 +2085,7 @@ Want to help improve pyMM? We welcome contributions!
 3. Make your changes
 4. Submit a pull request
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md) for detailed guidelines.
 
 ### Security
 
@@ -2073,7 +2094,7 @@ Found a security vulnerability?
 **Do not create a public issue.** Report privately to:
 <24556349+mosh666@users.noreply.github.com>
 
-See [SECURITY.md](../.github/SECURITY.md) for our security policy.
+See [SECURITY.md](https://github.com/mosh666/pyMM/blob/main/.github/SECURITY.md) for our security policy.
 
 ---
 
@@ -2081,7 +2102,7 @@ See [SECURITY.md](../.github/SECURITY.md) for our security policy.
 
 **pyMediaManager** | **Version**: 0.0.0-dev | **Python**: 3.12+ (3.13 recommended) | **License**: MIT
 
-[GitHub](https://github.com/mosh666/pyMM) · [Issues](https://github.com/mosh666/pyMM/issues) · [Discussions](https://github.com/mosh666/pyMM/discussions)
+[GitHub](https://github.com/mosh666/pyMM) · [Issues](https://github.com/mosh666/pyMM/issues)
 
 **Made with ❤️ for media professionals**
 

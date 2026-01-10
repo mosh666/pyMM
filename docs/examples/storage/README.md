@@ -33,6 +33,6 @@ pyMM can detect and work with local drives, USB devices, and network storage acr
 
 ## See Also
 
-- [User Guide - Storage](../../user-guide.md#storage)
-- [API Reference - StorageService](../../api-reference.md#storageservice)
-- [Platform Directories](../../platform-directories.md)
+- {ref}`storage-management` - User Guide Storage Management
+- {ref}`storageservice` - API Reference StorageService
+- {doc}`../../platform-directories`
