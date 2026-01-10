@@ -20,7 +20,7 @@ install:
     {{python}} -m pip install -e ".[dev]"
 
 # Run full quality check (lint, type-check, test)
-check: format-all lint lint-md type-check test
+check: format-all lint lint-md type-check check-docstrings check-docs test
 
 # =============================================================================
 # Testing Recipes
@@ -70,6 +70,14 @@ lint-md:
 # Run type checker (MyPy)
 type-check:
     {{python}} -m mypy app/
+
+# Check Python docstring coverage
+check-docstrings:
+    {{python}} -m interrogate --fail-under 100 app/ -vv
+
+# Check documentation formatting
+check-docs:
+    {{python}} -m doc8 docs/ --max-line-length 100 --ignore-path docs/_build --ignore-path docs/locales
 
 # Format code with Ruff
 format:
