@@ -1058,7 +1058,8 @@ def my_function(param1: str, param2: int) -> bool:
 
 ### Overview
 
-pyMediaManager documentation supports internationalization with German as the primary translation target. We welcome community-driven translations.
+pyMediaManager documentation supports internationalization with German as the primary
+translation target. We welcome community-driven translations.
 
 For detailed information, see [docs/i18n-strategy.md](docs/i18n-strategy.md).
 

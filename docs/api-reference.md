@@ -8,7 +8,9 @@
 >
 > **Last Updated:** January 10, 2026
 
-Complete API reference for pyMediaManager with detailed documentation for all modules, classes, and functions. All APIs include comprehensive docstrings with type hints, examples, and cross-references.
+Complete API reference for pyMediaManager with detailed documentation for all modules,
+classes, and functions. All APIs include comprehensive docstrings with type hints,
+examples, and cross-references.
 
 ## Quick Navigation
 
@@ -24,16 +26,18 @@ See: [Plugin System](#plugin-system)
 
 :::{grid-item-card} 📁 Project Management
 
-Create and manage media projects with templates, migrations, and version control integration.
+Create and manage media projects with templates, migrations, and version control
+integration.
 
-See: [Project Service API](#project-service-api)
+See: [Project Service API](#projectservice)
 :::
 
 :::{grid-item-card} ⚙️ Configuration
 
-Layered configuration system with validation, portable mode, and environment variables.
+Layered configuration system with validation, portable mode, and environment
+variables.
 
-See: [Configuration Service API](#configuration-service-api)
+See: [Configuration Service API](#configservice)
 :::
 
 :::{grid-item-card} 💾 Storage Detection
@@ -90,6 +94,7 @@ pyMediaManager follows a layered architecture:
 ---
 
 (plugin-system)=
+
 ## Plugin System
 
 The plugin system provides extensible functionality through manifest-based plugins with SHA-256 verification for security.
@@ -98,12 +103,15 @@ The plugin system provides extensible functionality through manifest-based plugi
 :gutter: 2
 
 :::{grid-item-card} 📖 Learn More
+
 - [Plugin Development Guide](plugin-development.md)
 - [Plugin Catalog](plugin-catalog.md)
 - [Example: List Plugins](examples/plugins/basic/list_plugins.py)
+
 :::
 
 :::{grid-item-card} 🎯 Key Features
+
 - Manifest-based architecture (YAML)
 - SHA-256 file integrity verification
 - Platform-specific plugin support
@@ -114,6 +122,7 @@ The plugin system provides extensible functionality through manifest-based plugi
 ::::
 
 (plugin-manager-api)=
+
 ### PluginManager
 
 Central hub for plugin discovery, installation, and lifecycle management.
@@ -233,11 +242,13 @@ Cross-platform system tool detection and validation.
 ---
 
 (services-layer)=
+
 ## Services Layer
 
 Business logic services providing core application functionality.
 
 (project-service-api)=
+
 ### ProjectService
 
 Manages project creation, discovery, and template migrations.
@@ -290,6 +301,7 @@ Manages project creation, discovery, and template migrations.
 ```
 
 (configuration-service-api)=
+
 ### ConfigService
 
 Layered configuration management with Pydantic validation.
@@ -341,6 +353,7 @@ Layered configuration management with Pydantic validation.
 ```
 
 (storage-service-api)=
+
 ### StorageService
 
 Cross-platform storage and drive detection.
@@ -411,6 +424,7 @@ Cross-platform file system operations with error handling.
 ---
 
 (core-modules)=
+
 ## Core Modules
 
 Foundation modules providing platform abstraction and logging.
@@ -467,6 +481,7 @@ Structured logging configuration and utilities.
 ---
 
 (data-models)=
+
 ## Data Models
 
 Pydantic models for data validation and serialization.
@@ -553,6 +568,7 @@ Platform-specific implementations for Windows, Linux, and macOS.
 ---
 
 (user-interface)=
+
 ## User Interface
 
 PySide6-based GUI components with QFluentWidgets for Fluent Design.
@@ -797,6 +813,7 @@ Generate API documentation locally:
 ::::{tab-set}
 
 :::{tab-item} Using justfile
+
 ```bash
 # Build all documentation
 just docs
@@ -810,9 +827,11 @@ just docs-linkcheck
 # Spell check
 just docs-spelling
 ```
+
 :::
 
 :::{tab-item} Using Sphinx directly
+
 ```bash
 # Install dependencies
 pip install -e ".[docs]"
@@ -827,9 +846,11 @@ sphinx-build -W -b html . _build/html
 # Check links
 sphinx-build -b linkcheck . _build/linkcheck
 ```
+
 :::
 
 :::{tab-item} Development Mode
+
 ```bash
 # Watch for changes and auto-rebuild
 pip install sphinx-autobuild
@@ -837,6 +858,7 @@ sphinx-autobuild docs docs/_build/html
 
 # Open http://localhost:8000
 ```
+
 :::
 
 ::::

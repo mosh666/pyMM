@@ -20,8 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured Edit on GitHub links for all documentation pages
 
 - **Enhanced Documentation Content**
-  - **Architecture Diagrams:** Added 11 comprehensive Mermaid diagrams to `docs/architecture.md` (1796 → 2491 lines, 5 → 16 diagrams)
-    - System Architecture (C4 context), Component Interaction (sequence), Plugin Lifecycle (state)
+  - **Architecture Diagrams:** Added 11 comprehensive Mermaid diagrams to
+    `docs/architecture.md` (1796 → 2491 lines, 5 → 16 diagrams)
+    - System Architecture (C4 context), Component Interaction (sequence), Plugin
+      Lifecycle (state)
     - Data Flow (flowchart), Storage Management (class), Project Structure (graph)
     - Migration Process, First Run Wizard, Configuration System (class), Event System (sequence)
     - Deployment Architecture (C4 deployment)
