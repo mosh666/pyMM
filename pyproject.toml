@@ -160,6 +160,8 @@ omit = [
     "*/tests/*",
     "*/__pycache__/*",
     "*/app/_version.py",
+    "*/.venv/*",
+    "*/venv/*",
 ]
 
 [tool.coverage.report]
@@ -178,7 +180,7 @@ line-length = 100
 target-version = "py312"
 output-format = "grouped"
 show-fixes = true
-exclude = ["build", "dist", ".git"]
+exclude = ["build", "dist", ".git", ".venv", "venv", ".env"]
 
 [tool.ruff.lint]
 select = [
@@ -281,7 +283,7 @@ warn_unused_configs = true
 warn_redundant_casts = true
 strict_equality = true
 ignore_missing_imports = true
-exclude = ["python3\\d+", "lib-py3\\d+", "build", "dist", "get-pip.py"]
+exclude = ["python3\\d+", "lib-py3\\d+", "build", "dist", "get-pip.py", "\\.venv", "venv", "\\.env"]
 
 # Per-module overrides for gradual strict adoption
 [[tool.mypy.overrides]]
