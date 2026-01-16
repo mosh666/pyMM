@@ -1,0 +1,40 @@
+#!/usr/bin/env pwsh
+# Pre-commit hook to run all checks before allowing commit
+# This ensures code quality standards are met
+
+Write-Host "🔍 Running pre-commit checks..." -ForegroundColor Cyan
+
+# Add Python Scripts to PATH if needed
+$pythonScriptsPath = "$env:APPDATA\Python\Python314\Scripts"
+if (Test-Path $pythonScriptsPath) {
+    $env:Path = "$pythonScriptsPath;$env:Path"
+}
+
+# Run pre-commit hooks
+$preCommit = Get-Command pre-commit -ErrorAction SilentlyContinue
+if ($preCommit) {
+    pre-commit run --all-files
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "❌ Pre-commit checks failed. Fix the issues above." -ForegroundColor Red
+        Write-Host "💡 To bypass hooks, use: git commit --no-verify" -ForegroundColor Yellow
+        exit 1
+    }
+    Write-Host "✅ Pre-commit checks passed!" -ForegroundColor Green
+} else {
+    Write-Host "⚠️  pre-commit not found. Install it with: uv tool install pre-commit" -ForegroundColor Yellow
+    Write-Host "⚠️  Then run: pre-commit install" -ForegroundColor Yellow
+
+    # Fallback to basic checks
+    Write-Host "🔍 Running fallback syntax check..." -ForegroundColor Cyan
+    $pythonFiles = Get-ChildItem -Path app,tests -Filter *.py -Recurse -ErrorAction SilentlyContinue
+    foreach ($file in $pythonFiles) {
+        python -m py_compile $file.FullName 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Syntax error in $($file.FullName)" -ForegroundColor Red
+            exit 1
+        }
+    }
+}
+
+Write-Host "✅ Pre-commit checks passed!" -ForegroundColor Green
+exit 0

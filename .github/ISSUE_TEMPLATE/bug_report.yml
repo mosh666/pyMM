@@ -1,0 +1,254 @@
+name: 🐛 Bug Report
+description: Report a bug to help us improve pyMediaManager
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+assignees:
+  - mosh666
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 🐛 Bug Report
+
+        Thank you for taking the time to report a bug! Your feedback helps make pyMediaManager better for everyone.
+
+        ## Before You Submit
+
+        - 🔍 **Search existing issues** to avoid duplicates: [pyMM Issues](https://github.com/mosh666/pyMM/issues)
+        - 📖 **Check documentation** for known issues: [User Guide](https://github.com/mosh666/pyMM/blob/main/docs/user-guide.md)
+        - 🔧 **Try troubleshooting steps** from the docs: [Troubleshooting](https://github.com/mosh666/pyMM/blob/main/docs/user-guide.md#troubleshooting)
+        - 💬 **Ask in discussions** if unsure: [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
+
+        **Security Issues**: Do not report security vulnerabilities here. Email: 24556349+mosh666@users.noreply.github.com
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 🔍 Bug Description
+      description: A clear and concise description of the bug. What happened that shouldn't have?
+      placeholder: |
+        Example: "When I try to create a new project with special characters in the name, the application crashes with an AttributeError."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 📋 Steps to Reproduce
+      description: Detailed steps to reproduce the behavior. The more specific, the better!
+      placeholder: |
+        1. Launch pyMediaManager
+        2. Click "New Project" button
+        3. Enter project name: "Test@Project#2026"
+        4. Click "Create"
+        5. Application crashes
+
+        **Note**: Include any relevant settings, plugin configurations, or file structures.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Expected Behavior
+      description: What did you expect to happen?
+      placeholder: |
+        Example: "The project should be created successfully with the name sanitized automatically, or I should see a validation error message."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Actual Behavior
+      description: What actually happened? Include error messages, screenshots, or unexpected outcomes.
+      placeholder: |
+        Example: "Application shows a crash dialog and closes. No project is created. Error message: 'AttributeError: NoneType object has no attribute split'"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Severity
+      description: How severe is this bug?
+      options:
+        - "Critical - Application crashes or data loss"
+        - "High - Major feature broken, no workaround"
+        - "Medium - Feature broken, workaround exists"
+        - "Low - Minor issue, cosmetic problem"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: 📦 pyMediaManager Version
+      description: "What version are you running? (Check: Help → About or run pymm --version)"
+      options:
+        - "Development (latest dev branch)"
+        - "0.2.x series"
+        - "0.1.x series"
+        - "Unknown/Other (please specify below)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: python-version
+    attributes:
+      label: 🐍 Python Version
+      description: What Python version are you using? (Run `python --version`)
+      options:
+        - "Python 3.14"
+        - "Python 3.13 (recommended)"
+        - "Python 3.12"
+        - "Python 3.11 or earlier (unsupported)"
+        - "Unknown/Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: 💻 Operating System
+      description: What operating system are you running?
+      options:
+        - "Windows 11 (latest)"
+        - "Windows 11 (older version)"
+        - "Windows 10 (version 1809+)"
+        - "Windows 10 (older than 1809)"
+        - "Windows Server"
+        - "Linux (not officially supported)"
+        - "macOS (not officially supported)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation-method
+    attributes:
+      label: 📥 Installation Method
+      description: How did you install pyMediaManager?
+      options:
+        - "pip install (standard)"
+        - "pip install -e . (development)"
+        - "Portable installation (embeddable Python)"
+        - "Built from source"
+        - "Other/Unknown"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Environment Details
+      description: Additional system information that might be relevant
+      placeholder: |
+        - Drive type: SSD / HDD / USB / Network
+        - Available RAM: 8 GB
+        - Installed plugins: DigiKam 8.2.0, ExifTool 12.70
+        - Project size: ~50 GB
+        - Antivirus: Windows Defender / Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📝 Log Output
+      description: |
+        Include relevant log output. Logs are in: `D:\pyMM.Logs\pymm_YYYY-MM-DD.log`
+
+        **Tip**: Enable debug logging in Settings → Privacy → Log Level: DEBUG
+      placeholder: |
+        ```
+        2026-01-07 14:32:15,123 - ERROR - app.services.project_service - Failed to create project
+        Traceback (most recent call last):
+          File "app/services/project_service.py", line 123, in create_project
+            project_path = self._validate_name(name)
+        AttributeError: 'NoneType' object has no attribute 'split'
+        ```
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: If applicable, add screenshots to help explain the problem. Drag and drop images here.
+      placeholder: |
+        Tip: You can paste images directly into this field.
+    validations:
+      required: false
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: 🔧 Workaround
+      description: Have you found a temporary workaround? Share it to help others!
+      placeholder: |
+        Example: "Avoiding special characters in project names prevents the crash."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: reproducibility
+    attributes:
+      label: 🔄 Reproducibility
+      description: How often can you reproduce this bug?
+      options:
+        - "Always - Happens every time"
+        - "Frequently - Happens most of the time"
+        - "Sometimes - Happens occasionally"
+        - "Rarely - Happened once or twice"
+        - "Unable to reproduce - Happened once only"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📋 Additional Context
+      description: Any other information that might be helpful
+      placeholder: |
+        - Recent changes to system or pyMM configuration
+        - Other applications that might conflict
+        - Network connectivity issues
+        - Recent Windows updates
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm you've completed these steps
+      options:
+        - label: I have searched existing issues for duplicates
+          required: true
+        - label: I have provided detailed steps to reproduce
+          required: true
+        - label: I have checked the documentation and troubleshooting guide
+          required: true
+        - label: I am using a supported Python version (3.12+)
+          required: false
+        - label: I am willing to help test a fix if provided
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ### 🙏 Thank You!
+
+        Thank you for helping improve pyMediaManager! Our team will review your bug report and respond as soon as possible.
+
+        **What happens next:**
+        1. ⏱️ We'll triage within 48 hours
+        2. 🏷️ We'll add appropriate labels and priority
+        3. 💬 We may ask follow-up questions
+        4. 🔧 We'll work on a fix or provide a workaround
+
+        **Stay updated**: Subscribe to notifications on this issue to receive updates.

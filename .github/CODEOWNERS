@@ -1,0 +1,37 @@
+# Code Owners for pyMediaManager
+#
+# These owners will be automatically requested for review when someone
+# opens a pull request that modifies code in specific areas.
+#
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+* @mosh666
+
+# Core application code
+/app/ @mosh666
+/app/core/ @mosh666
+
+# Plugin system
+/app/plugins/ @mosh666
+/plugins/ @mosh666
+
+# UI components
+/app/ui/ @mosh666
+
+# Documentation
+/docs/ @mosh666
+*.md @mosh666
+
+# Configuration files
+/config/ @mosh666
+*.yaml @mosh666
+*.yml @mosh666
+pyproject.toml @mosh666
+
+# CI/CD and GitHub workflows
+/.github/ @mosh666
+/.github/workflows/ @mosh666
+
+# Tests
+/tests/ @mosh666

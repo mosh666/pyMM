@@ -1,0 +1,456 @@
+name: Documentation
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - 'docs/**'
+      - 'app/**/*.py'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: ["**"]
+    paths:
+      - 'docs/**'
+      - 'app/**/*.py'
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Semantic Release"]
+    types:
+      - completed
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent redundant doc builds on rapid pushes - saves Actions minutes
+# But don't cancel page deployments (deploy job has separate concurrency)
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Documentation Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Check docstring coverage
+        run: |
+          echo "📊 Checking docstring coverage..."
+          uv run interrogate --fail-under 100 app/ -vv
+
+      - name: Lint markdown files
+        run: |
+          echo "📝 Linting markdown files..."
+          uv run doc8 docs/ --max-line-length 100 --ignore-path docs/_build
+
+      - name: Build docs with warnings as errors
+        run: |
+          echo "🔨 Building documentation with strict warnings..."
+          uv run sphinx-build -W --keep-going -b html docs docs/_build/html
+
+      - name: Check documentation links
+        run: |
+          echo "🔗 Validating all documentation links..."
+          uv run sphinx-build -b linkcheck docs docs/_build/linkcheck
+        continue-on-error: true
+
+      - name: Spell check documentation
+        run: |
+          echo "📖 Spell checking documentation..."
+          uv run sphinx-build -b spelling docs docs/_build/spelling
+        continue-on-error: true
+
+      - name: Upload quality report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: docs-quality-report
+          path: |
+            docs/_build/linkcheck/
+            docs/_build/spelling/
+          retention-days: 30
+
+  build:
+    runs-on: windows-latest
+    env:
+      PYTHONUTF8: 1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          # Fetch all branches for sphinx-multiversion
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Fetch all branches
+        run: |
+          git fetch --all --tags
+          git branch -r
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          uv sync --frozen --all-extras
+          uv pip install --system sphinx-multiversion
+
+      - name: Configure Git
+        run: |
+          git config --global core.longpaths true
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Cache GitHub release tags
+        id: cache-release-tags
+        uses: actions/cache@v4
+        with:
+          path: release_tags.txt
+          key: release-tags-${{ github.repository }}-${{ github.run_number }}
+          restore-keys: |
+            release-tags-${{ github.repository }}-
+
+      - name: Fetch GitHub release tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          Write-Host "Fetching GitHub release tags..."
+          uv run python scripts/get_release_tags.py
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "ERROR: Failed to fetch GitHub release tags"
+            exit 1
+          }
+          $tagCount = (Get-Content release_tags.txt | Measure-Object -Line).Lines
+          Write-Host "Found $tagCount release tags"
+          if ($tagCount -gt 0) {
+            Write-Host "Release tags:"
+            Get-Content release_tags.txt | ForEach-Object { Write-Host "  $_" }
+          }
+
+      - name: Filter git tags to releases only
+        run: |
+          # Get all local tags
+          $allTags = git tag
+          # Read release tags from file
+          $releaseTags = @()
+          if (Test-Path release_tags.txt) {
+            $releaseTags = Get-Content release_tags.txt | Where-Object { $_ -ne "" }
+          }
+          # Find tags to hide (tags that don't have releases)
+          $tagsToHide = @()
+          foreach ($tag in $allTags) {
+            if ($tag -notin $releaseTags) {
+              $tagsToHide += $tag
+            }
+          }
+          # Save tags to hide for later restoration
+          $tagsToHide | Out-File -FilePath hidden_tags.txt
+          # Hide non-release tags temporarily
+          foreach ($tag in $tagsToHide) {
+            git tag -d $tag | Out-Null
+          }
+          Write-Host "Hidden $($tagsToHide.Count) non-release tags"
+          Write-Host "Visible tags for documentation build:"
+          git tag | ForEach-Object { Write-Host "  $_" }
+
+      - name: Build Sphinx documentation
+        run: |
+          uv run sphinx-multiversion docs docs/_build/html
+
+      - name: Restore hidden git tags
+        if: always()
+        run: |
+          if (Test-Path hidden_tags.txt) {
+            $hiddenTags = Get-Content hidden_tags.txt | Where-Object { $_ -ne "" }
+            foreach ($tag in $hiddenTags) {
+              # Fetch the tag from remote and restore it
+              git fetch origin "refs/tags/${tag}:refs/tags/${tag}" 2>$null | Out-Null
+            }
+            Write-Host "Restored $($hiddenTags.Count) hidden tags"
+          }
+
+      - name: Generate versions.json
+        run: |
+          # Check if directory exists and list its contents
+          if (Test-Path docs/_build/html) {
+            Write-Host "Contents of docs/_build/html:"
+            Get-ChildItem -Path docs/_build/html | ForEach-Object { Write-Host "  $_" }
+
+            # Read release tags from file
+            $releaseTags = @()
+            if (Test-Path release_tags.txt) {
+              $releaseTags = Get-Content release_tags.txt | Where-Object { $_ -ne "" }
+            }
+
+            # Get list of all version directories
+            $allVersions = Get-ChildItem -Path docs/_build/html -Directory |
+                Where-Object { $_.Name -match '^(main|dev|v\d+\.\d+\.\d+)' } |
+                Select-Object -ExpandProperty Name
+
+            # Filter: keep branches (main/dev) and only tags with releases
+            $versions = @()
+            foreach ($version in $allVersions) {
+              # Keep branches
+              if ($version -eq "main" -or $version -eq "dev") {
+                $versions += $version
+              }
+              # Keep only tags that have releases
+              elseif ($version -in $releaseTags) {
+                $versions += $version
+              }
+              else {
+                Write-Host "Excluding $version (no GitHub release found)"
+              }
+            }
+
+            # Sort versions
+            $versions = $versions | Sort-Object -Descending
+
+            # Create versions.json
+            $versionsJson = $versions | ConvertTo-Json -Compress
+            Set-Content -Path docs/_build/html/versions.json -Value $versionsJson
+            Write-Host "Created versions.json with: $versionsJson"
+          } else {
+            Write-Host "ERROR: docs/_build/html directory does not exist"
+            Write-Host "Current directory: $(Get-Location)"
+            Write-Host "Directory contents:"
+            Get-ChildItem -Recurse -Directory -Depth 2 | ForEach-Object { Write-Host "  $($_.FullName)" }
+            exit 1
+          }
+
+      - name: Create landing page
+        run: |
+          New-Item -ItemType File -Force -Path docs/_build/html/index.html | Out-Null
+          @"
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>pyMediaManager Documentation</title>
+              <meta name="description" content="Portable Python-based media management application with PySide6 Fluent UI">
+              <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📁</text></svg>">
+              <style>
+                  :root {
+                      --color-brand: #4CAF50;
+                      --color-brand-hover: #45A049;
+                      --color-dev: #2196F3;
+                      --color-dev-hover: #1976D2;
+                      --color-tag: #FF9800;
+                      --color-tag-hover: #F57C00;
+                  }
+                  * { margin: 0; padding: 0; box-sizing: border-box; }
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      padding: 20px;
+                  }
+                  .container {
+                      background: white;
+                      border-radius: 16px;
+                      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                      max-width: 700px;
+                      width: 100%;
+                      padding: 60px 40px;
+                      text-align: center;
+                  }
+                  h1 {
+                      font-size: 2.5rem;
+                      color: #1a202c;
+                      margin-bottom: 0.5rem;
+                      font-weight: 700;
+                  }
+                  .subtitle {
+                      color: #718096;
+                      font-size: 1.125rem;
+                      margin-bottom: 3rem;
+                  }
+                  .version-section {
+                      margin-bottom: 2rem;
+                  }
+                  .version-section h2 {
+                      font-size: 1rem;
+                      color: #4a5568;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                      margin-bottom: 1rem;
+                      font-weight: 600;
+                  }
+                  .version-links {
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 12px;
+                      justify-content: center;
+                  }
+                  .version-link {
+                      display: inline-flex;
+                      align-items: center;
+                      gap: 8px;
+                      padding: 14px 28px;
+                      color: white;
+                      text-decoration: none;
+                      border-radius: 8px;
+                      font-size: 1rem;
+                      font-weight: 500;
+                      transition: all 0.2s ease;
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                  }
+                  .version-link:hover {
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                  }
+                  .version-link.stable {
+                      background: var(--color-brand);
+                  }
+                  .version-link.stable:hover {
+                      background: var(--color-brand-hover);
+                  }
+                  .version-link.dev {
+                      background: var(--color-dev);
+                  }
+                  .version-link.dev:hover {
+                      background: var(--color-dev-hover);
+                  }
+                  .version-link.tag {
+                      background: var(--color-tag);
+                      font-size: 0.9rem;
+                      padding: 10px 20px;
+                  }
+                  .version-link.tag:hover {
+                      background: var(--color-tag-hover);
+                  }
+                  .footer {
+                      margin-top: 3rem;
+                      padding-top: 2rem;
+                      border-top: 1px solid #e2e8f0;
+                      color: #718096;
+                      font-size: 0.875rem;
+                  }
+                  .footer a {
+                      color: var(--color-brand);
+                      text-decoration: none;
+                  }
+                  .footer a:hover {
+                      text-decoration: underline;
+                  }
+                  @media (max-width: 640px) {
+                      .container { padding: 40px 20px; }
+                      h1 { font-size: 2rem; }
+                      .version-links { flex-direction: column; }
+                      .version-link { width: 100%; justify-content: center; }
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>📁 pyMediaManager</h1>
+                  <p class="subtitle">Portable Python-based media management application</p>
+
+                  <div class="version-section">
+                      <h2>Branches</h2>
+                      <div class="version-links">
+                          <a href="main/index.html" class="version-link stable">
+                              <span>📘</span>
+                              <span>Main (Stable)</span>
+                          </a>
+                          <a href="dev/index.html" class="version-link dev">
+                              <span>🚧</span>
+                              <span>Dev (Latest)</span>
+                          </a>
+                      </div>
+                  </div>
+
+                  <div class="version-section">
+                      <h2>Tagged Versions</h2>
+                      <div class="version-links" id="tag-links">
+                          <p style="color: #718096;">Loading versions...</p>
+                      </div>
+                  </div>
+
+                  <div class="footer">
+                      <p>📖 Documentation built with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://pradyunsg.me/furo/">Furo</a></p>
+                      <p style="margin-top: 0.5rem;">🔗 <a href="https://github.com/mosh666/pyMM">View on GitHub</a></p>
+                  </div>
+              </div>
+
+              <script>
+                  // Fetch versions from generated JSON file
+                  fetch('versions.json')
+                      .then(r => r.json())
+                      .then(versions => {
+                          // Filter out branch versions (main, dev) and get only tags
+                          const tags = versions.filter(v => v.match(/^v\d+\.\d+\.\d+/));
+
+                          const tagLinksDiv = document.getElementById('tag-links');
+                          if (tags.length > 0) {
+                              tagLinksDiv.innerHTML = tags
+                                  .slice(0, 10) // Show latest 10 tags (already sorted by build script)
+                                  .map(tag => '<a href="'+tag+'/index.html" class="version-link tag"><span>🏷️</span><span>'+tag+'</span></a>')
+                                  .join('');
+                          } else {
+                              tagLinksDiv.innerHTML = '<p style="color: #a0aec0; font-style: italic;">No tagged versions available yet</p>';
+                          }
+                      })
+                      .catch(err => {
+                          console.error('Failed to load versions:', err);
+                          document.getElementById('tag-links').innerHTML = '<p style="color: #a0aec0; font-style: italic;">No tagged versions available</p>';
+                      });
+              </script>
+          </body>
+          </html>
+          "@ | Set-Content -Path docs/_build/html/index.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_build/html
+
+  deploy:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        timeout-minutes: 5

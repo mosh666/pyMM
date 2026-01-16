@@ -1,0 +1,187 @@
+name: Cleanup Beta Releases
+
+on:
+  push:
+    branches:
+      - dev
+  schedule:
+    # Daily at 2:00 AM UTC - after beta release creation
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      keep_count:
+        description: 'Number of latest beta releases to keep'
+        required: false
+        default: '3'
+        type: string
+      dry_run:
+        description: 'Dry run - preview deletions without actually deleting'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write  # Required for artifact cleanup
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup old workflow artifacts
+        run: |
+          echo "## 🗄️ Workflow Artifact Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Set retention period (keep artifacts from last 7 days)
+          RETENTION_DAYS=7
+          CUTOFF_DATE=$(date -u -d "$RETENTION_DAYS days ago" +%s 2>/dev/null || date -u -v-${RETENTION_DAYS}d +%s)
+
+          echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Retention period: ${RETENTION_DAYS} days" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Get all artifacts
+          ARTIFACTS=$(gh api repos/${{ github.repository }}/actions/artifacts --paginate -q '.artifacts[] | {id: .id, name: .name, created_at: .created_at, size_in_bytes: .size_in_bytes}')
+
+          if [ -z "$ARTIFACTS" ]; then
+            echo "### ℹ️ No artifacts found" >> $GITHUB_STEP_SUMMARY
+          else
+            DELETED_COUNT=0
+            DELETED_SIZE=0
+
+            echo "$ARTIFACTS" | jq -c '.' | while IFS= read -r artifact; do
+              ARTIFACT_ID=$(echo "$artifact" | jq -r '.id')
+              ARTIFACT_NAME=$(echo "$artifact" | jq -r '.name')
+              CREATED_AT=$(echo "$artifact" | jq -r '.created_at')
+              SIZE=$(echo "$artifact" | jq -r '.size_in_bytes')
+
+              ARTIFACT_DATE=$(date -u -d "$CREATED_AT" +%s 2>/dev/null || date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$CREATED_AT" +%s)
+
+              if [ "$ARTIFACT_DATE" -lt "$CUTOFF_DATE" ]; then
+                echo "Deleting artifact: $ARTIFACT_NAME (ID: $ARTIFACT_ID, Size: $(numfmt --to=iec-i --suffix=B $SIZE 2>/dev/null || echo "${SIZE} bytes"))"
+                gh api -X DELETE repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID || echo "Failed to delete $ARTIFACT_ID"
+                DELETED_COUNT=$((DELETED_COUNT + 1))
+                DELETED_SIZE=$((DELETED_SIZE + SIZE))
+              fi
+            done
+
+            if [ $DELETED_COUNT -gt 0 ]; then
+              DELETED_SIZE_MB=$((DELETED_SIZE / 1048576))
+              echo "### ✅ Deleted $DELETED_COUNT artifact(s)" >> $GITHUB_STEP_SUMMARY
+              echo "- Total size freed: ${DELETED_SIZE_MB} MB" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ✅ No artifacts older than ${RETENTION_DAYS} days" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup old beta releases
+        run: |
+          echo "## 🧹 Beta Release Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Set variables
+          DRY_RUN="${{ inputs.dry_run || 'false' }}"
+          KEEP_COUNT="${{ inputs.keep_count || '3' }}"
+
+          echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Keep latest: ${KEEP_COUNT} beta releases" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry run: ${DRY_RUN}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Get all beta releases sorted by creation date (newest first)
+          RELEASES=$(gh release list --repo "${{ github.repository }}" --limit 1000 --json tagName,createdAt,isPrerelease | \
+            jq -r '[.[] | select(.isPrerelease == true and (.tagName | contains("-beta.")))] | sort_by(.createdAt) | reverse')
+
+          TOTAL_BETAS=$(echo "$RELEASES" | jq 'length')
+
+          if [ "$TOTAL_BETAS" -eq 0 ]; then
+            echo "### ℹ️ No beta releases found" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "**Found:** ${TOTAL_BETAS} beta release(s)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$TOTAL_BETAS" -le "$KEEP_COUNT" ]; then
+            echo "### ✅ All beta releases are within retention limit" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Currently ${TOTAL_BETAS} beta release(s), keeping up to ${KEEP_COUNT}." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Get releases to keep (newest N) and to delete (older ones)
+          KEEP_BETAS=$(echo "$RELEASES" | jq -r --arg keep "$KEEP_COUNT" 'limit(($keep | tonumber); .[].tagName)')
+          DELETE_BETAS=$(echo "$RELEASES" | jq -r --arg keep "$KEEP_COUNT" '.[(($keep | tonumber)):][].tagName')
+
+          DELETE_COUNT=$(echo "$DELETE_BETAS" | wc -l | tr -d ' ')
+
+          echo "### 🔒 Keeping Latest $KEEP_COUNT Beta Releases" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$KEEP_BETAS" | while read -r TAG; do
+            if [ -n "$TAG" ]; then
+              RELEASE_DATE=$(echo "$RELEASES" | jq -r --arg tag "$TAG" '.[] | select(.tagName == $tag) | .createdAt')
+              echo "- ✅ \`$TAG\` (created: $RELEASE_DATE)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🗑️ Deleting $DELETE_COUNT Older Beta Release(s)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # List releases to delete
+          echo "$DELETE_BETAS" | while read -r TAG; do
+            if [ -n "$TAG" ]; then
+              RELEASE_DATE=$(echo "$RELEASES" | jq -r --arg tag "$TAG" '.[] | select(.tagName == $tag) | .createdAt')
+              echo "- ❌ \`$TAG\` (created: $RELEASE_DATE)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Delete releases
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "### 🔍 Dry Run Mode" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Dry run enabled - no releases were actually deleted." >> $GITHUB_STEP_SUMMARY
+            echo "Run with \`dry_run: false\` to perform actual deletion." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ⚙️ Deleting Releases..." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            DELETED=0
+            FAILED=0
+
+            echo "$DELETE_BETAS" | while read -r TAG; do
+              if [ -n "$TAG" ]; then
+                echo "Deleting $TAG..."
+                if gh release delete "$TAG" --repo "${{ github.repository }}" --yes 2>&1; then
+                  DELETED=$((DELETED + 1))
+                  echo "✅ Deleted \`$TAG\`" >> $GITHUB_STEP_SUMMARY
+                else
+                  FAILED=$((FAILED + 1))
+                  echo "❌ Failed to delete \`$TAG\`" >> $GITHUB_STEP_SUMMARY
+                fi
+              fi
+            done
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📊 Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- Kept: ${KEEP_COUNT} beta release(s)" >> $GITHUB_STEP_SUMMARY
+            echo "- Deleted: ${DELETE_COUNT} beta release(s)" >> $GITHUB_STEP_SUMMARY
+
+            if [ $FAILED -gt 0 ]; then
+              echo "- ⚠️ Failed: $FAILED release(s)" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Cleanup completed successfully!**" >> $GITHUB_STEP_SUMMARY
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

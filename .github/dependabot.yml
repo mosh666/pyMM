@@ -1,0 +1,329 @@
+version: 2
+
+# Global settings for all ecosystems
+registries: {}
+
+updates:
+  # ============================================================================
+  # Python Dependencies via UV
+  # ============================================================================
+  # NOTE: Dependabot's pip ecosystem does NOT understand uv.lock format.
+  # It will read pyproject.toml but ignore uv.lock, potentially creating
+  # version conflicts. Consider:
+  # 1. Manual review of all Dependabot PRs before merge
+  # 2. Run `uv lock --upgrade-package <package>` after merge
+  # 3. Monitor https://github.com/dependabot/dependabot-core/issues for uv support
+  - package-ecosystem: "pip"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 15  # Increased due to more groups
+    reviewers:
+      - "mosh666"
+    assignees:
+      - "mosh666"
+    labels:
+      - "dependencies"
+      - "python"
+      - "uv"
+    # milestone: 1  # Uncomment and set to milestone number if using milestones
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+
+    # Rebase strategy for cleaner history
+    rebase-strategy: "auto"
+
+    # Versioning strategy - though limited with uv.lock
+    # Options: auto, widen, increase, increase-if-necessary
+    versioning-strategy: "auto"
+
+    # -------------------------------------------------------------------------
+    # Comprehensive Grouping Strategy
+    # -------------------------------------------------------------------------
+    groups:
+      # GUI Framework
+      pyside6:
+        patterns:
+          - "PySide6*"
+
+      # Testing Framework
+      pytest:
+        patterns:
+          - "pytest*"
+        exclude-patterns:
+          - "pytest-qt"  # GUI testing separate
+
+      # GUI Testing (requires display)
+      pytest-gui:
+        patterns:
+          - "pytest-qt"
+
+      # Type Checking
+      type-checking:
+        patterns:
+          - "mypy"
+          - "types-*"
+
+      # Code Quality
+      code-quality:
+        patterns:
+          - "ruff"
+          - "black"
+          - "interrogate"
+          - "doc8"
+
+      # Documentation
+      documentation:
+        patterns:
+          - "sphinx*"
+          - "furo"
+          - "myst-parser"
+          - "sphinx-*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Async & Networking
+      async-networking:
+        patterns:
+          - "aiohttp"
+          - "APScheduler"
+
+      # Security (allow major updates)
+      security:
+        patterns:
+          - "cryptography"
+        update-types:
+          - "minor"
+          - "patch"
+          - "major"
+
+      # Data Validation
+      data-validation:
+        patterns:
+          - "pydantic"
+
+      # Build Tools
+      build-tools:
+        patterns:
+          - "hatchling"
+          - "hatch-vcs"
+          - "jinja2"
+
+      # Utilities - Minor updates only
+      utilities:
+        patterns:
+          - "rich"
+          - "pyyaml"
+          - "psutil"
+          - "packaging"
+          - "GitPython"
+          - "watchdog"
+          - "py7zr"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Platform-specific (Windows)
+      platform-windows:
+        patterns:
+          - "WMI"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Platform-specific (Linux)
+      platform-linux:
+        patterns:
+          - "pyudev"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Platform-specific (macOS)
+      platform-macos:
+        patterns:
+          - "pyobjc-*"
+        update-types:
+          - "minor"
+          - "patch"
+
+    # -------------------------------------------------------------------------
+    # Allow/Ignore Rules
+    # -------------------------------------------------------------------------
+    allow:
+      - dependency-type: "all"
+
+    ignore:
+      # Pin Python-semantic-release to avoid breaking changes
+      - dependency-name: "python-semantic-release"
+        update-types: ["version-update:semver-major"]
+
+      # Sphinx 8.0.0+ has breaking changes per your constraint
+      - dependency-name: "sphinx"
+        versions: [">=8.0.0"]
+
+      # Example: Ignore specific problematic versions
+      # - dependency-name: "PySide6"
+      #   versions: ["6.7.0"]  # Example: if a version is buggy
+
+      # Don't ignore ALL major updates globally - be selective per dependency
+
+  # ============================================================================
+  # Docker Dependencies
+  # ============================================================================
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"  # Stagger from Python updates
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "mosh666"
+    assignees:
+      - "mosh666"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker):"
+      include: "scope"
+    rebase-strategy: "auto"
+
+    # Allow all updates for base images
+    allow:
+      - dependency-type: "all"
+
+  # ============================================================================
+  # GitHub Actions
+  # ============================================================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"  # Stagger from other updates
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "mosh666"
+    assignees:
+      - "mosh666"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci):"
+      include: "scope"
+    rebase-strategy: "auto"
+
+    # Group related actions
+    groups:
+      # Core GitHub actions
+      github-core:
+        patterns:
+          - "actions/*"
+
+      # Security scanning
+      security-scanning:
+        patterns:
+          - "github/codeql-action/*"
+          - "ossf/scorecard-action"
+          - "actions/dependency-review-action"
+
+      # Code coverage
+      code-coverage:
+        patterns:
+          - "codecov/codecov-action"
+
+      # Python tooling
+      python-tooling:
+        patterns:
+          - "astral-sh/setup-uv"
+
+      # Linting & Quality
+      linting:
+        patterns:
+          - "DavidAnson/markdownlint-cli2-action"
+
+      # Dependabot utilities
+      dependabot-utils:
+        patterns:
+          - "dependabot/*"
+
+      # Other tools
+      other-tools:
+        patterns:
+          - "extractions/setup-just"
+
+    allow:
+      - dependency-type: "all"
+
+  # ============================================================================
+  # Pre-commit Hooks
+  # ============================================================================
+  # Note: This will create PRs to update .pre-commit-config.yaml
+  # but won't run 'pre-commit autoupdate' - you'll need to do that manually
+  # or use a GitHub Action
+  # Consider: https://github.com/pre-commit-ci/lite
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   target-branch: "dev"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "thursday"
+  #     time: "09:00"
+  #     timezone: "Etc/UTC"
+  #   open-pull-requests-limit: 5
+  #   reviewers:
+  #     - "mosh666"
+  #   assignees:
+  #     - "mosh666"
+  #   labels:
+  #     - "dependencies"
+  #     - "pre-commit"
+  #   commit-message:
+  #     prefix: "chore(pre-commit):"
+  #     include: "scope"
+  #   rebase-strategy: "auto"
+  #
+  #   # Only track pre-commit hooks
+  #   allow:
+  #     - dependency-name: "pre-commit"
+
+# ============================================================================
+# Notes on Limitations & Workarounds
+# ============================================================================
+#
+# 1. UV LOCKFILE SUPPORT:
+#    - Dependabot doesn't support uv.lock yet
+#    - After merging Dependabot PRs, run: uv lock --upgrade-package <package>
+#    - Consider CI check to ensure uv.lock stays in sync
+#
+# 2. PLATFORM-SPECIFIC DEPENDENCIES:
+#    - Dependabot will update all platforms, but CI might only test on one
+#    - Your CI matrix tests all platforms, which is good
+#
+# 3. SEMANTIC VERSIONING:
+#    - Major updates require careful review in 0.y.z phase
+#    - Consider selective ignore rules as project matures
+#
+# 4. SECURITY UPDATES:
+#    - Security group allows major updates
+#    - Consider enabling GitHub Security Advisories for alerts
+#
+# 5. PRE-COMMIT HOOKS:
+#    - Commented out - Dependabot support for .pre-commit-config.yaml is limited
+#    - Consider https://pre-commit.ci for automated hook updates
+#    - Or add GitHub Action to run 'pre-commit autoupdate' weekly
+#

@@ -1,0 +1,18 @@
+{
+  "config": {
+    "extends": ".markdownlint.json"
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    ".venv/**",
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "docs/_build/**",
+    "htmlcov/**",
+    ".pytest_tmp/**",
+    "CHANGELOG.md"
+  ]
+}

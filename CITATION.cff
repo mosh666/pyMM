@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "pyMediaManager"
+abstract: "Portable Python-based media management application with modern Fluent Design UI"
+authors:
+  - family-names: "mosh666"
+    affiliation: "Independent Developer"
+repository-code: "https://github.com/mosh666/pyMM"
+url: "https://github.com/mosh666/pyMM"
+license: MIT
+keywords:
+  - media-management
+  - portable
+  - digikam
+  - pyside6
+  - fluent-ui
+  - plugin-system
+  - project-management

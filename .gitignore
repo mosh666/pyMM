@@ -1,0 +1,247 @@
+# Python embeddable packages (not committed - downloaded by build)
+python*/
+python*._pth
+python*.zip
+
+# Python dependencies (not committed - installed by build)
+lib*/
+lib-py*/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+app/_version.py
+.eggs/
+*.egg
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+.Python
+
+# C extensions
+*.so
+*.dylib
+*.dll
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# Requirements files (dependencies in pyproject.toml)
+requirements*.txt
+
+# Testing
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.pytest_tmp/
+.tox/
+.nox/
+.hypothesis/
+.pytype/
+/test_*
+coverage.xml
+*.cover
+.cache
+nosetests.xml
+test-results/
+junit/
+*.log
+/debug_*
+interrogate_badge.svg
+
+# Temp directories (created by pytest or other tools)
+/tmp/
+
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+pyrightconfig.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+/get-pip.py
+
+# poetry
+poetry.lock
+
+# PDM
+.pdm.toml
+.pdm-python
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Environments
+.env
+.env.local
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pyvenv.cfg
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# IDEs
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+!.vscode/mcp.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+.history/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Logs (portable drive - not in repo)
+*.log
+*.log.*
+pyMM.Logs/
+logs/
+
+# Projects (portable drive - not in repo)
+pyMM.Projects/
+
+# Plugins (installed binaries - not in repo)
+pyMM.Plugins/
+
+# Template folders should only be in templates/ directory, not repo root
+/base/
+/default/
+/photo-management/
+/video-editing/
+/test/
+
+# Configuration (user-specific)
+config/user.yaml
+config/.secrets
+config/storage_groups.yaml
+config/backup_tracking.db
+config/backup_tracking.db-*  # SQLite journal/wal files
+*.local
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+temp/
+tmp/
+*.pid
+*.seed
+*.pid.lock
+
+# Distribution archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.dmg
+*.iso
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Compiled
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.pyc
+
+# Backup files
+*~
+*.bak
+*.backup
+
+# OS-specific
+*.stackdump
+
+# Profiling
+*.prof
+*.lprof
+
+# Cython
+cython_debug/
+
+# Ruff
+.ruff_cache/
+ruff_errors.txt
+
+# LSP
+.vscode-server/
+
+# Documentation build artifacts and temporary files
+docs/_build/
+release_tags.txt
+hidden_tags.txt
+
+MIGRATION_TESTING_CHECKLIST.md
+performance_baselines.json

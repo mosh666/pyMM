@@ -1,0 +1,300 @@
+name: 🚀 Feature Request
+description: Suggest a new feature or enhancement for pyMediaManager
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+assignees:
+  - mosh666
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 🚀 Feature Request
+
+        Thank you for suggesting a new feature! Your ideas help shape the future of pyMediaManager.
+
+        ## Before You Submit
+
+        - 🔍 **Search existing requests** to avoid duplicates: [Enhancement Issues](https://github.com/mosh666/pyMM/issues?q=is%3Aissue+label%3Aenhancement)
+        - 💬 **Discuss in the community** to gauge interest: [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
+        - 📖 **Check the roadmap** to see if it's planned: [Project Roadmap](https://github.com/mosh666/pyMM/blob/main/docs/architecture.md#future-roadmap)
+        - 🎯 **Consider project scope** - Does this align with pyMM's portable media management focus?
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🎯 Problem Statement
+      description: What problem does this feature solve? Is it related to a frustration or limitation?
+      placeholder: |
+        Example: "I'm frustrated when managing large video projects because there's no way to preview video files directly in the application. I have to open an external player every time, which breaks my workflow."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: Describe the feature you'd like to see implemented. Be as detailed as possible!
+      placeholder: |
+        Example: "Add a built-in video preview panel to the project view that uses FFmpeg to generate thumbnails and play video clips. Features:
+        - Thumbnail strip showing video timeline
+        - Click to preview at any point
+        - Basic controls (play, pause, seek)
+        - Support for common formats (MP4, MKV, AVI)
+        - Minimal memory footprint"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: What alternative solutions or approaches have you thought about?
+      placeholder: |
+        Example: "I considered:
+        1. Using external player integration - but this breaks the workflow
+        2. Generating static preview images - but this doesn't show motion
+        3. Using VLC plugin - but this adds a large dependency"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: 🏷️ Feature Category
+      description: What type of feature is this?
+      options:
+        - "UI/UX Enhancement - User interface improvement"
+        - "New Plugin Support - Support for new external tool"
+        - "Performance Improvement - Speed or efficiency gain"
+        - "Developer Experience - Tools or workflows for developers"
+        - "Documentation - Improved guides or examples"
+        - "Configuration - New settings or options"
+        - "API/Integration - External API or integration support"
+        - "Testing - Test coverage or quality improvements"
+        - "Security - Security enhancement"
+        - "Accessibility - Accessibility improvement"
+        - "Other - Please describe in additional context"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⚡ Priority Level
+      description: How important is this feature to you and your workflow?
+      options:
+        - "Critical - Blocking my ability to use pyMM"
+        - "High - Would significantly improve my workflow"
+        - "Medium - Nice to have, moderate impact"
+        - "Low - Minor improvement, low impact"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target-audience
+    attributes:
+      label: 👥 Target Audience
+      description: Who would benefit from this feature?
+      options:
+        - "All Users - General improvement for everyone"
+        - "Photographers - Specifically for photo workflows"
+        - "Videographers - Specifically for video workflows"
+        - "Developers - For plugin/extension development"
+        - "Power Users - Advanced features for experienced users"
+        - "Beginners - Helps new users get started"
+        - "Enterprise - For professional/commercial use"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: 📖 Use Case
+      description: Describe your specific use case and how this feature would help your workflow
+      placeholder: |
+        Example: "I manage wedding photography and videography projects with 500+ GB of mixed media per project. Currently, I:
+        1. Import all files to pyMM project
+        2. Need to verify video clips are correct
+        3. Must open each video in VLC to check
+        4. Return to pyMM to continue organizing
+
+        With video preview, I could:
+        1. Stay in pyMM throughout the process
+        2. Quickly scan through footage
+        3. Mark clips for editing without leaving the app
+        4. Save 30+ minutes per project"
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups or Examples
+      description: |
+        Share mockups, wireframes, screenshots from other apps, or code examples
+
+        **Tip**: Drag and drop images directly into this field
+      placeholder: |
+        Example screenshots from similar applications:
+        - Adobe Lightroom's video preview
+        - DaVinci Resolve's media browser
+
+        Or describe the UI:
+        "A panel on the right side showing:
+        - Video thumbnail at top
+        - Timeline scrubber
+        - Play/Pause buttons
+        - Duration and current time"
+    validations:
+      required: false
+
+  - type: textarea
+    id: technical-approach
+    attributes:
+      label: 🛠️ Technical Approach (Optional)
+      description: If you have technical knowledge, suggest how this could be implemented
+      placeholder: |
+        Example: "Could use PySide6's QMediaPlayer with FFmpeg backend:
+        - `QVideoWidget` for display
+        - `QMediaPlayer` for playback control
+        - FFmpeg for thumbnail generation
+        - Async loading to prevent UI freezing
+
+        Libraries:
+        - python-ffmpeg for video processing
+        - PySide6.QtMultimedia for playback"
+    validations:
+      required: false
+
+  - type: textarea
+    id: similar-features
+    attributes:
+      label: 🔗 Similar Features
+      description: Link to similar features in other applications or projects
+      placeholder: |
+        Example:
+        - DigiKam's video preview: https://docs.kde.org/...
+        - Shotwell's media browser: https://wiki.gnome.org/...
+        - Custom implementation: https://github.com/user/repo
+    validations:
+      required: false
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: 🧩 Estimated Complexity
+      description: How complex do you think this feature is to implement?
+      options:
+        - "Simple - Could be done in a few hours"
+        - "Moderate - Might take a few days"
+        - "Complex - Likely requires weeks of work"
+        - "Very Complex - Major architectural changes"
+        - "Unknown - Not sure"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: breaking-changes
+    attributes:
+      label: ⚠️ Breaking Changes
+      description: Would this feature require breaking changes to existing functionality?
+      options:
+        - "No - Purely additive feature"
+        - "Maybe - Might affect existing behavior"
+        - "Yes - Would break existing functionality"
+        - "Unknown - Not sure"
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 📦 Dependencies
+      description: Does this feature require new dependencies or plugins?
+      placeholder: |
+        Example:
+        - FFmpeg (already supported as plugin)
+        - python-ffmpeg package (~10 MB)
+        - PySide6.QtMultimedia (included in PySide6)
+
+        Note: Prefer minimal dependencies to maintain portability.
+    validations:
+      required: false
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 📊 Impact Assessment
+      description: What impact might this have on performance, storage, or other resources?
+      placeholder: |
+        Example:
+        - Memory: +50-100 MB when video preview is active
+        - Storage: Thumbnail cache ~100 MB per project
+        - CPU: Low impact, only when previewing
+        - Network: No impact (local processing only)
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📋 Additional Context
+      description: Any other information, research, or context that might be helpful
+      placeholder: |
+        - Market research on similar tools
+        - User feedback from community discussions
+        - Related feature requests
+        - Technical constraints to consider
+        - Accessibility considerations
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribution
+      description: Would you be willing to help implement this feature?
+      options:
+        - label: "I'd be willing to submit a pull request for this feature"
+        - label: "I can help test this feature once implemented"
+        - label: "I can provide design mockups or UX feedback"
+        - label: "I can help with documentation for this feature"
+        - label: "I can provide sample data or test cases"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm you've completed these steps
+      options:
+        - label: I have searched existing feature requests for duplicates
+          required: true
+        - label: I have described a clear use case and benefits
+          required: true
+        - label: I have considered the project's scope and goals
+          required: true
+        - label: I have checked if this conflicts with existing features
+          required: false
+        - label: I am willing to provide feedback during implementation
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ### 🙏 Thank You!
+
+        Thank you for suggesting this feature! Your input helps us prioritize development and build features that matter most to users.
+
+        **What happens next:**
+        1. ⏱️ We'll review and label within 48-72 hours
+        2. 💬 We may ask clarifying questions or request more details
+        3. 🗳️ Community members can upvote (👍) to show interest
+        4. 📋 If approved, we'll add it to the roadmap
+        5. 🛠️ Implementation will be tracked with milestones
+
+        **Help prioritize**: Encourage others to upvote (👍) if they want this feature too!
+
+        **Stay involved**: Subscribe to notifications to track progress and provide feedback during development.

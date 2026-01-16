@@ -1,0 +1,32 @@
+# Pre-commit.ci Configuration (Alternative to GitHub Action)
+
+# If you prefer using pre-commit.ci service instead of the pre-commit-autoupdate.yml workflow:
+# 1. Install the GitHub App: https://github.com/apps/pre-commit-ci
+# 2. Uncomment this file and rename to .pre-commit-ci.yaml
+# 3. Delete .github/workflows/pre-commit-autoupdate.yml
+#
+# Pre-commit.ci is free for open-source projects and provides:
+# - Automatic hook updates (weekly/monthly)
+# - Auto-fix PRs when hooks fail
+# - Zero GitHub Actions minutes consumed
+# - Minimal configuration required
+
+# Uncomment below to activate:
+
+# # Schedule for autoupdate (weekly or monthly)
+# autoupdate_schedule: weekly
+#
+# # Custom commit message for hook updates
+# autoupdate_commit_msg: 'chore(pre-commit): auto-update hooks'
+#
+# # Custom commit message for auto-fixes
+# autofix_commit_msg: 'style: auto-fixes from pre-commit hooks'
+#
+# # Automatically auto-fix pull requests
+# autofix_prs: true
+#
+# # Skip hooks that are slow or problematic in CI
+# skip: []
+#
+# # Run hooks on specific branches
+# autoupdate_branch: 'dev'

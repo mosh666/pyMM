@@ -1,0 +1,140 @@
+name: Measure Performance Baselines
+
+on:
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: 'Number of iterations per operation'
+        required: false
+        default: '10'
+        type: string
+  schedule:
+    # Run daily at 2 AM UTC for 7 days during baseline measurement period
+    - cron: '0 2 * * *'
+
+jobs:
+  measure:
+    name: Measure on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.13']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+
+      - name: Run baseline measurements
+        run: |
+          uv run python scripts/measure_performance_baseline.py --iterations ${{ github.event.inputs.iterations || '10' }} --output performance_baselines_${{ matrix.os }}.json --verbose
+
+      - name: Upload baseline results
+        uses: actions/upload-artifact@v6
+        with:
+          name: baselines-${{ matrix.os }}-${{ github.run_number }}
+          path: performance_baselines_${{ matrix.os }}.json
+          retention-days: 30
+
+      - name: Display summary
+        if: always()
+        run: |
+          if [ -f performance_baselines_${{ matrix.os }}.json ]; then
+            echo "### Performance Baseline Results - ${{ matrix.os }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Measurements completed successfully!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Results uploaded as artifact: baselines-${{ matrix.os }}-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          fi
+        shell: bash
+
+  aggregate:
+    name: Aggregate Results
+    needs: measure
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: baseline-artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Aggregate results
+        run: |
+          python3 << 'EOF'
+          import json
+          from pathlib import Path
+          from datetime import datetime
+
+          artifacts_dir = Path("baseline-artifacts")
+          results = []
+
+          for artifact_dir in artifacts_dir.glob("baselines-*"):
+              for json_file in artifact_dir.glob("*.json"):
+                  with open(json_file) as f:
+                      data = json.load(f)
+                      results.append({
+                          "platform": json_file.stem.replace("performance_baselines_", ""),
+                          "data": data
+                      })
+
+          aggregate = {
+              "aggregation_date": datetime.now().isoformat(),
+              "run_number": "${{ github.run_number }}",
+              "platforms": results
+          }
+
+          with open("performance_baselines_aggregate.json", "w") as f:
+              json.dump(aggregate, f, indent=2)
+
+          print(f"✅ Aggregated {len(results)} platform results")
+          EOF
+
+      - name: Upload aggregate results
+        uses: actions/upload-artifact@v6
+        with:
+          name: baselines-aggregate-${{ github.run_number }}
+          path: performance_baselines_aggregate.json
+          retention-days: 90
+
+      - name: Add summary
+        run: |
+          echo "### Baseline Measurement Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Run Number:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Next Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Run this workflow daily for 7 days" >> $GITHUB_STEP_SUMMARY
+          echo "2. After 7 days, download all aggregate artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "3. Run \`scripts/calculate_thresholds.py\` to set performance thresholds" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts uploaded:**" >> $GITHUB_STEP_SUMMARY
+          echo "- baselines-aggregate-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY

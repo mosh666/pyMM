@@ -1,0 +1,37 @@
+#!/usr/bin/env pwsh
+# Pre-push hook to run comprehensive tests before pushing
+# This catches issues before they reach CI/CD
+
+Write-Host "🚀 Running pre-push validation..." -ForegroundColor Cyan
+
+# Add Python Scripts to PATH if needed
+$pythonScriptsPath = "$env:APPDATA\Python\Python314\Scripts"
+if (Test-Path $pythonScriptsPath) {
+    $env:Path = "$pythonScriptsPath;$env:Path"
+}
+
+# Run full test suite with coverage
+if (Test-Path "pytest.ini") {
+    Write-Host "🧪 Running full test suite with coverage..." -ForegroundColor Cyan
+    pytest --cov=app --cov-report=term-missing --cov-fail-under=70 -v
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "❌ Tests or coverage check failed" -ForegroundColor Red
+        Write-Host "💡 To bypass hooks, use: git push --no-verify" -ForegroundColor Yellow
+        exit 1
+    }
+    Write-Host "✅ All tests passed with sufficient coverage!" -ForegroundColor Green
+}
+
+# Validate documentation
+if (Test-Path "docs") {
+    Write-Host "📚 Checking documentation..." -ForegroundColor Cyan
+    # Check if any .md files exist
+    $mdFiles = Get-ChildItem -Path docs -Filter *.md -Recurse -File
+    if ($mdFiles.Count -gt 0) {
+        Write-Host "✅ Documentation files present" -ForegroundColor Green
+    } else {
+        Write-Host "⚠️  No markdown files found in docs/" -ForegroundColor Yellow
+    }
+}
+
+Write-Host "✅ Pre-push validation complete!" -ForegroundColor Green

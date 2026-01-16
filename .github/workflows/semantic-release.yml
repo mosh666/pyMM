@@ -1,0 +1,377 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  schedule:
+    # Daily at 1:00 AM UTC - automated beta releases for dev branch if changes exist
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - main
+      force:
+        description: 'Force release even if no changes detected'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    # For scheduled runs, only proceed on dev branch
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/dev'
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+      skip_message: ${{ steps.check.outputs.skip_message }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Check for changes since last release
+        id: check
+        run: |
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "skip_message=No previous releases found, proceeding with first release" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check if there are commits since the last tag
+          COMMITS_SINCE=$(git rev-list ${LATEST_TAG}..HEAD --count)
+
+          if [ "$COMMITS_SINCE" -eq 0 ]; then
+            if [ "${{ inputs.force }}" = "true" ]; then
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "skip_message=No changes but force flag enabled, proceeding" >> $GITHUB_OUTPUT
+            else
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "skip_message=No changes to release since ${LATEST_TAG}" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "skip_message=Found ${COMMITS_SINCE} commit(s) since ${LATEST_TAG}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add workflow summary
+        if: steps.check.outputs.has_changes == 'false'
+        run: |
+          echo "## 📭 No Changes to Release" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.check.outputs.skip_message }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The workflow will be skipped as there are no new commits to release." >> $GITHUB_STEP_SUMMARY
+
+  semantic-release:
+    needs: check-changes
+    if: needs.check-changes.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: semantic-release-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_notes: ${{ steps.semantic.outputs.new_release_notes }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Install python-semantic-release
+        run: |
+          uv pip install --system 'python-semantic-release>=9.15.0,<10.0.0'
+
+      - name: Configure Git for semantic-release
+        run: |
+          git config user.name "semantic-release"
+          git config user.email "semantic-release@github.com"
+
+      - name: Python Semantic Release
+        id: semantic
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_COMMIT_AUTHOR: "semantic-release <semantic-release>"
+          NODE_OPTIONS: '--disable-warning=DEP0040'
+        run: |
+          # Run semantic-release and capture outputs (filter out gitproject warnings)
+          if semantic-release version --no-commit --no-tag --no-push --print 2>&1 | grep -v "semantic_release.gitproject\|gitproject.git_add" > /tmp/version.txt; then
+            VERSION_OUTPUT=$(cat /tmp/version.txt | tail -n 1)
+
+            # Check if output indicates no release is needed
+            if echo "$VERSION_OUTPUT" | grep -q "No release will be made"; then
+              echo "new_release_published=false" >> $GITHUB_OUTPUT
+              echo "ℹ️ $VERSION_OUTPUT"
+            else
+              # Valid version detected, proceed with release
+              echo "new_release_version=$VERSION_OUTPUT" >> $GITHUB_OUTPUT
+
+              # Actually create the release (filter warnings)
+              semantic-release version 2>&1 | grep -v "semantic_release.gitproject\|gitproject.git_add" || true
+
+              if [ ${PIPESTATUS[0]} -eq 0 ]; then
+                echo "new_release_published=true" >> $GITHUB_OUTPUT
+              else
+                echo "new_release_published=false" >> $GITHUB_OUTPUT
+              fi
+            fi
+          else
+            echo "new_release_published=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate version stays in v0.y.z range
+        if: steps.semantic.outputs.new_release_published == 'true' && steps.semantic.outputs.new_release_version != ''
+        run: |
+          VERSION="${{ steps.semantic.outputs.new_release_version }}"
+
+          # Extract major version (first number before dot)
+          MAJOR_VERSION=$(echo "$VERSION" | sed -E 's/^([0-9]+)\..*/\1/')
+
+          if [ "$MAJOR_VERSION" != "0" ]; then
+            echo "::error::❌ Version $VERSION exceeds v0.y.z range!"
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## ❌ Version Guardrail Violation" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Detected Version:** \`v$VERSION\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This project is currently in beta and must remain at \`v0.y.z\` until" >> $GITHUB_STEP_SUMMARY
+            echo "the v1.0.0 release process is followed." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**To release v1.0.0:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Follow the v1.0.0 Release Process in CONTRIBUTING.md" >> $GITHUB_STEP_SUMMARY
+            echo "2. Update \`tag_regex\` in pyproject.toml" >> $GITHUB_STEP_SUMMARY
+            echo "3. Remove this guardrail check from semantic-release.yml" >> $GITHUB_STEP_SUMMARY
+            echo "4. Remove version validation from .pre-commit-config.yaml" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          echo "✅ Version $VERSION is within allowed v0.y.z range" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Release Summary
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo "## 🚀 New Release Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** \`v${{ steps.semantic.outputs.new_release_version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Determine if this is a beta release
+          if [[ "${{ steps.semantic.outputs.new_release_version }}" == *"-beta."* ]]; then
+            echo "**Type:** 🧪 Beta Release (Development)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Type:** ✅ Stable Release" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### 📦 Download Links" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Release artifacts will be available at:" >> $GITHUB_STEP_SUMMARY
+          echo "https://github.com/${{ github.repository }}/releases/tag/v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### 📝 Changelog Excerpt" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          # Extract recent changelog entries (first 20 lines of release notes)
+          echo "${{ steps.semantic.outputs.new_release_notes }}" | head -n 20 >> $GITHUB_STEP_SUMMARY || echo "See full changelog in release notes" >> $GITHUB_STEP_SUMMARY
+
+  build:
+    needs: semantic-release
+    if: needs.semantic-release.outputs.new_release_published == 'true'
+    uses: ./.github/workflows/build.yml
+    permissions:
+      contents: read
+      id-token: write  # Required for artifact attestation
+      attestations: write
+    with:
+      version: ${{ needs.semantic-release.outputs.new_release_version }}
+
+  upload-assets:
+    needs: [semantic-release, build]
+    if: needs.semantic-release.outputs.new_release_published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write  # Required for artifact attestation
+      attestations: write
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v7
+        with:
+          pattern: 'pyMM-*'
+          path: dist
+          merge-multiple: false
+
+      - name: List all downloaded artifacts
+        run: |
+          echo "## 📦 Downloaded Build Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ls -lhR dist/
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          # Count artifacts
+          ARTIFACT_COUNT=$(find dist -type f \( -name "*.zip" -o -name "*.AppImage" -o -name "*.dmg" \) | wc -l)
+          CHECKSUM_COUNT=$(find dist -type f -name "*.sha256" | wc -l)
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Artifacts:** ${ARTIFACT_COUNT} build files + ${CHECKSUM_COUNT} checksums" >> $GITHUB_STEP_SUMMARY
+
+      - name: Flatten artifacts directory
+        run: |
+          # Move all files from subdirectories to dist root for easier upload
+          find dist -type f \( -name "*.zip" -o -name "*.msi" -o -name "*.AppImage" -o -name "*.dmg" -o -name "*.sha256" \) -exec mv {} dist/ \;
+          # Clean up empty directories
+          find dist -type d -empty -delete
+
+          echo "Flattened artifact structure:"
+          ls -lh dist/
+
+      - name: Check for build artifacts
+        id: check_artifacts
+        run: |
+          # Count actual artifact files (not checksums)
+          ARTIFACT_COUNT=$(find dist -maxdepth 1 -type f \( -name "*.zip" -o -name "*.msi" -o -name "*.AppImage" -o -name "*.dmg" \) | wc -l)
+
+          echo "Found ${ARTIFACT_COUNT} artifact files"
+
+          if [ "$ARTIFACT_COUNT" -gt 0 ]; then
+            echo "has_artifacts=true" >> $GITHUB_OUTPUT
+            echo "✅ Build artifacts found for attestation"
+            find dist -maxdepth 1 -type f \( -name "*.zip" -o -name "*.msi" -o -name "*.AppImage" -o -name "*.dmg" \)
+          else
+            echo "has_artifacts=false" >> $GITHUB_OUTPUT
+            echo "⚠️ No build artifacts found, skipping attestation"
+          fi
+
+      - name: Generate artifact attestations (supply chain security)
+        if: steps.check_artifacts.outputs.has_artifacts == 'true'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/*'
+        continue-on-error: true  # Don't fail if attestation unavailable
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.zip
+            dist/*.msi
+            dist/*.AppImage
+            dist/*.dmg
+            dist/*.sha256
+          tag_name: v${{ needs.semantic-release.outputs.new_release_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_unmatched_files: false
+
+      - name: Update Release Description for Beta
+        if: contains(needs.semantic-release.outputs.new_release_version, '-beta.')
+        run: |
+          # Get the existing release notes
+          gh release view "v${{ needs.semantic-release.outputs.new_release_version }}" \
+            --repo "${{ github.repository }}" \
+            --json body -q .body > existing_notes.md
+
+          # Create the enhanced beta release notes
+          cat > release_notes.md << 'EOF'
+          🧪 **Beta Release** - Development Build
+
+          EOF
+
+          # Append existing notes
+          cat existing_notes.md >> release_notes.md
+
+          # Append download instructions
+          cat >> release_notes.md << 'EOF'
+
+          ---
+
+          ### 📥 Download Options
+
+          Choose the appropriate build for your platform and Python version:
+
+          **Windows (Installer):** `pyMM-*-py3.13-win-amd64.msi` (Recommended - Double-click to install)
+          **Windows (Portable):** `pyMM-*-win-amd64.zip` (Extract and run `launcher.py`)
+          **Linux:** `pyMM-*.AppImage` (Make executable and run)
+          **macOS:** `pyMM-*.dmg` (Mount and drag to Applications)
+
+          **Recommended:** Python 3.13 builds for best compatibility.
+
+          ---
+
+          > ⚠️ **Warning:** This is a pre-release version for testing purposes.
+          > For production use, please use the [latest stable release](https://github.com/${{ github.repository }}/releases/latest).
+          >
+          > Only the 3 most recent beta releases are retained.
+          EOF
+
+          # Update the release with the enhanced notes
+          gh release edit "v${{ needs.semantic-release.outputs.new_release_version }}" \
+            --repo "${{ github.repository }}" \
+            --notes-file release_notes.md
+
+          # Cleanup
+          rm -f existing_notes.md release_notes.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add upload summary
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Release Assets Uploaded" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All build artifacts uploaded to:" >> $GITHUB_STEP_SUMMARY
+          echo "https://github.com/${{ github.repository }}/releases/tag/v${{ needs.semantic-release.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+
+  cleanup-old-betas:
+    needs: [semantic-release, upload-assets]
+    if: |
+      needs.semantic-release.outputs.new_release_published == 'true' &&
+      contains(needs.semantic-release.outputs.new_release_version, '-beta.')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add cleanup reminder
+        run: |
+          echo "## 🧹 Beta Cleanup Schedule" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Old beta releases are automatically cleaned up daily at 2:00 AM UTC." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Keeps the 3 most recent beta releases" >> $GITHUB_STEP_SUMMARY
+          echo "- Deletes associated workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "You can also [manually trigger cleanup](https://github.com/${{ github.repository }}/actions/workflows/cleanup-beta-releases.yml) if needed." >> $GITHUB_STEP_SUMMARY

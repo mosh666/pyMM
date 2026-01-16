@@ -1,0 +1,60 @@
+{
+	"folders": [
+		{
+			"path": "..\\",
+		}
+	],
+	"settings": {
+		// Personal Workspace Settings
+		// (Project settings moved to .vscode/settings.json)
+
+		// Spelling
+		"cSpell.words": [],
+
+		// Windows-specific PowerShell
+		"powershell.cwd": "pyMM",
+		"terminal.integrated.cwd": "pyMM",
+
+		// Windows-specific File Exclusions
+		"files.exclude": {
+			"$RECYCLE.BIN": true,
+			"msdownld.tmp": true,
+			"System Volume Information": true
+		},
+
+		// Personal Git Settings
+		"gitProjectManager.displayProjectPath": true,
+
+		// Personal DevTools
+		"vscode-edge-devtools.showWorkers": true,
+		"vscode-edge-devtools.useHttps": true,
+
+		// Personal Theme
+		"workbench.colorTheme": "Default Dark+",
+
+		// Personal Code Analysis
+		"codacy.guardrails.instructionsFile": "manual",
+
+		// Personal Chat/Copilot Preferences
+		"inlineChat.notebookAgent": true,
+		"inlineChat.enableV2": true,
+		"chat.viewSessions.orientation": "stacked",
+		"chat.renderRelatedFiles": true,
+		"chat.mcp.gallery.enabled": true,
+		"chat.mcp.assisted.nuget.enabled": true,
+		"chat.editor.wordWrap": "on",
+		"chat.editing.autoAcceptDelay": 10,
+		"chat.customAgentInSubagent.enabled": true,
+		"chat.checkpoints.showFileChanges": true,
+		"chat.agent.maxRequests": 100,
+		"chat.tools.terminal.autoApprove": {
+			"/^python -m pytest .+$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"uv": true,
+			"just": true,
+			"docker run": true
+		}
+	}
+}

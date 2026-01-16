@@ -1,0 +1,422 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [dev]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  # ==========================================================================
+  # Validate Dependabot PR before auto-merge
+  # ==========================================================================
+  validate:
+    name: Validate Dependabot PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+
+    outputs:
+      should_automerge: ${{ steps.check.outputs.should_automerge }}
+      update_type: ${{ steps.metadata.outputs.update-type }}
+      dependency_names: ${{ steps.metadata.outputs.dependency-names }}
+      package_ecosystem: ${{ steps.metadata.outputs.package-ecosystem }}
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Check if should auto-merge
+        id: check
+        run: |
+          UPDATE_TYPE="${{ steps.metadata.outputs.update-type }}"
+          PKG_ECO="${{ steps.metadata.outputs.package-ecosystem }}"
+
+          # Default: don't auto-merge
+          SHOULD_AUTOMERGE="false"
+
+          # Auto-merge rules by ecosystem and update type
+          case "$PKG_ECO" in
+            "pip")
+              case "$UPDATE_TYPE" in
+                "version-update:semver-patch")
+                  SHOULD_AUTOMERGE="true"
+                  echo "✅ Auto-merge: Python patch update"
+                  ;;
+                "version-update:semver-minor")
+                  # Only auto-merge minor updates for specific groups
+                  DEPS="${{ steps.metadata.outputs.dependency-names }}"
+                  if echo "$DEPS" | grep -qE "(pytest|ruff|mypy|types-)"; then
+                    SHOULD_AUTOMERGE="true"
+                    echo "✅ Auto-merge: Python minor update (dev dependencies)"
+                  else
+                    echo "⏸️  Manual review: Python minor update (runtime dependencies)"
+                  fi
+                  ;;
+                "version-update:semver-major")
+                  echo "⏸️  Manual review: Python major update"
+                  ;;
+              esac
+              ;;
+
+            "docker")
+              # Docker base image updates need manual review due to potential breaking changes
+              echo "⏸️  Manual review: Docker base image update"
+              ;;
+
+            "github-actions")
+              case "$UPDATE_TYPE" in
+                "version-update:semver-patch"|"version-update:semver-minor")
+                  SHOULD_AUTOMERGE="true"
+                  echo "✅ Auto-merge: GitHub Actions patch/minor update"
+                  ;;
+                "version-update:semver-major")
+                  echo "⏸️  Manual review: GitHub Actions major update"
+                  ;;
+              esac
+              ;;
+          esac
+
+          echo "should_automerge=$SHOULD_AUTOMERGE" >> $GITHUB_OUTPUT
+
+          if [ "$SHOULD_AUTOMERGE" = "false" ]; then
+            echo "::notice::This PR requires manual review and will not be auto-merged"
+          fi
+
+  # ==========================================================================
+  # Auto-merge if validation passes
+  # ==========================================================================
+  automerge:
+    name: Auto-Merge Dependabot PR
+    runs-on: ubuntu-latest
+    needs: validate
+    # Only run if validation passed and we should auto-merge
+    if: |
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      needs.validate.outputs.should_automerge == 'true'
+
+    concurrency:
+      group: dependabot-automerge-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Post auto-merge information
+        run: |
+          DEPENDENCY_NAMES="${{ needs.validate.outputs.dependency_names }}"
+          UPDATE_TYPE="${{ needs.validate.outputs.update_type }}"
+          PKG_ECO="${{ needs.validate.outputs.package_ecosystem }}"
+
+          COMMENT="## 🤖 Dependabot Auto-Merge
+
+          This PR meets the criteria for automatic merging and will be merged after all CI checks pass.
+
+          ### Auto-Merge Criteria Met
+          - ✅ **Update Type**: \`${UPDATE_TYPE}\`
+          - ✅ **Package Ecosystem**: \`${PKG_ECO}\`
+          - ✅ **Dependencies**: Approved for auto-merge
+
+          ### Dependencies Updated
+          "
+
+          # Handle multiple dependencies (comma-separated)
+          IFS=',' read -ra DEPS <<< "$DEPENDENCY_NAMES"
+          for dep in "${DEPS[@]}"; do
+            dep=$(echo "$dep" | xargs)  # trim whitespace
+            COMMENT="${COMMENT}
+          - **${dep}**"
+          done
+
+          COMMENT="${COMMENT}
+
+          ### Post-Merge Actions Required
+          "
+
+          if [ "$PKG_ECO" = "pip" ]; then
+            COMMENT="${COMMENT}
+          ⚠️  **UV Lock Update Needed**: After merge, run:
+          \`\`\`bash
+          uv lock --upgrade-package <package-name>
+          \`\`\`
+          "
+          fi
+
+          COMMENT="${COMMENT}
+
+          ### Timeline
+          - ⏳ Waiting for CI checks to complete
+          - ⏳ Auto-merge will trigger once all required checks pass
+          - ⏳ Estimated time: 20-30 minutes (full CI matrix)
+
+          ---
+          💡 **Note**: Auto-merge can be disabled by removing the \`automerge\` label or closing and reopening this PR."
+
+          gh pr comment "$PR_URL" --body "$COMMENT"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve Dependabot PR
+        run: |
+          # Check if already approved by this workflow
+          EXISTING_REVIEW=$(gh api \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and .state == "APPROVED") | .id')
+
+          if [ -n "$EXISTING_REVIEW" ]; then
+            echo "✅ PR already approved by workflow"
+          else
+            gh pr review --approve "$PR_URL" \
+              --body "✅ **Auto-approved** by Dependabot Auto-Merge workflow
+
+          **Validation Results:**
+          - Update type: \`${{ needs.validate.outputs.update_type }}\`
+          - Package ecosystem: \`${{ needs.validate.outputs.package_ecosystem }}\`
+          - Dependencies: ${{ needs.validate.outputs.dependency_names }}
+
+          This PR meets the criteria for automatic merging. It will be merged once all required CI checks pass."
+          fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge
+        run: |
+          # Check if auto-merge is already enabled
+          AUTOMERGE_STATUS=$(gh pr view "$PR_URL" --json autoMergeRequest --jq '.autoMergeRequest')
+
+          if [ "$AUTOMERGE_STATUS" != "null" ]; then
+            echo "✅ Auto-merge already enabled"
+          else
+            gh pr merge --auto --squash "$PR_URL"
+            echo "✅ Auto-merge enabled. PR will be merged once all required checks pass."
+          fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================================================
+  # Monitor CI and provide feedback
+  # ==========================================================================
+  monitor:
+    name: Monitor CI Status
+    runs-on: ubuntu-latest
+    needs: [validate, automerge]
+    if: |
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      needs.validate.outputs.should_automerge == 'true' &&
+      !cancelled()
+
+    steps:
+      - name: Wait for CI checks
+        id: wait_ci
+        run: |
+          MAX_WAIT_MINUTES=45  # Increased for full build matrix
+          POLL_INTERVAL=120    # Check every 2 minutes
+          ELAPSED=0
+
+          echo "⏳ Monitoring CI checks (timeout: ${MAX_WAIT_MINUTES} minutes)..."
+
+          while [ $ELAPSED -lt $((MAX_WAIT_MINUTES * 60)) ]; do
+            # Get current check status
+            STATUS_JSON=$(gh pr checks "$PR_URL" --json state,name,conclusion)
+
+            # Count checks by state
+            TOTAL=$(echo "$STATUS_JSON" | jq 'length')
+            COMPLETED=$(echo "$STATUS_JSON" | jq '[.[] | select(.state == "COMPLETED")] | length')
+            SUCCESS=$(echo "$STATUS_JSON" | jq '[.[] | select(.conclusion == "SUCCESS")] | length')
+            FAILURE=$(echo "$STATUS_JSON" | jq '[.[] | select(.conclusion == "FAILURE")] | length')
+
+            echo "📊 Check status: $SUCCESS/$TOTAL passed, $FAILURE failed, $((TOTAL - COMPLETED)) pending"
+
+            # If any check failed, exit early
+            if [ "$FAILURE" -gt 0 ]; then
+              echo "❌ CI checks failed"
+              echo "ci_status=failed" >> $GITHUB_OUTPUT
+
+              # List failed checks
+              echo "$STATUS_JSON" | jq -r '.[] | select(.conclusion == "FAILURE") | "  - " + .name'
+              exit 0
+            fi
+
+            # If all checks passed, exit successfully
+            if [ "$COMPLETED" -eq "$TOTAL" ] && [ "$SUCCESS" -eq "$TOTAL" ]; then
+              echo "✅ All CI checks passed!"
+              echo "ci_status=success" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
+            # Wait before next poll
+            sleep $POLL_INTERVAL
+            ELAPSED=$((ELAPSED + POLL_INTERVAL))
+
+            echo "⏳ Still waiting... (${ELAPSED}s / $((MAX_WAIT_MINUTES * 60))s)"
+          done
+
+          # Timeout reached
+          echo "⏱️  Timeout reached after ${MAX_WAIT_MINUTES} minutes"
+          echo "ci_status=timeout" >> $GITHUB_OUTPUT
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Comment on CI issues
+        if: steps.wait_ci.outputs.ci_status != 'success'
+        run: |
+          CI_STATUS="${{ steps.wait_ci.outputs.ci_status }}"
+
+          if [ "$CI_STATUS" = "failed" ]; then
+            COMMENT="## ❌ CI Checks Failed
+
+          The Dependabot auto-merge workflow detected failing CI checks.
+
+          ### Next Steps
+          1. 🔍 Review failing checks in the \"Checks\" tab above
+          2. 🤖 Dependabot may auto-update this PR if upstream changes resolve the issues
+          3. 🛠️  Manual intervention may be required for persistent failures
+
+          ### Auto-Merge Status
+          - ⏸️  Auto-merge is enabled but blocked by failing checks
+          - ✅ Will automatically merge if checks pass later
+          - 🔄 Push new commits to re-trigger checks
+
+          ---
+          💡 **Tip**: Use \`@dependabot recreate\` to rebuild this PR from scratch."
+
+          elif [ "$CI_STATUS" = "timeout" ]; then
+            COMMENT="## ⏱️  CI Monitoring Timeout
+
+          The auto-merge workflow stopped monitoring after 45 minutes.
+
+          ### What This Means
+          - ✅ Auto-merge is still enabled
+          - ✅ PR will merge automatically when all checks pass
+          - ℹ️  Your CI jobs may still be running
+
+          ### Current Status
+          Check the \"Checks\" tab above for real-time status of:
+          - 🪟 Windows builds (Python 3.12, 3.13, 3.14)
+          - 🐧 Linux builds (Python 3.12, 3.13, 3.14)
+          - 🍎 macOS builds (Python 3.12, 3.13, 3.14, Intel + ARM)
+          - 🔒 Security scans (CodeQL, Scorecard)
+          - 📚 Documentation builds
+
+          ---
+          💡 **Note**: This timeout is normal for the full CI matrix and doesn't indicate a problem."
+          fi
+
+          gh pr comment "$PR_URL" --body "$COMMENT"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================================================
+  # Handle manual review cases
+  # ==========================================================================
+  manual-review:
+    name: Label for Manual Review
+    runs-on: ubuntu-latest
+    needs: validate
+    if: |
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      needs.validate.outputs.should_automerge == 'false'
+
+    steps:
+      - name: Add manual review label
+        run: |
+          gh pr edit "$PR_URL" --add-label "needs-manual-review"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post manual review notice
+        run: |
+          UPDATE_TYPE="${{ needs.validate.outputs.update_type }}"
+          PKG_ECO="${{ needs.validate.outputs.package_ecosystem }}"
+          DEPS="${{ needs.validate.outputs.dependency_names }}"
+
+          COMMENT="## 🔍 Manual Review Required
+
+          This Dependabot PR requires manual review before merging.
+
+          ### Why Manual Review?
+          - **Update Type**: \`${UPDATE_TYPE}\`
+          - **Package Ecosystem**: \`${PKG_ECO}\`
+          - **Dependencies**: ${DEPS}
+
+          ### Review Checklist
+          "
+
+          if echo "$UPDATE_TYPE" | grep -q "major"; then
+            COMMENT="${COMMENT}
+          - [ ] Review CHANGELOG/release notes for breaking changes
+          - [ ] Check if code changes are needed for compatibility
+          - [ ] Verify all tests pass with updated dependencies
+          - [ ] Test critical user workflows manually if needed"
+          fi
+
+          if [ "$PKG_ECO" = "pip" ]; then
+            COMMENT="${COMMENT}
+          - [ ] Review dependency changes in pyproject.toml
+          - [ ] Check for transitive dependency conflicts
+          - [ ] After merge: Run \`uv lock --upgrade-package <name>\`
+          - [ ] Verify uv.lock is updated in a follow-up commit"
+          fi
+
+          if [ "$PKG_ECO" = "docker" ]; then
+            COMMENT="${COMMENT}
+          - [ ] Check Debian/Python base image release notes
+          - [ ] Verify Docker build succeeds locally
+          - [ ] Test container functionality
+          - [ ] Check for deprecated system packages"
+          fi
+
+          COMMENT="${COMMENT}
+
+          ### Approval Process
+          1. ✅ Complete the review checklist above
+          2. ✅ Ensure all CI checks pass
+          3. ✅ Approve the PR
+          4. ✅ Merge manually when ready
+
+          ---
+          💡 **Tip**: Remove \`needs-manual-review\` label if you want to enable auto-merge for this PR."
+
+          gh pr comment "$PR_URL" --body "$COMMENT"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# ==============================================================================
+# Configuration Notes
+# ==============================================================================
+#
+# AUTO-MERGE RULES:
+# 1. Python (pip):
+#    - ✅ Auto-merge: Patch updates (all dependencies)
+#    - ✅ Auto-merge: Minor updates (dev dependencies only: pytest, ruff, mypy, types-*)
+#    - ❌ Manual review: Minor updates (runtime dependencies)
+#    - ❌ Manual review: Major updates (all dependencies)
+#
+# 2. Docker:
+#    - ❌ Manual review: All updates (base images can have breaking changes)
+#
+# 3. GitHub Actions:
+#    - ✅ Auto-merge: Patch/minor updates
+#    - ❌ Manual review: Major updates
+#
+# CUSTOMIZATION:
+# - Edit the validate job's check step to adjust auto-merge criteria
+# - Modify dependency patterns in the grep command for Python minor updates
+# - Adjust MAX_WAIT_MINUTES in monitor job for your CI duration
+#
+# UV LOCKFILE REMINDER:
+# - After merging Python dependency PRs, run: uv lock --upgrade-package <name>
+# - Consider adding a post-merge GitHub Action to automate this
+#

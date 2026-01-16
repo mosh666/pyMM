@@ -1,0 +1,277 @@
+name: Update UV Lock After Dependabot Merge
+
+# Trigger when a PR is closed (merged or just closed)
+on:
+  pull_request:
+    types: [closed]
+    branches: [dev]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-uv-lock:
+    name: Update uv.lock for Python Dependencies
+    runs-on: ubuntu-latest
+
+    # Only run if:
+    # 1. PR was actually merged (not just closed)
+    # 2. PR was from Dependabot
+    # 3. PR modified Python dependencies
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      contains(github.event.pull_request.labels.*.name, 'python')
+
+    steps:
+      - name: Check if UV lock update is needed
+        id: check
+        run: |
+          # Parse PR title to extract dependency information
+          PR_TITLE="${{ github.event.pull_request.title }}"
+
+          # Dependabot PR titles follow pattern:
+          # "chore(deps): bump package-name from X.Y.Z to A.B.C in /path"
+          # or for grouped updates:
+          # "chore(deps): bump group-name group in /path"
+
+          echo "PR Title: $PR_TITLE"
+
+          # Check if this is a grouped update
+          if echo "$PR_TITLE" | grep -q " group "; then
+            echo "is_group_update=true" >> $GITHUB_OUTPUT
+            # Extract group name (between "bump " and " group")
+            GROUP_NAME=$(echo "$PR_TITLE" | sed -n 's/.*bump \(.*\) group.*/\1/p')
+            echo "group_name=$GROUP_NAME" >> $GITHUB_OUTPUT
+            echo "Detected grouped update: $GROUP_NAME"
+          else
+            echo "is_group_update=false" >> $GITHUB_OUTPUT
+            # Extract package name (between "bump " and " from")
+            PACKAGE_NAME=$(echo "$PR_TITLE" | sed -n 's/.*bump \(.*\) from.*/\1/p')
+            echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+            echo "Detected single package update: $PACKAGE_NAME"
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'  # Use stable version for lock updates
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+
+      - name: Check if uv.lock needs updating
+        id: check_lock
+        run: |
+          # Get current uv.lock hash
+          BEFORE_HASH=$(sha256sum uv.lock | cut -d' ' -f1)
+          echo "before_hash=$BEFORE_HASH" >> $GITHUB_OUTPUT
+          echo "Lock file hash before: $BEFORE_HASH"
+
+          # Check if pyproject.toml was actually modified
+          git diff HEAD~1 HEAD --name-only | grep -q "pyproject.toml"
+          if [ $? -eq 0 ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "✅ pyproject.toml was modified, lock update needed"
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  pyproject.toml not modified, skipping lock update"
+          fi
+
+      - name: Update uv.lock for single package
+        if: |
+          steps.check_lock.outputs.needs_update == 'true' &&
+          steps.check.outputs.is_group_update == 'false'
+        run: |
+          PACKAGE_NAME="${{ steps.check.outputs.package_name }}"
+
+          echo "📦 Updating lock for package: $PACKAGE_NAME"
+
+          # Run UV lock with upgrade for specific package
+          # Using --upgrade-package ensures only this package and its deps are updated
+          uv lock --upgrade-package "$PACKAGE_NAME"
+
+          echo "✅ Lock file updated for $PACKAGE_NAME"
+
+      - name: Update uv.lock for grouped packages
+        if: |
+          steps.check_lock.outputs.needs_update == 'true' &&
+          steps.check.outputs.is_group_update == 'true'
+        run: |
+          GROUP_NAME="${{ steps.check.outputs.group_name }}"
+
+          echo "📦 Updating lock for dependency group: $GROUP_NAME"
+
+          # For grouped updates, we need to determine which packages were updated
+          # Best approach: do a full lock upgrade since multiple packages changed
+          uv lock --upgrade
+
+          echo "✅ Lock file updated for group: $GROUP_NAME"
+
+      - name: Check if lock file changed
+        id: lock_changed
+        run: |
+          if git diff --quiet uv.lock; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  Lock file unchanged after update"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Lock file has changes"
+
+            # Show diff summary
+            echo "📊 Lock file diff summary:"
+            git diff --stat uv.lock
+          fi
+
+      - name: Commit and push lock file changes
+        if: steps.lock_changed.outputs.changed == 'true'
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Commit changes
+          git add uv.lock
+
+          if [ "${{ steps.check.outputs.is_group_update }}" = "true" ]; then
+            COMMIT_MSG="chore(deps): update uv.lock after ${{ steps.check.outputs.group_name }} group merge"
+          else
+            COMMIT_MSG="chore(deps): update uv.lock after ${{ steps.check.outputs.package_name }} merge"
+          fi
+
+          git commit -m "$COMMIT_MSG" -m "Auto-generated by dependabot-uv-lock-update workflow" -m "Related PR: #${{ github.event.pull_request.number }}"
+
+          # Push to the base branch (dev)
+          git push origin ${{ github.event.pull_request.base.ref }}
+
+          echo "✅ Lock file changes committed and pushed"
+
+      - name: Comment on merged PR
+        if: steps.lock_changed.outputs.changed == 'true'
+        run: |
+          COMMENT="## ✅ UV Lock File Updated
+
+          The \`uv.lock\` file has been automatically updated following this Dependabot merge.
+
+          ### What was updated
+          "
+
+          if [ "${{ steps.check.outputs.is_group_update }}" = "true" ]; then
+            COMMENT="${COMMENT}- **Dependency Group**: ${{ steps.check.outputs.group_name }}"
+          else
+            COMMENT="${COMMENT}- **Package**: \`${{ steps.check.outputs.package_name }}\`"
+          fi
+
+          COMMENT="${COMMENT}
+
+          ### Details
+          - **Commit**: See the follow-up commit with updated \`uv.lock\`
+          - **Lock Hash Before**: \`${{ steps.check_lock.outputs.before_hash }}\`
+          - **Branch**: \`${{ github.event.pull_request.base.ref }}\`
+
+          ### Verification
+          To verify the lock file is correct:
+          \`\`\`bash
+          uv sync --frozen
+          uv run pytest
+          \`\`\`
+
+          ---
+          🤖 *Automated by [\`dependabot-uv-lock-update\`](.github/workflows/dependabot-uv-lock-update.yml) workflow*"
+
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$COMMENT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment if no update needed
+        if: |
+          steps.check_lock.outputs.needs_update == 'false' ||
+          steps.lock_changed.outputs.changed == 'false'
+        run: |
+          if [ "${{ steps.check_lock.outputs.needs_update }}" = "false" ]; then
+            REASON="pyproject.toml was not modified"
+          else
+            REASON="uv.lock was already in sync"
+          fi
+
+          COMMENT="## ℹ️  UV Lock File Check
+
+          No \`uv.lock\` update was needed for this Dependabot merge.
+
+          **Reason**: $REASON
+
+          This is normal for certain types of updates and doesn't indicate a problem.
+
+          ---
+          🤖 *Automated by [\`dependabot-uv-lock-update\`](.github/workflows/dependabot-uv-lock-update.yml) workflow*"
+
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$COMMENT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on workflow failure
+        if: failure()
+        run: |
+          COMMENT="## ⚠️  UV Lock File Update Failed
+
+          The automatic \`uv.lock\` update workflow encountered an error.
+
+          ### Manual Steps Required
+          1. Pull the latest changes from \`${{ github.event.pull_request.base.ref }}\`
+          2. Run the lock update manually:
+             \`\`\`bash
+             uv lock --upgrade-package ${{ steps.check.outputs.package_name || 'PACKAGE_NAME' }}
+             git add uv.lock
+             git commit -m \"chore(deps): update uv.lock after dependabot merge\"
+             git push
+             \`\`\`
+
+          ### Workflow Run
+          [View failed workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          ---
+          🤖 *Automated by [\`dependabot-uv-lock-update\`](.github/workflows/dependabot-uv-lock-update.yml) workflow*"
+
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$COMMENT" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# ==============================================================================
+# Configuration Notes
+# ==============================================================================
+#
+# WORKFLOW BEHAVIOR:
+# - Triggers automatically when Dependabot PRs are merged to 'dev' branch
+# - Only processes PRs labeled with 'python' (set in dependabot.yml)
+# - Extracts package name from PR title (Dependabot standard format)
+# - Runs `uv lock --upgrade-package <name>` for single packages
+# - Runs `uv lock --upgrade` for grouped dependency updates
+# - Commits changes back to base branch (dev)
+# - Posts comment on original PR with results
+#
+# REQUIREMENTS:
+# - Repository must have 'contents: write' permission for github-actions bot
+# - Dependabot PRs must be labeled with 'python' in dependabot.yml
+# - UV must support the Python version specified (currently 3.13)
+#
+# EDGE CASES HANDLED:
+# - PR closed without merge (skipped via if condition)
+# - pyproject.toml not modified (skipped, no lock update needed)
+# - Lock file already in sync (comments but doesn't commit)
+# - Grouped dependency updates (uses full upgrade)
+# - Workflow failures (posts comment with manual instructions)
+#
+# CUSTOMIZATION:
+# - Change Python version in 'Set up Python' step if needed
+# - Modify commit message format in 'Commit and push' step
+# - Adjust branch name if using different target (currently 'dev')
+# - Add additional verification steps if needed
+#

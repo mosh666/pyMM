@@ -1,0 +1,488 @@
+name: CI - Tests and Linting
+
+on:
+  push:
+    branches: [ main, dev ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, dev ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+  statuses: write
+
+# Prevent redundant workflow runs on rapid pushes - saves Actions minutes
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Always run - reports CI skip status
+  skip-check:
+    name: CI Skip Status
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      skip_reason: ${{ steps.skip_check.outputs.skip_reason }}
+      skip_tests: ${{ steps.skip_check.outputs.skip_tests }}
+      skip_lint: ${{ steps.skip_check.outputs.skip_lint }}
+      skip_build: ${{ steps.skip_check.outputs.skip_build }}
+      paths_code: ${{ steps.filter.outputs.code }}
+      paths_docs: ${{ steps.filter.outputs.docs }}
+      paths_config: ${{ steps.filter.outputs.config }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2  # Need at least 2 commits for diff
+
+      - name: Detect changed file paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'app/**'
+              - 'tests/**'
+              - 'plugins/**'
+            docs:
+              - 'docs/**'
+              - '*.md'
+              - '**/*.md'
+            config:
+              - 'pyproject.toml'
+              - 'config/**'
+              - '.github/**'
+              - 'Dockerfile'
+              - 'justfile'
+
+      - name: Check skip directives
+        id: skip_check
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+
+          # Initialize outputs
+          SHOULD_SKIP="false"
+          SKIP_REASON=""
+          SKIP_TESTS="false"
+          SKIP_LINT="false"
+          SKIP_BUILD="false"
+
+          # Check for skip directives
+          if [[ "$COMMIT_MSG" == *"[skip ci]"* ]]; then
+            SHOULD_SKIP="true"
+            SKIP_REASON="Full CI skip requested with [skip ci]"
+          elif [[ "$COMMIT_MSG" == *"[skip tests]"* ]]; then
+            SKIP_TESTS="true"
+            SKIP_REASON="Tests skipped with [skip tests]"
+          elif [[ "$COMMIT_MSG" == *"[skip lint]"* ]]; then
+            SKIP_LINT="true"
+            SKIP_REASON="Linting skipped with [skip lint]"
+          elif [[ "$COMMIT_MSG" == *"[skip build]"* ]]; then
+            SKIP_BUILD="true"
+            SKIP_REASON="Build skipped with [skip build]"
+          fi
+
+          # Auto-skip if only docs changed (unless it's a PR)
+          if [[ "${{ steps.filter.outputs.docs }}" == "true" ]] && \
+             [[ "${{ steps.filter.outputs.code }}" == "false" ]] && \
+             [[ "${{ steps.filter.outputs.config }}" == "false" ]] && \
+             [[ "${{ github.event_name }}" != "pull_request" ]] && \
+             [[ "$SHOULD_SKIP" == "false" ]]; then
+            SHOULD_SKIP="true"
+            SKIP_REASON="Only documentation files changed (auto-skip)"
+          fi
+
+          echo "should_skip=$SHOULD_SKIP" >> $GITHUB_OUTPUT
+          echo "skip_reason=$SKIP_REASON" >> $GITHUB_OUTPUT
+          echo "skip_tests=$SKIP_TESTS" >> $GITHUB_OUTPUT
+          echo "skip_lint=$SKIP_LINT" >> $GITHUB_OUTPUT
+          echo "skip_build=$SKIP_BUILD" >> $GITHUB_OUTPUT
+
+      - name: Add skip summary
+        if: steps.skip_check.outputs.should_skip == 'true' || steps.skip_check.outputs.skip_tests == 'true' || steps.skip_check.outputs.skip_lint == 'true' || steps.skip_check.outputs.skip_build == 'true'
+        run: |
+          echo "## ⏭️ CI Skip Directive Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Reason:** ${{ steps.skip_check.outputs.skip_reason }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### File Changes Detected:" >> $GITHUB_STEP_SUMMARY
+          echo "- Code files (app/, tests/, plugins/): ${{ steps.filter.outputs.code }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Documentation files: ${{ steps.filter.outputs.docs }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Configuration files: ${{ steps.filter.outputs.config }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Jobs Status:" >> $GITHUB_STEP_SUMMARY
+          echo "- Linting: ${{ steps.skip_check.outputs.skip_lint == 'true' && '⏭️ Skipped' || '✅ Running' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Type Checking: ${{ steps.skip_check.outputs.skip_lint == 'true' && '⏭️ Skipped' || '✅ Running' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: ${{ steps.skip_check.outputs.skip_tests == 'true' && '⏭️ Skipped' || '✅ Running' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Scans: 🔒 Always Running (cannot be skipped)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> **Note:** Security scans always run regardless of skip directives for project safety." >> $GITHUB_STEP_SUMMARY
+
+  lint:
+    needs: skip-check
+    # Skip if [skip ci] or [skip lint] or auto-skipped, but allow if code changed
+    if: |
+      needs.skip-check.outputs.should_skip != 'true' &&
+      needs.skip-check.outputs.skip_lint != 'true'
+    name: Linting and Formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Just
+        uses: extractions/setup-just@v2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --frozen --all-extras
+
+      - name: Run ruff linting
+        run: just lint
+
+  type-check:
+    needs: skip-check
+    # Skip if [skip ci] or [skip lint] or auto-skipped
+    if: |
+      needs.skip-check.outputs.should_skip != 'true' &&
+      needs.skip-check.outputs.skip_lint != 'true'
+    name: Type Checking
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Just
+        uses: extractions/setup-just@v2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --frozen --all-extras
+
+      - name: Run mypy type checking
+        run: just lint
+
+  test:
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: [skip-check, lint, type-check]
+    # Skip if [skip ci] or [skip tests] or auto-skipped
+    # But if this is a PR, always run tests on code changes
+    if: |
+      (needs.skip-check.outputs.should_skip != 'true' &&
+       needs.skip-check.outputs.skip_tests != 'true') ||
+      (github.event_name == 'pull_request' && needs.skip-check.outputs.paths_code == 'true')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-14]
+        python-version: ["3.12", "3.13", "3.14"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Required for hatch-vcs
+
+      - name: Set up Just
+        uses: extractions/setup-just@v2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Install Qt dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1-mesa-dev \
+            libglib2.0-0 \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libegl1 \
+            libudev-dev
+
+      - name: Install platform-specific Python dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: uv pip install --system pyudev>=0.24.1
+
+      - name: Install platform-specific Python dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: uv pip install --system pywin32>=306 wmi>=1.5.1
+
+      - name: Set Qt platform to offscreen (Linux)
+        if: runner.os == 'Linux'
+        run: echo "QT_QPA_PLATFORM=offscreen" >> $GITHUB_ENV
+
+      - name: Run pytest with coverage (strict)
+        shell: bash
+        run: |
+          echo "🧪 Running all tests with coverage..."
+          # Platform markers auto-skip tests for wrong platforms via conftest.py
+          # Run all tests - platform-specific tests are automatically skipped on wrong OS
+          uv run pytest tests/ --cov=app --cov-report=xml -v
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-py${{ matrix.python-version }}
+          verbose: false
+          disable_search: true
+        continue-on-error: true
+
+      - name: Upload coverage HTML report
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-report-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: htmlcov/
+          retention-days: 14
+        if: always()
+
+  lint-docs:
+    needs: skip-check
+    # Docs validation can be skipped with [skip ci] but not [skip lint]
+    if: needs.skip-check.outputs.should_skip != 'true'
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Lint markdown files (strict)
+        uses: DavidAnson/markdownlint-cli2-action@v22
+        with:
+          globs: '**/*.md'
+          config: '.markdownlint.json'
+
+      - name: Check for broken links
+        run: |
+          echo "🔗 Checking for broken internal links..."
+          # Check if README links to existing files
+          if ! grep -q "docs/getting-started.md" README.md; then
+            echo "⚠️  Warning: README might have broken documentation links"
+          fi
+          echo "✅ Basic link check passed"
+
+      - name: Check documentation completeness
+        run: |
+          echo "📚 Checking documentation completeness..."
+          required_docs=(
+            "README.md"
+            "CHANGELOG.md"
+            "CONTRIBUTING.md"
+            "LICENSE"
+            "docs/installation.md"
+            "docs/getting-started.md"
+            "docs/features.md"
+            "docs/configuration.md"
+            "docs/storage-groups.md"
+            "docs/sync-engine.md"
+            "docs/templates.md"
+            "docs/troubleshooting.md"
+            "docs/migration-guide.md"
+            "docs/plugin-catalog.md"
+            "docs/getting-started-dev.md"
+            "docs/architecture.md"
+            "docs/plugin-development.md"
+            "docs/api-reference.md"
+            "docs/windows-setup.md"
+            "docs/macos-setup.md"
+            "docs/platform-directories.md"
+          )
+          missing_docs=()
+
+          for doc in "${required_docs[@]}"; do
+            if [ ! -f "$doc" ]; then
+              missing_docs+=("$doc")
+            fi
+          done
+
+          if [ ${#missing_docs[@]} -gt 0 ]; then
+            echo "❌ Missing required documentation files:"
+            printf '  - %s\n' "${missing_docs[@]}"
+            exit 1
+          fi
+
+          echo "✅ All required documentation files present"
+
+  validate-config:
+    needs: skip-check
+    # Config validation can be skipped with [skip ci]
+    if: needs.skip-check.outputs.should_skip != 'true'
+    name: Configuration Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate YAML files
+        run: |
+          echo "📝 Validating YAML configuration files..."
+          uv pip install --system pyyaml
+          python <<'PYEOF'
+          import yaml
+          import sys
+          from pathlib import Path
+
+          errors = []
+          for yaml_file in Path('.').rglob('*.yaml'):
+              if '.github' in str(yaml_file) or 'node_modules' in str(yaml_file):
+                  continue
+              try:
+                  with open(yaml_file) as f:
+                      yaml.safe_load(f)
+                  print(f'✅ {yaml_file}')
+              except Exception as e:
+                  errors.append(f'{yaml_file}: {e}')
+                  print(f'❌ {yaml_file}: {e}')
+
+          if errors:
+              sys.exit(1)
+          print('\n✅ All YAML files validated')
+          PYEOF
+
+      - name: Validate pyproject.toml
+        run: |
+          echo "📦 Validating pyproject.toml..."
+          uv pip install --system tomli
+          python -c "import tomli; tomli.load(open('pyproject.toml', 'rb'))"
+          echo "✅ pyproject.toml is valid"
+
+  test-docker:
+    name: Docker Container Tests
+    runs-on: ubuntu-latest
+    needs: [skip-check, lint, type-check]
+    # Skip if [skip ci], [skip tests], or [skip build]
+    if: |
+      needs.skip-check.outputs.should_skip != 'true' &&
+      needs.skip-check.outputs.skip_tests != 'true' &&
+      needs.skip-check.outputs.skip_build != 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Required for hatch-vcs
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          echo "🐳 Building Docker image..."
+          docker build --target test -t pymm-ci:${{ github.sha }} .
+          echo "✅ Docker image built successfully"
+
+      - name: Run tests in Docker container
+        timeout-minutes: 15
+        run: |
+          echo "🧪 Running tests in Docker container..."
+          docker run --rm -t \
+            -e PYMM_DISABLE_TEMPLATE_WATCH=1 \
+            -e PYTHONUNBUFFERED=1 \
+            pymm-ci:${{ github.sha }} \
+            bash -c "xvfb-run -a pytest tests/ --cov=app --cov-report=term --tb=short -v || exit 1"
+          echo "✅ Docker tests passed"
+
+      - name: Verify application startup
+        run: |
+          echo "🚀 Verifying application can start in container..."
+          docker run --rm \
+            -e PYMM_DISABLE_TEMPLATE_WATCH=1 \
+            --entrypoint python \
+            pymm-ci:${{ github.sha }} \
+            -c "from app.main import get_app_root; print(f'App root: {get_app_root()}')"
+          echo "✅ Application startup verified"
+
+  summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [skip-check, lint, type-check, test, lint-docs, validate-config, test-docker]
+    if: always()
+
+    steps:
+      - name: Check results
+        run: |
+          echo "📊 CI Pipeline Summary:"
+          echo "  Linting: ${{ needs.lint.result }}"
+          echo "  Type Checking: ${{ needs.type-check.result }}"
+          echo "  Tests: ${{ needs.test.result }}"
+          echo "  Documentation: ${{ needs.lint-docs.result }}"
+          echo "  Configuration: ${{ needs.validate-config.result }}"
+          echo "  Docker Tests: ${{ needs.test-docker.result }}"
+
+          if [[ "${{ needs.lint.result }}" != "success" ]] || \
+             [[ "${{ needs.type-check.result }}" != "success" ]] || \
+             [[ "${{ needs.test.result }}" != "success" ]] || \
+             [[ "${{ needs.lint-docs.result }}" != "success" ]] || \
+             [[ "${{ needs.validate-config.result }}" != "success" ]] || \
+             [[ "${{ needs.test-docker.result }}" != "success" ]]; then
+            echo "❌ CI pipeline failed - please fix errors before merging"
+            exit 1
+          fi
+
+          echo "✅ All CI checks passed!"

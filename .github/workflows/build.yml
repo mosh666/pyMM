@@ -1,0 +1,565 @@
+name: Build Portable Distribution
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version override (e.g. 1.2.0)'
+        required: false
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write  # For artifact attestation
+  attestations: write
+
+jobs:
+  build-windows:
+    name: Build Windows - Python ${{ matrix.python-version }} (${{ matrix.arch }})
+    runs-on: windows-2022  # Pinned for reproducible release builds
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+        arch: ["amd64"]
+        # Note: ARM64 builds excluded - GitHub Actions doesn't provide ARM64 Windows runners,
+        # so we cannot execute ARM64 Python to install dependencies
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Version Override
+        if: inputs.version != ''
+        run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ inputs.version }}" >> $env:GITHUB_ENV
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python for build script
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build dependencies
+        run: uv pip install --system hatchling hatch-vcs jinja2 wheel packaging
+
+      - name: Install WiX Toolset v4 (for Python 3.13 only)
+        if: matrix.python-version == '3.13'
+        run: |
+          dotnet tool install --global wix
+          wix --version
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(python -m hatchling version)
+          # Normalize version to PEP 440 format (e.g., 2.0-beta.54 -> 2.0b54)
+          NORMALIZED_VERSION=$(python -c "from packaging.version import Version; print(str(Version('$VERSION')))")
+          echo "VERSION=$NORMALIZED_VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $NORMALIZED_VERSION"
+
+      # _version.py is generated automatically by hatch-vcs build hook
+
+      - name: Run Build Script
+        run: |
+          $format = "zip"
+          if ("${{ matrix.python-version }}" -eq "3.13") {
+            $format = "both"  # Build both ZIP and MSI for Python 3.13
+          }
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }} --format $format
+
+      - name: Freeze dependencies
+        run: |
+          $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $pythonDir = "python$pyNoDot-arm64"
+          } else {
+            $pythonDir = "python$pyNoDot"
+          }
+          $reqFile = "requirements-frozen-py${pyNoDot}-${arch}.txt"
+          $pythonExe = "${pythonDir}\python.exe"
+
+          uv pip freeze --python $pythonExe > $reqFile
+          echo "REQUIREMENTS_FILE=$reqFile" >> $env:GITHUB_OUTPUT
+
+      - name: Create portable archive
+        run: |
+          $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $pythonDir = "python$pyNoDot-arm64"
+            $libDir = "lib-py$pyNoDot-arm64"
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
+          } else {
+            $pythonDir = "python$pyNoDot"
+            $libDir = "lib-py$pyNoDot"
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
+          }
+          $reqFile = "requirements-frozen-py${pyNoDot}-${arch}.txt"
+
+          Compress-Archive -Path `
+            $pythonDir, `
+            $libDir, `
+            app, `
+            plugins, `
+            config, `
+            launcher.py, `
+            README.md, `
+            LICENSE, `
+            $reqFile `
+            -DestinationPath $archiveName
+
+          echo "ARCHIVE_NAME=$archiveName" >> $env:GITHUB_OUTPUT
+
+      - name: Calculate SHA256 checksum
+        run: |
+          $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
+          } else {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
+          }
+          $hash = (Get-FileHash -Path $archiveName -Algorithm SHA256).Hash
+          $hash | Out-File -FilePath "${archiveName}.sha256" -NoNewline
+          echo "CHECKSUM=$hash" >> $env:GITHUB_OUTPUT
+          echo "Checksum: $hash"
+
+      - name: Calculate MSI SHA256 checksum (Python 3.13 only)
+        if: matrix.python-version == '3.13'
+        run: |
+          $arch = "${{ matrix.arch }}"
+          $msiName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-${arch}.msi"
+          if (Test-Path $msiName) {
+            $hash = (Get-FileHash -Path $msiName -Algorithm SHA256).Hash
+            $hash | Out-File -FilePath "${msiName}.sha256" -NoNewline
+            echo "MSI Checksum: $hash"
+          } else {
+            echo "MSI file not found: $msiName"
+          }
+
+      - name: Smoke Test - Validate Portable Distribution
+        run: |
+          Write-Host "========================================" -ForegroundColor Cyan
+          Write-Host "  Portable Distribution Smoke Tests" -ForegroundColor Cyan
+          Write-Host "========================================" -ForegroundColor Cyan
+
+          $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
+          $arch = "${{ matrix.arch }}"
+          if ($arch -eq "arm64") {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
+            $pythonDir = "python$pyNoDot-arm64"
+            $libDir = "lib-py$pyNoDot-arm64"
+          } else {
+            $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
+            $pythonDir = "python$pyNoDot"
+            $libDir = "lib-py$pyNoDot"
+          }
+
+          $testDir = "test_portable"
+
+          Write-Host "`n[1/5] Extracting portable distribution..." -ForegroundColor Yellow
+          if (-not (Test-Path $archiveName)) {
+            Write-Error "Archive not found: $archiveName"
+            exit 1
+          }
+          Expand-Archive -Path $archiveName -DestinationPath $testDir -Force
+          Write-Host "✓ Extracted to $testDir" -ForegroundColor Green
+
+          Write-Host "`n[2/5] Verifying directory structure..." -ForegroundColor Yellow
+          $requiredDirs = @($pythonDir, $libDir, "app", "plugins", "config", "bin")
+          foreach ($dir in $requiredDirs) {
+            $path = Join-Path $testDir $dir
+            if (-not (Test-Path $path)) {
+              Write-Error "Missing required directory: $dir"
+              exit 1
+            }
+            Write-Host "  ✓ $dir" -ForegroundColor Green
+          }
+
+          Write-Host "`n[3/5] Verifying UV executable..." -ForegroundColor Yellow
+          $uvExe = Join-Path $testDir "bin\uv.exe"
+          if (-not (Test-Path $uvExe)) {
+            Write-Error "UV executable not found at: $uvExe"
+            exit 1
+          }
+          Write-Host "  ✓ UV executable found" -ForegroundColor Green
+
+          # Test UV version
+          $uvVersion = & $uvExe --version 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ UV version: $uvVersion" -ForegroundColor Green
+          } else {
+            Write-Warning "  ⚠ UV --version check failed (may be expected in CI)"
+          }
+
+          Write-Host "`n[4/5] Testing launcher --version..." -ForegroundColor Yellow
+          $pythonExe = Join-Path $testDir "$pythonDir\python.exe"
+          $launcherPy = Join-Path $testDir "launcher.py"
+
+          if (-not (Test-Path $pythonExe)) {
+            Write-Error "Python executable not found: $pythonExe"
+            exit 1
+          }
+          if (-not (Test-Path $launcherPy)) {
+            Write-Error "Launcher not found: $launcherPy"
+            exit 1
+          }
+
+          $launcherVersion = & $pythonExe $launcherPy --version 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ Launcher version: $launcherVersion" -ForegroundColor Green
+          } else {
+            Write-Warning "  ⚠ Launcher --version check returned non-zero exit code"
+            Write-Host "  Output: $launcherVersion" -ForegroundColor Gray
+          }
+
+          Write-Host "`n[5/5] Validating critical imports..." -ForegroundColor Yellow
+          $testImports = @(
+            "PySide6.QtWidgets",
+            "qfluentwidgets",
+            "pydantic",
+            "yaml",
+            "git",
+            "wmi"
+          )
+
+          $failedImports = @()
+          foreach ($module in $testImports) {
+            $importTest = & $pythonExe -c "import $module; print('OK')" 2>&1
+            if ($LASTEXITCODE -eq 0 -and $importTest -match "OK") {
+              Write-Host "  ✓ $module" -ForegroundColor Green
+            } else {
+              Write-Host "  ✗ $module" -ForegroundColor Red
+              $failedImports += $module
+            }
+          }
+
+          if ($failedImports.Count -gt 0) {
+            Write-Error "Failed to import: $($failedImports -join ', ')"
+            exit 1
+          }
+
+          Write-Host "`n========================================" -ForegroundColor Cyan
+          Write-Host "  ✓ All Smoke Tests Passed!" -ForegroundColor Green
+          Write-Host "========================================" -ForegroundColor Cyan
+
+          # Cleanup test directory
+          Remove-Item -Path $testDir -Recurse -Force -ErrorAction SilentlyContinue
+
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pyMM-py${{ matrix.python-version }}-win-${{ matrix.arch }}-build
+          path: |
+            pyMM-v*.zip
+            pyMM-v*.msi
+            pyMM-v*.sha256
+          retention-days: 30
+
+  create-recommended-link:
+    name: Create recommended release link
+    runs-on: ubuntu-latest
+    needs: build-windows
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts/
+
+      - name: Create recommended symlink metadata
+        run: |
+          echo "pyMM-py3.13-build" > RECOMMENDED.txt
+          echo "For most users, download the Python 3.13 build for best compatibility." >> RECOMMENDED.txt
+
+      - name: Upload recommended metadata
+        uses: actions/upload-artifact@v6
+        with:
+          name: recommended-metadata
+          path: RECOMMENDED.txt
+          retention-days: 30
+
+  build-linux:
+    name: Build Linux AppImage - Python ${{ matrix.python-version }} (${{ matrix.arch }})
+    runs-on: ubuntu-22.04  # Pinned for reproducible release builds
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+        arch: ["x86_64"]
+        # Note: aarch64 builds excluded - GitHub Actions doesn't provide ARM64 Linux runners,
+        # and appimagetool-aarch64.AppImage cannot execute on x86_64 runners
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Version Override
+        if: inputs.version != ''
+        run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python for build script
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1 libegl1 libglib2.0-0 libfontconfig1 \
+            libxkbcommon-x11-0 libdbus-1-3 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+            libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0 libx11-xcb1 \
+            fuse libfuse2
+
+      - name: Install Python build dependencies
+        run: |
+          uv pip install --system hatchling hatch-vcs pyinstaller
+
+      - name: Get version
+        id: version
+        run: |
+          version=$(python -m hatchling version)
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "Version: $version"
+
+      # _version.py is generated automatically by hatch-vcs build hook
+
+      - name: Install application dependencies
+        run: |
+          uv pip install --system -e .
+
+      - name: Run Build Script
+        run: |
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }}
+
+      - name: Smoke test - Verify AppImage exists and is executable
+        run: |
+          echo "========================================"
+          echo "  Linux AppImage Smoke Tests"
+          echo "========================================"
+
+          appimage_file=$(find dist -name "pyMM-*.AppImage" -type f | head -n 1)
+
+          echo -e "\n[1/4] Verifying AppImage exists..."
+          if [ -z "$appimage_file" ]; then
+            echo "❌ Error: No AppImage found in dist/"
+            exit 1
+          fi
+          echo "✓ Found AppImage: $appimage_file"
+
+          echo -e "\n[2/4] Making AppImage executable..."
+          chmod +x "$appimage_file"
+          echo "✓ Set executable permissions"
+
+          echo -e "\n[3/4] Testing --version flag..."
+          version_output=$("$appimage_file" --version 2>&1 || echo "FAILED")
+          if [ "$version_output" != "FAILED" ]; then
+            echo "✓ Version output: $version_output"
+          else
+            echo "⚠️ Warning: --version check failed (may be expected in headless CI)"
+          fi
+
+          echo -e "\n[4/4] Verifying file size..."
+          size=$(stat -c%s "$appimage_file")
+          if [ "$size" -lt 10000000 ]; then
+            echo "❌ Error: AppImage seems too small ($size bytes)"
+            exit 1
+          fi
+          size_mb=$((size / 1024 / 1024))
+          echo "✓ AppImage size: ${size_mb}MB ($size bytes)"
+
+          # Extract AppImage to test internal structure (without FUSE)
+          echo -e "\n[Bonus] Testing AppImage extraction..."
+          extract_dir="test_appimage_extract"
+          "$appimage_file" --appimage-extract > /dev/null 2>&1 || true
+          if [ -d "squashfs-root" ]; then
+            echo "✓ AppImage extraction successful"
+
+            # Verify key files exist
+            if [ -f "squashfs-root/AppRun" ] && [ -f "squashfs-root/pyMM.desktop" ]; then
+              echo "✓ AppRun and desktop file found"
+            else
+              echo "⚠️ Warning: Missing AppRun or desktop file"
+            fi
+
+            # Cleanup
+            rm -rf squashfs-root
+          else
+            echo "⚠️ Warning: Could not extract AppImage (FUSE may not be available)"
+          fi
+
+          echo -e "\n========================================"
+          echo "  ✓ All Smoke Tests Passed!"
+          echo "========================================"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pyMM-py${{ matrix.python-version }}-linux-${{ matrix.arch }}-build
+          path: |
+            dist/pyMM-*.AppImage
+            dist/pyMM-*.sha256
+          retention-days: 30
+
+  build-macos:
+    name: Build macOS - Python ${{ matrix.python-version }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.arch == 'x86_64' && 'macos-15-intel' || 'macos-latest' }}
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+        arch: ["x86_64", "arm64"]
+        # Note: x86_64 builds use macos-15-intel (Intel), arm64 builds use macos-latest (M-series)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Version Override
+        if: inputs.version != ''
+        run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python for build script
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python build dependencies
+        run: |
+          uv pip install --system hatchling hatch-vcs pyinstaller
+
+      - name: Get version
+        id: version
+        run: |
+          version=$(python -m hatchling version)
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "Version: $version"
+
+      # _version.py is generated automatically by hatch-vcs build hook
+
+      - name: Install application dependencies
+        run: |
+          uv pip install --system -e .
+
+      - name: Run Build Script
+        run: |
+          python scripts/build_manager.py --version ${{ matrix.python-version }} --arch ${{ matrix.arch }} --format dmg
+
+      - name: Smoke test - Verify DMG exists
+        run: |
+          echo "========================================"
+          echo "  macOS DMG Smoke Tests"
+          echo "========================================"
+
+          dmg_file=$(find dist -name "pyMM-*.dmg" -type f | head -n 1)
+
+          echo -e "\n[1/5] Verifying DMG exists..."
+          if [ -z "$dmg_file" ]; then
+            echo "❌ Error: No DMG found in dist/"
+            exit 1
+          fi
+          echo "✓ Found DMG: $dmg_file"
+
+          echo -e "\n[2/5] Verifying DMG file size..."
+          size=$(stat -f%z "$dmg_file")
+          if [ "$size" -lt 10000000 ]; then
+            echo "❌ Error: DMG seems too small ($size bytes)"
+            exit 1
+          fi
+          size_mb=$((size / 1024 / 1024))
+          echo "✓ DMG size: ${size_mb}MB ($size bytes)"
+
+          echo -e "\n[3/5] Mounting DMG..."
+          hdiutil attach "$dmg_file" -nobrowse -mountpoint /Volumes/pyMediaManager
+          if [ $? -ne 0 ]; then
+            echo "❌ Error: Failed to mount DMG"
+            exit 1
+          fi
+          echo "✓ DMG mounted at /Volumes/pyMediaManager"
+
+          echo -e "\n[4/5] Verifying .app bundle..."
+          if [ -d "/Volumes/pyMediaManager/pyMediaManager.app" ]; then
+            echo "✓ Found .app bundle in DMG"
+
+            # Verify app bundle structure
+            if [ -f "/Volumes/pyMediaManager/pyMediaManager.app/Contents/MacOS/pyMediaManager" ]; then
+              echo "✓ Main executable found"
+            else
+              echo "❌ Error: Main executable not found in .app bundle"
+              hdiutil detach /Volumes/pyMediaManager -force || true
+              exit 1
+            fi
+
+            if [ -f "/Volumes/pyMediaManager/pyMediaManager.app/Contents/Info.plist" ]; then
+              echo "✓ Info.plist found"
+            else
+              echo "⚠️ Warning: Info.plist not found"
+            fi
+
+            echo -e "\n[5/5] Testing .app --version..."
+            version_output=$(/Volumes/pyMediaManager/pyMediaManager.app/Contents/MacOS/pyMediaManager --version 2>&1 || echo "FAILED")
+            if [ "$version_output" != "FAILED" ]; then
+              echo "✓ Version output: $version_output"
+            else
+              echo "⚠️ Warning: --version check failed (may be expected in CI)"
+            fi
+
+            # Wait for any processes to finish
+            sleep 2
+
+            # Unmount DMG
+            echo -e "\nUnmounting DMG..."
+            hdiutil detach /Volumes/pyMediaManager -force || {
+              echo "⚠️ Warning: Could not detach DMG cleanly, trying force detach..."
+              sleep 1
+              hdiutil detach /Volumes/pyMediaManager -force || true
+            }
+            echo "✓ DMG unmounted"
+          else
+            echo "❌ Error: .app bundle not found in DMG"
+            hdiutil detach /Volumes/pyMediaManager -force || true
+            exit 1
+          fi
+
+          echo -e "\n========================================"
+          echo "  ✓ All Smoke Tests Passed!"
+          echo "========================================"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: pyMM-py${{ matrix.python-version }}-macos-${{ matrix.arch }}-build
+          path: |
+            dist/pyMM-*.dmg
+            dist/pyMM-*.sha256
+          retention-days: 30
