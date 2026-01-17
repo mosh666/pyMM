@@ -68,7 +68,7 @@ def convert_plugin_yaml(plugin_file: Path) -> None:
     print(f"  Saved {plugin_file}")
 
 
-def main():
+def main() -> None:
     """Convert all plugin.yaml files in the plugins directory."""
     plugins_dir = Path(__file__).parent.parent / "plugins"
 

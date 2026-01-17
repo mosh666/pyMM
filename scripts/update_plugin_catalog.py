@@ -41,7 +41,7 @@ CATALOG_FILE = PROJECT_ROOT / "docs" / "plugin-catalog.md"
 class TimingMetrics:
     """Track operation timing for performance monitoring."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.timings: dict[str, float] = {}
         self._start_times: dict[str, float] = {}
 
@@ -88,7 +88,7 @@ def discover_plugins(verbose: bool = False) -> list[dict[str, Any]]:  # noqa: C9
     if verbose:
         print(f"🔍 Discovering plugins in {PLUGINS_DIR}...")
 
-    plugins = []
+    plugins: list[dict[str, Any]] = []
 
     if not PLUGINS_DIR.exists():
         if verbose:
@@ -226,7 +226,7 @@ def get_supported_platforms(manifest: dict[str, Any]) -> list[str]:
     Returns:
         List of platform names (e.g., ["Windows", "Linux", "macOS"])
     """
-    platforms = []
+    platforms: list[str] = []
     platform_map = {
         "windows": "Windows",
         "linux": "Linux",

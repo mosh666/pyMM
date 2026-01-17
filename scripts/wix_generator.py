@@ -179,7 +179,7 @@ def generate_component_group(
 
     components = []
     used_ids = set()  # Track used IDs to prevent duplicates
-    directory_counters = {}  # Track short name counters per directory
+    directory_counters: dict[str, int] = {}  # Track short name counters per directory
 
     # Split files into chunks (WiX has component size limits)
     for component_index, i in enumerate(range(0, len(files), max_files_per_component), start=1):

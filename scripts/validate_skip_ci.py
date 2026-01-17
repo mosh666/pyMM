@@ -68,7 +68,7 @@ def check_skip_directive(commit_msg: str) -> tuple[str | None, str]:
 
 def categorize_files(files: list[str]) -> dict[str, list[str]]:
     """Categorize staged files by type."""
-    categories = {
+    categories: dict[str, list[str]] = {
         "code": [],
         "tests": [],
         "config": [],
