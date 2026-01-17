@@ -2,6 +2,26 @@
 
 <!-- version list -->
 
+## v0.1.0-beta.1 (2026-01-17)
+
+### Continuous Integration
+
+- Fix workflow_dispatch permission error by using workflow_run trigger
+  ([`2734124`](https://github.com/mosh666/pyMM/commit/27341246dc3b63c700923600b857a0dd6e9aaf1e))
+
+- Add 'CI - Tests and Linting' to workflow_run triggers in docs.yml - Remove update-docs-site job
+  that used createWorkflowDispatch - Documentation now builds automatically when CI or Semantic
+  Release completes - Resolves 403 'Resource not accessible by integration' error
+
+BREAKING CHANGE: Documentation workflow no longer supports manual dispatch from other workflows. Use
+  workflow_run trigger instead for automatic builds after CI/release completion.
+
+### Breaking Changes
+
+- Documentation workflow no longer supports manual dispatch from other workflows. Use workflow_run
+  trigger instead for automatic builds after CI/release completion.
+
+
 ## v0.0.1-beta.1 (2026-01-17)
 
 ### Bug Fixes
