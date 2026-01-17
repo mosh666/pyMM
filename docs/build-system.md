@@ -1,5 +1,8 @@
 # Build System Documentation
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 ## Overview
 
 pyMediaManager uses a comprehensive, cross-platform build system to create portable distributions for Windows, Linux,

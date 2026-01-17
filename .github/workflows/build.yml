@@ -93,32 +93,31 @@ jobs:
           uv pip freeze --python $pythonExe > $reqFile
           echo "REQUIREMENTS_FILE=$reqFile" >> $env:GITHUB_OUTPUT
 
-      - name: Create portable archive
+      - name: Finalize portable archive
         run: |
           $pyNoDot = "${{ matrix.python-version }}".Replace(".", "")
           $arch = "${{ matrix.arch }}"
           if ($arch -eq "arm64") {
-            $pythonDir = "python$pyNoDot-arm64"
-            $libDir = "lib-py$pyNoDot-arm64"
             $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-arm64.zip"
           } else {
-            $pythonDir = "python$pyNoDot"
-            $libDir = "lib-py$pyNoDot"
             $archiveName = "pyMM-v${{ steps.version.outputs.VERSION }}-py${{ matrix.python-version }}-win-amd64.zip"
           }
           $reqFile = "requirements-frozen-py${pyNoDot}-${arch}.txt"
 
-          Compress-Archive -Path `
-            $pythonDir, `
-            $libDir, `
-            app, `
-            plugins, `
-            config, `
-            launcher.py, `
-            README.md, `
-            LICENSE, `
-            $reqFile `
-            -DestinationPath $archiveName
+          # Move ZIP from dist/ to root directory
+          $distZip = "dist\$archiveName"
+          if (-not (Test-Path $distZip)) {
+            Write-Error "Build script did not create expected ZIP: $distZip"
+            exit 1
+          }
+          Move-Item -Path $distZip -Destination $archiveName -Force
+          Write-Host "Moved ZIP from dist/ to root: $archiveName" -ForegroundColor Green
+
+          # Add frozen requirements file to the ZIP
+          if (Test-Path $reqFile) {
+            Compress-Archive -Path $reqFile -DestinationPath $archiveName -Update
+            Write-Host "Added frozen requirements to archive" -ForegroundColor Green
+          }
 
           echo "ARCHIVE_NAME=$archiveName" >> $env:GITHUB_OUTPUT
 
@@ -168,6 +167,8 @@ jobs:
           }
 
           $testDir = "test_portable"
+
+          Write-Host "Testing archive: $archiveName" -ForegroundColor Cyan
 
           Write-Host "`n[1/5] Extracting portable distribution..." -ForegroundColor Yellow
           if (-not (Test-Path $archiveName)) {

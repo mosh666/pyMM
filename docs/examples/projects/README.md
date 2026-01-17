@@ -1,5 +1,8 @@
 # Project Management Examples
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 Examples for creating, managing, and migrating media projects in pyMediaManager.
 
 ## Overview

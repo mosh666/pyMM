@@ -1,6 +1,7 @@
 # Contributing to pyMediaManager
 
-> **Last Updated:** January 14, 2026
+> **Last Updated:** 2026-01-17 21:41 UTC
+
 
 Thank you for your interest in contributing to pyMediaManager! This guide provides comprehensive
 instructions for setting up your development environment, writing code, testing, and submitting
@@ -791,6 +792,8 @@ Fixes #456
 ```
 
 ## Testing Guidelines
+
+> **Testing Roadmap:** For comprehensive test coverage plan, priority tiers (sync engine 0% → 60%, GUI expansion), and contribution guidelines, see [Testing Roadmap](docs/testing-roadmap.md). **Sync engine testing is the highest-priority contribution area.**
 
 ### Test Philosophy
 

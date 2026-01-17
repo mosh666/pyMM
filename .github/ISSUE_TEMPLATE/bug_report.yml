@@ -16,8 +16,8 @@ body:
         ## Before You Submit
 
         - 🔍 **Search existing issues** to avoid duplicates: [pyMM Issues](https://github.com/mosh666/pyMM/issues)
-        - 📖 **Check documentation** for known issues: [User Guide](https://github.com/mosh666/pyMM/blob/main/docs/user-guide.md)
-        - 🔧 **Try troubleshooting steps** from the docs: [Troubleshooting](https://github.com/mosh666/pyMM/blob/main/docs/user-guide.md#troubleshooting)
+        - 📖 **Check documentation** for known issues: [Getting Started](https://github.com/mosh666/pyMM/blob/main/docs/getting-started.md) | [Features](https://github.com/mosh666/pyMM/blob/main/docs/features.md)
+        - 🔧 **Try troubleshooting steps** from the docs: [Troubleshooting Guide](https://github.com/mosh666/pyMM/blob/main/docs/troubleshooting.md)
         - 💬 **Ask in discussions** if unsure: [GitHub Discussions](https://github.com/mosh666/pyMM/discussions)
 
         **Security Issues**: Do not report security vulnerabilities here. Email: 24556349+mosh666@users.noreply.github.com
@@ -85,11 +85,10 @@ body:
     id: version
     attributes:
       label: 📦 pyMediaManager Version
-      description: "What version are you running? (Check: Help → About or run pymm --version)"
+      description: "What version are you running? (Check: Help → About or run python -m app --version)"
       options:
         - "Development (latest dev branch)"
-        - "0.2.x series"
-        - "0.1.x series"
+        - "v0.1.x (current beta)"
         - "Unknown/Other (please specify below)"
     validations:
       required: true

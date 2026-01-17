@@ -1,5 +1,8 @@
 # Semantic Release Configuration
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 This document explains the semantic versioning and automated release system used in pyMM.
 
 ## Overview
@@ -56,10 +59,10 @@ number**, regardless of commit type.
 
 | Current Version | Commit Type | New Version | Notes |
 | --------------- | ----------- | ----------- | ----- |
-| `v0.2.0-beta.60` | `fix:` | `v0.2.0-beta.61` | Increments beta number |
-| `v0.2.0-beta.60` | `feat:` | `v0.2.0-beta.61` | Increments beta number |
-| `v0.2.0-beta.60` | `feat!:` or `BREAKING CHANGE:` | `v0.2.0-beta.61` | Increments beta number |
-| `v0.2.0-beta.60` | `docs:`, `chore:`, `refactor:` | No change | Excluded from releases |
+| `v0.2.0-beta.60` (example) | `fix:` | `v0.2.0-beta.61` | Increments beta number |
+| `v0.2.0-beta.60` (example) | `feat:` | `v0.2.0-beta.61` | Increments beta number |
+| `v0.2.0-beta.60` (example) | `feat!:` or `BREAKING CHANGE:` | `v0.2.0-beta.61` | Increments beta number |
+| `v0.2.0-beta.60` (example) | `docs:`, `chore:`, `refactor:` | No change | Excluded from releases |
 
 **Key Behavior**: The actual version bump (patch/minor/major) is **not calculated on dev**. It's only
 determined when you merge `dev` → `main`, at which point semantic-release analyzes all commits since the
@@ -179,9 +182,9 @@ complete before merging the v1.0.0 release.
 
 ## Common Issues
 
-### Issue: Semantic-release calculates v1.0.0 instead of v0.2.0
+### Issue: Semantic-release calculates wrong version (v1.0.0 instead of v0.x.x)
 
-**Cause**: Using python-semantic-release v10.x
+**Cause**: Using python-semantic-release v10.x which has different version calculation logic
 
 **Solution**: Ensure v9.15.0 or later is installed:
 

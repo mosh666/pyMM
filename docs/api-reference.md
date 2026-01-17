@@ -1,5 +1,8 @@
 # API Reference
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 ```{eval-rst}
 .. currentmodule:: app
 ```
@@ -7,8 +10,6 @@
 > **Status:** Complete with 100% docstring coverage (724/724 items documented)
 > **Python Support:** 3.12, 3.13, 3.14 (CI testing)
 > **Type Safety:** 100% MyPy strict mode compliance (0 errors)
-> **Last Updated:** January 14, 2026
-
 Complete API reference for pyMediaManager with detailed documentation for all modules,
 classes, and functions. All APIs include comprehensive docstrings with type hints,
 examples, and cross-references.

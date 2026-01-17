@@ -1,10 +1,12 @@
 # 🚀 Getting Started - Developer Guide
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 <!-- markdownlint-disable MD013 MD033 MD036 MD040 MD051 -->
 
 > **Target Audience:** Developers contributing to pyMediaManager
 > **Estimated Time:** 30-45 minutes for complete setup
-> **Last Updated:** January 14, 2026
 > **Comprehensive Guide:** See [DEVELOPER.md](https://github.com/mosh666/pyMM/blob/main/DEVELOPER.md) for complete developer documentation
 
 ---

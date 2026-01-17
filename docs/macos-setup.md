@@ -122,9 +122,9 @@ uv sync --all-extras
 uv run python -m app
 ```
 
-> **Note**: pyMediaManager uses **UV** (not pip) for package management as of v0.2.0.
+> **Note**: pyMediaManager migrated to **UV** package manager (replacing pip) in early 2026.
 > UV is 10-100x faster and provides lockfile support.
-> See {ref}`migrating-from-pip` for details.
+> See {ref}`migrating-from-pip` for details if upgrading from older versions.
 
 ---
 
@@ -589,4 +589,4 @@ pymm --help
 ---
 
 **Platform**: macOS 11+ (Intel & Apple Silicon)
-**Last Updated**: 2026-01-14
+> **Last Updated:** 2026-01-17 21:41 UTC

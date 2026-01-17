@@ -1,5 +1,8 @@
 # User Interface Examples
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 Examples for building custom interfaces with pyMediaManager's UI components.
 
 ## Overview

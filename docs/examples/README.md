@@ -1,5 +1,8 @@
 # pyMediaManager Examples
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 This directory contains working Python examples demonstrating pyMediaManager's API and features.
 
 ## Structure

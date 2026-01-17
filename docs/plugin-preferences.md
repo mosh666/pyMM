@@ -1,5 +1,8 @@
 # Plugin Preferences System
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 ## Overview
 
 The plugin preferences system allows users to override default plugin

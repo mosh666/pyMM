@@ -1,10 +1,14 @@
 # Troubleshooting Guide
 
-> **Last Updated:** January 14, 2026
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
+>
 > **Test Coverage:** 193 tests passing (73% coverage, ⚠️ sync engine: 0%)
 > **Python Support:** 3.12, 3.13, 3.14 (3.13 recommended, 3.14 fully supported)
 > **Build System:** uv (10-100x faster) + Hatchling + hatch-vcs
-> **Latest Fixes:** Windows UV bundling (v0.2.0-beta.47+), dependabot-uv-lock-update workflow
+> **Latest Fixes:** Windows UV bundling improvements, dependabot-uv-lock-update workflow
+> (Version references in examples are not current version - check releases for your actual version)
 
 This guide covers common issues, error messages, and solutions for pyMediaManager.
 
@@ -122,7 +126,7 @@ source ~/.bashrc  # or ~/.zshrc
 
 Portable ZIP distributions include a bundled UV executable. Run `launcher.py` to automatically add UV to PATH.
 
-> **Migration Note:** If you're upgrading from a pre-v0.2.0 version that used pip, see
+> **Migration Note:** If you're upgrading from an older version that used pip (pre-2026), see
 > {ref}`migrating-from-pip` for migration steps.
 
 ---
@@ -805,7 +809,7 @@ If you need to force a release:
    # Get latest tag
    git describe --tags --abbrev=0
 
-   # Count commits since last tag
+   # Count commits since last tag (example: v0.2.0-beta.1)
    git rev-list v0.2.0-beta.1..HEAD --count
    ```
 
@@ -898,7 +902,7 @@ gh run view <run-id> --log
 If build succeeded but upload failed:
 
 1. Download artifacts from build workflow run
-2. Upload to release manually:
+2. Upload to release manually (replace version with your actual release):
 
    ```bash
    gh release upload v0.3.0-beta.1 \

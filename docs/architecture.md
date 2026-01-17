@@ -2,14 +2,16 @@
 
 # 🏗️ Architecture Documentation
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 > **Project:** pyMediaManager (pyMM) v0.y.z (Beta)
 > **Python Support:** 3.12, 3.13, 3.14 (3.13 recommended, 3.14 fully supported)
-> **Last Updated:** January 14, 2026
 > **Status:** ✅ Production Ready (193 tests, 73% coverage, 100% docstring coverage, 0 mypy errors)
 > **Versioning:** v0.y.z enforced with multi-layer protection until v1.0.0 release
 > **Storage Groups:** Phase 1 & Phase 2 complete (sync engine fully implemented)
 > **Build System:** uv (10-100x faster) + Hatchling (PEP 517) + hatch-vcs (git tag versioning)
-> **Critical Gap:** ⚠️ Sync engine (9 modules) has 0% test coverage - see [examples](examples/sync/README.md)
+> **Critical Gap:** ⚠️ Sync engine (9 modules) has 0% test coverage - see [Testing Roadmap](testing-roadmap.md) for contribution priorities and [examples](examples/sync/README.md) for working code
 
 ## 📚 Table of Contents
 

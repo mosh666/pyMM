@@ -2,7 +2,8 @@
 
 # Installation & Setup
 
-> **Last Updated:** January 14, 2026
+> **Last Updated:** 2026-01-17 21:41 UTC
+
 
 <!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
@@ -80,7 +81,7 @@
 
 ## 🔄 Migrating from pip to UV
 
-If you're upgrading from an older version of pyMediaManager (pre-v0.2.0), the project has **completely migrated from pip to UV** as of January 2026.
+If you're upgrading from an older version of pyMediaManager that used pip, the project **completely migrated to UV** as of early 2026.
 
 ### What Changed?
 
@@ -910,7 +911,9 @@ sudo udevadm test /sys/block/sda
   sudo udevadm control --reload-rules
   ```
 
-For more details, see [Linux udev Rules Documentation](linux-udev-installer.md).
+For more details and comprehensive Linux installation options, see:
+- **[Linux Setup Guide](linux-setup.md)** - Complete setup with AppImage, package managers, troubleshooting
+- **[Linux udev Rules Technical Details](linux-udev-installer.md)** - Technical implementation details
 
 ---
 

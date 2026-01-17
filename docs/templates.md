@@ -1,5 +1,8 @@
 # Project Templates
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 **Project template system** for pyMediaManager, providing pre-configured
 directory structures, metadata, and plugin configurations for different media
 management workflows.
@@ -687,4 +690,3 @@ def migrate_v1_to_v2(project_path: Path):
 ---
 
 **Version**: 1.0
-**Last Updated**: 2026-01-14

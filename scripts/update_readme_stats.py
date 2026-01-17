@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 from contextlib import suppress
+from datetime import UTC, datetime
 from pathlib import Path
 import re
 import sys
@@ -273,13 +274,125 @@ def update_readme_section(content: str, marker: str, new_content: str) -> str:
     return content
 
 
-def main() -> int:
-    """Main entry point."""
-    parser = argparse.ArgumentParser(description="Update README.md with current statistics")
-    parser.add_argument("--dry-run", action="store_true", help="Show changes without writing")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
-    args = parser.parse_args()
+def update_doc_timestamps() -> list[Path]:
+    """Update timestamps in all markdown files in the repository.
 
+    Scans ALL *.md files (excluding CHANGELOG.md) and either updates existing
+    timestamps or adds new ones after the first heading.
+
+    Returns:
+        List of files that were modified.
+    """
+    # Get current UTC timestamp in ISO 8601 format
+    current_timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
+
+    # Patterns to match existing timestamp formats (both blockquote and plain)
+    # Matches: "> **Last Updated:** ...", "**Last Updated**: ...", etc.
+    timestamp_patterns = [
+        # Blockquote format: > **Last Updated:** 2026-01-17 21:39 UTC
+        re.compile(
+            r"(>\s*\*\*(?:Last Updated|last updated|Updated):\*\*\s*)([^\n]+)",
+            re.IGNORECASE,
+        ),
+        # Plain format: **Last Updated**: 2026-01-14
+        re.compile(
+            r"(\*\*(?:Last Updated|last updated|Updated)\*\*:\s*)([^\n]+)",
+            re.IGNORECASE,
+        ),
+    ]
+
+    # Pattern to find first heading (H1)
+    first_heading_pattern = re.compile(r"^(#\s+.+?)$", re.MULTILINE)
+
+    modified_files: list[Path] = []
+
+    # Find ALL markdown files in repository (excluding CHANGELOG.md, .venv, node_modules)
+    exclude_dirs = {".venv", "venv", "node_modules", "__pycache__", ".pytest_cache", "htmlcov"}
+    all_md_files = [
+        f
+        for f in PROJECT_ROOT.rglob("*.md")
+        if f.name != "CHANGELOG.md"
+        and not f.name.startswith(".")
+        and not any(excluded in f.parts for excluded in exclude_dirs)
+    ]
+
+    for md_file in all_md_files:
+        try:
+            content = md_file.read_text(encoding="utf-8")
+            original_content = content
+
+            # Check if file already has a timestamp (try all patterns)
+            has_timestamp = False
+            for pattern in timestamp_patterns:
+                if pattern.search(content):
+                    # Update existing timestamp
+                    # Use lambda to avoid backslash-digit interpretation issues
+                    content = pattern.sub(
+                        lambda m: m.group(1) + current_timestamp,
+                        content,
+                    )
+                    has_timestamp = True
+
+            if not has_timestamp:
+                # Add timestamp after first heading if it exists
+                heading_match = first_heading_pattern.search(content)
+                if heading_match:
+                    heading = heading_match.group(0)
+                    # Insert timestamp as blockquote after heading
+                    timestamp_line = f"\n\n> **Last Updated:** {current_timestamp}\n"
+                    content = content.replace(heading, heading + timestamp_line, 1)
+
+            # Only write if content changed
+            if content != original_content:
+                md_file.write_text(content, encoding="utf-8")
+                modified_files.append(md_file)
+
+        except OSError as e:
+            # Log error but continue with other files
+            print(f"Warning: Could not update {md_file}: {e}", file=sys.stderr)
+            continue
+
+    return modified_files
+
+
+def handle_timestamp_updates(args: argparse.Namespace) -> int:
+    """Handle timestamp update logic.
+
+    Args:
+        args: Parsed command-line arguments
+
+    Returns:
+        Exit code (0 for success)
+    """
+    if args.verbose:
+        print("Updating timestamps in documentation files...")
+
+    if args.dry_run:
+        print("🔍 Dry run - would update timestamps in documentation files")
+        return 0
+
+    modified_files = update_doc_timestamps()
+
+    if modified_files:
+        print(f"✅ Updated timestamps in {len(modified_files)} file(s):")
+        for file in modified_files:
+            rel_path = file.relative_to(PROJECT_ROOT)
+            print(f"  - {rel_path}")
+    else:
+        print("✅ All documentation timestamps are already up to date")
+
+    return 0
+
+
+def handle_readme_updates(args: argparse.Namespace) -> int:
+    """Handle README update logic.
+
+    Args:
+        args: Parsed command-line arguments
+
+    Returns:
+        Exit code (0 for success, 1 for error)
+    """
     readme_path = PROJECT_ROOT / "README.md"
     if not readme_path.exists():
         print(f"❌ README.md not found at {readme_path}", file=sys.stderr)
@@ -305,30 +418,35 @@ def main() -> int:
         print("✅ README.md is already up to date - no changes needed")
         return 0
 
+    # Show diff or write changes
     if args.dry_run:
-        print("🔍 Dry run - changes that would be made:")
-        print("=" * 80)
-        # Show diff-like output
-        for i, (orig_line, new_line) in enumerate(
-            zip(original_content.splitlines(), updated_content.splitlines(), strict=False), 1
-        ):
-            if orig_line != new_line:
-                print(f"Line {i}:")
-                print(f"  - {orig_line}")
-                print(f"  + {new_line}")
-        print("=" * 80)
-        return 0
-
-    # Write changes
-    readme_path.write_text(updated_content, encoding="utf-8")
-    print("✅ README.md updated successfully")
-
-    if args.verbose:
-        print("\nUpdated sections:")
-        for marker in updates:
-            print(f"  - {marker}")
+        print("📝 Would update README.md with:")
+        print("\n" + updated_content)
+    else:
+        readme_path.write_text(updated_content, encoding="utf-8")
+        print("✅ Updated README.md successfully")
 
     return 0
+
+
+def main() -> int:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description="Update README.md with current statistics")
+    parser.add_argument("--dry-run", action="store_true", help="Show changes without writing")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument(
+        "--update-timestamps",
+        action="store_true",
+        help="Update timestamps in all documentation files",
+    )
+    args = parser.parse_args()
+
+    # Handle timestamp updates if requested
+    if args.update_timestamps:
+        return handle_timestamp_updates(args)
+
+    # Handle README updates
+    return handle_readme_updates(args)
 
 
 if __name__ == "__main__":

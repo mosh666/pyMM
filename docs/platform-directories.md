@@ -1,5 +1,8 @@
 # Platform-Specific Directory Support
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 ## Overview
 
 pyMediaManager now follows platform conventions for configuration, data, and

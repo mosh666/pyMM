@@ -2,6 +2,9 @@
 
 # Developer Guide
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 <!-- markdownlint-disable MD013 MD033 MD041 -->
 
 **Welcome to pyMediaManager Development!** This guide is for contributors, maintainers, and anyone interested in understanding the technical architecture and development workflow.

@@ -1,5 +1,8 @@
 # pyMediaManager Documentation
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 ```{note}
 **Version Selector**: Use the sidebar menu to switch between documentation versions (Main/Dev).
 You can also visit the [documentation home](https://mosh666.github.io/pyMM/) to select your version.
@@ -32,6 +35,7 @@ architecture
 build-system
 plugin-development
 api-reference
+testing-roadmap
 semantic-release
 ```
 
@@ -42,6 +46,7 @@ caption: Platform-Specific
 ---
 windows-setup
 macos-setup
+linux-setup
 platform-directories
 linux-udev-installer
 docker-ci-testing

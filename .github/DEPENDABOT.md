@@ -1,8 +1,9 @@
 # Dependabot Documentation
 
-Complete guide for automated dependency management in the pyMM project.
+> **Last Updated:** 2026-01-17 21:41 UTC
 
-**Last Updated**: January 14, 2026
+
+Complete guide for automated dependency management in the pyMM project.
 
 ---
 

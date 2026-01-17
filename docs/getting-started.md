@@ -2,7 +2,8 @@
 
 # Getting Started
 
-> **Last Updated:** January 14, 2026
+> **Last Updated:** 2026-01-17 21:41 UTC
+
 
 <!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 

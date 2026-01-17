@@ -1,5 +1,8 @@
 # Plugin System Examples
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 Examples demonstrating pyMediaManager's plugin architecture, installation, and management.
 
 ## Overview

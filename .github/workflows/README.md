@@ -1,5 +1,8 @@
 # GitHub Actions Workflows
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 This directory contains all GitHub Actions workflows for the pyMM project,
 following 2026 best practices with **100% uv migration** for reproducible builds.
 
@@ -417,5 +420,5 @@ uv sync --all-extras
 
 ---
 
-**Last Updated:** January 14, 2026
+**Last Updated:** January 17, 2026
 **Maintained by:** @mosh666

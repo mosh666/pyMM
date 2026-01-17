@@ -1,5 +1,10 @@
 # Linux udev Rules Installer
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
+> **⚠️ Deprecated:** This document contains technical details about the udev installer implementation. For comprehensive Linux installation and setup instructions, see **[Linux Setup Guide](linux-setup.md)** which covers AppImage installation (recommended), package managers for Ubuntu/Debian/Fedora/Arch, permissions, udev rules, and troubleshooting.
+
 ## Overview
 
 The Linux udev rules installer provides automatic USB device detection for

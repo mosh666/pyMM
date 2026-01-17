@@ -1,5 +1,8 @@
 # Scripts Directory
 
+> **Last Updated:** 2026-01-17 21:41 UTC
+
+
 Utility scripts for development, CI/CD, and automation.
 
 ## Available Scripts
