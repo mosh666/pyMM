@@ -123,7 +123,13 @@ smv_latest_version = "main"
 smv_prefer_remote_refs = True
 
 # List of patterns, relative to source directory, to ignore when looking for source files
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    "..DS_Store",
+    "examples/README.md",  # Exclude top-level examples README
+    "examples/*/README.md",  # Exclude example subdirectory READMEs (downloadable only)
+]
 
 # Suppress warnings for autodoc import failures (PySide6 introspection issues)
 suppress_warnings = [
