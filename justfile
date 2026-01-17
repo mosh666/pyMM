@@ -145,7 +145,7 @@ lint-md: _check-npx
 # Run type checker (MyPy)
 [group('quality')]
 type-check:
-    {{python}} -m mypy app/
+    {{python}} -m mypy app/ docs/ scripts/ tests/ launcher.py
 
 # Check Python docstring coverage
 [group('quality')]
@@ -575,7 +575,7 @@ ci-docker-test IMAGE="pymm-ci:latest": _check-docker
     docker run --rm {{IMAGE}} python -m ruff check app/
     @echo ""
     @echo "{{YELLOW}}▶ Running type checking...{{NORMAL}}"
-    docker run --rm {{IMAGE}} python -m mypy app/
+    docker run --rm {{IMAGE}} python -m mypy app/ docs/ scripts/ tests/ launcher.py
     @echo ""
     @echo "{{YELLOW}}▶ Running tests...{{NORMAL}}"
     docker run --rm {{IMAGE}} bash -c "\
