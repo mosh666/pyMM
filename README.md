@@ -78,12 +78,11 @@
 |--------|-------|
 | **Python Versions** | 3.12, 3.13, 3.14 |
 | **Plugins Available** | 9 |
-| **Test Cases** | 193 |
-| **Test Coverage** | 73% (⚠️ sync engine: 0%) |
-| **Lines of Code** | ~38,280 Python |
-| **Documentation Files** | 29 |
-| **Documentation Completeness** | 100% (724/724 docstrings) |
-| **Type Safety** | 100% (0 MyPy errors) |
+| **Test Cases** | 33+ |
+| **Test Coverage** | N/A |
+| **Lines of Code** | ~36,301 Python |
+| **Documentation Files** | 31 |
+| **Documentation Completeness** | 100.0% |
 <!-- AUTO-GENERATED:STATS:END -->
 
 ---
