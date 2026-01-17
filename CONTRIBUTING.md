@@ -2,14 +2,12 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 Thank you for your interest in contributing to pyMediaManager! This guide provides comprehensive
 instructions for setting up your development environment, writing code, testing, and submitting
 contributions.
 
 > **Quick Start:** See [DEVELOPER.md](DEVELOPER.md) for comprehensive developer documentation with architecture
 > diagrams, testing strategies, and CI/CD workflows.
->
 > **See also:** [CHANGELOG.md](CHANGELOG.md) | [Architecture Guide](docs/architecture.md) |
 > [Installation](docs/installation.md) | [Getting Started](docs/getting-started.md) |
 > [Developer Getting Started](docs/getting-started-dev.md) |
@@ -793,7 +791,9 @@ Fixes #456
 
 ## Testing Guidelines
 
-> **Testing Roadmap:** For comprehensive test coverage plan, priority tiers (sync engine 0% → 60%, GUI expansion), and contribution guidelines, see [Testing Roadmap](docs/testing-roadmap.md). **Sync engine testing is the highest-priority contribution area.**
+> **Testing Roadmap:** For comprehensive test coverage plan, priority tiers (sync engine 0% → 60%, GUI expansion),
+> and contribution guidelines, see [Testing Roadmap](docs/testing-roadmap.md). **Sync engine testing is the
+> highest-priority contribution area.**
 
 ### Test Philosophy
 

@@ -5,9 +5,7 @@
 # pyMediaManager
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-## 🎬 Cross-Platform Portable Media Management Application
+\n## 🎬 Cross-Platform Portable Media Management Application
 
 [![License](https://img.shields.io/github/license/mosh666/pyMM?style=flat&color=blue)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20|%20Linux%20|%20macOS-0078D6?style=flat&logo=windows)](https://github.com/mosh666/pyMM)
