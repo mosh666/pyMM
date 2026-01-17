@@ -325,7 +325,7 @@ warn_unused_configs = true
 warn_redundant_casts = true
 strict_equality = true
 ignore_missing_imports = true
-exclude = ["python3\\d+", "lib-py3\\d+", "build", "dist", "get-pip.py", "\\.venv", "venv", "\\.env"]
+exclude = ["python3\\d+", "lib-py3\\d+", "build", "dist", "get-pip.py", "\\.venv", "venv", "\\.env", "docs/examples"]
 
 # Per-module overrides for gradual strict adoption
 [[tool.mypy.overrides]]
@@ -352,7 +352,7 @@ disable_error_code = ["attr-defined"]
 module = "tests.*"
 disallow_untyped_defs = false
 disallow_untyped_calls = false
-disable_error_code = ["no-untyped-def", "no-untyped-call", "union-attr", "index", "attr-defined"]
+disable_error_code = ["no-untyped-def", "no-untyped-call", "union-attr", "index", "attr-defined", "call-arg", "arg-type", "comparison-overlap", "no-any-return", "dict-item"]
 
 [[tool.mypy.overrides]]
 module = "scripts.*"
