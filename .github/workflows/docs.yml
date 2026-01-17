@@ -14,7 +14,7 @@ on:
       - 'app/**/*.py'
   workflow_dispatch:
   workflow_run:
-    workflows: ["Semantic Release"]
+    workflows: ["CI - Tests and Linting", "Semantic Release"]
     types:
       - completed
     branches:
