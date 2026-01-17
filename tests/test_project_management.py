@@ -92,9 +92,13 @@ def test_project_service(tmp_path):
 
 
 if __name__ == "__main__":
+    import tempfile
+
     try:
-        test_project_model()
-        test_project_service()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_path = Path(tmpdir)
+            test_project_model(tmp_path)
+            test_project_service(tmp_path)
 
     except Exception:
         sys.exit(1)

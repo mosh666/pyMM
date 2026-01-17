@@ -67,8 +67,11 @@ def test_git_service(tmp_path):
 
 
 if __name__ == "__main__":
+    import tempfile
+
     try:
-        test_git_service()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_git_service(Path(tmpdir))
 
     except Exception:
         sys.exit(1)
