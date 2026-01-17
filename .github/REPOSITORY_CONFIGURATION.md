@@ -1,9 +1,7 @@
 # Repository Configuration Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Complete guide for configuring GitHub repository settings for the pyMM project.
+\nComplete guide for configuring GitHub repository settings for the pyMM project.
 
 ---
 

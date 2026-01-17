@@ -1,9 +1,7 @@
 # Support
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Thank you for using **pyMediaManager** (pyMM)! We're here to help you get the most out of the application.
+\nThank you for using **pyMediaManager** (pyMM)! We're here to help you get the most out of the application.
 
 ## 📚 Documentation
 

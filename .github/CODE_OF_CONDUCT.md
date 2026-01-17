@@ -3,9 +3,7 @@
 # Contributor Covenant Code of Conduct
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-## Our Pledge
+\n## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our
 community a harassment-free experience for everyone, regardless of age, body

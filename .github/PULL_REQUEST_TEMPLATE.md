@@ -3,9 +3,7 @@
 # 🔄 Pull Request
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-> **Template Version:** January 17, 2026
+\n> **Template Version:** January 17, 2026
 
 ## 📝 Description
 
