@@ -1,0 +1,55 @@
+# Storage Groups Configuration Example
+#
+# This file defines Master/Backup drive relationships for data redundancy.
+# Projects can be assigned to storage groups for automatic failover support.
+#
+# Phase 1: Relationship tracking only (no automatic sync)
+# Phase 2: Sync functionality (manual trigger, scheduled, real-time)
+
+# Configuration schema version (for future migrations)
+version: 1
+
+# List of configured storage groups
+groups:
+  # Example group 1: Photo archive with Master/Backup pairing
+  - id: "550e8400-e29b-41d4-a716-446655440000"
+    name: "Photo Archive 2026"
+    created: "2026-01-12T10:00:00"
+    modified: "2026-01-12T10:00:00"
+    description: "Primary storage for photo projects"
+
+    # Master drive identification
+    master_drive:
+      serial_number: "1234567890ABC"  # Hardware serial (may be null on some platforms)
+      label: "PhotoMaster"             # Volume label
+      total_size: 2000000000000        # Total capacity in bytes (2 TB)
+
+    # Backup drive identification
+    backup_drive:
+      serial_number: "9876543210XYZ"
+      label: "PhotoBackup"
+      total_size: 2000000000000
+
+  # Example group 2: Video editing with different drive sizes
+  - id: "660e8400-e29b-41d4-a716-446655440001"
+    name: "Video Projects"
+    created: "2026-01-12T11:00:00"
+    modified: "2026-01-12T11:00:00"
+    description: "Video editing workspace with backup"
+
+    master_drive:
+      serial_number: null              # No serial available (fallback to label+size)
+      label: "VideoMaster"
+      total_size: 4000000000000        # 4 TB
+
+    backup_drive:
+      serial_number: null
+      label: "VideoBackup"
+      total_size: 4000000000000
+
+# Notes:
+# - Drive matching uses serial_number first (exact match)
+# - Fallback: label (exact match) + total_size (±5% tolerance)
+# - Both drives must be removable (USB/external)
+# - Groups can be created/edited via UI: Storage View → Manage Storage Groups
+# - Projects link to groups via storage_group_id in project metadata

@@ -1,0 +1,17 @@
+name: Video Editing Template
+description: Professional video editing project with proxy, render, and project file organization
+version: 1.0.0
+min_app_version: 0.0.0
+extends: default
+required_plugins:
+  - ffmpeg
+  - mkvtoolnix
+folder_structure:
+  - media
+  - exports
+  - cache
+  - source
+  - proxies
+  - renders
+  - project-files
+migration_notes: {}

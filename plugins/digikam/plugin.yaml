@@ -1,0 +1,35 @@
+schema_version: 2
+name: digiKam
+version: 8.5.0
+mandatory: true
+enabled: true
+description: Professional photo management application with powerful tagging and organization
+  features
+category: Image Processing
+prefer_system: true
+register_to_path: true
+dependencies:
+- mariadb
+- exiftool
+platforms:
+  windows:
+    source:
+      type: url
+      base_uri: https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe
+    command:
+      path: ''
+      executable: digikam.exe
+  linux:
+    source:
+      type: url
+      base_uri: https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe
+    command:
+      path: ''
+      executable: digikam.exe
+  macos:
+    source:
+      type: url
+      base_uri: https://download.kde.org/stable/digikam/8.5.0/digiKam-8.5.0-Win64.exe
+    command:
+      path: ''
+      executable: digikam.exe

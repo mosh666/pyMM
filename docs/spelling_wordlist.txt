@@ -1,0 +1,184 @@
+# Custom dictionary for sphinxcontrib-spelling
+# Add project-specific technical terms here as CI failures identify them
+# Format: one word per line, case-sensitive
+
+# Project name
+pyMM
+pyMediaManager
+pymm
+
+# Operating systems and platforms
+macOS
+powershell
+udev
+xvfb
+WMI
+
+# Package managers and tools
+Homebrew
+Flatpak
+pkexec
+certutil
+setuptools
+scm
+uv
+homebrew
+Dependabot
+
+# File systems
+exFAT
+
+# Media tools
+FFmpeg
+DigiKam
+ffmpeg
+digiKam
+
+# Programming frameworks and libraries
+async
+Pydantic
+venv
+PySide
+pytest
+
+# Shell commands
+dirname
+pwd
+chmod
+udevadm
+systemd
+polkit
+
+# Data formats
+yaml
+yml
+yamllint
+XDG
+
+# Python types
+Enum
+Dataclass
+dataclass
+Dataclasses
+dataclasses
+
+# Qt and GUI terms
+QWidget
+QML
+
+# Technical verbs/adjectives
+programmatically
+hardcoded
+sandboxed
+embeddable
+Embeddable
+transcoding
+theming
+
+# Technical terms
+uninstallation
+Preload
+Config
+config
+configs
+checksums
+executables
+lifecycle
+seealso
+videographers
+backoff
+profiler
+
+# Measurements and units
+Mbps
+backends
+dialogs
+validators
+subpackage
+codebase
+docstring
+docstrings
+Docstrings
+markdownlint
+Breakpoint
+Formatters
+checkmark
+Validator
+Xcode
+Matroska
+Codec
+WebM
+
+# File extensions
+exe
+gz
+html
+js
+dmg
+
+# URLs and protocols
+https
+github
+www
+BtbN
+DMG
+AppImage
+
+# Directives
+Pre
+pre
+
+# Documentation formats
+RST
+
+# Development terms
+dev
+deps
+dropdown
+greyed
+uncheck
+changelog
+Changelog
+rw
+sys
+vcs
+lockfile
+virtualenv
+cron
+Cron
+debouncing
+Debouncing
+debounce
+failover
+Failover
+unmount
+mariadb
+MariaDB
+exiftool
+backend
+backends
+ci
+pyproject
+toml
+Roadmap
+lookups
+NAS
+deduplication
+inotify
+dependabot
+spacebar
+msiexec
+py
+amd
+px
+msi
+png
+txt
+Lockfile
+pywin
+WiX
+Toolset
+rebase
+Gmail
+linux
+MyProject

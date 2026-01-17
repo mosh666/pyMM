@@ -1,0 +1,11 @@
+name: Default Template
+description: Standard project template extending base with common workflow folders
+version: 1.0.0
+min_app_version: 0.0.0
+extends: base
+required_plugins: []
+folder_structure:
+  - media
+  - exports
+  - cache
+migration_notes: {}

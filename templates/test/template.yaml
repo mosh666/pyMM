@@ -1,0 +1,9 @@
+name: Test Template
+description: Minimal template for unit testing with single media folder
+version: 1.0.0
+min_app_version: 0.0.0
+extends: base
+required_plugins: []
+folder_structure:
+  - media
+migration_notes: {}

@@ -1,0 +1,198 @@
+# User Configuration Example
+# Copy this file to 'user.yaml' and customize for your environment
+# This file demonstrates all available configuration options
+# user.yaml is created on first run and is not tracked by Git
+
+# ============================================================================
+# APPLICATION SETTINGS
+# ============================================================================
+
+# app_name: pyMediaManager  # Application display name (default: pyMediaManager)
+
+# Platform compatibility settings
+# strict_platform_checks: false  # Set to true to enforce platform abstraction (v2.0+)
+
+# ============================================================================
+# PATHS
+# ============================================================================
+# All paths are relative to the application root unless absolute
+
+paths:
+  # Projects directory - where media projects are stored
+  # Windows example: pyMM.Projects or D:\\MediaProjects
+  # Linux/macOS example: pyMM.Projects or /mnt/external/MediaProjects
+  projects_dir: pyMM.Projects
+
+  # Logs directory
+  # logs_dir: pyMM.Logs
+
+  # Plugins directory
+  # plugins_dir: pyMM.Plugins
+
+  # Configuration directory
+  # config_dir: config
+
+# ============================================================================
+# LOGGING
+# ============================================================================
+
+logging:
+  # Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+
+  # Enable console logging
+  # console_enabled: true
+
+  # Enable file logging
+  # file_enabled: true
+
+  # Maximum log file size in bytes (default: 10MB)
+  # max_file_size: 10485760
+
+  # Number of backup log files to keep
+  # backup_count: 5
+
+  # Log format string
+  # format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# ============================================================================
+# USER INTERFACE
+# ============================================================================
+
+ui:
+  # Application theme: light, dark, auto (system default)
+  theme: auto
+
+  # Window geometry
+  window:
+    # width: 1280
+    # height: 720
+    # maximized: false
+
+  # Sidebar width in pixels
+  # sidebar_width: 250
+
+  # Recent projects list (managed by application)
+  # recent_projects:
+  #   - "D:\\pyMM.Projects\\MyProject"
+  #   - "/mnt/external/pyMM.Projects/AnotherProject"
+
+# ============================================================================
+# PLUGINS
+# ============================================================================
+
+plugins:
+  # Auto-detect system tools on startup
+  # auto_detect: true
+
+  # Update check frequency in days
+  # update_check_interval: 7
+
+  # Plugin repositories (for future use)
+  # repositories:
+  #   - "https://plugins.pyMediaManager.example/official"
+
+  # Disabled plugins (by name)
+  # disabled:
+  #   - legacy-plugin
+  #   - experimental-tool
+
+# ============================================================================
+# GIT INTEGRATION
+# ============================================================================
+
+git:
+  # Enable Git integration for projects
+  # enabled: true
+
+  # Auto-initialize Git for new projects
+  # auto_init: false
+
+  # Default .gitignore patterns for new projects
+  # default_ignore:
+  #   - "*.tmp"
+  #   - "cache/"
+  #   - "*.log"
+
+  # Git LFS tracking patterns (if gitlfs plugin is installed)
+  # lfs_patterns:
+  #   - "*.psd"
+  #   - "*.mp4"
+  #   - "*.mov"
+
+# ============================================================================
+# TEMPLATES
+# ============================================================================
+
+templates:
+  # Default template for new projects
+  # default: default
+
+  # Custom template directories (in addition to bundled templates)
+  # custom_dirs:
+  #   - "D:\\CustomTemplates"
+  #   - "/home/user/.config/pyMM/templates"
+
+# ============================================================================
+# PRIVACY & TELEMETRY
+# ============================================================================
+
+privacy:
+  # Enable anonymous usage telemetry (not implemented yet)
+  telemetry_enabled: false
+
+  # Crash reporting
+  # crash_reports: false
+
+# ============================================================================
+# ADVANCED SETTINGS
+# ============================================================================
+
+advanced:
+  # Thread pool size for async operations
+  # thread_pool_size: 4
+
+  # File watcher debounce delay in milliseconds
+  # file_watcher_delay: 500
+
+  # Maximum concurrent plugin operations
+  # max_concurrent_operations: 3
+
+  # Cache directory (for plugin downloads, etc.)
+  # cache_dir: .cache
+
+# ============================================================================
+# PLATFORM-SPECIFIC EXAMPLES
+# ============================================================================
+
+# Windows 10/11 Example:
+# paths:
+#   projects_dir: D:\\MediaProjects
+#   plugins_dir: D:\\pyMM\\plugins
+# ui:
+#   theme: light
+#   window:
+#     width: 1920
+#     height: 1080
+#     maximized: true
+
+# Linux Example (Ubuntu/Debian):
+# paths:
+#   projects_dir: /mnt/media/pyMM.Projects
+#   plugins_dir: ~/.local/share/pyMM/plugins
+# ui:
+#   theme: dark
+
+# macOS Example (Intel/Apple Silicon):
+# paths:
+#   projects_dir: /Volumes/External/pyMM.Projects
+#   plugins_dir: ~/Library/Application Support/pyMM/plugins
+# ui:
+#   theme: auto
+
+# Portable USB Drive Example (Cross-Platform):
+# Use relative paths to maintain portability
+# paths:
+#   projects_dir: pyMM.Projects  # Relative to app location
+#   logs_dir: pyMM.Logs
+#   plugins_dir: pyMM.Plugins

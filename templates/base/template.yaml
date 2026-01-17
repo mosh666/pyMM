@@ -1,0 +1,10 @@
+name: Base Template
+description: Minimal project structure with essential folders for media management
+version: 1.0.0
+min_app_version: 0.0.0
+required_plugins: []
+folder_structure:
+  - media
+  - exports
+  - cache
+migration_notes: {}

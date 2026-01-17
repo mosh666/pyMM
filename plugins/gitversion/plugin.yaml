@@ -1,0 +1,33 @@
+schema_version: 2
+name: GitVersion
+version: 6.0.5
+mandatory: true
+enabled: true
+description: Semantic versioning tool that uses Git history
+category: Version Control
+prefer_system: true
+register_to_path: true
+dependencies:
+- git
+platforms:
+  windows:
+    source:
+      type: url
+      base_uri: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    command:
+      path: ''
+      executable: gitversion.exe
+  linux:
+    source:
+      type: url
+      base_uri: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    command:
+      path: ''
+      executable: gitversion.exe
+  macos:
+    source:
+      type: url
+      base_uri: https://github.com/GitTools/GitVersion/releases/download/6.0.5/gitversion-win-x64-6.0.5.zip
+    command:
+      path: ''
+      executable: gitversion.exe

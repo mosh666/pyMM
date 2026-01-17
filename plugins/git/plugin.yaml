@@ -1,0 +1,28 @@
+schema_version: 2
+name: Git
+version: 2.48.1
+mandatory: true
+enabled: true
+description: Distributed version control system for tracking project changes
+category: Version Control
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source:
+      type: url
+      base_uri: https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/PortableGit-2.48.1-64-bit.7z.exe
+      checksum_sha256: A4335111B3363871CAC632BE93D7466154D8EB08782FF55103866B67D6722257
+      file_size: 63431824
+    command:
+      path: cmd
+      executable: git.exe
+  linux:
+    command:
+      path: ''
+      executable: git
+  macos:
+    command:
+      path: ''
+      executable: git

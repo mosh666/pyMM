@@ -1,0 +1,32 @@
+schema_version: 2
+name: MariaDB
+version: 11.6.2
+mandatory: true
+enabled: true
+description: Open source relational database - required backend for digiKam
+category: Database
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    system_package: mariadb
+    version_constraint: '>=11.0'
+    source:
+      type: url
+      base_uri: https://archive.mariadb.org/mariadb-11.6.2/winx64-packages/mariadb-11.6.2-winx64.zip
+    command:
+      path: bin
+      executable: mysql.exe
+  linux:
+    system_package: mariadb
+    version_constraint: '>=11.0'
+    command:
+      path: bin
+      executable: mysql.exe
+  macos:
+    system_package: mariadb
+    version_constraint: '>=11.0'
+    command:
+      path: bin
+      executable: mysql.exe

@@ -1,0 +1,32 @@
+schema_version: 2
+name: MKVToolNix
+version: 89.0.0
+mandatory: false
+enabled: false
+description: Set of tools to create, alter and inspect Matroska (MKV) files
+category: Media Processing
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'
+    source:
+      type: url
+      base_uri: https://mkvtoolnix.download/windows/releases/89.0/mkvtoolnix-64-bit-89.0.7z
+    command:
+      path: ''
+      executable: mkvmerge.exe
+  linux:
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'
+    command:
+      path: ''
+      executable: mkvmerge.exe
+  macos:
+    system_package: mkvtoolnix
+    version_constraint: '>=89.0'
+    command:
+      path: ''
+      executable: mkvmerge.exe

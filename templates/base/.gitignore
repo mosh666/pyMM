@@ -1,0 +1,10 @@
+# pyMediaManager project
+cache/
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# OS files
+desktop.ini
+.directory

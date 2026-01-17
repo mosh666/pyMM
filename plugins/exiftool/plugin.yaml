@@ -1,0 +1,28 @@
+schema_version: 2
+name: ExifTool
+version: 13.45.0
+mandatory: true
+enabled: true
+description: Read, write and edit meta information in a wide variety of files
+category: Image Processing
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    source:
+      type: url
+      base_uri: https://exiftool.org/exiftool-13.45_64.zip
+      checksum_sha256: CD696D91703772738287FC5AF0BCD50BFDEB39E4ACF1FE4B7ECDEBC375523DF2
+      file_size: 10984399
+    command:
+      path: ''
+      executable: exiftool.exe
+  linux:
+    command:
+      path: ''
+      executable: exiftool
+  macos:
+    command:
+      path: ''
+      executable: exiftool

@@ -1,0 +1,324 @@
+/* pyMediaManager Documentation Custom Styles
+ * Color palette extracted from QFluentWidgets UI
+ * Primary green from portable status indicator: #4CAF50
+ */
+
+/* Light mode color palette */
+:root {
+    --color-brand-primary: #4CAF50;
+    --color-brand-secondary: #388E3C;
+    --color-brand-accent: #66BB6A;
+    --color-brand-content: #212121;
+    --color-brand-muted: #9E9E9E;
+
+    /* Code block colors */
+    --color-code-background: #f5f5f5;
+    --color-code-border: #e0e0e0;
+
+    /* Custom admonition colors */
+    --color-success-background: rgba(76, 175, 80, 0.1);
+    --color-success-border: #4CAF50;
+}
+
+/* Dark mode color palette */
+[data-theme="dark"] {
+    --color-brand-primary: #66BB6A;
+    --color-brand-secondary: #4CAF50;
+    --color-brand-accent: #81C784;
+    --color-brand-content: #E0E0E0;
+    --color-brand-muted: #9E9E9E;
+
+    /* Code block colors for dark mode */
+    --color-code-background: #1e1e1e;
+    --color-code-border: #333333;
+
+    /* Custom admonition colors for dark mode */
+    --color-success-background: rgba(102, 187, 106, 0.15);
+    --color-success-border: #66BB6A;
+}
+
+/* Apply brand colors to Furo theme elements */
+.sidebar-brand-text {
+    color: var(--color-brand-primary) !important;
+    font-weight: 600;
+}
+
+/* Primary links and navigation */
+a {
+    color: var(--color-brand-primary);
+}
+
+a:hover {
+    color: var(--color-brand-secondary);
+}
+
+/* Sidebar navigation */
+.sidebar-tree .reference.internal {
+    color: var(--color-brand-content);
+}
+
+.sidebar-tree .reference.internal:hover {
+    color: var(--color-brand-primary);
+}
+
+.sidebar-tree .current > .reference {
+    color: var(--color-brand-primary);
+    font-weight: 600;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-brand-content);
+}
+
+h1 {
+    border-bottom: 2px solid var(--color-brand-primary);
+    padding-bottom: 0.3em;
+}
+
+/* Code blocks */
+pre {
+    background-color: var(--color-code-background);
+    border: 1px solid var(--color-code-border);
+    border-radius: 4px;
+}
+
+code {
+    background-color: var(--color-code-background);
+    color: var(--color-brand-content);
+    border: 1px solid var(--color-code-border);
+    border-radius: 3px;
+    padding: 0.1em 0.3em;
+}
+
+/* Inline code in paragraphs */
+p code, li code, td code {
+    font-size: 0.95em;
+}
+
+/* Admonitions */
+.admonition {
+    border-radius: 4px;
+}
+
+.admonition.note {
+    border-left: 4px solid var(--color-brand-primary);
+}
+
+.admonition.tip {
+    border-left: 4px solid var(--color-brand-accent);
+}
+
+.admonition.warning {
+    border-left: 4px solid #FFA726;
+}
+
+.admonition.danger {
+    border-left: 4px solid #EF5350;
+}
+
+/* Custom success admonition for portable mode documentation */
+.admonition.success {
+    background-color: var(--color-success-background);
+    border-left: 4px solid var(--color-success-border);
+}
+
+/* Version warning banner for dev branch */
+.announcement {
+    background-color: #FFA726 !important;
+    color: #212121 !important;
+    font-weight: 600;
+    text-align: center;
+    padding: 12px 20px;
+    border-bottom: 3px solid #FF8F00;
+}
+
+[data-theme="dark"] .announcement {
+    background-color: #F57C00 !important;
+    color: #FFFFFF !important;
+    border-bottom: 3px solid #EF6C00;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table thead {
+    background-color: var(--color-brand-primary);
+    color: white;
+}
+
+table th {
+    padding: 10px;
+    font-weight: 600;
+}
+
+table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--color-code-border);
+}
+
+table tbody tr:hover {
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+[data-theme="dark"] table tbody tr:hover {
+    background-color: rgba(102, 187, 106, 0.1);
+}
+
+/* Buttons and interactive elements */
+.btn, button {
+    background-color: var(--color-brand-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn:hover, button:hover {
+    background-color: var(--color-brand-secondary);
+}
+
+/* sphinx-copybutton styling */
+.copybtn {
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.copybtn:hover {
+    opacity: 1;
+}
+
+/* sphinx-tabs styling */
+.sphinx-tabs-tab {
+    color: var(--color-brand-content);
+    background-color: transparent;
+}
+
+.sphinx-tabs-tab[aria-selected="true"] {
+    color: var(--color-brand-primary);
+    border-bottom: 2px solid var(--color-brand-primary);
+}
+
+.sphinx-tabs-panel {
+    border: 1px solid var(--color-code-border);
+    border-radius: 0 4px 4px 4px;
+    padding: 1em;
+}
+
+/* Search box */
+.search-input {
+    border: 2px solid var(--color-code-border);
+    border-radius: 4px;
+}
+
+.search-input:focus {
+    border-color: var(--color-brand-primary);
+    outline: none;
+}
+
+/* Footer */
+footer {
+    color: var(--color-brand-muted);
+    border-top: 1px solid var(--color-code-border);
+    padding-top: 1em;
+    margin-top: 2em;
+}
+
+/* Version selector (for sphinx-multiversion) */
+.version-selector {
+    background-color: var(--color-code-background);
+    border: 1px solid var(--color-code-border);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.version-selector:hover {
+    border-color: var(--color-brand-primary);
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 1.5em 0;
+}
+
+/* API documentation styling */
+.py.class, .py.function, .py.method {
+    border-left: 3px solid var(--color-brand-primary);
+    padding-left: 1em;
+    margin: 1em 0;
+}
+
+.sig-name {
+    color: var(--color-brand-primary);
+    font-weight: 600;
+}
+
+/* Platform-specific badges */
+.platform-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin: 0 4px;
+}
+
+.platform-badge.windows {
+    background-color: #0078D4;
+    color: white;
+}
+
+.platform-badge.linux {
+    background-color: #FCC624;
+    color: #212121;
+}
+
+.platform-badge.macos {
+    background-color: #000000;
+    color: white;
+}
+
+/* Version directives styling */
+.versionadded, .versionchanged, .deprecated {
+    border-left: 3px solid;
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.versionadded {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: var(--color-brand-primary);
+}
+
+.versionchanged {
+    background-color: rgba(33, 150, 243, 0.1);
+    border-color: #2196F3;
+}
+
+.deprecated {
+    background-color: rgba(255, 87, 34, 0.1);
+    border-color: #FF5722;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .announcement {
+        font-size: 0.9em;
+        padding: 10px 15px;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    .platform-badge {
+        font-size: 0.75em;
+    }
+}

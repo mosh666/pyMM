@@ -1,0 +1,34 @@
+schema_version: 2
+name: FFmpeg
+version: 7.1.0
+mandatory: false
+enabled: false
+description: Complete solution to record, convert and stream audio and video
+category: Media Processing
+prefer_system: true
+register_to_path: true
+dependencies: []
+platforms:
+  windows:
+    system_package: ffmpeg
+    version_constraint: '>=7.0'
+    source:
+      type: url
+      base_uri: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
+      checksum_sha256: 77032E0991B47FC9A8431C9CEAD943B3F442F8D2ACD68DCD145B9525DDF6DB62
+      file_size: 211496872
+    command:
+      path: bin
+      executable: ffmpeg.exe
+  linux:
+    system_package: ffmpeg
+    version_constraint: '>=7.0'
+    command:
+      path: bin
+      executable: ffmpeg.exe
+  macos:
+    system_package: ffmpeg
+    version_constraint: '>=7.0'
+    command:
+      path: bin
+      executable: ffmpeg.exe
