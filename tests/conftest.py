@@ -268,7 +268,7 @@ def mock_subprocess_run():
                 detector.find_system_tool('git')
     """
 
-    def _mock_run(cmd: list[str], *args: Any, **kwargs: Any) -> subprocess.CompletedProcess:
+    def _mock_run(cmd: list[str], *args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
         """Mock subprocess.run with realistic tool outputs."""
         if not cmd:
             return subprocess.CompletedProcess(
@@ -320,7 +320,9 @@ def mock_subprocess_run_failure():
                 info = detector.find_system_tool('nonexistent')
     """
 
-    def _mock_run_failure(cmd: list[str], *args: Any, **kwargs: Any) -> subprocess.CompletedProcess:
+    def _mock_run_failure(
+        cmd: list[str], *args: Any, **kwargs: Any
+    ) -> subprocess.CompletedProcess[str]:
         """Mock subprocess.run that fails."""
         return subprocess.CompletedProcess(
             args=cmd,
@@ -401,7 +403,9 @@ def mock_diskutil():
         MOCK_DISKUTIL_LIST_OUTPUT,
     )
 
-    def _mock_diskutil(cmd: list[str], *args: Any, **kwargs: Any) -> subprocess.CompletedProcess:
+    def _mock_diskutil(
+        cmd: list[str], *args: Any, **kwargs: Any
+    ) -> subprocess.CompletedProcess[str]:
         """Mock diskutil command execution."""
         if "list" in cmd:
             output = MOCK_DISKUTIL_LIST_OUTPUT

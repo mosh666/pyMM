@@ -91,7 +91,7 @@ class MockWMIDiskDrive:
         self.Size = data.get("Size")
         self.SerialNumber = data.get("SerialNumber")
 
-    def associators(self, wmi_class: str) -> list:
+    def associators(self, wmi_class: str) -> list[MockWMIPartition]:
         """Mock WMI associators method."""
         if wmi_class == "Win32_DiskDriveToDiskPartition":
             # Return partition based on disk type
@@ -111,7 +111,7 @@ class MockWMIPartition:
         self.Index = data.get("Index")
         self.Size = data.get("Size")
 
-    def associators(self, wmi_class: str) -> list:
+    def associators(self, wmi_class: str) -> list[MockWMILogicalDisk]:
         """Mock WMI associators method."""
         if wmi_class == "Win32_LogicalDiskToPartition":
             return [MockWMILogicalDisk(MOCK_WMI_LOGICAL_DISK_USB)]
