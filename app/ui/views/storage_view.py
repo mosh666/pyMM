@@ -2,8 +2,11 @@
 Storage view for managing portable drives.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import (
     QHBoxLayout,
@@ -16,9 +19,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.core.services.storage_group_service import StorageGroupService
-from app.core.services.storage_service import StorageService
+from app.core.services.storage_service import StorageService  # noqa: TC001  # Used at runtime
 from app.models.storage_group import DriveRole
+
+if TYPE_CHECKING:
+    from app.core.services.storage_group_service import StorageGroupService
 
 
 class StorageView(QWidget):

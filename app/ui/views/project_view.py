@@ -2,7 +2,10 @@
 Project view for managing media projects.
 """
 
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
@@ -16,7 +19,9 @@ from PySide6.QtWidgets import (
 )
 
 from app.models.project import Project
-from app.services.project_service import MigrationDiff, ProjectService
+
+if TYPE_CHECKING:
+    from app.services.project_service import MigrationDiff, ProjectService
 from app.ui.components.migration_banner import MigrationBanner
 from app.ui.dialogs.migration_dialog import MigrationDialog
 

@@ -2,8 +2,10 @@
 Plugin view for managing application plugins.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
@@ -19,7 +21,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.plugins.plugin_manager import PluginManager
+if TYPE_CHECKING:
+    from app.plugins.plugin_manager import PluginManager
 
 
 class PluginInstallThread(QThread):
