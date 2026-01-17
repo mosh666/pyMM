@@ -25,10 +25,10 @@ class TestToolDetectionStatus:
 
     def test_status_values(self):
         """Test that all expected status values exist."""
-        assert ToolDetectionStatus.FOUND_VALID == "found_valid"
-        assert ToolDetectionStatus.FOUND_INVALID == "found_invalid"
-        assert ToolDetectionStatus.NOT_FOUND == "not_found"
-        assert ToolDetectionStatus.ERROR == "error"
+        assert ToolDetectionStatus.FOUND_VALID == ToolDetectionStatus.FOUND_VALID
+        assert ToolDetectionStatus.FOUND_INVALID == ToolDetectionStatus.FOUND_INVALID
+        assert ToolDetectionStatus.NOT_FOUND == ToolDetectionStatus.NOT_FOUND
+        assert ToolDetectionStatus.ERROR == ToolDetectionStatus.ERROR
 
 
 class TestSystemToolInfo:

@@ -42,7 +42,8 @@ def discover_plugins() -> list[Path]:
 def load_plugin_yaml(path: Path) -> dict[str, Any]:
     """Load and parse plugin YAML file."""
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        data: dict[str, Any] = yaml.safe_load(f)
+        return data
 
 
 @pytest.mark.docs
