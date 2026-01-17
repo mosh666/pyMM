@@ -1,9 +1,7 @@
 # Windows Setup Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-**Complete Windows installation and configuration guide** for
+\n**Complete Windows installation and configuration guide** for
 pyMediaManager, covering MSI installer, portable installation, permissions,
 and Windows-specific features.
 

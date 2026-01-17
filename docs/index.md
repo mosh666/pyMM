@@ -2,7 +2,6 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 ```{note}
 **Version Selector**: Use the sidebar menu to switch between documentation versions (Main/Dev).
 You can also visit the [documentation home](https://mosh666.github.io/pyMM/) to select your version.
@@ -50,22 +49,6 @@ linux-setup
 platform-directories
 linux-udev-installer
 docker-ci-testing
-```
-
-```{toctree}
----
-maxdepth: 1
-caption: Examples & Resources
-hidden: true
----
-examples/README
-examples/config/README
-examples/platform/README
-examples/plugins/README
-examples/projects/README
-examples/storage/README
-examples/sync/README
-examples/ui/README
 ```
 
 ```{toctree}

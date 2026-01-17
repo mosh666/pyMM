@@ -2,8 +2,8 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
-**Comprehensive Test Coverage Plan** for pyMediaManager to achieve production-grade quality across all modules, with special emphasis on the sync engine and GUI components.
+**Comprehensive Test Coverage Plan** for pyMediaManager to achieve production-grade quality across all modules, with
+special emphasis on the sync engine and GUI components.
 
 ---
 
@@ -12,7 +12,7 @@
 ### Current State
 
 | Metric | Current | Target | Gap |
-|--------|---------|--------|-----|
+| ------ | ------- | ------ | --- |
 | **Total Tests** | 193 | 250+ | +57 tests |
 | **Overall Coverage** | 73% | 80% | +7% |
 | **Sync Engine Coverage** | 0% | 60% | +60% |
@@ -34,7 +34,8 @@
 
 **Goal:** Achieve **60% coverage** for all sync modules
 
-**Impact:** HIGH - Sync engine is fully implemented and in production use, but has zero test coverage. This is the highest-priority testing gap.
+**Impact:** HIGH - Sync engine is fully implemented and in production use, but has zero test coverage. This is the
+highest-priority testing gap.
 
 **Timeline:** Q1 2026 (Next 3 months)
 
@@ -43,7 +44,7 @@
 #### Modules Requiring Tests
 
 | Module | Lines | Classes | Target Coverage | Estimated Tests |
-|--------|-------|---------|----------------|-----------------|
+| ------ | ----- | ------- | --------------- | --------------- |
 | `file_synchronizer.py` | 431 | `FileSynchronizer`, `FileConflict`, `SyncStatistics` | 60% | 15 tests |
 | `backup_tracking.py` | ~300 | `BackupTrackingDatabase` | 65% | 12 tests |
 | `scheduled_sync.py` | ~250 | `ScheduledSyncManager`, `SyncSchedule` | 55% | 10 tests |
@@ -115,7 +116,8 @@ class TestFileSynchronizer:
     # Add 13+ more tests...
 ```
 
-**Reference Implementation:** See [docs/examples/sync/README.md](examples/sync/README.md) for working code examples demonstrating sync APIs.
+**Reference Implementation:** Working code examples are available in the `examples/sync/` directory
+demonstrating sync APIs.
 
 ---
 
@@ -132,7 +134,7 @@ class TestFileSynchronizer:
 #### Current GUI Test Distribution
 
 | Test File | Current Tests | Target Tests | Focus Areas |
-|-----------|---------------|--------------|-------------|
+| --------- | ------------- | ------------ | ----------- |
 | `test_first_run_wizard.py` | 12 | 15 | Add wizard navigation, validation edge cases |
 | `test_project_dialogs.py` | 25 | 30 | Add project template selection, error handling |
 | `test_views.py` | 13 | 20 | Add filter/search, context menus, refresh |
@@ -239,6 +241,7 @@ Test settings and preferences UI:
 #### 1. file_synchronizer.py
 
 **Classes to Test:**
+
 - `FileSynchronizer` - Core sync logic
 - `FileConflict` - Conflict representation
 - `SyncStatistics` - Sync result tracking
@@ -268,13 +271,14 @@ Test settings and preferences UI:
 - test_sync_handles_invalid_paths()
 ```
 
-**Reference:** [docs/examples/sync/manual_sync_example.py](examples/sync/manual_sync_example.py)
+**Reference:** See [docs/examples/sync/manual_sync.py](examples/sync/manual_sync.py) for manual sync example
 
 ---
 
 #### 2. backup_tracking.py
 
 **Classes to Test:**
+
 - `BackupTrackingDatabase` - SQLite change tracking
 
 **Required Test Coverage:**
@@ -299,13 +303,14 @@ Test settings and preferences UI:
 - test_corrupted_database_recovery()
 ```
 
-**Reference:** [docs/examples/sync/backup_tracking_example.py](examples/sync/backup_tracking_example.py)
+**Reference:** See [docs/examples/sync/sync_history.py](examples/sync/sync_history.py) for backup tracking example
 
 ---
 
 #### 3. scheduled_sync.py
 
 **Classes to Test:**
+
 - `ScheduledSyncManager` - APScheduler integration
 - `SyncSchedule` - Schedule configuration
 
@@ -329,13 +334,15 @@ Test settings and preferences UI:
 - test_schedule_handles_errors()
 ```
 
-**Reference:** [docs/examples/sync/scheduled_sync_example.py](examples/sync/scheduled_sync_example.py)
+**Reference:** See [docs/examples/sync/scheduled_sync_setup.py](examples/sync/scheduled_sync_setup.py) for scheduled
+sync example
 
 ---
 
 #### 4. realtime_sync.py
 
 **Classes to Test:**
+
 - `RealtimeSyncManager` - Watchdog manager
 - `RealtimeSyncHandler` - File system event handler
 
@@ -361,13 +368,15 @@ Test settings and preferences UI:
 - test_restart_after_crash()
 ```
 
-**Reference:** [docs/examples/sync/realtime_sync_example.py](examples/sync/realtime_sync_example.py)
+**Reference:** See [docs/examples/sync/realtime_sync_monitor.py](examples/sync/realtime_sync_monitor.py) for realtime
+sync example
 
 ---
 
 #### 5. notifications.py
 
 **Classes to Test:**
+
 - `NotificationManager` - Progress and status callbacks
 
 **Required Test Coverage:**
@@ -386,13 +395,12 @@ Test settings and preferences UI:
 - test_notify_conflict_detected()
 ```
 
-**Reference:** [docs/examples/sync/notifications_example.py](examples/sync/notifications_example.py)
-
 ---
 
 #### 6. crypto_compression.py
 
 **Classes to Test:**
+
 - `CryptoHelper` - AES-256-GCM encryption
 - `CompressionHelper` - GZIP/LZ4 compression
 
@@ -414,13 +422,14 @@ Test settings and preferences UI:
 - test_compression_ratio_calculation()
 ```
 
-**Reference:** [docs/examples/sync/crypto_compression_example.py](examples/sync/crypto_compression_example.py)
+**Reference:** See [docs/examples/sync/sync_with_encryption.py](examples/sync/sync_with_encryption.py) for encryption example
 
 ---
 
 #### 7. bandwidth_throttler.py
 
 **Classes to Test:**
+
 - `BandwidthThrottler` - Token bucket rate limiting
 
 **Required Test Coverage:**
@@ -441,13 +450,12 @@ Test settings and preferences UI:
 - test_throttle_multiple_files()
 ```
 
-**Reference:** [docs/examples/sync/bandwidth_throttling_example.py](examples/sync/bandwidth_throttling_example.py)
-
 ---
 
 #### 8. advanced_sync_options.py
 
 **Classes to Test:**
+
 - `AdvancedSyncOptions` - Configuration dataclass
 - `SpaceSavingsReport` - Compression/encryption metrics
 
@@ -466,8 +474,6 @@ Test settings and preferences UI:
 - test_encryption_overhead()
 ```
 
-**Reference:** [docs/examples/sync/advanced_options_example.py](examples/sync/advanced_options_example.py)
-
 ---
 
 ## 🛠️ Contribution Guidelines
@@ -475,11 +481,12 @@ Test settings and preferences UI:
 ### Getting Started with Sync Engine Testing
 
 1. **Review Existing Examples**
-   - Browse [docs/examples/sync/](examples/sync/) for working implementations
+   - Browse the `examples/sync/` directory for working implementations
    - Each example demonstrates real usage patterns
    - Adapt examples into test fixtures and assertions
 
 2. **Set Up Test Environment**
+
    ```bash
    # Clone repository
    git clone https://github.com/mosh666/pyMM.git
@@ -493,6 +500,7 @@ Test settings and preferences UI:
    ```
 
 3. **Create Test File Structure**
+
    ```bash
    # Create new test directory for sync modules
    mkdir -p tests/unit/sync
@@ -501,6 +509,7 @@ Test settings and preferences UI:
    ```
 
 4. **Write Your First Test**
+
    ```python
    # tests/unit/sync/test_file_synchronizer.py
    import pytest
@@ -534,6 +543,7 @@ Test settings and preferences UI:
    ```
 
 5. **Run Your Tests**
+
    ```bash
    # Run single test file
    pytest tests/unit/sync/test_file_synchronizer.py -v
@@ -698,7 +708,7 @@ pytest --durations=10
 ### Coverage Targets by Quarter
 
 | Quarter | Overall Coverage | Sync Coverage | GUI Tests | Integration Tests | Total Tests |
-|---------|------------------|---------------|-----------|-------------------|-------------|
+| ------- | ---------------- | ------------- | --------- | ----------------- | ----------- |
 | **Q1 2026** | 76% | 60% | 60 tests | 12 tests | 220 tests |
 | **Q2 2026** | 78% | 65% | 100 tests | 18 tests | 250 tests |
 | **Q3 2026** | 80% | 70% | 110 tests | 25 tests | 270 tests |
@@ -720,12 +730,12 @@ A module is considered "adequately tested" when:
 
 ## 🔗 Additional Resources
 
-- **Testing Documentation:** [tests/README.md](../tests/README.md)
-- **Sync Engine Examples:** [docs/examples/sync/README.md](examples/sync/README.md)
-- **Architecture Overview:** [docs/architecture.md](architecture.md)
-- **Contribution Guide:** [CONTRIBUTING.md](../CONTRIBUTING.md)
-- **pytest Documentation:** https://docs.pytest.org/
-- **pytest-qt Documentation:** https://pytest-qt.readthedocs.io/
+- **Testing Documentation:** See tests/README.md in the repository
+- **Sync Engine Examples:** Working examples in `examples/sync/` directory
+- **Architecture Overview:** [Architecture Guide](architecture.md)
+- **Contribution Guide:** See CONTRIBUTING.md in the repository
+- **pytest Documentation:** <https://docs.pytest.org/>
+- **pytest-qt Documentation:** <https://pytest-qt.readthedocs.io/>
 
 ---
 
@@ -738,6 +748,9 @@ A module is considered "adequately tested" when:
 
 ---
 
-**Priority Focus:** The sync engine's 0% test coverage is the highest-priority gap. If you're contributing tests, start with `file_synchronizer.py` and `backup_tracking.py` as these are foundational modules used by all other sync components.
+**Priority Focus:** The sync engine's 0% test coverage is the highest-priority gap. If you're contributing tests,
+start with `file_synchronizer.py` and `backup_tracking.py` as these are foundational modules used by all other sync
+components.
 
-**Remember:** Tests are documentation! Well-written tests help future contributors understand how the code should behave. Write tests that you'd want to read when learning a new module.
+**Remember:** Tests are documentation! Well-written tests help future contributors understand how the code should
+behave. Write tests that you'd want to read when learning a new module.

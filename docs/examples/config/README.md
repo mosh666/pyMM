@@ -1,9 +1,7 @@
 # Configuration Management Examples
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Examples for working with pyMediaManager's configuration system.
+\nExamples for working with pyMediaManager's configuration system.
 
 ## Overview
 

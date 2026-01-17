@@ -1,9 +1,7 @@
 # {PROJECT_NAME}
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-**Created:** {DATE}
+\n**Created:** {DATE}
 **Template:** Photo Management Template v1.0.0
 **Author:** {AUTHOR}
 **Project Path:** {PROJECT_PATH}

@@ -1,9 +1,7 @@
 # Sync Engine Examples
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-This directory contains minimal standalone examples demonstrating the sync engine APIs.
+\nThis directory contains minimal standalone examples demonstrating the sync engine APIs.
 
 ## Examples
 

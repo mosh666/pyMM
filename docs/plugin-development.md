@@ -3,12 +3,10 @@
 # 🔌 Plugin Development Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-> **Python Support:** 3.12, 3.13, 3.14 (3.13 recommended with MSI installer, 3.14 fully supported)
+\n> **Python Support:** 3.12, 3.13, 3.14 (3.13 recommended with MSI installer, 3.14 fully supported)
 > **Plugin System:** Manifest-driven (YAML-based) with automatic validation
 > **Security:** SHA-256 checksum verification, retry logic, progress tracking
-> **Code Examples:** See [examples/plugins/README.md](examples/plugins/README.md) for working code
+> **Code Examples:** Working examples available in the `examples/plugins/` directory
 
 ## 📚 Table of Contents
 

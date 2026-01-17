@@ -21,7 +21,7 @@ drive resolution and synchronization:
 **Phase 2 Status:** ✅ **Fully Implemented** - The sync engine is complete with manual, scheduled,
 and real-time synchronization. See [Sync Engine Documentation](sync-engine.md) for details.
 
-> **📚 Code Examples:** See [examples/storage/README.md](examples/storage/README.md) for working code:
+> **📚 Code Examples:** Working examples available in the `examples/storage/` directory:
 >
 > - [list_storage_groups.py](examples/storage/list_storage_groups.py) - List all groups
 > - [create_storage_group.py](examples/storage/create_storage_group.py) - Create new group

@@ -3,9 +3,7 @@
 # Configuration & Troubleshooting
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
+\n<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
 This guide covers configuration options, CLI usage, and troubleshooting.
 

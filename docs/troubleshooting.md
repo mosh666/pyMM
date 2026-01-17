@@ -1,9 +1,7 @@
 # Troubleshooting Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
->
+\n>
 > **Test Coverage:** 193 tests passing (73% coverage, ⚠️ sync engine: 0%)
 > **Python Support:** 3.12, 3.13, 3.14 (3.13 recommended, 3.14 fully supported)
 > **Build System:** uv (10-100x faster) + Hatchling + hatch-vcs

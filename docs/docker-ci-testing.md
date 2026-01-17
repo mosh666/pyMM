@@ -1,9 +1,7 @@
 # Docker CI Testing Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-## Overview
+\n## Overview
 
 This guide explains how to run a complete CI pipeline locally using Docker, mimicking what happens in
 GitHub Actions. All commands use the modernized Just task runner with 2026 features (colored output,

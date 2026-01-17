@@ -2,7 +2,6 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 **Comprehensive Synchronization System** for pyMediaManager Storage Groups.
 This guide covers the fully implemented synchronization engine that provides
 manual, scheduled, and real-time file synchronization between Master and
@@ -73,8 +72,8 @@ The sync engine consists of 9 implemented modules in `app/core/sync/`:
 | `__init__.py` | Public API exports | All public classes |
 
 > **⚠️ Test Coverage:** These 9 modules currently have **0% test coverage**. While the sync engine is fully
-> implemented and functional, comprehensive test coverage is needed. See
-> [examples/sync/README.md](examples/sync/README.md) for working code examples demonstrating the APIs.
+> implemented and functional, comprehensive test coverage is needed. See the `examples/sync/` directory
+> for working code examples demonstrating the APIs.
 >
 > **Contributions Welcome:** Test coverage for sync modules is a high-priority contribution area. See
 > [CONTRIBUTING.md](https://github.com/mosh666/pyMM/blob/main/CONTRIBUTING.md) for testing guidelines.
@@ -123,7 +122,7 @@ result = storage_service.sync_to_backup(
 print(f"Sync complete: {result.files_copied} files copied, {result.bytes_copied} bytes")
 ```
 
-> **📚 Code Examples:** See [examples/sync/README.md](examples/sync/README.md) for complete working examples:
+> **📚 Code Examples:** Complete working examples are available in the `examples/sync/` directory:
 >
 > - [manual_sync.py](examples/sync/manual_sync.py) - One-time sync operation
 > - [scheduled_sync_setup.py](examples/sync/scheduled_sync_setup.py) - APScheduler integration

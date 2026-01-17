@@ -3,9 +3,7 @@
 # Installation & Setup
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
+\n<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
 ## 🎯 Introduction
 
@@ -912,6 +910,7 @@ sudo udevadm test /sys/block/sda
   ```
 
 For more details and comprehensive Linux installation options, see:
+
 - **[Linux Setup Guide](linux-setup.md)** - Complete setup with AppImage, package managers, troubleshooting
 - **[Linux udev Rules Technical Details](linux-udev-installer.md)** - Technical implementation details
 

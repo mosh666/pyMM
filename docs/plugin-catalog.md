@@ -3,9 +3,7 @@
 # Plugin Catalog
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Complete catalog of official plugins available for pyMediaManager. All plugins use YAML manifests and SHA-256
+\nComplete catalog of official plugins available for pyMediaManager. All plugins use YAML manifests and SHA-256
 verification for security.
 
 ## Table of Contents

@@ -1,9 +1,7 @@
 # Semantic Release Configuration
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-This document explains the semantic versioning and automated release system used in pyMM.
+\nThis document explains the semantic versioning and automated release system used in pyMM.
 
 ## Overview
 

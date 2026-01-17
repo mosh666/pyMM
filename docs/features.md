@@ -3,9 +3,7 @@
 # Features & Usage
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
+\n<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
 This guide covers project management, storage groups (Phase 2 complete with sync engine), plugins, and advanced features.
 

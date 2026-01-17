@@ -1,9 +1,7 @@
 # Storage Detection Examples
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Examples for working with storage devices and drive detection in pyMediaManager.
+\nExamples for working with storage devices and drive detection in pyMediaManager.
 
 ## Overview
 

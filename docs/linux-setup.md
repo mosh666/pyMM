@@ -2,8 +2,9 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
-**Complete Linux installation and configuration guide** for pyMediaManager, covering AppImage portable installation, package managers for various distributions, permissions setup, and Linux-specific features.
+**Complete Linux installation and configuration guide** for pyMediaManager,
+covering AppImage portable installation, package managers for various
+distributions, permissions setup, and Linux-specific features.
 
 ---
 
@@ -11,11 +12,14 @@
 
 ### Method 1: AppImage (Recommended)
 
-The AppImage format provides a **universal, portable installation** that works across all Linux distributions without requiring system installation or package managers. This is the recommended method for most users.
+The AppImage format provides a **universal, portable installation** that works
+across all Linux distributions without requiring system installation or package
+managers. This is the recommended method for most users.
 
 #### Why AppImage?
 
-- ✅ **Universal** - Works on Ubuntu, Fedora, Arch, Debian, openSUSE, and all major distros
+- ✅ **Universal** - Works on Ubuntu, Fedora, Arch, Debian, openSUSE, and all major
+  distros
 - ✅ **Portable** - Run from USB drives or any location
 - ✅ **No Dependencies** - All libraries bundled
 - ✅ **No Root Required** - Install and run as regular user
@@ -43,6 +47,7 @@ Download the latest AppImage from:
 #### Installation Steps
 
 1. **Download AppImage**
+
    ```bash
    # Download latest release (x86_64)
    wget https://github.com/mosh666/pyMM/releases/latest/download/pyMediaManager-x86_64.AppImage
@@ -52,16 +57,19 @@ Download the latest AppImage from:
    ```
 
 2. **Make Executable**
+
    ```bash
    chmod +x pyMediaManager-x86_64.AppImage
    ```
 
 3. **Run Application**
+
    ```bash
    ./pyMediaManager-x86_64.AppImage
    ```
 
 4. **Optional: Move to Applications Directory**
+
    ```bash
    # Move to ~/Applications (user-specific)
    mkdir -p ~/Applications
@@ -91,6 +99,7 @@ yay -S appimagelauncher
 ```
 
 **After installing AppImageLauncher:**
+
 - Double-click the AppImage
 - Choose "Integrate and run"
 - Application appears in application menu automatically
@@ -121,6 +130,7 @@ update-desktop-database ~/.local/share/applications/
 ```
 
 **Download Icon** (optional):
+
 ```bash
 # Download official icon
 mkdir -p ~/.local/share/icons/hicolor/256x256/apps
@@ -337,6 +347,7 @@ cd ~/pyMediaManager
 ```
 
 **Portable Mode**: When run from USB or external drive, pyMediaManager automatically:
+
 - Stores config on the portable drive
 - Detects drive reconnection
 - Maintains portable project paths
@@ -352,6 +363,7 @@ For automatic USB device detection, pyMediaManager requires udev rules installat
 #### What are udev Rules?
 
 udev rules allow pyMediaManager to:
+
 - **Detect USB storage devices** automatically
 - **Notify when drives connect/disconnect**
 - **Identify master/backup drives** for Storage Groups
@@ -482,7 +494,7 @@ uv run python -m app.main
 pyMediaManager supports both X11 and Wayland display servers:
 
 | Feature | X11 | Wayland |
-|---------|-----|---------|
+| --- | --- | --- |
 | **Stability** | ✅ Excellent | ⚠️ Good (some bugs) |
 | **Performance** | ✅ Good | ✅ Better |
 | **Compatibility** | ✅ Universal | ⚠️ Newer |
@@ -521,7 +533,7 @@ sudo pacman -S xcb-util-cursor
 
 #### Error: `python3.13: command not found`
 
-**Solution**: Install Python 3.13 (see [Python Environment Management](#python-environment-management))
+**Solution**: Install Python 3.13 (see Python Environment Management section below)
 
 ```bash
 # Check installed Python versions
@@ -564,7 +576,7 @@ sudo pacman -S xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderut
 
 #### Error: Drives not detected automatically
 
-**Solution 1**: Install udev rules (see [Permissions & udev Rules](#permissions--udev-rules))
+**Solution 1**: Install udev rules (see Permissions & udev Rules section above)
 
 **Solution 2**: Check plugdev group membership
 
@@ -773,9 +785,10 @@ ln -s /path/to/ssd/pyMediaManager ~/.config/pyMediaManager
 ## 🆘 Getting Help
 
 - **GitHub Issues**: [github.com/mosh666/pyMM/issues](https://github.com/mosh666/pyMM/issues)
-- **GitHub Discussions**: [github.com/mosh666/pyMM/discussions](https://github.com/mosh666/pyMM/discussions)
-- **Documentation**: [github.com/mosh666/pyMM/tree/main/docs](https://github.com/mosh666/pyMM/tree/main/docs)
+- **Documentation**: [mosh666.github.io/pyMM](https://mosh666.github.io/pyMM/)
 
 ---
 
-**Platform Comparison**: See [Windows Setup](windows-setup.md) and [macOS Setup](macos-setup.md) for platform-specific features and installation methods.
+**Platform Comparison**: See [Windows Setup](windows-setup.md) and
+[macOS Setup](macos-setup.md) for platform-specific features and installation
+methods.

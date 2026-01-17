@@ -3,9 +3,7 @@
 # Getting Started
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
+\n<!-- markdownlint-disable MD013 MD033 MD036 MD051 -->
 
 This guide covers the core features, user interface, and first-time configuration of pyMediaManager.
 

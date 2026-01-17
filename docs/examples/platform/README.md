@@ -1,9 +1,7 @@
 # Platform Abstraction Examples
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-Examples for writing cross-platform code in pyMediaManager.
+\nExamples for writing cross-platform code in pyMediaManager.
 
 ## Overview
 

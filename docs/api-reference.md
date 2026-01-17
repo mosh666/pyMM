@@ -2,7 +2,6 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 ```{eval-rst}
 .. currentmodule:: app
 ```

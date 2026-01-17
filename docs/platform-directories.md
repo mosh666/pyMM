@@ -1,9 +1,7 @@
 # Platform-Specific Directory Support
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-## Overview
+\n## Overview
 
 pyMediaManager now follows platform conventions for configuration, data, and
 cache directories. This ensures compliance with operating system standards and

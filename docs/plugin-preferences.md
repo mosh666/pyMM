@@ -1,9 +1,7 @@
 # Plugin Preferences System
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-## Overview
+\n## Overview
 
 The plugin preferences system allows users to override default plugin
 execution behavior on a per-plugin basis. Users can choose whether each plugin

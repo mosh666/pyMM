@@ -1,9 +1,7 @@
 # Migration Guide
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-This guide helps you migrate between different versions of pyMediaManager and upgrade project templates.
+\nThis guide helps you migrate between different versions of pyMediaManager and upgrade project templates.
 
 ## Table of Contents
 

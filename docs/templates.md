@@ -1,9 +1,7 @@
 # Project Templates
 
 > **Last Updated:** 2026-01-17 21:41 UTC
-
-
-**Project template system** for pyMediaManager, providing pre-configured
+\n**Project template system** for pyMediaManager, providing pre-configured
 directory structures, metadata, and plugin configurations for different media
 management workflows.
 

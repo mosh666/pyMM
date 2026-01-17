@@ -2,7 +2,6 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 <!-- markdownlint-disable MD013 MD033 MD036 MD040 MD051 -->
 
 > **Target Audience:** Developers contributing to pyMediaManager

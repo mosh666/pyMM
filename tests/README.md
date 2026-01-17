@@ -2,12 +2,12 @@
 
 > **Last Updated:** 2026-01-17 21:41 UTC
 
-
 <!-- markdownlint-disable MD013 MD033 MD060 -->
 
 > **Comprehensive testing infrastructure with 193 tests, 73% code coverage, and automatic system drive protection**
->
-> **📋 Testing Roadmap:** See [docs/testing-roadmap.md](../docs/testing-roadmap.md) for test coverage plan, priority tiers (sync engine 0% → 60%, GUI 26% → 40%), and contribution guidelines. **Sync engine testing is the highest-priority gap.**
+> **📋 Testing Roadmap:** See [docs/testing-roadmap.md](../docs/testing-roadmap.md) for test coverage plan, priority
+> tiers (sync engine 0% → 60%, GUI 26% → 40%), and contribution guidelines. **Sync engine testing is the
+> highest-priority gap.**
 
 ---
 
