@@ -727,7 +727,7 @@ clean:
 
     # Root level patterns to clean
     root_patterns = [
-        "build", "dist", "*.egg-info", ".coverage", ".coverage.*",
+        "bin", "build", "dist", "*.egg-info", ".coverage", ".coverage.*",
         "htmlcov", "*.zip", "*.sha256", "get-pip.py", "performance_*.json",
         "interrogate_badge.svg"
     ]
@@ -797,5 +797,5 @@ uv-cache-clean:
 # Clean everything (includes docs build)
 [group('maintenance')]
 [confirm]
-clean-all: _cleanup-tmp docs-clean clean
+clean-all: _cleanup-tmp docs-clean uv-cache-clean clean
     @echo "✨ Complete cleanup finished!"
