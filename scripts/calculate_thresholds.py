@@ -130,9 +130,13 @@ def calculate_thresholds(
 
     # Calculate overall parallel execution threshold
     if thresholds["operation_thresholds"]:
-        max_threshold = max(
-            t["recommended_threshold"] for t in thresholds["operation_thresholds"].values()
-        )
+        op_thresholds = thresholds["operation_thresholds"]
+        max_threshold = 0.0
+        if isinstance(op_thresholds, dict):
+            max_threshold = max(
+                float(t.get("recommended_threshold", 0)) if isinstance(t, dict) else 0
+                for t in op_thresholds.values()
+            )
         # Parallel execution is dominated by longest operation plus coordination overhead
         parallel_threshold = max_threshold + 10  # 10s coordination overhead
 

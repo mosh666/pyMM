@@ -174,23 +174,33 @@ def measure_all_operations(iterations: int = 10, verbose: bool = False) -> dict[
     }
 
     for op in operations:
+        op_name = str(op["name"])
+        op_command = op["command"]
+        if isinstance(op_command, str):
+            cmd_list = [op_command]
+        else:
+            cmd_list = list(op_command) if not isinstance(op_command, list) else op_command
         stats = measure_operation(
-            op["name"],
-            op["command"],
+            op_name,
+            cmd_list,
             iterations=iterations,
             verbose=verbose,
         )
-        results["operations"][op["name"]] = stats
+        results["operations"][op_name] = stats
 
     # Calculate total simulated update time (parallel operations use max, not sum)
     successful_ops = [
-        v for v in results["operations"].values() if v.get("iterations_successful", 0) > 0
+        v
+        for v in results["operations"].values()
+        if isinstance(v, dict) and v.get("iterations_successful", 0) > 0
     ]
 
     if successful_ops:
         # In parallel execution, total time is dominated by the longest operation
         # plus some overhead for coordination
-        parallel_p95 = max(op["p95"] for op in successful_ops) + 5  # 5s overhead
+        parallel_p95 = (
+            max(float(op.get("p95", 0)) for op in successful_ops if isinstance(op, dict)) + 5
+        )  # 5s overhead
 
         results["summary"] = {
             "total_operations": len(operations),
