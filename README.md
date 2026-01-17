@@ -81,8 +81,8 @@
 | **Plugins Available** | 9 |
 | **Test Cases** | 33+ |
 | **Test Coverage** | N/A |
-| **Lines of Code** | ~36,330 Python |
-| **Documentation Files** | 31 |
+| **Lines of Code** | ~36,467 Python |
+| **Documentation Files** | 33 |
 | **Documentation Completeness** | 100.0% |
 <!-- AUTO-GENERATED:STATS:END -->
 
