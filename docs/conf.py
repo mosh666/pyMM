@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import sys
+from typing import Any
 from unittest.mock import MagicMock
 
 # Add project root to Python path for autodoc
@@ -16,7 +17,7 @@ class MockModule(MagicMock):
     """Mock module that returns itself for any attribute access."""
 
     @classmethod
-    def __getattr__(cls, name):
+    def __getattr__(cls, name: str) -> MagicMock:
         return MagicMock()
 
 
@@ -93,7 +94,7 @@ autodoc_mock_imports = ["PySide6", "shiboken6"]
 
 
 # Read release tags from file if it exists
-def get_release_tags_whitelist():
+def get_release_tags_whitelist() -> str:
     """Load release tags from release_tags.txt and build a regex whitelist."""
     release_tags_file = Path(__file__).parent.parent / "release_tags.txt"
     if release_tags_file.exists():
@@ -404,11 +405,13 @@ inheritance_node_attrs = {
 
 
 # Setup function to configure autodoc behavior
-def setup(app):
+def setup(app: Any) -> None:
     """Configure Sphinx application."""
 
     # Skip autodoc for modules that have PySide6 import issues
-    def skip_pyside_imports(_app, what, _name, obj, skip, _options):
+    def skip_pyside_imports(
+        _app: Any, what: str, _name: str, obj: Any, skip: bool, _options: Any
+    ) -> bool:
         """Skip autodoc for classes/modules with PySide6 import issues."""
         # Skip UI components that fail to import
         if what in ("class", "module"):
